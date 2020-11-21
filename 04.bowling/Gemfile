@@ -1,0 +1,5 @@
+# For plain Ruby scripts
+# fronze_string_literal: true
+group :development do
+  gem 'rubocop-fjord', require: false
+end
