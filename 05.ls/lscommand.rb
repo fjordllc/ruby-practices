@@ -51,7 +51,7 @@ def sort_files_reverse(files)
   files.sort.reverse
 end
 
-if options['a'] 
+if options['a']
   all_files(files)
 else
   not_a_files(files)
