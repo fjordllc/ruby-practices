@@ -1,8 +1,8 @@
+#!/usr/bin/env ruby
 # frozen_string_literal: true
 
 require 'optparse'
 options = ARGV.getopts('l')
-puts options['l'].class
 
 def file_check
   ARGV.each_with_index do |arg, i| # ファイルが存在しなかったら警告をしてそこで終わりにする
@@ -24,6 +24,13 @@ def calc_words(str)
       .gsub(/20|(0[9a])/, ' ')  # 半角空白へ置換
       .split(/\s+/)             # 分割
       .size
+end
+
+def stdin(options)
+  if options['l']
+    stdin_calc_l
+  else stdin_calc
+  end
 end
 
 def calc_bytes(str)
@@ -79,12 +86,7 @@ if ARGV[0]
   end
 
 else
-  puts options['l']
-  if options['l']
-    stdin_calc_l
-  else
-    stdin_calc
-  end
+  stdin(options)
 end
 
 puts
