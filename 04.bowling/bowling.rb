@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 # !/usr/bin/env ruby
-# fronze_string_literal: true
+
 score = ARGV[0]
 scores = score.chars
 frames = []
@@ -25,28 +27,26 @@ last_frame = frames[9..].flatten(1)
 frames = normal_frame << last_frame
 
 frame_score = []
-total_score = []
 
 10.times do |i|
   next_frame = i + 1
   next_next_frame = i + 2
-  if i < 9
-    if frames[i].count == 1 && frames[next_frame].count == 1
-      total_score = 20 + frames[next_next_frame].first
-    elsif frames[i].count == 1 && frames[next_frame].count == 2
-      total_score = 10 + frames[next_frame].sum
-    elsif frames[i].count == 1 && frames[next_frame].count == 3
-      total_score = 10 + frames[next_frame][0] + frames[next_frame][1]
-    elsif frames[i].count == 2 && frames[i].sum == 10 && frames[next_frame].count == 3
-      total_score = 10 + frames[next_frame][0]
-    elsif frames[i].count == 2 && frames[i].sum == 10
-      total_score = 10 + frames[next_frame].first
-    else
-      total_score = frames[i].sum
+  total_score =
+    if frames[i].count == 1 && frames[next_frame].count == 1 && i < 9
+      20 + frames[next_next_frame].first
+    elsif frames[i].count == 1 && frames[next_frame].count == 2 && i < 9
+      10 + frames[next_frame].sum
+    elsif frames[i].count == 1 && frames[next_frame].count == 3 && i < 9
+      10 + frames[next_frame][0] + frames[next_frame][1]
+    elsif frames[i].count == 2 && frames[i].sum == 10 && frames[next_frame].count == 3 && i < 9
+      10 + frames[next_frame][0]
+    elsif frames[i].count == 2 && frames[i].sum == 10 && i < 9
+      10 + frames[next_frame].first
+    elsif i < 9
+      frames[i].sum
+    elsif i > 8
+      frames[i].sum
     end
-  else
-    total_score = frames[i].sum
-  end
   frame_score << total_score
 end
 
