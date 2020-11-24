@@ -51,13 +51,13 @@ def sort_files_reverse(files)
   files.sort.reverse
 end
 
-if options['a'] == true
+if options['a']
   all_files(files)
 else
   not_a_files(files)
 end
 
-files = if options['r'] == true
+files = if options['r']
           sort_files_reverse(files)
         else
           sort_files(files)
@@ -92,7 +92,7 @@ def options_l(files)
   end
 end
 
-if options['l'] == true
+if options['l']
   option_l_total(files, blocks)
   options_l(files)
 else
