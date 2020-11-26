@@ -44,4 +44,5 @@ flames.each_with_index do |x, idx|
     point += x.sum
   end
 end
+
 puts point
