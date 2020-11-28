@@ -4,90 +4,78 @@
 require 'optparse'
 options = ARGV.getopts('l')
 
-def file_check
-  ARGV.each_with_index do |arg, i| # ファイルが存在しなかったら警告をしてそこで終わりにする
+def argv
+  ARGV # 引数で ARGV の中身を 渡すようにする
+end
+
+def argv_check
+  !ARGV[0].nil? # nilだったら標準入力をみたいのでfalseにする
+end
+
+def file_check(isfiles)
+  isfiles.each_with_index do |arg, i| # ファイルが存在しなかったら警告をしてそこで終わりにする
     if File.directory?(arg) == true || File.exist?(arg) == false
-      puts "#{ARGV[i]}は存在しないファイルです"
+      puts "#{isfiles[i]}は存在しないファイルです"
       exit
     end
   end
 end
 
+def openfiles(str)
+  File.open(str).read
+end
+
 def calc_lines(str)
-  File.open(str).read.count("\n")  # 行数計算
+  str.count("\n")
 end
 
 def calc_words(str)
-  File.open(str).read # 単語数計算
-      .unpack('H*') # 16進数変換
-      .join(' ')
-      .gsub(/20|(0[9a])/, ' ')  # 半角空白へ置換
-      .split(/\s+/)             # 分割
-      .size
-end
-
-def stdin(options)
-  if options['l']
-    stdin_calc_l
-  else
-    stdin_calc
-  end
+  str.split(/\s/).count { |w| !w.empty? }
 end
 
 def calc_bytes(str)
-  File.stat(str).size # 容量計算
+  str.bytesize
 end
 
-def stdin_calc
+def rjust(target_string)
+  target_string.rjust(8)
+end
+
+def stdin_calc(option_l)
   inputs = $stdin.readlines # 標準入力時
-  lcount = 0
-  wcount = 0
-  bcount = 0
-  inputs.each_with_index do |input, _i| # コマンドライン引数
-    lcount += input.count("\n") # 行数
-    wcount += input.split(/\s/).count { |w| !w.empty? }
-    bcount += input.bytesize
-  end
-  print lcount.to_s.rjust(8)
-  print wcount.to_s.rjust(8)
-  print bcount.to_s.rjust(8)
+  print   rjust(calc_lines(inputs.join).to_s)
+  print   rjust(calc_words(inputs.join).to_s) unless option_l['l']
+  print   rjust(calc_bytes(inputs.join).to_s) unless option_l['l']
 end
 
-def stdin_calc_l
-  inputs = $stdin.readlines # 標準入力
-  lcount = 0
-  inputs.each_with_index do |input, _i| # コマンドライン引数
-    lcount += input.count("\n")  # 行数
-  end
-  print lcount.to_s.rjust(8)
-end
-
-if ARGV[0]
-  file_check
+if argv_check
+  file_check(argv)
   file_count = 0
   total_l = 0
   total_w = 0
   total_b = 0
 
-  ARGV.each_with_index do |arg, _i|
+  argv.each_with_index do |arg, _i|
     file_count += 1
-    print calc_lines(arg).to_s.rjust(8)
-    print calc_words(arg).to_s.rjust(8) unless options
-    print calc_bytes(arg).to_s.rjust(8) unless options
-    puts " #{arg}"
-    total_l += calc_lines(arg)
-    total_w += calc_words(arg) unless options
-    total_b += calc_bytes(arg) unless options
+    str = openfiles(arg)
+    print rjust(calc_lines(str).to_s)
+    print rjust(calc_words(str).to_s) unless options['l']
+    print rjust(calc_bytes(str).to_s) unless options['l']
+    print " #{arg}"
+    total_l += calc_lines(str)
+    total_w += calc_words(str) unless options['l']
+    total_b += calc_bytes(str) unless options['l']
+    puts
   end
   if file_count > 1
-    print total_l.to_s.rjust(8)
-    print total_w.to_s.rjust(8) unless options
-    print total_b.to_s.rjust(8) unless options
+    print rjust(total_l.to_s)
+    print rjust(total_w.to_s) unless options['l']
+    print rjust(total_b.to_s) unless options['l']
     print ' total'
   end
 
 else
-  stdin(options)
+  stdin_calc(options)
 end
 
 puts
