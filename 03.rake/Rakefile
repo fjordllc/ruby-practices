@@ -1,0 +1,6 @@
+desc 'hello.cのコンパイル'
+task :hello do
+  file 'hello' => 'hello.c' do
+    sh 'gcc hello.c -o hello'
+  end
+end
