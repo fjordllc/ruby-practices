@@ -1,0 +1,136 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'optparse'
+require 'etc'
+require 'date'
+
+# ################################################
+# functions
+
+# ファイルが実行された際の一連の処理
+def main
+  options = store_options
+
+  files = options['a'] || options['all'] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
+  sorted_files = options['r'] || options['reverse'] ? files.sort.reverse : files.sort
+
+  if options['l'] || options['long']
+    total_block_size = get_total_block_size(sorted_files)
+    justified_files = to_long_format(sorted_files)
+    out_long_format(total_block_size, justified_files)
+  else
+    justified_files = justify(sorted_files, 'l')
+    out_normal_format(justified_files)
+  end
+end
+
+# オプションを取得
+def store_options
+  ARGV.getopts('alr', 'all', 'long', 'reverse')
+rescue OptionParser::InvalidOption
+  puts 'invalid option'
+  exit
+end
+
+# 通常フォーマット（横に最大3列を維持して表示）で出力
+def out_normal_format(outputs)
+  outputs.each_slice(3).map do |output|
+    puts output.join(' ')
+  end
+end
+
+# ロングフォーマットで出力
+def out_long_format(total_block_size, outputs)
+  puts "total #{total_block_size}"
+
+  outputs.each do |output|
+    puts output.join('  ')
+  end
+end
+
+# ロングフォーマットに変換
+def to_long_format(files)
+  file_type_and_permissions = []
+  nlinks = []
+  usernames = []
+  groupnames = []
+  sizes = []
+  mtimes = []
+  filenames = []
+
+  files.each do |file|
+    stat = File.lstat(file)
+    file_type_and_permissions << "#{get_file_type(stat)}#{to_symbolic_notation(stat.mode)}"
+    nlinks << stat.nlink
+    usernames << Etc.getpwuid(stat.uid).name
+    groupnames << Etc.getgrgid(stat.gid).name
+    sizes << stat.size
+    mtimes << to_long_formats_date(stat.mtime)
+    filename = stat.symlink? ? "#{file} -> #{File.readlink(file)}" : file
+    filenames << filename
+  end
+
+  # 取得した情報の一番長い文字列数に合わせて左右寄せで整形
+  # file_type_and_permissionsは常に一番左の情報で文字列数も同じ、filenamesは常に一番右の情報で左寄せとなるので整形不要
+  [file_type_and_permissions, justify(nlinks, 'l'), justify(usernames), justify(groupnames), justify(sizes), justify(mtimes), filenames].transpose
+end
+
+# パーミッションを8進数からシンボリックに変更
+SYMBOLIC_HASH = {
+  '7' => 'rwx',
+  '6' => 'rw-',
+  '5' => 'r-x',
+  '4' => 'r--',
+  '3' => '-wx',
+  '2' => '-w-',
+  '1' => '--x',
+  '0' => '---'
+}.freeze
+def to_symbolic_notation(mode)
+  octal = mode.to_s(8)[-3, 3]
+
+  octal.each_char.map do |s|
+    SYMBOLIC_HASH[s]
+  end.join
+end
+
+# 最終更新時刻をmacのlsに準拠した文字列に変換
+def to_long_formats_date(mtime)
+  # 最終更新が今月だった場合は年ではなくて時刻を返す
+  year_or_time = Date.today.month == mtime.month ? mtime.strftime('%R') : mtime.strftime('%Y')
+  mtime.strftime("%m %e #{year_or_time}")
+end
+
+# ファイルの種類を取得
+def get_file_type(stat)
+  if stat.file?
+    '-'
+  elsif stat.directory?
+    'd'
+  elsif stat.symlink?
+    'l'
+  end
+end
+
+# 出力の整形のため一番長い文字列の幅に合わせる
+def justify(outputs, just = 'r')
+  max_length = outputs.map { |x| x.to_s.length }.max
+
+  # 基本右寄せ
+  outputs.map do |output|
+    just == 'r' ? output.to_s.rjust(max_length) : output.to_s.ljust(max_length)
+  end
+end
+
+# 各ファイルのブロックサイズの合計を取得
+def get_total_block_size(files)
+  files.sum do |file|
+    File.lstat(file).blocks
+  end
+end
+
+# /functions
+# ################################################
+
+main
