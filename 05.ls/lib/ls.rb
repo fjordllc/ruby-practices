@@ -44,10 +44,10 @@ def details(files, path)
     detail[:owner] = Etc.getpwuid(stat.uid).name
     detail[:group] = Etc.getgrgid(stat.gid).name
     detail[:bytes] = stat.size
-    detail[:year] = stat.ctime.year
-    detail[:month] = stat.ctime.month
-    detail[:day] = stat.ctime.day
-    detail[:time] = stat.ctime.strftime('%R')
+    detail[:year] = stat.mtime.year
+    detail[:month] = stat.mtime.month
+    detail[:day] = stat.mtime.day
+    detail[:time] = stat.mtime.strftime('%R')
     detail[:name] = f
     detail[:blocks] = stat.blocks
     details << detail
