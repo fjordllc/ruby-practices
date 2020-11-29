@@ -18,10 +18,10 @@ def main
   if options['l'] || options['long']
     total_block_size = get_total_block_size(sorted_files)
     justified_files = to_long_format(sorted_files)
-    out_long_format(total_block_size, justified_files)
+    output_long_format(total_block_size, justified_files)
   else
     justified_files = justify(sorted_files, 'l')
-    out_normal_format(justified_files)
+    output_normal_format(justified_files)
   end
 end
 
@@ -34,18 +34,22 @@ rescue OptionParser::InvalidOption
 end
 
 # 通常フォーマット（横に最大3列を維持して表示）で出力
-def out_normal_format(outputs)
-  outputs.each_slice(3).map do |output|
-    puts output.join(' ')
+def output_normal_format(outputs)
+  three_division = outputs.each_slice(3).map { |output| output }
+  # 3分割した配列がtransposeできるよう配列数が不足してる場合はnilで埋める
+  three_division[-1] = three_division.last.values_at(0...3) if three_division.last.length < 3
+
+  three_division.transpose.each do |e|
+    puts e.join(' ')
   end
 end
 
 # ロングフォーマットで出力
-def out_long_format(total_block_size, outputs)
+def output_long_format(total_block_size, outputs)
   puts "total #{total_block_size}"
 
   outputs.each do |output|
-    puts output.join('  ')
+    puts "#{output[0]}  #{output[1]} #{output[2]}  #{output[3]}  #{output[4]} #{output[5]} #{output[6]}"
   end
 end
 
@@ -73,7 +77,7 @@ def to_long_format(files)
 
   # 取得した情報の一番長い文字列数に合わせて左右寄せで整形
   # file_type_and_permissionsは常に一番左の情報で文字列数も同じ、filenamesは常に一番右の情報で左寄せとなるので整形不要
-  [file_type_and_permissions, justify(nlinks, 'l'), justify(usernames), justify(groupnames), justify(sizes), justify(mtimes), filenames].transpose
+  [file_type_and_permissions, justify(nlinks), justify(usernames), justify(groupnames), justify(sizes), justify(mtimes), filenames].transpose
 end
 
 # パーミッションを8進数からシンボリックに変更
@@ -97,9 +101,14 @@ end
 
 # 最終更新時刻をmacのlsに準拠した文字列に変換
 def to_long_formats_date(mtime)
-  # 最終更新が今月だった場合は年ではなくて時刻を返す
-  year_or_time = Date.today.month == mtime.month ? mtime.strftime('%R') : mtime.strftime('%Y')
-  mtime.strftime("%m %e #{year_or_time}")
+  # 最終更新から6ヶ月以上経過している場合は更新年を返す
+  now = Time.now
+  now_date = Date.new(now.year, now.month, now.day)
+  last_update_date = Date.new(mtime.year, mtime.month, mtime.day)
+  diff_month = now_date.year * 12 + now_date.month - last_update_date.year * 12 - last_update_date.month
+
+  year_or_time = diff_month >= 6 ? " #{mtime.strftime('%-Y')}" : mtime.strftime('%R')
+  mtime.strftime("%-m %e #{year_or_time}")
 end
 
 # ファイルの種類を取得
