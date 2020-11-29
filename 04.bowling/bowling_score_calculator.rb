@@ -8,15 +8,14 @@ scores.each.with_index do |s, i|
   if s == 'X'
     kind_of_score = 'strike' if i.zero? # スコアの最初がXは必ずストライク
 
-    kind_of_score = 'strike' if scores[i - 1] == 'X' || scores[i - 1].to_i != 0 # 前のスコアが0じゃないXは必ずストライク
+    kind_of_score = 'spare' if i == 1 && scores[0] != 'X' && scores[0].to_i.zero? # 2投目でスペアの場合は1投目が必ず0になっている
 
-    if scores[i - 1] != 'X' && scores[i - 1].to_i.zero?
-      kind_of_score = 'spare' if i == 1 # 2投目がXで1投目が0なら必ずスペア
+    # 引数の3番目以降に存在するXはストライクかスペアか判断できないのでshotsを見る
+    kind_of_score = 'spare' if i > 1 && shots.length.odd? # shotsの配列数が奇数ならフレームの2投目がXなのでスペア
 
-      kind_of_score = 'spare' if scores[i - 2] == 'X' # 2投前がXなら必ずスペア
+    kind_of_score = 'spare' if shots.length > 18 # 19投目以降はすべてスペア扱いとする
 
-      kind_of_score = 'strike' if i > 1 && scores[i - 2] != 'X' # 2投前が[0-9]なら必ずストライク
-    end
+    kind_of_score ||= 'strike' # 上記の条件に一致しない場合はストライク
   else
     kind_of_score = 'other'
   end
@@ -38,13 +37,13 @@ shots.each_slice(2) do |s|
   frames << s
 end
 
-# 11フレーム以上存在する場合は10フレーム目に3投目が投げられていることになるので10フレーム以降を10フレーム目にまとめる
-case frames.length
-when 12
-  frames[-3] = [10, 10, 10]
-  frames.pop(2)
-when 11
-  frames[-2] = frames.last(2).flatten
+# 11フレーム目が存在する場合は10フレーム目に3投目が投げられていることになるので10フレーム目にまとめる
+if frames.length > 10
+  frames[-2] = if frames.last.length == 2 # 最後のフレームで3連続ストライク
+                 [frames[-2].sum, frames.last[0], frames.last[1]]
+               else
+                 [frames[-2][0], frames[-2][1], frames.last[0]]
+               end
   frames.pop
 end
 
