@@ -5,32 +5,21 @@ require 'optparse'
 require 'etc'
 require 'date'
 
-# ################################################
-# functions
-
 # ファイルが実行された際の一連の処理
 def main
-  options = store_options
+  options = ARGV.getopts('alr')
 
-  files = options['a'] || options['all'] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
-  sorted_files = options['r'] || options['reverse'] ? files.sort.reverse : files.sort
+  files = options['a'] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
+  sorted_files = options['r'] ? files.sort.reverse : files.sort
 
-  if options['l'] || options['long']
+  if options['l']
     total_block_size = get_total_block_size(sorted_files)
     justified_files = to_long_format(sorted_files)
     output_long_format(total_block_size, justified_files)
   else
-    justified_files = justify(sorted_files, 'l')
+    justified_files = justify(sorted_files, 'left')
     output_normal_format(justified_files)
   end
-end
-
-# オプションを取得
-def store_options
-  ARGV.getopts('alr', 'all', 'long', 'reverse')
-rescue OptionParser::InvalidOption
-  puts 'invalid option'
-  exit
 end
 
 # 通常フォーマット（横に最大3列を維持して表示）で出力
@@ -39,8 +28,8 @@ def output_normal_format(outputs)
   # 3分割した配列がtransposeできるよう配列数が不足してる場合はnilで埋める
   three_division[-1] = three_division.last.values_at(0...3) if three_division.last.length < 3
 
-  three_division.transpose.each do |e|
-    puts e.join(' ')
+  three_division.transpose.each do |one_of_division|
+    puts one_of_division.join(' ')
   end
 end
 
@@ -49,6 +38,7 @@ def output_long_format(total_block_size, outputs)
   puts "total #{total_block_size}"
 
   outputs.each do |output|
+    # macのlsの幅に合わせるため個別に各フィールド間のスペースを指定
     puts "#{output[0]}  #{output[1]} #{output[2]}  #{output[3]}  #{output[4]} #{output[5]} #{output[6]}"
   end
 end
@@ -60,7 +50,7 @@ def to_long_format(files)
   usernames = []
   groupnames = []
   sizes = []
-  mtimes = []
+  modified_times = []
   filenames = []
 
   files.each do |file|
@@ -70,14 +60,14 @@ def to_long_format(files)
     usernames << Etc.getpwuid(stat.uid).name
     groupnames << Etc.getgrgid(stat.gid).name
     sizes << stat.size
-    mtimes << to_long_formats_date(stat.mtime)
-    filename = stat.symlink? ? "#{file} -> #{File.readlink(file)}" : file
+    modified_times << to_long_formats_date(stat.mtime)
+    filename = stat.symlink? ? "#{file} - #{File.readlink(file)}" : file
     filenames << filename
   end
 
   # 取得した情報の一番長い文字列数に合わせて左右寄せで整形
   # file_type_and_permissionsは常に一番左の情報で文字列数も同じ、filenamesは常に一番右の情報で左寄せとなるので整形不要
-  [file_type_and_permissions, justify(nlinks), justify(usernames), justify(groupnames), justify(sizes), justify(mtimes), filenames].transpose
+  [file_type_and_permissions, justify(nlinks), justify(usernames), justify(groupnames), justify(sizes), justify(modified_times), filenames].transpose
 end
 
 # パーミッションを8進数からシンボリックに変更
@@ -100,15 +90,14 @@ def to_symbolic_notation(mode)
 end
 
 # 最終更新時刻をmacのlsに準拠した文字列に変換
-def to_long_formats_date(mtime)
+def to_long_formats_date(time)
   # 最終更新から6ヶ月以上経過している場合は更新年を返す
-  now = Time.now
-  now_date = Date.new(now.year, now.month, now.day)
-  last_update_date = Date.new(mtime.year, mtime.month, mtime.day)
+  now_date = Date.today
+  last_update_date = time.to_date
   diff_month = now_date.year * 12 + now_date.month - last_update_date.year * 12 - last_update_date.month
 
-  year_or_time = diff_month >= 6 ? " #{mtime.strftime('%-Y')}" : mtime.strftime('%R')
-  mtime.strftime("%-m %e #{year_or_time}")
+  year_or_time = diff_month >= 6 ? " #{time.strftime('%-Y')}" : time.strftime('%R')
+  time.strftime("%-m %e #{year_or_time}")
 end
 
 # ファイルの種類を取得
@@ -123,12 +112,11 @@ def get_file_type(stat)
 end
 
 # 出力の整形のため一番長い文字列の幅に合わせる
-def justify(outputs, just = 'r')
+def justify(outputs, direction = 'right')
   max_length = outputs.map { |x| x.to_s.length }.max
 
-  # 基本右寄せ
   outputs.map do |output|
-    just == 'r' ? output.to_s.rjust(max_length) : output.to_s.ljust(max_length)
+    direction == 'right' ? output.to_s.rjust(max_length) : output.to_s.ljust(max_length)
   end
 end
 
@@ -138,8 +126,5 @@ def get_total_block_size(files)
     File.lstat(file).blocks
   end
 end
-
-# /functions
-# ################################################
 
 main
