@@ -8,11 +8,11 @@ def argv
   ARGV # 引数で ARGV の中身を 渡すようにする
 end
 
-def argv_check
+def check_argv
   !ARGV[0].nil? # nilだったら標準入力をみたいのでfalseにする
 end
 
-def file_check(isfiles)
+def check_file(isfiles)
   isfiles.each_with_index do |arg, i| # ファイルが存在しなかったら警告をしてそこで終わりにする
     if File.directory?(arg) == true || File.exist?(arg) == false
       puts "#{isfiles[i]}は存在しないファイルです"
@@ -21,7 +21,7 @@ def file_check(isfiles)
   end
 end
 
-def openfiles(str)
+def open_and_read_files(str)
   File.open(str).read
 end
 
@@ -48,16 +48,16 @@ def stdin_calc(option_l)
   print   rjust(calc_bytes(inputs.join).to_s) unless option_l['l']
 end
 
-if argv_check
-  file_check(argv)
+if check_argv
+  check_file(argv)
   file_count = 0
   total_l = 0
   total_w = 0
   total_b = 0
 
-  argv.each_with_index do |arg, _i|
+  argv.each do |arg|
     file_count += 1
-    str = openfiles(arg)
+    str = open_and_read_files(arg)
     print rjust(calc_lines(str).to_s)
     print rjust(calc_words(str).to_s) unless options['l']
     print rjust(calc_bytes(str).to_s) unless options['l']
