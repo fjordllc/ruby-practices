@@ -29,7 +29,8 @@ end
 def stdin(options)
   if options['l']
     stdin_calc_l
-  else stdin_calc
+  else
+    stdin_calc
   end
 end
 
