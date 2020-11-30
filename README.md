@@ -29,4 +29,6 @@ $ cd ruby-practices/04.bowling
 $ rubocop
 ```
 
-6. 自分のリポジトリへのPull Requestを作成し、URLを提出してください。
+6. Pull Requestを作成し、URLを提出してください。
+Pull Requestの作成画面では、merge先として **自分自身のアカウントのruby-practices** を指定してください。
+![Pull Request作成画面](https://user-images.githubusercontent.com/2603449/99864665-0c145c00-2be8-11eb-8501-14bd484529f2.png)
