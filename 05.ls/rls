@@ -24,7 +24,7 @@ end
 
 # 通常フォーマット（横に最大3列を維持して表示）で出力
 def output_normal_format(outputs)
-  if outputs.length < 3
+  if outputs.length < 4
     puts outputs.join(' ')
   else
     divisions = outputs.each_slice(3).map { |output| output }
