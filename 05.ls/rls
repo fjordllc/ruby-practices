@@ -24,12 +24,16 @@ end
 
 # 通常フォーマット（横に最大3列を維持して表示）で出力
 def output_normal_format(outputs)
-  three_division = outputs.each_slice(3).map { |output| output }
-  # 3分割した配列がtransposeできるよう配列数が不足してる場合はnilで埋める
-  three_division[-1] = three_division.last.values_at(0...3) if three_division.last.length < 3
+  if outputs.length < 3
+    puts outputs.join(' ')
+  else
+    divisions = outputs.each_slice(3).map { |output| output }
+    # 3分割した配列がtransposeできるよう配列数が不足してる場合はnilで埋める
+    divisions[-1] = divisions.last.values_at(0...3) if divisions.last.length < 3
 
-  three_division.transpose.each do |one_of_division|
-    puts one_of_division.join(' ')
+    divisions.transpose.each do |division|
+      puts division.join(' ')
+    end
   end
 end
 
@@ -61,7 +65,7 @@ def to_long_format(files)
     groupnames << Etc.getgrgid(stat.gid).name
     sizes << stat.size
     modified_times << to_long_formats_date(stat.mtime)
-    filename = stat.symlink? ? "#{file} - #{File.readlink(file)}" : file
+    filename = stat.symlink? ? "#{file} -> #{File.readlink(file)}" : file
     filenames << filename
   end
 
