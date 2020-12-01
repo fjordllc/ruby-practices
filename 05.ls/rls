@@ -43,7 +43,7 @@ def output_long_format(total_block_size, outputs)
 
   outputs.each do |output|
     # NOTE: メンターさんからOKをもらったので、例外的にrubocopの警告を無視
-    puts '%s %s %s %s %s %s %s' % output # rubocop:disable Style/FormatStringToken
+    puts '%s  %s %s  %s  %s %s %s' % output # rubocop:disable Style/FormatStringToken
   end
 end
 
