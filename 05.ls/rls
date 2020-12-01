@@ -42,8 +42,8 @@ def output_long_format(total_block_size, outputs)
   puts "total #{total_block_size}"
 
   outputs.each do |output|
-    # macのlsの幅に合わせるため個別に各フィールド間のスペースを指定
-    puts "#{output[0]}  #{output[1]} #{output[2]}  #{output[3]}  #{output[4]} #{output[5]} #{output[6]}"
+    # NOTE: メンターさんからOKをもらったので、例外的にrubocopの警告を無視
+    puts '%s %s %s %s %s %s %s' % output # rubocop:disable Style/FormatStringToken
   end
 end
 
