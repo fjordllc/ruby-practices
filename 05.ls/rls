@@ -25,12 +25,12 @@ end
 # 通常フォーマット（横に最大MAX_COL_LENGTH列分を維持して表示）で出力
 MAX_COL_LENGTH = 3
 def output_normal_format(outputs)
-  # ファイル数がMAX_COL_LENGTH以下の場合は不要なスペースが入らないようそのまま出力
+  # ファイル数がMAX_COL_LENGTH以下の場合は分割不要のためそのまま出力
   if outputs.length <= MAX_COL_LENGTH
     puts outputs.join(' ')
   else
     divisions = outputs.each_slice(MAX_COL_LENGTH).map { |output| output }
-    # 分割した配列がtransposeできるよう配列数が不足してる場合はnilで埋める
+    # 分割した配列がtransposeできるよう、最後の配列の要素数が不足してる場合はnilで埋めてすべての配列の要素数を揃える
     divisions[-1] = divisions.last.values_at(0...3) if divisions.last.length < 3
 
     divisions.transpose.each do |division|
