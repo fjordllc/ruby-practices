@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'optparse'
+
+# ファイルが実行された際の一連の処理
+def main
+  option = ARGV.getopts('l')
+  # arguments = ARGV[0] ? ARGV : get_standard_input
+
+  if ARGV[0]
+    arguments = ARGV
+  else
+    arguments = get_standard_input
+  end
+
+  p arguments
+  p get_number_of_lines(arguments)
+end
+
+def get_standard_input
+  inputs = []
+  # ctrl + d で抜けるまで標準入力を受け取り続ける
+  while line = $stdin.gets
+    inputs << line.chomp
+  end
+  inputs
+end
+
+def get_number_of_lines(lines)
+  if lines.instance_of?(Array) # 配列で渡された場合は配列数が行数
+    lines.length
+  end
+end
+
+def get_number_of_words(words)
+  
+end
+
+main
