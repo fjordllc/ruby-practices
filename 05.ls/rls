@@ -31,7 +31,7 @@ def output_normal_format(outputs)
   else
     divisions = outputs.each_slice(MAX_COL_LENGTH).map { |output| output }
     # 分割した配列がtransposeできるよう、最後の配列の要素数が不足してる場合はnilで埋めてすべての配列の要素数を揃える
-    divisions[-1] = divisions.last.values_at(0...3) if divisions.last.length < 3
+    divisions[-1] = divisions.last.values_at(0...MAX_COL_LENGTH) if divisions.last.length < MAX_COL_LENGTH
 
     divisions.transpose.each do |division|
       puts division.join(' ')
