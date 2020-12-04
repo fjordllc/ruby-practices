@@ -3,51 +3,50 @@
 # !/usr/bin/env ruby
 
 score = ARGV[0]
-scores = score.chars
-frames = []
+score_chars = score.chars
+scores = []
 frame = []
 
-scores.each do |s|
-  frame << 10 if s == 'X'
-  frame << s.to_i if s != 'X'
+score_chars.each do |s|
+  s == 'X' ? frame << 10 : frame << s.to_i
   if frame.count == 1 && frame.first == 10
-    frames << frame
+    scores << frame
     frame = []
   end
   if frame.count == 2
-    frames << frame
+    scores << frame
     frame = []
   end
 end
 
-frames[9] << scores.last.to_i if frames[9] != [10] && frames[9].sum == 10
+scores[9] << score_chars.last.to_i if scores[9] != [10] && scores[9].sum == 10
 
-normal_frame = frames.take(9)
-last_frame = frames[9..].flatten(1)
-frames = normal_frame << last_frame
+normal_frame = scores.take(9)
+last_frame = scores[9..].flatten(1)
+scores = normal_frame << last_frame
 
-frame_score = []
+frame_scores = []
 
 10.times do |i|
   next_frame = i + 1
   next_next_frame = i + 2
   total_score =
-    if frames[i].count == 1 && frames[next_frame].count == 1 && i < 9
-      20 + frames[next_next_frame].first
-    elsif frames[i].count == 1 && frames[next_frame].count == 2 && i < 9
-      10 + frames[next_frame].sum
-    elsif frames[i].count == 1 && frames[next_frame].count == 3 && i < 9
-      10 + frames[next_frame][0] + frames[next_frame][1]
-    elsif frames[i].count == 2 && frames[i].sum == 10 && frames[next_frame].count == 3 && i < 9
-      10 + frames[next_frame][0]
-    elsif frames[i].count == 2 && frames[i].sum == 10 && i < 9
-      10 + frames[next_frame].first
-    elsif i < 9
-      frames[i].sum
-    elsif i > 8
-      frames[i].sum
+    if i > 8
+      scores[i].sum
+    elsif scores[i].count == 1 && scores[next_frame].count == 1
+      20 + scores[next_next_frame].first
+    elsif scores[i].count == 1 && scores[next_frame].count == 2
+      10 + scores[next_frame].sum
+    elsif scores[i].count == 1 && scores[next_frame].count == 3
+      10 + scores[next_frame][0] + scores[next_frame][1]
+    elsif scores[i].count == 2 && scores[i].sum == 10 && scores[next_frame].count == 3
+      10 + scores[next_frame][0]
+    elsif scores[i].count == 2 && scores[i].sum == 10
+      10 + scores[next_frame].first
+    else
+      scores[i].sum
     end
-  frame_score << total_score
+  frame_scores << total_score
 end
 
-p frame_score.sum
+p frame_scores.sum
