@@ -31,6 +31,7 @@ class Game
       ninth_frame.score,
       tenth_frame.score
     ]
+    # p score_addition
     score_result = GameScoreAddCal.new(score_addition)
     score_result.score_addition
   end
@@ -72,35 +73,70 @@ class GameSetting
   def initialize(game_score)
     @game_score = game_score
   end
-
   def frames_array_convert
-    frames_array = []
+    frames = StrikeConvert.new(@game_score).convert
+    frames_slice = FramesSlice.new(frames).slice
+    if frames_slice.size == 10
+      frames_slice
+    elsif frames_slice.size == 11
+      frames_pop_convert = FramesPop.new(frames_slice)
+      frames_pop_convert.frames_pop_eleven_frame if frames_slice.size == 11
+    elsif frames_slice.size == 12
+      frames_pop_convert = FramesPop.new(frames_slice)
+      frames_pop_convert.frames_pop_twelve_frame
+    end
+  end
+end
+
+class StrikeConvert
+  def initialize(frames_array)
+    @frames_array = frames_array
+  end
+  def convert
+    frames_array_converted = []
     shot_count = 0
-    @game_score.chars.each do |shot|
+    @frames_array.chars.each do |shot|
       shot_count += 1
       if shot == 'X' && shot_count == 1
-        frames_array << shot
-        frames_array << '0'
+        frames_array_converted << shot
+        frames_array_converted << '0'
         shot_count += 1
       else
-        frames_array << shot
+        frames_array_converted << shot
       end
       shot_count = 0 if shot_count == 2
     end
+    frames_array_converted
+  end
+end
+
+class FramesSlice
+  def initialize(frames_array)
+    @frames_array = frames_array
+  end
+  def slice
     frames = []
-    frames_array.each_slice(2) do |frame|
+    @frames_array.each_slice(2) do |frame|
       frames << frame
     end
-    if frames.size == 11
-      last_flame = frames.pop(2)
-      frames << last_flame[0] + last_flame[1]
-    end
-    if frames.size == 12
-      last_flame = frames.pop(3)
-      frames << last_flame[0] + last_flame[1] + last_flame[2]
-      frames.last.delete_if { |l| l == '0' }
-    end
     frames
+  end
+end
+
+class FramesPop
+  def initialize(frames)
+    @frames = frames
+  end
+  def frames_pop_eleven_frame
+    last_flame = @frames.pop(2)
+    @frames << last_flame[0] + last_flame[1]
+    @frames
+  end
+  def frames_pop_twelve_frame
+    last_flame = @frames.pop(3)
+    @frames << last_flame[0] + last_flame[1] + last_flame[2]
+    @frames.last.delete_if { |l| l == '0' }
+    @frames
   end
 end
 
@@ -111,7 +147,6 @@ class Frame
     @second_shot = Shot.new(shots[1])
     @third_shot = Shot.new(shots[2])
   end
-
   def score
     third_shot.score.zero? ? [first_shot.score, second_shot.score] : [first_shot.score, second_shot.score, third_shot.score]
   end
