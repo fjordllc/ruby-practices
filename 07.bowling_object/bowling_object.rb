@@ -73,6 +73,7 @@ class GameSetting
   def initialize(game_score)
     @game_score = game_score
   end
+
   def frames_array_convert
     frames = StrikeConvert.new(@game_score).convert
     frames_slice = FramesSlice.new(frames).slice
@@ -92,6 +93,7 @@ class StrikeConvert
   def initialize(frames_array)
     @frames_array = frames_array
   end
+
   def convert
     frames_array_converted = []
     shot_count = 0
@@ -114,6 +116,7 @@ class FramesSlice
   def initialize(frames_array)
     @frames_array = frames_array
   end
+
   def slice
     frames = []
     @frames_array.each_slice(2) do |frame|
@@ -127,11 +130,13 @@ class FramesPop
   def initialize(frames)
     @frames = frames
   end
+
   def frames_pop_eleven_frame
     last_flame = @frames.pop(2)
     @frames << last_flame[0] + last_flame[1]
     @frames
   end
+
   def frames_pop_twelve_frame
     last_flame = @frames.pop(3)
     @frames << last_flame[0] + last_flame[1] + last_flame[2]
@@ -147,6 +152,7 @@ class Frame
     @second_shot = Shot.new(shots[1])
     @third_shot = Shot.new(shots[2])
   end
+
   def score
     third_shot.score.zero? ? [first_shot.score, second_shot.score] : [first_shot.score, second_shot.score, third_shot.score]
   end
