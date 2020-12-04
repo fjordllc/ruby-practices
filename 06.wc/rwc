@@ -6,35 +6,78 @@ require 'optparse'
 # ファイルが実行された際の一連の処理
 def main
   option = ARGV.getopts('l')
-  # arguments = ARGV[0] ? ARGV : get_standard_input
 
   if ARGV[0]
     arguments = ARGV
+    argument_is_file = true
   else
     arguments = get_standard_input
+    argument_is_file = false
   end
 
-  p arguments
-  p get_number_of_lines(arguments)
+  # results = []
+
+  # ここファイルを開く処理だけ入れて、変数への格納はもうひとつ下の条件分岐でやっていいかもしれない
+  if argument_is_file
+    # p "argument_is_file : #{argument_is_file}"
+  else
+    results = build_data(arguments)
+  end
+
+  p "arguments : #{arguments}"
+  # p "get_number_of_lines : #{get_number_of_lines(arguments)}"
+  # p results
+  output_result(results)
+end
+
+def build_data(arguments)
+  {
+    lines: get_number_of_lines(arguments),
+    words: get_number_of_words(arguments),
+    bytes: get_number_of_bytes(arguments)
+  }
 end
 
 def get_standard_input
   inputs = []
   # ctrl + d で抜けるまで標準入力を受け取り続ける
   while line = $stdin.gets
-    inputs << line.chomp
+    unless line.chomp.empty?
+      #  inputs << line.chomp
+      inputs << line
+    end
   end
   inputs
 end
 
-def get_number_of_lines(lines)
-  if lines.instance_of?(Array) # 配列で渡された場合は配列数が行数
-    lines.length
+def get_number_of_lines(arguments)
+  if arguments.instance_of?(Array) # 配列で渡された場合は配列数が行数
+    arguments.length
   end
 end
 
-def get_number_of_words(words)
+def get_number_of_words(arguments)
+  arguments.each.sum do |argument|
+    argument.split.length
+  end
+end
+
+def get_number_of_bytes(arguments)
+  arguments.each.sum do |argument|
+    argument.bytesize
+  end
+end
+
+def output_result(results)
+  if options['l']
+    p results[:lines]
+  end
+
+  if argument_is_file
   
+  else
+    p results
+  end
 end
 
 main
