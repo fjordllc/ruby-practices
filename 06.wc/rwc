@@ -3,31 +3,32 @@
 
 require 'optparse'
 
-# ファイルが実行された際の一連の処理
+RENDER_COL_LENGTH = 8
+
 def main
   option = ARGV.getopts('l')
 
   if ARGV[0]
     arguments = ARGV
-    argument_is_file = true
+    is_arguments_file = true
   else
     arguments = get_standard_input
-    argument_is_file = false
+    is_arguments_file = false
   end
 
-  # results = []
+  # p "arguments : #{arguments}"
 
-  # ここファイルを開く処理だけ入れて、変数への格納はもうひとつ下の条件分岐でやっていいかもしれない
-  if argument_is_file
-    # p "argument_is_file : #{argument_is_file}"
+  run_wc(arguments, is_arguments_file, option)
+end
+
+def run_wc(arguments, is_arguments_file, option)
+  if is_arguments_file
+    # p "is_arguments_file : #{is_arguments_file}"
   else
     results = build_data(arguments)
+    render_standard_input(results, option)
   end
-
-  p "arguments : #{arguments}"
-  # p "get_number_of_lines : #{get_number_of_lines(arguments)}"
-  # p results
-  output_result(results)
+  
 end
 
 def build_data(arguments)
@@ -40,7 +41,6 @@ end
 
 def get_standard_input
   inputs = []
-  # ctrl + d で抜けるまで標準入力を受け取り続ける
   while line = $stdin.gets
     unless line.chomp.empty?
       #  inputs << line.chomp
@@ -51,9 +51,7 @@ def get_standard_input
 end
 
 def get_number_of_lines(arguments)
-  if arguments.instance_of?(Array) # 配列で渡された場合は配列数が行数
-    arguments.length
-  end
+  arguments.length if arguments.instance_of?(Array) # 配列で渡された場合は配列数が行数
 end
 
 def get_number_of_words(arguments)
@@ -63,20 +61,18 @@ def get_number_of_words(arguments)
 end
 
 def get_number_of_bytes(arguments)
-  arguments.each.sum do |argument|
-    argument.bytesize
-  end
+  arguments.each.sum(&:bytesize)
 end
 
-def output_result(results)
-  if options['l']
-    p results[:lines]
-  end
-
-  if argument_is_file
-  
+def render_standard_input(results, option)
+  if option['l']
+    puts results[:lines].to_s.rjust(RENDER_COL_LENGTH)
   else
-    p results
+    puts [
+      results[:lines].to_s.rjust(RENDER_COL_LENGTH),
+      results[:words].to_s.rjust(RENDER_COL_LENGTH),
+      results[:bytes].to_s.rjust(RENDER_COL_LENGTH)
+    ].join
   end
 end
 
