@@ -42,19 +42,14 @@ end
 def store_standard_input
   inputs = []
   while (line = $stdin.gets)
-    unless line.chomp.empty?
-      inputs << line
-    end
+    inputs << line unless line.chomp.empty?
   end
   inputs
 end
 
 def count_number_of_lines(arguments)
-  if arguments.instance_of?(Array) # 配列で渡された場合は配列数が行数
-    arguments.length
-  else
-    arguments.lines.count
-  end
+  # mac の wc に準拠して、lines ではなく改行コードの数を count
+  arguments.instance_of?(Array) ? arguments.length : arguments.count("\n")
 end
 
 def count_number_of_words(arguments)
@@ -68,11 +63,7 @@ def count_number_of_words(arguments)
 end
 
 def count_number_of_bytes(arguments)
-  if arguments.instance_of?(Array)
-    arguments.each.sum(&:bytesize)
-  else
-    arguments.bytesize
-  end
+  arguments.instance_of?(Array) ? arguments.each.sum(&:bytesize) : arguments.bytesize
 end
 
 def retrieve_files(arguments)
@@ -82,7 +73,7 @@ def retrieve_files(arguments)
 
     if File.exist?(file_path)
       stat = File.lstat(file_path)
-      file_data = stat.file? ? get_file_data(file_path) : "wc: #{argument}: open: No such file or directory"
+      file_data = stat.file? ? get_file_data(file_path) : "wc: #{argument}: read: Is a directory"
       results << file_data
     else
       results << "wc: #{argument}: open: No such file or directory"
@@ -98,45 +89,41 @@ def get_file_data(file_path)
   result
 end
 
-def render_standard_input(results, option)
-  if option['l']
-    puts results[:lines].to_s.rjust(RENDERING_COL_LENGTH)
-  else
-    puts [
-      results[:lines].to_s.rjust(RENDERING_COL_LENGTH),
-      results[:words].to_s.rjust(RENDERING_COL_LENGTH),
-      results[:bytes].to_s.rjust(RENDERING_COL_LENGTH)
-    ].join
-  end
+def render_standard_input(result, option)
+  puts justify_output(result, option)
 end
 
-def render_argument_files(results, _option)
+def render_argument_files(results, option)
   total = { lines: 0, words: 0, bytes: 0 }
   results.each do |result|
     if result.instance_of?(Hash)
-      puts [
-        result[:lines].to_s.rjust(RENDERING_COL_LENGTH),
-        result[:words].to_s.rjust(RENDERING_COL_LENGTH),
-        result[:bytes].to_s.rjust(RENDERING_COL_LENGTH),
-        " #{result[:file_name]}"
-      ].join
-      total[:lines] += result[:lines]
-      total[:words] += result[:words]
-      total[:bytes] += result[:bytes]
+      puts justify_output(result, option, result[:file_name])
+      total = sum_file_data(result, total)
     else
       puts result
     end
   end
-  results.length > 1 ? render_total_files_size(total) : return
+  (puts justify_output(total, option, 'total')) if results.length > 1
 end
 
-def render_total_files_size(total)
-  puts [
-    total[:lines].to_s.rjust(RENDERING_COL_LENGTH),
-    total[:words].to_s.rjust(RENDERING_COL_LENGTH),
-    total[:bytes].to_s.rjust(RENDERING_COL_LENGTH),
-    ' total'
-  ].join
+def justify_output(result, option, additional = '')
+  if option['l']
+    "#{result[:lines].to_s.rjust(RENDERING_COL_LENGTH)} #{additional}"
+  else
+    [
+      result[:lines].to_s.rjust(RENDERING_COL_LENGTH),
+      result[:words].to_s.rjust(RENDERING_COL_LENGTH),
+      result[:bytes].to_s.rjust(RENDERING_COL_LENGTH),
+      " #{additional}"
+    ].join
+  end
+end
+
+def sum_file_data(file_data, total)
+  file_data.each_key do |key|
+    total[key] += file_data[key] unless key == :file_name
+  end
+  total
 end
 
 main
