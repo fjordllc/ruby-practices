@@ -72,8 +72,7 @@ def retrieve_files(arguments)
     file_path = Pathname("./#{argument}")
 
     if File.exist?(file_path)
-      stat = File.lstat(file_path)
-      file_data = stat.file? ? get_file_data(file_path) : "wc: #{argument}: read: Is a directory"
+      file_data = get_file_data(file_path)
       results << file_data
     else
       results << "wc: #{argument}: open: No such file or directory"
@@ -83,10 +82,16 @@ def retrieve_files(arguments)
 end
 
 def get_file_data(file_path)
-  fils_string = File.read(file_path)
-  result = build_data(fils_string)
-  result[:file_name] = File.basename(file_path)
-  result
+  stat = File.lstat(file_path)
+
+  if stat.directory?
+    "wc: #{File.basename(file_path)}: read: Is a directory"
+  else
+    fils_string = File.read(file_path)
+    result = build_data(fils_string)
+    result[:file_name] = File.basename(file_path)
+    result
+  end
 end
 
 def render_standard_input(result, option)
