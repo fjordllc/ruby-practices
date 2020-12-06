@@ -2,8 +2,10 @@
 # frozen_string_literal: true
 
 require 'optparse'
+require 'etc'
+require 'pathname'
 
-RENDER_COL_LENGTH = 8
+RENDERING_COL_LENGTH = 8
 
 def main
   option = ARGV.getopts('l')
@@ -12,68 +14,129 @@ def main
     arguments = ARGV
     is_arguments_file = true
   else
-    arguments = get_standard_input
+    arguments = store_standard_input
     is_arguments_file = false
   end
-
-  # p "arguments : #{arguments}"
 
   run_wc(arguments, is_arguments_file, option)
 end
 
 def run_wc(arguments, is_arguments_file, option)
   if is_arguments_file
-    # p "is_arguments_file : #{is_arguments_file}"
+    results = retrieve_files(arguments)
+    render_argument_files(results, option)
   else
     results = build_data(arguments)
     render_standard_input(results, option)
   end
-  
 end
 
 def build_data(arguments)
   {
-    lines: get_number_of_lines(arguments),
-    words: get_number_of_words(arguments),
-    bytes: get_number_of_bytes(arguments)
+    lines: count_number_of_lines(arguments),
+    words: count_number_of_words(arguments),
+    bytes: count_number_of_bytes(arguments)
   }
 end
 
-def get_standard_input
+def store_standard_input
   inputs = []
-  while line = $stdin.gets
+  while (line = $stdin.gets)
     unless line.chomp.empty?
-      #  inputs << line.chomp
       inputs << line
     end
   end
   inputs
 end
 
-def get_number_of_lines(arguments)
-  arguments.length if arguments.instance_of?(Array) # 配列で渡された場合は配列数が行数
-end
-
-def get_number_of_words(arguments)
-  arguments.each.sum do |argument|
-    argument.split.length
+def count_number_of_lines(arguments)
+  if arguments.instance_of?(Array) # 配列で渡された場合は配列数が行数
+    arguments.length
+  else
+    arguments.lines.count
   end
 end
 
-def get_number_of_bytes(arguments)
-  arguments.each.sum(&:bytesize)
+def count_number_of_words(arguments)
+  if arguments.instance_of?(Array)
+    arguments.each.sum do |argument|
+      argument.split.length
+    end
+  else
+    arguments.split(/\s+/).length
+  end
+end
+
+def count_number_of_bytes(arguments)
+  if arguments.instance_of?(Array)
+    arguments.each.sum(&:bytesize)
+  else
+    arguments.bytesize
+  end
+end
+
+def retrieve_files(arguments)
+  results = []
+  arguments.each do |argument|
+    file_path = Pathname("./#{argument}")
+
+    if File.exist?(file_path)
+      stat = File.lstat(file_path)
+      file_data = stat.file? ? get_file_data(file_path) : "wc: #{argument}: open: No such file or directory"
+      results << file_data
+    else
+      results << "wc: #{argument}: open: No such file or directory"
+    end
+  end
+  results
+end
+
+def get_file_data(file_path)
+  fils_string = File.read(file_path)
+  result = build_data(fils_string)
+  result[:file_name] = File.basename(file_path)
+  result
 end
 
 def render_standard_input(results, option)
   if option['l']
-    puts results[:lines].to_s.rjust(RENDER_COL_LENGTH)
+    puts results[:lines].to_s.rjust(RENDERING_COL_LENGTH)
   else
     puts [
-      results[:lines].to_s.rjust(RENDER_COL_LENGTH),
-      results[:words].to_s.rjust(RENDER_COL_LENGTH),
-      results[:bytes].to_s.rjust(RENDER_COL_LENGTH)
+      results[:lines].to_s.rjust(RENDERING_COL_LENGTH),
+      results[:words].to_s.rjust(RENDERING_COL_LENGTH),
+      results[:bytes].to_s.rjust(RENDERING_COL_LENGTH)
     ].join
   end
+end
+
+def render_argument_files(results, _option)
+  total = { lines: 0, words: 0, bytes: 0 }
+  results.each do |result|
+    if result.instance_of?(Hash)
+      puts [
+        result[:lines].to_s.rjust(RENDERING_COL_LENGTH),
+        result[:words].to_s.rjust(RENDERING_COL_LENGTH),
+        result[:bytes].to_s.rjust(RENDERING_COL_LENGTH),
+        " #{result[:file_name]}"
+      ].join
+      total[:lines] += result[:lines]
+      total[:words] += result[:words]
+      total[:bytes] += result[:bytes]
+    else
+      puts result
+    end
+  end
+  results.length > 1 ? render_total_files_size(total) : return
+end
+
+def render_total_files_size(total)
+  puts [
+    total[:lines].to_s.rjust(RENDERING_COL_LENGTH),
+    total[:words].to_s.rjust(RENDERING_COL_LENGTH),
+    total[:bytes].to_s.rjust(RENDERING_COL_LENGTH),
+    ' total'
+  ].join
 end
 
 main
