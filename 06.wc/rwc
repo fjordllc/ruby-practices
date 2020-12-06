@@ -58,7 +58,7 @@ def count_number_of_words(arguments)
       argument.split.length
     end
   else
-    arguments.split(/\s+/).length
+    arguments.strip.split(/\s+/).length
   end
 end
 
@@ -98,7 +98,7 @@ def render_argument_files(results, option)
   results.each do |result|
     if result.instance_of?(Hash)
       puts justify_output(result, option, result[:file_name])
-      total = sum_file_data(result, total)
+      total = sum_file_size(result, total)
     else
       puts result
     end
@@ -119,7 +119,7 @@ def justify_output(result, option, additional = '')
   end
 end
 
-def sum_file_data(file_data, total)
+def sum_file_size(file_data, total)
   file_data.each_key do |key|
     total[key] += file_data[key] unless key == :file_name
   end
