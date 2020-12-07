@@ -3,13 +3,14 @@
 # !/usr/bin/env ruby
 
 require 'etc'
-require 'list_to_columns'
 require './file_data'
 
 module Ls
   class Formatter
     def simple(files)
-      puts ListToColumns.new(files, width: 40, space: 2)
+      files.each_slice(3) do |separated_files|
+        puts separated_files.map { |n| n.to_s.ljust(15) }.join
+      end
     end
 
     def detail(files)
