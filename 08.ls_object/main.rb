@@ -8,8 +8,8 @@ require './file_data'
 module Ls
   class Main
     def run(opt)
-      @file = Ls::FileData.new(opt)
-      @file.print_l_option(opt)
+      file_data = Ls::FileData.new(opt)
+      file_data.format_option(opt)
     end
   end
 end

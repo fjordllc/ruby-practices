@@ -23,7 +23,7 @@ module Ls
         print "#{Etc.getpwuid(stat.uid).name}  "
         print "#{Etc.getgrgid(stat.gid).name} "
         print "#{stat.size.to_s.rjust(5)} "
-        print "#{stat.mtime.strftime('%m %e %H:%M')} ".rjust(5)
+        print "#{stat.mtime.strftime('%m %e %H:%M')} "
         puts file
       end
     end
