@@ -4,6 +4,7 @@ class Game
   def initialize(frame)
     @frame = frame
   end
+
   def score
     score = 0
     @frame.each_with_index do |f, idx|
@@ -15,10 +16,10 @@ class Game
         idx += 1
         next_next_frame = @frame[idx]
         score += if next_frame[0] == 10 && !next_next_frame.nil?
-                              10 + next_frame[0] + next_frame[1] + next_next_frame[0]
-                            else
-                              10 + next_frame[0] + next_frame[1]
-                            end
+                   10 + next_frame[0] + next_frame[1] + next_next_frame[0]
+                 else
+                   10 + next_frame[0] + next_frame[1]
+                 end
       elsif f.sum == 10 # spare
         idx += 1
         next_frame = @frame[idx]
@@ -35,6 +36,7 @@ class Frame
   def initialize(shot)
     @shot = shot
   end
+
   def convert
     frame = []
     @shot.each_slice(2) do |s|
@@ -47,7 +49,7 @@ class Frame
     if frame.size == 12
       last_flame = frame.pop(3)
       frame << last_flame[0] + last_flame[1] + last_flame[2]
-      frame.last.delete_if { |l| l == 0 }
+      frame.last.delete_if(&:zero?)
     end
     frame
   end
@@ -57,6 +59,7 @@ class Shot
   def initialize(mark)
     @mark = mark
   end
+
   def convert
     shots = []
     shot_count = 0
