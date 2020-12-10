@@ -8,7 +8,7 @@ scores = []
 frame = []
 
 score_chars.each do |s|
-  s == 'X' ? frame << 10 : frame << s.to_i
+  frame << (s == 'X' ? 10 : s.to_i)
   if frame.count == 1 && frame.first == 10
     scores << frame
     frame = []
