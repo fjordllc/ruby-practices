@@ -18,27 +18,27 @@ class Game
       end
       shot_count = 0 if shot_count == 2
     end
-    @frames = shots.each_slice(2).to_a
-    if @frames.size == 11
-      last_flame = @frames.pop(2)
-      @frames << last_flame[0] + last_flame[1]
+    frames = shots.each_slice(2).to_a
+    if frames.size == 11
+      last_flame = frames.pop(2)
+      frames << last_flame[0] + last_flame[1]
     end
-    if @frames.size == 12
-      last_flame = @frames.pop(3)
-      @frames << last_flame[0] + last_flame[1] + last_flame[2]
-      @frames.last.delete_if { |l| l == '0' }
+    if frames.size == 12
+      last_flame = frames.pop(3)
+      frames << last_flame[0] + last_flame[1] + last_flame[2]
+      frames.last.delete_if { |l| l == '0' }
     end
     @frame_array = [
-      Frame.new(@frames[0]),
-      Frame.new(@frames[1]),
-      Frame.new(@frames[2]),
-      Frame.new(@frames[3]),
-      Frame.new(@frames[4]),
-      Frame.new(@frames[5]),
-      Frame.new(@frames[6]),
-      Frame.new(@frames[7]),
-      Frame.new(@frames[8]),
-      Frame.new(@frames[9])
+      Frame.new(frames[0]),
+      Frame.new(frames[1]),
+      Frame.new(frames[2]),
+      Frame.new(frames[3]),
+      Frame.new(frames[4]),
+      Frame.new(frames[5]),
+      Frame.new(frames[6]),
+      Frame.new(frames[7]),
+      Frame.new(frames[8]),
+      Frame.new(frames[9])
     ]
   end
 
