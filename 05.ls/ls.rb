@@ -9,7 +9,7 @@ file_and_directory = Dir.glob('*').sort
 
 private
 
-def ftype_to_one_letter(ftype)
+def change_filetype_format(ftype)
   {
     'file' => '-',
     'directory' => 'd',
@@ -21,7 +21,7 @@ def ftype_to_one_letter(ftype)
   }[ftype]
 end
 
-def to_rwx_trio(mode)
+def change_file_mode_format(mode)
   formats = %i[--- --x -w- -wx r-- r-x rw- rwx]
   octal = mode.to_s(8)
   user = octal[-3].to_i
@@ -62,18 +62,20 @@ file_and_directory = Dir.glob('*', File::FNM_DOTMATCH).sort if option_hash[:a]
 file_and_directory = file_and_directory.reverse if option_hash[:r]
 
 if option_hash[:l]
-  total = 0
-  file_and_directory.each do |c|
-    total += File.stat(c).blocks
-  end
+  total = file_and_directory.sum { |a| File.stat(a).blocks }
   puts "total #{total}"
-  file_and_directory.each do |f|
-    stat = File.stat(f)
-    print "#{ftype_to_one_letter(stat.ftype)}#{to_rwx_trio(stat.mode)} #{stat.nlink} #{get_owner_name(stat.uid).name}\
-          #{get_group_name(stat.gid).name} #{stat.size} #{change_time_format(stat.mtime)} #{f}\n"
+  file_and_directory.each do |file_or_directory|
+    stat = File.stat(file_or_directory)
+    file_type = change_filetype_format(stat.ftype)
+    file_mode = change_file_mode_format(stat.mode)
+    owner_name = get_owner_name(stat.uid).name
+    group_name = get_group_name(stat.gid).name
+    formatted_time = change_time_format(stat.mtime)
+    print "#{file_type}#{file_mode} #{stat.nlink} #{owner_name} #{group_name} #{stat.size} #{formatted_time} \
+#{file_or_directory}\n"
   end
 else
-  file_and_directory.each_slice(3) do |f|
-    puts "#{f[0]} #{f[1]} #{f[2]}"
+  file_and_directory.each_slice(3) do |file_or_directory|
+    puts "#{file_or_directory[0]} #{file_or_directory[1]} #{file_or_directory[2]}"
   end
 end
