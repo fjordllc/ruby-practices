@@ -1,31 +1,68 @@
 # frozen_string_literal: true
 
 class Game
-  def initialize(frame)
-    @frame = frame
+  def initialize(marks)
+    @marks = marks
+    shot_count = 0
+    shots = []
+    @marks.chars.each do |mark|
+      shot_count += 1
+      if mark == 'X' && shot_count == 1
+        shots << mark
+        shots << "0"
+        shot_count += 1
+      elsif mark == 'X'
+        shots << mark
+      else
+        shots << mark
+      end
+      shot_count = 0 if shot_count == 2
+    end
+    @frames = shots.each_slice(2).to_a
+    if @frames.size == 11
+      last_flame = @frames.pop(2)
+      @frames << last_flame[0] + last_flame[1]
+    end
+    if @frames.size == 12
+      last_flame = @frames.pop(3)
+      @frames << last_flame[0] + last_flame[1] + last_flame[2]
+      @frames.last.delete_if{ |l| l == "0" }
+    end
+    @frame_array = [
+      first_frame = Frame.new(@frames[0]),
+      second_frame = Frame.new(@frames[1]),
+      third_frame = Frame.new(@frames[2]),
+      forth_frame = Frame.new(@frames[3]),
+      fifth_frame = Frame.new(@frames[4]),
+      sixth_frame = Frame.new(@frames[5]),
+      seventh_frame = Frame.new(@frames[6]),
+      eighth_frame = Frame.new(@frames[7]),
+      nineth_frame = Frame.new(@frames[8]),
+      tenth_frame = Frame.new(@frames[9])
+    ]
   end
 
   def score
     score = 0
-    @frame.each_with_index do |f, idx|
-      if f.size == 3 # 10フレーム目
-        score += f.sum
-      elsif f[0] == 10 # strike
+    @frame_array.each_with_index do |f, idx|
+      if f.tenth_frame?
+         score += f.score
+      elsif f.strike?
         idx += 1
-        next_frame = @frame[idx]
+        next_frame = @frame_array[idx]
         idx += 1
-        next_next_frame = @frame[idx]
-        score += if next_frame[0] == 10 && !next_next_frame.nil?
-                   10 + next_frame[0] + next_frame[1] + next_next_frame[0]
+        next_next_frame = @frame_array[idx]
+         score += if next_frame.strike? && !next_next_frame.nil?
+                   10 + next_frame.score + next_next_frame.first_shot_score
                  else
-                   10 + next_frame[0] + next_frame[1]
+                   10 + next_frame.first_shot_score + next_frame.second_shot_score
                  end
-      elsif f.sum == 10 # spare
+      elsif f.spare?
         idx += 1
-        next_frame = @frame[idx]
-        score += 10 + next_frame[0]
+        next_frame = @frame_array[idx]
+         score += 10 + next_frame.first_shot_score
       else
-        score += f.sum
+        score += f.score
       end
     end
     score
@@ -33,25 +70,42 @@ class Game
 end
 
 class Frame
-  def initialize(shot)
-    @shot = shot
+  def initialize(frame)
+    @first_mark = Shot.new(frame[0])
+    @second_mark = Shot.new(frame[1])
+    @third_mark = Shot.new(frame[2])
   end
 
-  def convert
-    frame = []
-    @shot.each_slice(2) do |s|
-      frame << s
+  def score
+    [@first_mark.score, @second_mark.score, @third_mark.score].sum
+  end
+
+  def strike?
+    if @first_mark.score == 10
+      true
+    else
+      false
     end
-    if frame.size == 11
-      last_flame = frame.pop(2)
-      frame << last_flame[0] + last_flame[1]
+  end
+
+  def tenth_frame?
+    if @third_mark.to_s.nil?
+      false
+    else
+      true
     end
-    if frame.size == 12
-      last_flame = frame.pop(3)
-      frame << last_flame[0] + last_flame[1] + last_flame[2]
-      frame.last.delete_if(&:zero?)
-    end
-    frame
+  end
+
+  def spare?
+    return true if [@first_mark.score, @second_mark.score].sum == 10
+  end
+
+  def first_shot_score
+    @first_mark.score
+  end
+
+  def second_shot_score
+    @second_mark.score
   end
 end
 
@@ -60,27 +114,19 @@ class Shot
     @mark = mark
   end
 
-  def convert
-    shots = []
-    shot_count = 0
-    @mark.chars.each do |shot|
-      shot_count += 1
-      if shot == 'X' && shot_count == 1
-        shots << 10
-        shots << 0
-        shot_count += 1
-      elsif shot == 'X'
-        shots << 10
-      else
-        shots << shot.to_i
-      end
-      shot_count = 0 if shot_count == 2
+  def score
+    if @mark == "X"
+      10
+    else
+      @mark.to_i
     end
-    shots
   end
+
+  def to_s
+    @mark
+  end
+    
 end
 
-shot = Shot.new(ARGV[0]).convert
-frame = Frame.new(shot).convert
-game_score = Game.new(frame).score
-puts game_score
+game = Game.new(ARGV[0])
+puts game.score
