@@ -9,7 +9,7 @@ class Game
       shot_count += 1
       if mark == 'X' && shot_count == 1
         shots << mark
-        shots << "0"
+        shots << '0'
         shot_count += 1
       elsif mark == 'X'
         shots << mark
@@ -26,19 +26,19 @@ class Game
     if @frames.size == 12
       last_flame = @frames.pop(3)
       @frames << last_flame[0] + last_flame[1] + last_flame[2]
-      @frames.last.delete_if{ |l| l == "0" }
+      @frames.last.delete_if { |l| l == '0' }
     end
     @frame_array = [
-      first_frame = Frame.new(@frames[0]),
-      second_frame = Frame.new(@frames[1]),
-      third_frame = Frame.new(@frames[2]),
-      forth_frame = Frame.new(@frames[3]),
-      fifth_frame = Frame.new(@frames[4]),
-      sixth_frame = Frame.new(@frames[5]),
-      seventh_frame = Frame.new(@frames[6]),
-      eighth_frame = Frame.new(@frames[7]),
-      nineth_frame = Frame.new(@frames[8]),
-      tenth_frame = Frame.new(@frames[9])
+      Frame.new(@frames[0]),
+      Frame.new(@frames[1]),
+      Frame.new(@frames[2]),
+      Frame.new(@frames[3]),
+      Frame.new(@frames[4]),
+      Frame.new(@frames[5]),
+      Frame.new(@frames[6]),
+      Frame.new(@frames[7]),
+      Frame.new(@frames[8]),
+      Frame.new(@frames[9])
     ]
   end
 
@@ -46,13 +46,13 @@ class Game
     score = 0
     @frame_array.each_with_index do |f, idx|
       if f.tenth_frame?
-         score += f.score
+        score += f.score
       elsif f.strike?
         idx += 1
         next_frame = @frame_array[idx]
         idx += 1
         next_next_frame = @frame_array[idx]
-         score += if next_frame.strike? && !next_next_frame.nil?
+        score += if next_frame.strike? && !next_next_frame.nil?
                    10 + next_frame.score + next_next_frame.first_shot_score
                  else
                    10 + next_frame.first_shot_score + next_frame.second_shot_score
@@ -60,7 +60,7 @@ class Game
       elsif f.spare?
         idx += 1
         next_frame = @frame_array[idx]
-         score += 10 + next_frame.first_shot_score
+        score += 10 + next_frame.first_shot_score
       else
         score += f.score
       end
@@ -81,11 +81,7 @@ class Frame
   end
 
   def strike?
-    if @first_mark.score == 10
-      true
-    else
-      false
-    end
+    @first_mark.score == 10
   end
 
   def tenth_frame?
@@ -115,7 +111,7 @@ class Shot
   end
 
   def score
-    if @mark == "X"
+    if @mark == 'X'
       10
     else
       @mark.to_i
@@ -125,7 +121,6 @@ class Shot
   def to_s
     @mark
   end
-    
 end
 
 game = Game.new(ARGV[0])
