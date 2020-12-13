@@ -84,16 +84,15 @@ def render_standard_input(result, option)
 end
 
 def render_argument_files(results, option)
-  total = { lines: 0, words: 0, bytes: 0 }
   results.each do |result|
     if result.instance_of?(Hash)
       puts justify_output(result, option, result[:file_name])
-      total = sum_file_size(result, total)
     else
       puts result
     end
   end
-  (puts justify_output(total, option, 'total')) if results.length > 1
+
+  (puts justify_output(sum_file_size(results), option, 'total')) if results.length > 1
 end
 
 def justify_output(result, option, additional = '')
@@ -109,10 +108,17 @@ def justify_output(result, option, additional = '')
   end
 end
 
-def sum_file_size(file_data, total)
-  file_data.each_key do |key|
-    total[key] += file_data[key] unless key == :file_name
+def sum_file_size(file_data)
+  total = { lines: 0, words: 0, bytes: 0 }
+
+  file_data.each do |one_of_file_data|
+    next unless one_of_file_data.instance_of?(Hash)
+
+    one_of_file_data.each_key do |key|
+      total[key] += one_of_file_data[key] unless key == :file_name
+    end
   end
+
   total
 end
 
