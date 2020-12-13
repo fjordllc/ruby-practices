@@ -72,8 +72,8 @@ def get_file_data(file_path)
   if stat.directory?
     "wc: #{File.basename(file_path)}: read: Is a directory"
   else
-    fils_string = File.read(file_path)
-    result = build_data(fils_string)
+    file_string = File.read(file_path)
+    result = build_data(file_string)
     result[:file_name] = File.basename(file_path)
     result
   end
