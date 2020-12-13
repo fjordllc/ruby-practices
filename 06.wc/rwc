@@ -26,36 +26,33 @@ def run_wc(arguments, is_arguments_file, option)
     results = retrieve_files(arguments)
     render_argument_files(results, option)
   else
-    results = build_data(arguments)
+    results = build_data_for_standard_input(arguments)
     render_standard_input(results, option)
   end
 end
 
-def build_data(arguments)
+# 標準入力で引数を受け取った場合は arguments は改行毎に要素に格納された配列になる
+def build_data_for_standard_input(arguments)
   {
-    lines: count_number_of_lines(arguments),
+    lines: arguments.length,
     words: count_number_of_words(arguments),
-    bytes: count_number_of_bytes(arguments)
+    bytes: arguments.sum(&:bytesize)
   }
 end
 
-def count_number_of_lines(arguments)
-  # mac の wc に準拠して、lines ではなく改行コードの数を count
-  arguments.instance_of?(Array) ? arguments.length : arguments.count("\n")
+# 引数にファイル名を指定された場合は、arguments は各ファイルの文字列になる
+def build_data_for_file(arguments)
+  {
+    lines: arguments.count("\n"),
+    words: arguments.strip.split(/\s+/).length,
+    bytes: arguments.bytesize
+  }
 end
 
 def count_number_of_words(arguments)
-  if arguments.instance_of?(Array)
-    arguments.sum do |argument|
-      argument.split.length
-    end
-  else
-    arguments.strip.split(/\s+/).length
+  arguments.sum do |argument|
+    argument.split.length
   end
-end
-
-def count_number_of_bytes(arguments)
-  arguments.instance_of?(Array) ? arguments.sum(&:bytesize) : arguments.bytesize
 end
 
 def retrieve_files(arguments)
@@ -73,7 +70,7 @@ def get_file_data(file_path)
     "wc: #{File.basename(file_path)}: read: Is a directory"
   else
     file_string = File.read(file_path)
-    result = build_data(file_string)
+    result = build_data_for_file(file_string)
     result[:file_name] = File.basename(file_path)
     result
   end
