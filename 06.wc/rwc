@@ -14,7 +14,6 @@ def main
     arguments = ARGV
     is_arguments_file = true
   else
-    # arguments = store_standard_input
     arguments = $stdin.readlines
     is_arguments_file = false
   end
@@ -38,20 +37,6 @@ def build_data(arguments)
     words: count_number_of_words(arguments),
     bytes: count_number_of_bytes(arguments)
   }
-end
-
-def store_standard_input
-  # inputs = []
-  # while (line = $stdin.gets)
-  #   inputs << line unless line.chomp.empty?
-  # end
-  # inputs
-
-  # while (line = $stdin.gets)
-  #   line unless line.chomp.empty?
-  # end
-
-  $stdin.readlines
 end
 
 def count_number_of_lines(arguments)
