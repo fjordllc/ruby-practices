@@ -46,7 +46,7 @@ end
 
 def count_number_of_words(arguments)
   if arguments.instance_of?(Array)
-    arguments.each.sum do |argument|
+    arguments.sum do |argument|
       argument.split.length
     end
   else
@@ -55,22 +55,15 @@ def count_number_of_words(arguments)
 end
 
 def count_number_of_bytes(arguments)
-  arguments.instance_of?(Array) ? arguments.each.sum(&:bytesize) : arguments.bytesize
+  arguments.instance_of?(Array) ? arguments.sum(&:bytesize) : arguments.bytesize
 end
 
 def retrieve_files(arguments)
-  results = []
-  arguments.each do |argument|
+  arguments.map do |argument|
     file_path = Pathname("./#{argument}")
 
-    if File.exist?(file_path)
-      file_data = get_file_data(file_path)
-      results << file_data
-    else
-      results << "wc: #{argument}: open: No such file or directory"
-    end
+    File.exist?(file_path) ? get_file_data(file_path) : "wc: #{argument}: open: No such file or directory"
   end
-  results
 end
 
 def get_file_data(file_path)
