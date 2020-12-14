@@ -9,21 +9,14 @@ module Ls
   class Formatter
     def simple(files)
       reform_files = []
-      files.each_slice(5) do |separated_files|
-        reform_files << case separated_files.size
-                        when 1
-                          separated_files.push(nil, nil, nil, nil, nil)
-                        when 2
-                          separated_files.push(nil, nil, nil, nil)
-                        when 3
-                          separated_files.push(nil, nil, nil)
-                        when 4
-                          separated_files.push(nil, nil)
-                        when 5
-                          separated_files.push(nil)
-                        else
-                          separated_files
-                        end
+      i = if (files.size % 3).zero?
+            files.size.div(3)
+          else
+            files.size.div(3) + 1
+          end
+      files.each_slice(i) do |separated_files|
+        separated_files.push(nil) while separated_files.size < i
+        reform_files << separated_files
       end
       reform_files.transpose.each do |array_files|
         array_files.each do |file|
