@@ -2,30 +2,27 @@
 
 class Game
   def initialize(marks)
-    @frame_array = Frame.frame_array_convert(marks)
+    @frames = Frame.shots_to_frames(marks)
   end
 
   def score
     score = 0
-    @frame_array.each_with_index do |f, idx|
+    @frames.each_with_index do |f, idx|
       if f.tenth_frame?
-        score += f.score
+        score += f.shots_score
       elsif f.strike?
-        idx += 1
-        next_frame = @frame_array[idx]
-        idx += 1
-        next_next_frame = @frame_array[idx]
+        next_frame = @frames[idx + 1]
+        next_next_frame = @frames[idx + 2]
         score += if next_frame.strike? && !next_next_frame.nil?
-                   10 + next_frame.score + next_next_frame.first_shot_score
+                   10 + next_frame.shots_score + next_next_frame.first_shot_score
                  else
                    10 + next_frame.first_shot_score + next_frame.second_shot_score
                  end
       elsif f.spare?
-        idx += 1
-        next_frame = @frame_array[idx]
+        next_frame = @frames[idx + 1]
         score += 10 + next_frame.first_shot_score
       else
-        score += f.score
+        score += f.shots_score
       end
     end
     score
@@ -33,64 +30,51 @@ class Game
 end
 
 class Frame
-  def initialize(frame)
-    @first_mark = Shot.new(frame[0])
-    @second_mark = Shot.new(frame[1])
-    @third_mark = Shot.new(frame[2])
+  def initialize(shots)
+    @shots = shots
   end
 
-  def score
-    [@first_mark.score, @second_mark.score, @third_mark.score].sum
+  def shots_score
+    @shots.size == 3 ? [@shots[0].score, @shots[1].score, @shots[2].score].sum : [@shots[0].score, @shots[1].score].sum
   end
 
   def strike?
-    @first_mark.score == 10
+    @shots[0].score == 10
   end
 
   def tenth_frame?
-    if @third_mark.to_s.nil?
-      false
-    else
-      true
-    end
+    @shots[2].nil? ? false : true
   end
 
   def spare?
-    return true if [@first_mark.score, @second_mark.score].sum == 10
+    @shots[0].score != 10 && [@shots[0].score, @shots[1].score].sum == 10
   end
 
   def first_shot_score
-    @first_mark.score
+    @shots[0].score
   end
 
   def second_shot_score
-    @second_mark.score
+    @shots[1].score
   end
 
-  def self.frame_array_convert(marks)
-    shots = Shot.shot_array_convert(marks)
-    frames = shots.each_slice(2).to_a
-    if frames.size == 11
-      last_flame = frames.pop(2)
-      frames << last_flame[0] + last_flame[1]
+  def self.shots_to_frames(marks)
+    shots = Shot.marks_to_shots(marks)
+    frame_array = shots.each_slice(2).to_a
+    if frame_array.size == 11
+      last_flame = frame_array.pop(2)
+      frame_array << last_flame[0] + last_flame[1]
     end
-    if frames.size == 12
-      last_flame = frames.pop(3)
-      frames << last_flame[0] + last_flame[1] + last_flame[2]
-      frames.last.delete_if { |l| l == '0' }
+    if frame_array.size == 12
+      last_flame = frame_array.pop(3)
+      frame_array << last_flame[0] + last_flame[1] + last_flame[2]
+      frame_array.last.delete_if { |l| l.to_s == '0' }
     end
-    @frame_array = [
-      Frame.new(frames[0]),
-      Frame.new(frames[1]),
-      Frame.new(frames[2]),
-      Frame.new(frames[3]),
-      Frame.new(frames[4]),
-      Frame.new(frames[5]),
-      Frame.new(frames[6]),
-      Frame.new(frames[7]),
-      Frame.new(frames[8]),
-      Frame.new(frames[9])
-    ]
+    @frames = []
+    (0..9).each do |num|
+      @frames << Frame.new(frame_array[num])
+    end
+    @frames
   end
 end
 
@@ -100,30 +84,26 @@ class Shot
   end
 
   def score
-    if @mark == 'X'
-      10
-    else
-      @mark.to_i
-    end
+    @mark == 'X' ? 10 : @mark.to_i
   end
 
   def to_s
     @mark
   end
 
-  def self.shot_array_convert(marks)
+  def self.marks_to_shots(marks)
     shot_count = 0
     shots = []
     marks.chars.each do |mark|
       shot_count += 1
       if mark == 'X' && shot_count == 1
-        shots << mark
-        shots << '0'
+        shots << Shot.new(mark)
+        shots << Shot.new("0")
         shot_count += 1
       elsif mark == 'X'
-        shots << mark
+        shots << Shot.new(mark)
       else
-        shots << mark
+        shots << Shot.new(mark)
       end
       shot_count = 0 if shot_count == 2
     end
