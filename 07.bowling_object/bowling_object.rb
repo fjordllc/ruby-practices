@@ -98,7 +98,7 @@ class Shot
       shot_count += 1
       if mark == 'X' && shot_count == 1
         shots << Shot.new(mark)
-        shots << Shot.new("0")
+        shots << Shot.new('0')
         shot_count += 1
       elsif mark == 'X'
         shots << Shot.new(mark)
