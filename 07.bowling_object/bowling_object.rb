@@ -70,11 +70,9 @@ class Frame
       frame_array << last_flame[0] + last_flame[1] + last_flame[2]
       frame_array.last.delete_if { |l| l.to_s == '0' }
     end
-    @frames = []
-    (0..9).each do |num|
-      @frames << Frame.new(frame_array[num])
+    (0..9).map do |num|
+      Frame.new(frame_array[num])
     end
-    @frames
   end
 end
 
