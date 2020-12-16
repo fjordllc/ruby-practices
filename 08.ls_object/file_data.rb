@@ -1,35 +1,69 @@
 # frozen_string_literal: true
 
-# !/usr/bin/env ruby
-
-require './formatter'
+require 'etc'
 
 module Ls
   class FileData
-    def initialize(opt)
-      @opts = opt
+    OCT_TO_RWX = {
+      '0' => '---',
+      '1' => '--x',
+      '2' => '-w-',
+      '3' => '-wx',
+      '4' => 'r--',
+      '5' => 'r-x',
+      '6' => 'rw-',
+      '7' => 'rwx'
+    }.freeze
+
+    def initialize(file)
+      @file = file
     end
 
-    def format_option(opt)
-      formatter = Ls::Formatter.new
-      if opt['l']
-        formatter.detail(target_files)
-      else
-        formatter.simple(target_files)
+    def ftype
+      stat = File::Stat.new(@file)
+      case stat.ftype
+      when 'directory'
+        print 'd'
+      when 'link'
+        print 'l'
+      when 'file'
+        print '-'
       end
     end
 
-    private
+    def permission
+      permission = File.lstat(@file).mode.to_s(8)[-3..]
+      change_permission_style(permission).join
+    end
 
-    def target_files
-      target_files = if @opts['a']
-                       Dir.glob('*', File::FNM_DOTMATCH).sort
-                     else
-                       Dir.glob('*').sort
-                     end
+    def change_permission_style(permission)
+      permission.each_char.map do |digit|
+        OCT_TO_RWX.fetch(digit)
+      end
+    end
 
-      target_files = target_files.reverse if @opts['r']
-      target_files
+    def nlink
+      File.lstat(@file).nlink
+    end
+
+    def user_name
+      Etc.getpwuid(File.lstat(@file).uid).name
+    end
+
+    def group_name
+      Etc.getgrgid(File.lstat(@file).gid).name
+    end
+
+    def size
+      File.lstat(@file).size
+    end
+
+    def mtime
+      File.lstat(@file).mtime.strftime('%a %e %H:%M').to_s
+    end
+
+    def name
+      @file.to_s
     end
   end
 end

@@ -3,13 +3,13 @@
 # !/usr/bin/env ruby
 
 require 'optparse'
-require './file_data'
+require './file_list'
 
 module Ls
   class Main
     def run(opt)
-      file_data = Ls::FileData.new(opt)
-      file_data.format_option(opt)
+      file_list = Ls::FileList.new(opt)
+      file_list.format_option(opt)
     end
   end
 end
