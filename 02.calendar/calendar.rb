@@ -45,3 +45,11 @@ days.each do |day|
     days_array.push("#{day.day} ")
   end
 end
+
+days_array.each do |day|
+  if day.to_i > 0 && day.to_i < 10
+    print(" #{day} ")
+  else
+    print("#{day} ")
+  end
+end
