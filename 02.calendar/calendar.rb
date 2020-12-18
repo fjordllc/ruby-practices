@@ -35,3 +35,13 @@ elsif first_day.saturday?
 else first_day.sunday?
   days_array.push("#{first_day.day}　")
 end
+
+second_day = Date.parse("#{year}-#{month}-2")
+days = (second_day..final_day)  
+days.each do |day|
+  if day.saturday?
+    days_array.push("#{day.day}\n")
+  else
+    days_array.push("#{day.day} ")
+  end
+end
