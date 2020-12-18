@@ -1,0 +1,122 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'optparse'
+require 'etc'
+require 'pathname'
+
+RENDERING_COL_LENGTH = 8
+
+def main
+  option = ARGV.getopts('l')
+
+  if ARGV[0]
+    arguments = ARGV
+    is_arguments_file = true
+  else
+    arguments = $stdin.readlines
+    is_arguments_file = false
+  end
+
+  run_wc(arguments, is_arguments_file, option)
+end
+
+def run_wc(arguments, is_arguments_file, option)
+  if is_arguments_file
+    results = retrieve_files(arguments)
+    render_argument_files(results, option)
+  else
+    results = build_data_for_standard_input(arguments)
+    render_standard_input(results, option)
+  end
+end
+
+# 標準入力で引数を受け取った場合は arguments は改行毎に要素に格納された配列になる
+def build_data_for_standard_input(arguments)
+  {
+    lines: arguments.length,
+    words: count_number_of_words(arguments),
+    bytes: arguments.sum(&:bytesize)
+  }
+end
+
+# 引数にファイル名を指定された場合は、arguments は各ファイルの文字列になる
+def build_data_for_file(arguments)
+  {
+    lines: arguments.count("\n"),
+    words: arguments.strip.split(/\s+/).length,
+    bytes: arguments.bytesize
+  }
+end
+
+def count_number_of_words(arguments)
+  arguments.sum do |argument|
+    argument.split.length
+  end
+end
+
+def retrieve_files(arguments)
+  arguments.map do |argument|
+    file_path = Pathname("./#{argument}")
+
+    File.exist?(file_path) ? get_file_data(file_path) : "wc: #{argument}: open: No such file or directory"
+  end
+end
+
+def get_file_data(file_path)
+  stat = File.lstat(file_path)
+
+  if stat.directory?
+    "wc: #{File.basename(file_path)}: read: Is a directory"
+  else
+    file_string = File.read(file_path)
+    result = build_data_for_file(file_string)
+    result[:file_name] = File.basename(file_path)
+    result
+  end
+end
+
+def render_standard_input(result, option)
+  puts justify_output(result, option)
+end
+
+def render_argument_files(results, option)
+  results.each do |result|
+    if result.instance_of?(Hash)
+      puts justify_output(result, option, result[:file_name])
+    else
+      puts result
+    end
+  end
+
+  (puts justify_output(sum_file_size(results), option, 'total')) if results.length > 1
+end
+
+def justify_output(result, option, additional = '')
+  if option['l']
+    "#{result[:lines].to_s.rjust(RENDERING_COL_LENGTH)} #{additional}"
+  else
+    [
+      result[:lines].to_s.rjust(RENDERING_COL_LENGTH),
+      result[:words].to_s.rjust(RENDERING_COL_LENGTH),
+      result[:bytes].to_s.rjust(RENDERING_COL_LENGTH),
+      " #{additional}"
+    ].join
+  end
+end
+
+def sum_file_size(file_data)
+  total = { lines: 0, words: 0, bytes: 0 }
+
+  file_data.each do |one_of_file_data|
+    next unless one_of_file_data.instance_of?(Hash)
+
+    one_of_file_data.each_key do |key|
+      total[key] += one_of_file_data[key] unless key == :file_name
+    end
+  end
+
+  total
+end
+
+main
