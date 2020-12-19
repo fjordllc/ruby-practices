@@ -71,7 +71,7 @@ if option_hash[:l]
     owner_name = get_owner_name(stat.uid).name
     group_name = get_group_name(stat.gid).name
     formatted_time = change_time_format(stat.mtime)
-    print "#{file_type}#{file_mode} #{stat.nlink} #{owner_name} #{group_name} #{stat.size} #{formatted_time}
+    print "#{file_type}#{file_mode} #{stat.nlink} #{owner_name} #{group_name} #{stat.size} #{formatted_time} \
 #{file_or_directory}\n"
   end
 else
