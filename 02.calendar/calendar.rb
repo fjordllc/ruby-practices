@@ -1,3 +1,4 @@
+#!/usr/bin/ruby
 require 'date'
 require 'optparse'
 
