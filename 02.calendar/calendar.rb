@@ -8,17 +8,20 @@ month = options["m"]
 if year && month
   puts "　　　　#{month}月　#{year}"
   puts "日　月　火　水　木　金　土"
+  first_day = Date.parse("#{year}-#{month}-1")
+  final_day = Date.new(year.to_i, month.to_i, -1)
+  second_day = Date.parse("#{year}-#{month}-2")
 else
   today = Date.today.to_s.split("-")
   this_year = today[0]
   this_month = today[1]
-  this_day = today[2]
+  first_day = Date.parse("#{this_year}-#{this_month}-1")
+  final_day = Date.new(this_year.to_i, this_month.to_i, -1)
+  second_day = Date.parse("#{this_year}-#{this_month}-2")
   puts "　　　　#{this_month}月 #{this_year}"
   puts "日　月　火　水　木　金　土"
 end
 
-first_day = Date.parse("#{year}-#{month}-1")
-final_day = Date.new(year.to_i, month.to_i, -1)
 days_array = []
 if first_day.monday?
   days_array.push("     #{first_day.day}")
@@ -36,7 +39,6 @@ else first_day.sunday?
   days_array.push("#{first_day.day}　")
 end
 
-second_day = Date.parse("#{year}-#{month}-2")
 days = (second_day..final_day)  
 days.each do |day|
   if day.saturday?
