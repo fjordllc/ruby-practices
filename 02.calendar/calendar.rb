@@ -6,7 +6,21 @@ options = ARGV.getopts('m:y:')
 year = options["y"]
 month = options["m"]
 
-if year && month
+if year && month == nil
+  this_month = Date.today.month
+  puts "　　　　#{this_month}月　#{year}"
+  puts "日　月　火　水　木　金　土"
+  first_day = Date.parse("#{year}-#{this_month}-1")
+  final_day = Date.new(year.to_i, this_month.to_i, -1)
+  second_day = Date.parse("#{year}-#{this_month}-2")
+elsif year == nil && month
+  this_year = Date.today.year
+  puts "　　　　#{month}月　#{this_year}"
+  puts "日　月　火　水　木　金　土"
+  first_day = Date.parse("#{this_year}-#{month}-1")
+  final_day = Date.new(this_year.to_i, month.to_i, -1)
+  second_day = Date.parse("#{this_year}-#{month}-2")
+elsif year && month
   puts "　　　　#{month}月　#{year}"
   puts "日　月　火　水　木　金　土"
   first_day = Date.parse("#{year}-#{month}-1")
