@@ -13,9 +13,8 @@ if year && month
   final_day = Date.new(year.to_i, month.to_i, -1)
   second_day = Date.parse("#{year}-#{month}-2")
 else
-  today = Date.today.to_s.split("-")
-  this_year = today[0]
-  this_month = today[1]
+  this_year = Date.today.year
+  this_month = Date.today.month
   first_day = Date.parse("#{this_year}-#{this_month}-1")
   final_day = Date.new(this_year.to_i, this_month.to_i, -1)
   second_day = Date.parse("#{this_year}-#{this_month}-2")
