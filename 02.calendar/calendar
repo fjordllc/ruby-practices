@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+
+require 'date'
+require 'optparse'
+
+today = Date.today
+options = ARGV.getopts('y:', 'm:')
+year  = (options['y'] || today.year).to_i
+month = (options['m'] || today.month).to_i
+first_day = Date.new(year, month, 1)
+last_day = Date.new(year, month, -1)
+first_wday = first_day.wday
+days = (first_day..last_day)
+
+puts ("#{month}月 #{year}").center(20)
+puts ["日", "月", "火", "水", "木", "金", "土"].join(" ")
+print ("   ") * first_wday
+
+days.each do |date|
+    if date.sunday?
+        print date.day.to_s.rjust(2)
+    elsif date.saturday?
+        print (" ") + date.day.to_s.rjust(2) + ("\n")
+    else
+        print (" ") + date.day.to_s.rjust(2)
+    end
+end
+puts ("\n")
