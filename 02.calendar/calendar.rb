@@ -3,15 +3,17 @@
 require 'optparse'
 require 'date'
 
-#コマンドラインの練習お試しコード(一応残しておく)
-#params = ARGV.getopts('' , 'abc')
-#p params
+#コマンドライン引数として月(m)と年(y)を受け取る
+params = ARGV.getopts("y:", "m:")
 
-#ひとまず、2020年12月をカレンダーっぽく表示できるようにコードをかく
-#12月の初日の情報を取得
-date = Date.new(2020, 12, 1)
-#12月の最終日の情報を取得
-date2 = Date.new(2020, 12, -1)
+year = params.values[0].to_i
+month = params.values[1].to_i
+
+#コマンドラインで受け取った月と年を元にDateインスタンスを生成
+#月の初日の情報を取得
+date = Date.new(year, month, 1)
+#月の最終日の情報を取得
+date2 = Date.new(year, month, -1)
 
 day_temp = date.day
 date_temp = date
@@ -25,14 +27,18 @@ while day_temp <= date2.day
     day_temp += 1
 end
 
-#ハッシュの中身確認用
-#puts date_hash
-
-puts '         12月' ' 2020'
+#カレンダーを出力
+print('      ' + month.to_s + '月 ' + year.to_s)
+print("\n")
 print('日', ' 月 ', '火', ' 水 ', '木', ' 金 ', '土')
 print("\n")
 date_hash.each do |key, value|
-    print(key.to_s + ' ')
+    if key.to_s.length == 1
+        print(' ' + key.to_s + ' ')
+    elsif  
+        print(key.to_s + ' ')
+    end
+    #土曜日まで出力したら改行
     if value == 6
         print("\n")
     end
