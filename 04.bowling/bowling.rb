@@ -9,19 +9,13 @@ frame = []
 # 入力された数値に配列を指定する
 scores.each do |s|
   # strike
-  frame << if s == 'X'
-             10
-           else
-             s.to_i
-           end
+  frame << (s == 'X' ? 10 : s.to_i)
   # 1投目で10本倒れたとき
   if frame.count == 1 && frame == [10]
     # framesにframeを代入
     frames << frame
     # 次のフレームを定義
     frame = []
-  else
-    frames
   end
   # 2球投げたら
   next unless frame.count == 2
@@ -50,20 +44,17 @@ end
 point1 = 0
 frames[0..7].each_with_index do |frame, i|
   # 2回連続ストライクのときの計算
-  if frame[0] == 10 && frames[i + 1][0] == 10
-    point1 += 20 + frames[i + 2][0]
-  # ストライクのときの計算
-  elsif frame[0] == 10
-    point1 += 10 + frames[i + 1][0] + frames[i + 1][1]
-  # 3回連続ストライクのときの計算
-  elsif frame[0] == 10 && frames[i + 1][0] == 10 && frames[i + 2][0] == 10
-    point1 == 30
-  # スペアの計算
-  elsif frame.sum == 10 && frame[0] != 10
-    point1 += 10 + frames[i + 1][0]
-  else
-    point1 += frame.sum
-  end
+  point1 += if frame[0] == 10 && frames[i + 1][0] == 10
+              20 + frames[i + 2][0]
+            # ストライクのときの計算
+            elsif frame[0] == 10
+              10 + frames[i + 1][0] + frames[i + 1][1]
+            # スペアの計算
+            elsif frame.sum == 10
+              10 + frames[i + 1][0]
+            else
+              frame.sum
+            end
 end
 
 # 9フレーム目までの計算
