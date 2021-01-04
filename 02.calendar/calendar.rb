@@ -4,7 +4,7 @@ require 'optparse'
 require 'date'
 
 #コマンドライン引数として月(m)と年(y)を受け取る
-params = ARGV.getopts("y:", "m:")
+params = ARGV.getopts("", "y:#{Date.today.year}", "m:#{Date.today.month}")
 
 year = params.values[0].to_i
 month = params.values[1].to_i
@@ -43,3 +43,4 @@ date_hash.each do |key, value|
         print("\n")
     end
 end
+
