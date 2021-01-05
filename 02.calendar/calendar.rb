@@ -34,8 +34,29 @@ print('日', ' 月 ', '火', ' 水 ', '木', ' 金 ', '土')
 print("\n")
 date_hash.each do |key, value|
     if key.to_s.length == 1
-        print(' ' + key.to_s + ' ')
-    elsif  
+        #日付が一桁の場合は、整合をとるために前にも空白を付与する
+        if key.to_s == "1"
+            #1日だけは曜日番号に応じて空白の数を調整して出力位置をずらす
+            case date_hash[:"1"]
+            when 0
+                print(' ' + key.to_s + ' ')    
+            when 1
+                print('    ' + key.to_s + ' ')
+            when 2
+                print('       ' + key.to_s + ' ')
+            when 3
+                print('          ' + key.to_s + ' ')
+            when 4
+                print('             ' + key.to_s + ' ')
+            when 5
+                print('                ' + key.to_s + ' ')
+            when 6
+                print('                   ' + key.to_s + ' ')
+            end
+        else
+            print(' ' + key.to_s + ' ')
+        end
+    elsif
         print(key.to_s + ' ')
     end
     #土曜日まで出力したら改行
