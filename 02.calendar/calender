@@ -7,23 +7,26 @@ require "date"
 options = ARGV.getopts('y:m:')
 
 # 今日の日付を取得
-date = Date.today
+date_for_now = Date.today
 
-# オプションの指定によって、対象となる年・月を取得
-# 年月ともに指定された場合
-if options["y"] != nil && options["m"] != nil
-  date = Date.new(options["y"].to_i, options["m"].to_i, 1)
-# 年だけ指定された場合、月は現在の月にする
-elsif options["y"] != nil && options["m"] == nil
-  date = Date.new(options["y"].to_i, date.month, 1)
-# 月だけ指定された場合、年は現在の年にする
-elsif options["y"] == nil && options["m"] != nil
-  date = Date.new(date.year, options["m"].to_i, 1)
-# どちらも指定されなかった場合は、今月の1日を取得
+# -yオプションがついていたら、第一引数に渡す年を指定
+# ついていなければ今年にする
+if options["y"] != nil
+  year = options["y"].to_i
 else
-  date = Date.new(date.year, date.month, 1)
+  year = date_for_now.year
 end
 
+# -mオプションがついていたら、第二引数に渡す月を指定
+# ついていなければ今月にする
+if options["m"] != nil
+  month = options["m"].to_i
+else
+  month = date_for_now.month
+end
+
+# 対象年月の日付を作成
+date = Date.new(year, month, 1)
 # 対象年月の最終日を取得
 last_day_of_month = Date.new(date.year, date.month, -1)
 
@@ -32,39 +35,35 @@ puts "     #{date.month}月 #{date.year}"
 puts "日 月 火 水 木 金 土"
 
 # カレンダーの出力処理
-# 対象月の最終日と出力した日付を比較して、−1(最終日がdateよりも前の日付の場合の返り値)になったら、ループを抜ける
-while (last_day_of_month <=> date) != -1
+(date..last_day_of_month).each do |target_date|
   # 日付出力用の変数を定義
   output_date = ""
 
   # 日付が「1」の場合、文字列の前に空白を挿入する処理
   # date.cwdayで曜日を判定（月曜なら1）
   # date.cwday * 3つのスペースを挿入して、フォーマットの曜日の下にくるように調整
-  if date.day == 1
+  if target_date.day == 1
     output_date += "\s" * ( date.cwday * 3 )
   end
 
-  # 日付が一桁の場合、二桁と合わせるためにスペースを１つ挿入
+  # 日付が一桁の場合、二桁と合わせるためにスペースを１つ追加
   # date.dayはそのままだとIntegerでサイズは8
   # 一桁というのを明示的にしたいので、Stringにキャストして判定
-  if date.day.to_s.size == 1
+  if target_date.day.to_s.size == 1
     output_date += " "
   end
 
-  # output_dateに表示する日付を挿入
-  output_date += "#{date.day} "
+  # output_dateに表示する日付を追加
+  output_date += "#{target_date.day} "
 
-  # 出力する日が土曜日の場合、末尾に改行を挿入
-  if date.saturday?
+  # 出力する日が土曜日の場合、末尾に改行を追加
+  if target_date.saturday?
     output_date += "\n"
   end
   
   # 日付を出力
   # putsだと改行されてしまうので、printを使用
   print output_date
-
-  # dateを翌日に更新
-  date = date.next
 end
 
 # ターミナルでの表示用に改行を挿入
