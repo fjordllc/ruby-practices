@@ -8,7 +8,6 @@ opt.on('-y [VAL]') {|v| params[:year] = v }
 opt.on('-m [VAL]') {|v| params[:month] = v }
 opt.parse!(ARGV)
 
-# 引数で指定した年月を代入
 displayed_year, displayed_month = params[:year].to_i, params[:month].to_i
 
 # 年と月の入力が無い場合初期値として今日の年月を代入
@@ -37,3 +36,4 @@ puts "日 月 火 水 木 金 土"
   print "#{n.day} "
   end
 end
+puts ''
