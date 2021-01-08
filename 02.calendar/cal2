@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'Date'
+require 'date'
 require 'optparse'
 opt = OptionParser.new
 params = {}
@@ -8,16 +8,13 @@ opt.on('-y [VAL]') {|v| params[:year] = v }
 opt.on('-m [VAL]') {|v| params[:month] = v }
 opt.parse!(ARGV)
 
+# 引数で指定した年月を代入
 displayed_year, displayed_month = params[:year].to_i, params[:month].to_i
 
 # 年と月の入力が無い場合初期値として今日の年月を代入
 today = Date.today
-unless params[:year]
-  displayed_year = today.year
-end
-unless params[:month]
-  displayed_month = today.month
-end
+displayed_year = today.year unless params[:year]
+displayed_month = today.month unless params[:month]
 
 # 初日と最後の日のDateオブジェクトを作成
 first_day = Date.new(displayed_year, displayed_month, 1)
@@ -40,4 +37,3 @@ puts "日 月 火 水 木 金 土"
   print "#{n.day} "
   end
 end
-puts ''
