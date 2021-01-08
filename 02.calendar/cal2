@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+
+require 'date'
+require 'optparse'
+opt = OptionParser.new
+params = {}
+opt.on('-y [VAL]') {|v| params[:year] = v }
+opt.on('-m [VAL]') {|v| params[:month] = v }
+opt.parse!(ARGV)
+
+displayed_year, displayed_month = params[:year].to_i, params[:month].to_i
+
+# 年と月の入力が無い場合初期値として今日の年月を代入
+today = Date.today
+displayed_year = today.year unless params[:year]
+displayed_month = today.month unless params[:month]
+
+# 初日と最後の日のDateオブジェクトを作成
+first_day = Date.new(displayed_year, displayed_month, 1)
+last_day = Date.new(displayed_year, displayed_month, -1)
+
+puts "      #{displayed_month}月 #{displayed_year}"
+puts "日 月 火 水 木 金 土"
+(first_day.wday*3).times {print " "}
+(first_day..last_day).each do |n|
+  case
+  when n.saturday? && n.day < 10
+    print " #{n.day} "
+    puts " "
+  when n.saturday?
+    print "#{n.day} "
+    puts " "
+  when n.day < 10
+    print " #{n.day} "
+  else
+  print "#{n.day} "
+  end
+end
+puts ''
