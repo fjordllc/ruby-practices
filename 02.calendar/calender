@@ -6,24 +6,13 @@ require "date"
 # オプションとして-yと-mを受け付ける設定
 options = ARGV.getopts('y:m:')
 
-# 今日の日付を取得
-date_for_now = Date.today
-
 # -yオプションがついていたら、第一引数に渡す年を指定
 # ついていなければ今年にする
-if options["y"]
-  year = options["y"].to_i
-else
-  year = date_for_now.year
-end
+year = options["y"].to_i || Date.today.year
 
 # -mオプションがついていたら、第二引数に渡す月を指定
 # ついていなければ今月にする
-if options["m"]
-  month = options["m"].to_i
-else
-  month = date_for_now.month
-end
+month = options["m"].to_i || Date.today.month
 
 # 対象年月の日付を作成
 date = Date.new(year, month, 1)
