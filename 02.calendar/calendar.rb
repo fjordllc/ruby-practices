@@ -41,10 +41,8 @@ date_hash.each do |key, value|
                 #曜日番号が1増えるごとに、空白を3つ増やす
                 pre_branks += '   '
             end
-            print(pre_branks + key.to_s + ' ')
-        else
-            print(pre_branks + key.to_s + ' ')
         end
+        print(pre_branks + key.to_s + ' ')
     elsif
         print(key.to_s + ' ')
     end
