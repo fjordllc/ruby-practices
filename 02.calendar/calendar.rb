@@ -30,6 +30,7 @@ end
 #カレンダーを出力
 puts '      ' + month.to_s + '月 ' + year.to_s
 puts '日' + ' 月 ' + '火' + ' 水 ' + '木' + ' 金 ' + '土'
+
 date_hash.each do |key, value|
     if key.to_s.length == 1
         #日付が一桁の場合は、整合をとるために前にも空白を付与する
