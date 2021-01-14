@@ -1,0 +1,17 @@
+task "default" => :compile_to_ls
+
+desc 'コンパイル後lsコマンド実行'
+task :compile_to_ls => :list do
+  :compile
+  :list
+end
+
+desc 'C言語のファイルをgccコマンドでコンパイルする'
+task :compile do
+  sh "gcc jyuunisi01.c"
+end
+
+desc 'lsコマンドを実行する'
+task :list => :compile do
+  sh "ls"
+end
