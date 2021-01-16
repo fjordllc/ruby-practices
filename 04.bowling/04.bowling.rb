@@ -3,10 +3,10 @@
 
 pins = ARGV[0].chars
 shots = []
-pins.each do |pin|
+pins.each_with_index do |pin, n|
   if pin == 'X'
     shots << 10
-    shots << 0
+    shots << 0 unless pins[n - 1] == '0' && shots.size.even?
   else
     shots << pin.to_i
   end
@@ -19,19 +19,20 @@ end
 
 frame_score = []
 frames.each_with_index do |frame, n|
-  if frame[0] == 10 && n < 9
-    if (frames[n + 1])[0] == 10 && (frames[n + 2])[0] == 10
-      frame_score << 30
-    elsif n < 8 && (frames[n + 1])[0] == 10
-      frame_score << 20 + (frames[n + 2])[0]
+  frame_score <<
+    if frame[0] == 10 && n < 9
+      if (frames[n + 1])[0] == 10 && (frames[n + 2])[0] == 10
+        30
+      elsif n < 8 && (frames[n + 1])[0] == 10
+        20 + (frames[n + 2])[0]
+      else
+        10 + frames[n + 1].sum
+      end
+    elsif frame.sum == 10 && n < 9
+      10 + (frames[n + 1])[0]
     else
-      frame_score << 10 + frames[n + 1].sum
+      frame.sum
     end
-  elsif frame.sum == 10 && n < 9
-    frame_score << 10 + (frames[n + 1])[0]
-  else
-    frame_score << frame.sum
-  end
 end
 
 puts frame_score.sum
