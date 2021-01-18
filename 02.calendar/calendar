@@ -1,0 +1,43 @@
+#!/usr/bin/env ruby
+
+require 'date'
+require 'optparse'
+
+options = ARGV.getopts("y:", "m:")
+
+year = options["y"].to_i    # キー"y"の値を取得して変数yearへ代入
+month = options["m"].to_i     # キー"m"の値を取得して変数monthへ代入
+
+if options["y"]
+  year = options["y"].to_i
+else
+  year = Date.today.year
+end
+
+if options["m"]
+  month = options["m"].to_i
+else
+  month =  Date.today.month
+end
+
+header = ("#{month}月 #{year}") # ヘッダーの部分 「1月 2021」
+header_wdays = ["日", " ", "月", " ", "火", " ", "水", " ", "木", " ", "金", " ", "土"]
+
+
+firstday_wday = Date.new(year, month, 1).wday  # 今月1日の「曜日」取得
+firstday_date = Date.new(year, month, 1).day   # 今月の「初日」を取得
+lastday_date = Date.new(year, month, -1).day   # 今月の「最終日」を取得
+
+puts header.center(20)  # center(20)の指定で「01月 2021」を中央寄せで出力。
+puts header_wdays.join  # ヘッダーの曜日を出力
+print "   " * firstday_wday #初日の前の空白 #空白の数=半角3つ分✕今月初日の曜日の数値 #今回は今年の8/1(土)=3*「6」= 半角18個分空く
+
+(1..lastday_date).each do |date|    # 1~最終日まで繰り返し
+  print date.to_s.rjust(2) + " "    # 右寄せで表示し、その横に空白を置く。
+  firstday_wday = firstday_wday + 1 #[?]今月1日の曜日の数値(今回は6)に、繰り返しするごとに1を足してく処理。これだと+1ずつ曜日の戻り値がwdayメソッドの本来の結果よりズレてしまう
+  if firstday_wday % 7 == 0 # a÷bで割った余り。ここでは7÷7だけ通過させる。
+    print "\n"
+  end
+end
+
+print "\n"
