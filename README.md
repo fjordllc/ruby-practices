@@ -31,4 +31,11 @@ $ rubocop
 
 6. Pull Requestを作成し、URLを提出してください。
 Pull Requestの作成画面では、merge先として **自分自身のアカウントのruby-practices** を指定してください。
+また、**作成したPull Requestは提出後に確認OKをもらうまでmergeのボタンを押さないでください。**
 ![Pull Request作成画面](https://user-images.githubusercontent.com/2603449/99864665-0c145c00-2be8-11eb-8501-14bd484529f2.png)
+
+# 注意点
+
+- [プルリクエスト形式で提出物を出す際の「これはやっちゃダメ」リスト](https://bootcamp.fjord.jp/pages/317)を一読してください。
+- 基本的に、1課題につきPull Requestは1つとします。
+- もし、誤って1つのPull Request内に複数の課題の内容を含めてしまった時、修正する方法がわからない場合は、一度リポジトリ自体を消してForkからやり直してください。
