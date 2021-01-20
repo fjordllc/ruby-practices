@@ -20,7 +20,7 @@ month = params["m"]&.to_i || Date.today.month
 year = params["y"]&.to_i || Date.today.year
 
 begin
-  BaseDay = Date.new(year, month, 15)
+  Date.new(year, month, 15)
 rescue => e
   puts "#{year}年#{month}月は存在しません。\n西暦を入力してください\n例) ./calender.rb -m 1 -y 2021"
   exit
