@@ -1,12 +1,12 @@
 require 'date'
 require 'optparse'
 
-def write(year, month, total_days)
+def write(year, month)
   wday_number = Date.new(year, month, 1).wday
   puts "      #{month}月 #{year}"
   puts "日 月 火 水 木 金 土"
   print '   ' * wday_number
-  (1..(total_days)).each do | day |
+  (1..(Date.new(year, month, -1).mday)).each do | day |
     print ' ' if day.to_s.size == 1
     print "#{day} "
     print "\n" if (wday_number + day) % 7 == 0
@@ -36,6 +36,4 @@ rescue => e
   exit
 end
 
-total_days = Date.new(year, month, -1).mday
-
-write(year, month, total_days)
+write(year, month)
