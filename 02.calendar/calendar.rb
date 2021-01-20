@@ -1,7 +1,7 @@
 require 'date'
 require 'optparse'
 
-def write(year, month)
+def output_to_terminal(year, month)
   wday_number = Date.new(year, month, 1).wday
   puts "      #{month}月 #{year}"
   puts "日 月 火 水 木 金 土"
@@ -26,4 +26,4 @@ rescue => e
   exit
 end
 
-write(year, month)
+output_to_terminal(year, month)
