@@ -15,19 +15,9 @@ end
 
 params = ARGV.getopts("m:", 'y:')
 
-month = 
-  if params["m"].nil?
-    Date.today.month
-  else
-    params["m"].to_i
-  end
+month = params["m"]&.to_i || Date.today.month
 
-year = 
-  if params["y"].nil?
-    Date.today.year
-  else
-    params["y"].to_i
-  end
+year = params["y"]&.to_i || Date.today.year
 
 begin
   BaseDay = Date.new(year, month, 15)
