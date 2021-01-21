@@ -1,0 +1,14 @@
+CC = "gcc"
+
+task :default => "say_hello"
+
+task "say_hello" => "hello" do |file|
+	sh "./#{file.prerequisites[0]}"
+end
+file "hello" => "hello.o" do |file|
+  sh "#{CC} -o #{file.name} #{file.prerequisites[0]}"
+end
+
+file "hello.o" => "hello.c" do |file|
+	sh "#{CC} -c #{file.prerequisites[0]}"
+end
