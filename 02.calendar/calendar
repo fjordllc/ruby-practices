@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-
 require 'date'
 require 'optparse'
 
