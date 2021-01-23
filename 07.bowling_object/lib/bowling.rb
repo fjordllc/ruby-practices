@@ -13,7 +13,6 @@ class Game
 
   def score
     frames = divide_frame
-    frames.size
     10.times.each do |num|
       add_frame_score(frames, num)
     end
