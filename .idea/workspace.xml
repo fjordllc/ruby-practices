@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c88ec92a-4769-445c-8748-7dedde77135a" name="デフォルト変更リスト" comment="">
-      <change beforePath="$PROJECT_DIR$/02.calendar/calendar" beforeDir="false" afterPath="$PROJECT_DIR$/02.calendar/calendar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +50,7 @@
       <workItem from="1611043368370" duration="35000" />
       <workItem from="1611043421164" duration="10147000" />
       <workItem from="1611193397143" duration="6000" />
-      <workItem from="1611370490212" duration="1099000" />
+      <workItem from="1611370490212" duration="1787000" />
     </task>
     <servers />
   </component>
