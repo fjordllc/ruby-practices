@@ -44,4 +44,9 @@ class ShotTest < Minitest::Test
     game_score4 = Game.new('XXXXXXXXXXXX')
     assert_equal 300, game_score4.score
   end
+
+  def test_hoge
+    p game = Game.new('6390038273X9180XX00')
+    p game.score
+  end
 end

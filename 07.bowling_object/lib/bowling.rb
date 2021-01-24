@@ -2,33 +2,39 @@
 # frozen_string_literal: true
 
 class Game
-  attr_reader :game_score, :shots, :frames, :all_score
+  attr_reader :game_score, :shots, :frames, :num, :all_score
 
   def initialize(game_mark)
     @game_score = game_mark.chars
     @shots = []
     @frames = []
+    @num = 0
     @all_score = []
   end
 
   def score
-    frames = divide_frame
+    @frames = divide_frame
     10.times.each do |num|
-      add_frames_score(frames, num)
+      @num = num
+      add_frames_score
     end
     all_score.sum
   end
 
-  def add_frames_score(frames, num)
-    all_score << if num <= 8
-                   calc_frame_first_between_nineth(frames, num)
-                 else
-                   calc_frame_last(frames, num)
-                 end
+  def add_frames_score
+    all_score << calc_frames_score
   end
 
-  def calc_frame_last(frames, num)
-    if current_frame_strike?(frames, num)
+  def calc_frames_score
+    if num <= 8
+      calc_frame_first_between_nineth
+    else
+      calc_frame_last
+    end
+  end
+
+  def calc_frame_last
+    if current_frame_strike?
       if frames.size == 11
         Frame.new(frames[num][0], frames[num + 1][0], frames[num + 1][1]).score
       else
@@ -41,9 +47,9 @@ class Game
     end
   end
 
-  def calc_frame_first_between_nineth(frames, num)
-    if current_frame_strike?(frames, num)
-      if next_frame_strike?(frames, num)
+  def calc_frame_first_between_nineth
+    if current_frame_strike?
+      if next_frame_strike?
         Frame.new(frames[num][0], frames[num + 1][0], frames[num + 2][0]).score
       else
         Frame.new(frames[num][0], frames[num + 1][0], frames[num + 1][1]).score
@@ -53,11 +59,11 @@ class Game
     end
   end
 
-  def current_frame_strike?(frames, num)
+  def current_frame_strike?
     frames[num][0].include?('X')
   end
 
-  def next_frame_strike?(frames, num)
+  def next_frame_strike?
     frames[num + 1][0].include?('X')
   end
 
