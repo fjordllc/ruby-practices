@@ -26,11 +26,7 @@ class Game
   end
 
   def calc_frames_score
-    if num <= 8
-      calc_frame_first_between_nineth
-    else
-      calc_frame_last
-    end
+    num <= 8 ? calc_frame_first_between_nineth : calc_frame_last
   end
 
   def calc_frame_last
@@ -120,9 +116,7 @@ class Shot
   end
 
   def score
-    return 10 if mark.include?('X')
-
-    mark.to_i
+    mark.include?('X') ? 10 : mark.to_i
   end
 end
 
