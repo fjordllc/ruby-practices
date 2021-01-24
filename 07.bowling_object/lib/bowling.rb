@@ -27,28 +27,48 @@ class Game
 
   def calc_frame_last
     if current_frame_strike?
-      if frames.size == 11
-        Frame.new(frames[num][0], frames[num + 1][0], frames[num + 1][1]).score
-      else
-        Frame.new(frames[num][0], frames[num + 1][0], frames[num + 2][0]).score
-      end
+      calc_frame_last_when_strike
     elsif frames.size == 11
-      Frame.new(frames[num][0], frames[num][1], frames[num + 1][0]).score
+      calc_frame_combi_basic
     else
       Frame.new(frames[num][0], frames[num][1], 0).score
     end
   end
 
+  def calc_frame_last_when_strike
+    if frames.size == 11
+      calc_frame_combi_frames_current_index_zero_and_next_frames
+    else
+      calc_frame_combi_frames_index_zero
+    end
+  end
+
   def calc_frame_first_between_nineth
     if current_frame_strike?
-      if next_frame_strike?
-        Frame.new(frames[num][0], frames[num + 1][0], frames[num + 2][0]).score
-      else
-        Frame.new(frames[num][0], frames[num + 1][0], frames[num + 1][1]).score
-      end
+      calc_frame_first_between_nineth_when_strike
     else
-      Frame.new(frames[num][0], frames[num][1], frames[num + 1][0]).score
+      calc_frame_combi_basic
     end
+  end
+
+  def calc_frame_first_between_nineth_when_strike
+    if next_frame_strike?
+      calc_frame_combi_frames_index_zero
+    else
+      calc_frame_combi_frames_current_index_zero_and_next_frames
+    end
+  end
+
+  def calc_frame_combi_frames_current_index_zero_and_next_frames
+    Frame.new(frames[num][0], frames[num + 1][0], frames[num + 1][1]).score
+  end
+
+  def calc_frame_combi_frames_index_zero
+    Frame.new(frames[num][0], frames[num + 1][0], frames[num + 2][0]).score
+  end
+
+  def calc_frame_combi_basic
+    Frame.new(frames[num][0], frames[num][1], frames[num + 1][0]).score
   end
 
   def current_frame_strike?
