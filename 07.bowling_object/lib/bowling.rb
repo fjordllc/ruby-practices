@@ -2,27 +2,23 @@
 # frozen_string_literal: true
 
 class Game
-  attr_reader :game_score, :shots, :frames, :num, :all_score
+  attr_reader :game_score, :shots, :frames, :num
 
   def initialize(game_mark)
     @game_score = game_mark.chars
     @shots = []
     @frames = []
     @num = 0
-    @all_score = []
   end
 
   def score
     @frames = divide_frame
+    all_score = []
     10.times.each do |num|
       @num = num
-      add_frames_score
+      all_score << calc_frames_score
     end
     all_score.sum
-  end
-
-  def add_frames_score
-    all_score << calc_frames_score
   end
 
   def calc_frames_score
