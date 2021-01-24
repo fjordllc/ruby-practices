@@ -6,7 +6,6 @@ class Game
 
   def initialize(game_mark)
     @game_score = game_mark.chars
-    @shots = []
     @frames = []
     @num = 0
   end
@@ -80,10 +79,11 @@ class Game
   end
 
   def divide_frame
-    add_zero_when_strike.each_slice(2).map { |s| s }
+    make_shots.each_slice(2).map { |s| s }
   end
 
-  def add_zero_when_strike
+  def make_shots
+    shots = []
     game_score.each do |shot|
       if shot.include?('X')
         shots << 'X'
