@@ -14,12 +14,12 @@ class Game
   def score
     frames = divide_frame
     10.times.each do |num|
-      add_frame_score(frames, num)
+      add_frames_score(frames, num)
     end
     all_score.sum
   end
 
-  def add_frame_score(frames, num)
+  def add_frames_score(frames, num)
     all_score << if num <= 8
                    calc_frame_first_between_nineth(frames, num)
                  else
