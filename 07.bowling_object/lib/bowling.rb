@@ -2,16 +2,16 @@
 # frozen_string_literal: true
 
 class Game
-  attr_reader :game_score, :shots, :frames, :num
+  attr_reader :game_score, :game_frames, :num
 
   def initialize(game_mark)
     @game_score = game_mark.chars
-    @frames = []
+    @game_frames = []
     @num = 0
   end
 
   def score
-    @frames = divide_frame
+    @game_frames = score_frames
     all_score = []
     10.times.each do |num|
       @num = num
@@ -21,78 +21,51 @@ class Game
   end
 
   def calc_frames_score
-    num <= 8 ? calc_frame_first_between_nineth : calc_frame_last
-  end
-
-  def calc_frame_last
-    if current_frame_strike?
-      calc_frame_last_when_strike
-    elsif frames.size == 11
-      calc_frame_combi_basic
+    if num == 9
+      frame_is_last
+    elsif game_frames[num].size == 1
+      first_shot_is_strike
     else
-      Frame.new(frames[num][0], frames[num][1], 0).score
+      normal_score
     end
   end
 
-  def calc_frame_last_when_strike
-    if frames.size == 11
-      calc_frame_combi_frames_current_index_zero_and_next_frames
+  def frame_is_last
+    if game_frames[num].size == 2
+      Frame.new(game_frames[num][0], game_frames[num][1], '3').score
     else
-      calc_frame_combi_frames_index_zero
+      Frame.new(game_frames[num][0], game_frames[num][1], game_frames[num][2]).score
     end
   end
 
-  def calc_frame_first_between_nineth
-    if current_frame_strike?
-      calc_frame_first_between_nineth_when_strike
+  def first_shot_is_strike
+    if game_frames[num + 1].size == 1
+      Frame.new(game_frames[num][0], game_frames[num + 1][0], game_frames[num + 2][0]).score
     else
-      calc_frame_combi_basic
+      Frame.new(game_frames[num][0], game_frames[num + 1][0], game_frames[num + 1][1]).score
     end
   end
 
-  def calc_frame_first_between_nineth_when_strike
-    if next_frame_strike?
-      calc_frame_combi_frames_index_zero
-    else
-      calc_frame_combi_frames_current_index_zero_and_next_frames
-    end
+  def normal_score
+    Frame.new(game_frames[num][0], game_frames[num][1], game_frames[num + 1][0]).score
   end
 
-  def calc_frame_combi_frames_current_index_zero_and_next_frames
-    Frame.new(frames[num][0], frames[num + 1][0], frames[num + 1][1]).score
-  end
 
-  def calc_frame_combi_frames_index_zero
-    Frame.new(frames[num][0], frames[num + 1][0], frames[num + 2][0]).score
-  end
-
-  def calc_frame_combi_basic
-    Frame.new(frames[num][0], frames[num][1], frames[num + 1][0]).score
-  end
-
-  def current_frame_strike?
-    frames[num][0].include?('X')
-  end
-
-  def next_frame_strike?
-    frames[num + 1][0].include?('X')
-  end
-
-  def divide_frame
-    make_shots.each_slice(2).map { |s| s }
-  end
-
-  def make_shots
-    shots = []
+  def score_frames
+    frames = []
+    frame = []
     game_score.each do |shot|
-      if shot.include?('X')
-        shots << 'X'
-        shots << '0' if shots.size.odd?
+      if frames[9]
+        frames[9] << shot
       else
-        shots << shot
+        frame << shot
+        if frame[0] == 'X' || frame[1]
+          frames << frame
+          frame = []
+        end
       end
     end
-    shots
+    frames
   end
 end
 
