@@ -15,6 +15,17 @@ class Param
   end
 end
 
+class Stdin
+  attr_accessor :words
+  attr_reader :lines, :bytes, :name, :opt
+
+  def initialize(stdin, opt)
+    @lines = stdin.count("\n")
+    @words = stdin.split(/\s+/).size unless opt.has?
+    @bytes = stdin.bytesize unless opt.has?
+  end
+end
+
 class Option
   def initialize
     @options = nil
@@ -44,17 +55,6 @@ def exec(ary)
   print lines_sum.to_s.rjust(8)
   print words_sum.to_s.rjust(8) + bytes_sum.to_s.rjust(8) if words_sum > 1
   puts ' total'
-end
-
-class Stdin
-  attr_accessor :words
-  attr_reader :lines, :bytes, :name, :opt
-
-  def initialize(stdin, opt)
-    @lines = stdin.count("\n")
-    @words = stdin.split(/\s+/).size unless opt.has?
-    @bytes = stdin.bytesize unless opt.has?
-  end
 end
 
 opt = Option.new
