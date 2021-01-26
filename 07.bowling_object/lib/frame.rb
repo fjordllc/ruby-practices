@@ -26,7 +26,7 @@ class Frame
   end
 
   def spare?
-    [first_shot.score, second_shot.score].sum == 10 unless strike?
+    !strike? && [first_shot.score, second_shot.score].sum == 10
   end
 end
 
