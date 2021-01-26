@@ -32,11 +32,10 @@ class Game
   end
 
   def frame_is_last
-    if game_frames[num].size == 2
-      Frame.new(game_frames[num][0], game_frames[num][1], '3').score
-    else
-      Frame.new(game_frames[num][0], game_frames[num][1], game_frames[num][2]).score
-    end
+    first_mark = game_frames[num][0]
+    second_mark = game_frames[num][1]
+    third_mark = game_frames[num].size == 2 ? '0' : game_frames[num][2]
+    Frame.new(first_mark, second_mark, third_mark)
   end
 
   def first_shot_is_strike
