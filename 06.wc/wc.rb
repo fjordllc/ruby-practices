@@ -16,8 +16,7 @@ class Param
 end
 
 class Stdin
-  attr_accessor :words
-  attr_reader :lines, :bytes, :name, :opt
+  attr_reader :lines, :words, :bytes, :opt
 
   def initialize(stdin, opt)
     @lines = stdin.count("\n")
@@ -48,7 +47,8 @@ def exec(ary)
     bytes_sum += a.bytes if a.bytes
     print a.lines.to_s.rjust(8)
     print a.words.to_s.rjust(8) + a.bytes.to_s.rjust(8) if a.words
-    puts " #{a.name}"
+    print " #{a.name}" if a.respond_to?(:name)
+    puts "\n"
   end
   return unless ary.size > 1
 
