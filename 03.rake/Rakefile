@@ -1,0 +1,11 @@
+CC = "gcc"
+
+task :default => "souwa01"
+
+file "souwa01" => "souwa01.o" do
+  sh "#{CC} -o souwa01 souwa01.o"
+end
+
+file "souwa01.o" => "souwa01.c" do
+  sh "#{CC} -c souwa01.c"
+end
