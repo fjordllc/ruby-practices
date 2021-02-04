@@ -20,8 +20,4 @@ class FileList
   def without_dotfile
     @files = Dir.glob('*', base: target).sort
   end
-
-  def not_exsit?
-    print "ls: #{target} : No such file or directory"
-  end
 end

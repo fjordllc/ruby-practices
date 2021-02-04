@@ -25,9 +25,10 @@ class Ls
 
   def call
     option = options_parse
-    @show = Show.new(ARGV[0])
 
-    return show.list_exist? unless Dir.exist?(ARGV[0] || '.')
+    return print "ls: #{ARGV[0]} : No such file or directory" unless File.exist?(ARGV[0] || '.')
+
+    @show = Show.new(ARGV[0])
 
     option.key?(:a) ? show.list_contain_dotfile : show.list_without_dotfile
     show.list_reverse if option.key?(:r)

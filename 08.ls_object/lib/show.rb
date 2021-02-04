@@ -130,8 +130,4 @@ class Show
   def list_without_dotfile
     @files = list.without_dotfile
   end
-
-  def list_exist?
-    list.not_exsit?
-  end
 end
