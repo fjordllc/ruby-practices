@@ -1,13 +1,13 @@
 #!/usr/bin/env ruby
 score = ARGV[0]
-scores = score.chars.map! {|n| n == 'X' ? 10 : n.to_i}
+scores = score.chars.map! { |n| n == 'X' ? 10 : n.to_i }
 frame = []
 frames = []
 frame_count = 0
 
-scores.each do |score|
-  frame << score
-  if frame_count + 1 <= 9 
+scores.each do |score_temp|
+  frame << score_temp
+  if frame_count + 1 <= 9
     if frame.length == 1 && frame[0] == 10
       # 1投目で1本倒した(つまりストライク)の場合は、後ろに0を追加して
       # 配列framesに格納
@@ -29,31 +29,32 @@ scores.each do |score|
 end
 
 point = 0
-#フレーム数を表すインデックス変数
+# フレーム数を表すインデックス変数
 frames_index = 0
 
-frames.each do |frame|
-  if frames_index + 1 == 10
+frames.each do |frame_tmp|
+  point +=
+    if frames_index + 1 == 10
       # 10フレーム目のみは単純に加算する
-      point += frame.sum
-  elsif frame.sum == 10 && frame[0] != 10
+      frame_tmp.sum
+    elsif frame_tmp.sum == 10 && frame_tmp[0] != 10
       # スペアの場合
       # 次フレームの1投目の得点を追加で加算
-      point += frame.sum + frames[frames_index + 1][0]
-  elsif frame[0] == 10
+      frame_tmp.sum + frames[frames_index + 1][0]
+    elsif frame_tmp[0] == 10
       # ストライクの場合
       # 次のフレームの1,2投目の合計を追加で加算
-      if frames[frames_index + 1][1] == 0 && frames_index + 1 != 9
+      if (frames[frames_index + 1][1]).zero? && frames_index + 1 != 9
         # ストライクが連続した場合は、計算を合わせるために2フレーム先の得点を足す
         # ただし9フレーム目のみは2フレーム先はないので行わない
-        point += frame.sum + frames[frames_index + 1][0] + frames[frames_index + 2][0]
+        frame_tmp.sum + frames[frames_index + 1][0] + frames[frames_index + 2][0]
       else
-        point += frame.sum + frames[frames_index + 1][0] + frames[frames_index + 1][1]
+        frame_tmp.sum + frames[frames_index + 1][0] + frames[frames_index + 1][1]
       end
-  else
-      #スペアでもストライクでもない場合は、単純に1フレームの合計値を加算
-      point += frame.sum
-  end
+    else
+      # スペアでもストライクでもない場合は、単純に1フレームの合計値を加算
+      frame_tmp.sum
+    end
   # フレームを1つ進める
   frames_index += 1
 end
