@@ -9,7 +9,7 @@ scores.each do |score_temp|
   frame << score_temp
   if frame_count + 1 <= 9
     if frame.length == 1 && frame[0] == 10
-      # 1投目で1本倒した(つまりストライク)の場合は、後ろに0を追加して
+      # 1投目で10本倒した(つまりストライク)の場合は、後ろに0を追加して
       # 配列framesに格納
       frame << 0
       frames << frame
