@@ -43,7 +43,7 @@ module Bowling
         def point = 10
 
         def satisfied_by?(rolls)
-          !strike?(rolls) && rolls.sum == 10
+          !strike?(rolls) && rolls.sum == Spare.point
         end
 
         def score_for(rolls)
