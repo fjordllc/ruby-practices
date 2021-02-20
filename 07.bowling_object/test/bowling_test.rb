@@ -2,7 +2,7 @@
 
 require 'minitest/autorun'
 require 'minitest/pride'
-require_relative 'bowling'
+require_relative '../lib/bowling'
 
 class BowlingTest < Minitest::Test
   def calculate_score(marks)
