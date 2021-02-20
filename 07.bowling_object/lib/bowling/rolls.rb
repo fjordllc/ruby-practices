@@ -3,7 +3,9 @@
 module Bowling
   class Rolls
     def initialize(rolls, frames, index)
-      @rolls, @frames, @index = rolls, frames, index # rubocop:disable Style/ParallelAssignment
+      @rolls = rolls # 投球結果の配列。ストライク時は[10, nil]
+      @frames = frames # ゲームのフレーム全体の配列への参照
+      @index = index # 自分が何フレーム目かのインデックス(0-9)
     end
 
     def score
