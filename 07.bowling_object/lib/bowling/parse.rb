@@ -26,6 +26,7 @@ module Bowling
     end
 
     def pins_for_rolls!(pins)
+      # TODO: ストライク2投目のnilは無くせるのでは… :thinking_face:
       strike?(pins.first) ? [pins.shift, nil] : pins.shift(2)
     end
 
