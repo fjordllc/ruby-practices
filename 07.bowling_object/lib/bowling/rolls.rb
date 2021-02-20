@@ -48,7 +48,7 @@ module Bowling
     end
 
     def score_if(sym)
-      Score.of(sym, self)
+      Score.point_if(sym, self)
     end
   end
 end

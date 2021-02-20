@@ -5,7 +5,7 @@ module Bowling
     class << self
       def strike_point = Strike.point
 
-      def of(sym, rolls)
+      def point_if(sym, rolls)
         bonus?(sym, rolls) && score_with_bonus_for(sym, rolls)
       end
 
