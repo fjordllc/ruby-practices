@@ -6,20 +6,16 @@ module Bowling
       def strike_point = Strike.point
 
       def point_if(sym, rolls)
-        bonus?(sym, rolls) && score_with_bonus_for(sym, rolls)
+        bonus?(sym, rolls) && bonus(sym).score_for(rolls)
       end
 
       def bonus?(sym, rolls)
-        bonus_type(sym).satisfied_by?(rolls)
+        bonus(sym).satisfied_by?(rolls)
       end
 
       private
 
-      def score_with_bonus_for(sym, rolls)
-        bonus_type(sym).score_for(rolls)
-      end
-
-      def bonus_type(sym)
+      def bonus(sym)
         const_get(sym.to_s.capitalize)
       end
     end
