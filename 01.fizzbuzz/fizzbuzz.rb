@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 def fizzbuzz(max_number)
   1.upto(max_number) do |number|
-    if number % 15 == 0
-      puts "fizzbuzz"
-    elsif number % 5 == 0
-      puts "buzz"
-    elsif number % 3 == 0
-      puts "fizz"
+    if (number % 15).zero?
+      puts 'fizzbuzz'
+    elsif (number % 5).zero?
+      puts 'buzz'
+    elsif (number % 3).zero?
+      puts 'fizz'
     else
       puts number
     end
