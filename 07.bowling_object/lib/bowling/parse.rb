@@ -3,29 +3,29 @@
 module Bowling
   class Parse
     def self.call(marks)
-      new.call(marks)
+      new(marks).call
     end
 
-    def call(marks)
-      pins = pins_from(marks)
-      Game.frame_size.times.with_object([]) do |i, frames|
-        frames << create_rolls_for_frame(i, pins, frames)
-      end
+    def call
+      Game.frame_size.times.with_object(@frames) { |i, f| f[i] = rolls_for_frame(i) }
     end
 
     private
 
-    def initialize; end
-
-    def pins_from(marks)
-      marks.split(',').map { |m| m == 'X' ? Score.strike_point : m.to_i }
+    def initialize(marks)
+      @marks = marks
+      @frames = []
     end
 
-    def create_rolls_for_frame(index, pins, frames)
-      Game.final_frame?(index) ? Rolls.new(pins, frames, index) : Rolls.new(pins_for_rolls!(pins), frames, index)
+    def pins
+      @pins ||= @marks.split(',').map { |m| m == 'X' ? Score.strike_point : m.to_i }
     end
 
-    def pins_for_rolls!(pins)
+    def rolls_for_frame(index)
+      Game.final_frame?(index) ? Rolls.new(pins, @frames, index) : Rolls.new(pins_for_rolls!, @frames, index)
+    end
+
+    def pins_for_rolls!
       # TODO: ストライク2投目のnilは無くせるのでは… :thinking_face:
       strike?(pins.first) ? [pins.shift, nil] : pins.shift(2)
     end
