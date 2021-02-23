@@ -21,11 +21,12 @@ points = 0
 frames.each_with_index do |frame, index|
   if index == 9 && frame[0] == 10
     points += 10 + frames[10].sum + frames[11].sum
-#    if frames[index + 2]
-#      points += frames[index + 2].sum
-#    end
   elsif index == 9 && frame[0] != 10 && frame.sum == 10
     points += 10 + frames[10].sum
+  elsif index == 9 && frame.sum != 10
+    points += frame.sum
+  elsif index == frames.size - 2 && frames.size - 2 < 9
+    points += frame.sum
   elsif index == frames.size - 1 || index == frames.size - 2
     next
   elsif frame[0] == 10 && frames[index + 1][0] != 10
