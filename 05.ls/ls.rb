@@ -10,23 +10,24 @@ def dir_stat(pathname, opt)
   arr = []
   arr << pathname.join('*')
   arr << pathname.join('.*') if opt
-  pathname.glob(arr) do |pathname_|
-    stat << MyStat.new(pathname_)
+  pathname.glob(arr) do |p|
+    stat << MyStat.new(p)
   end
   stat
 end
 
-def file_dir(input, opt)
+def file_dir(argv, opt)
   args = []
-  if input == false
-    ARGV.each do |arg|
-      Pathname.glob(arg) do |pathname|
+  if argv.empty? == false
+    argv.each do |arg|
+      pathname = Pathname.pwd
+      pathname.glob(arg) do |p|
         stat = []
-        if pathname.directory?
-          stat = dir_stat(pathname, opt)
+        if p.directory?
+          stat = dir_stat(p, opt)
           args << [:other, arg, stat]
         else
-          stat << MyStat.new(pathname)
+          stat << MyStat.new(p)
           args << [:first, nil, stat]
         end
       end
@@ -48,7 +49,7 @@ option.on('-r') { |v| v }
 
 option.parse!(ARGV, into: options)
 
-file_dir_info = file_dir(ARGV.empty?, options[:a])
+file_dir_info = file_dir(ARGV, options[:a])
 
 file_dir_info.sort! do |a, b|
   (a[0] <=> b[0]).nonzero? || (a[1] <=> b[1])
@@ -87,17 +88,18 @@ else
           else
             fd[2].size / 3 + 1
           end
-
-    data_child = []
-
+    data_child = Array.new(div)
     fd[2].each.with_index do |d, i|
-      data_child << File.basename(d.path)
+      data_child[i % div] = File.basename(d.path)
       if ((i + 1) % div).zero?
         datas << data_child
-        data_child = []
+        data_child = Array.new(div)
       end
     end
     datas << data_child
+
+    datas = datas.transpose
+
     datas.each do |dataset|
       dataset.each do |item|
         printf('%<display>-30s ', display: item) unless item.nil?
