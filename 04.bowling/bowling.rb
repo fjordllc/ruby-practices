@@ -1,60 +1,62 @@
 #!/usr/bin/env ruby
-score = ARGV[0]
-scores = score.chars
-shots = []
-scores.each do |s|
-  if s == 'X' # strike
-    shots << 10
-    shots << 0
-  else
-    shots << s.to_i
-  end
-end
+# frozen_string_literal: true
 
+input_score = ARGV[0]
+input_scores = input_score.chars.map! { |n| n == 'X' ? 10 : n.to_i }
+frame = []
 frames = []
-shots.each_slice(2) do |s|
-  frames << s
-end
+frame_count = 1
 
-p frames
-
-point = 0
-#フレーム数を表すインデックス変数
-frames_index = 0
-
-frames.each do |frame|
-    #1フレームごとの合計得点を格納
-#    point = point + frames[i].sum
-    if frames[frames_index].sum == 10
-        #1フレームの合計ピン数が10(スペア)の場合
-        #次のフレームの1投目のピン数を加算
-        point = point + frames[frames_index + 1][0]
-    elsif frames[frames_index][0] = 10
-        #ストライクの場合
-        #次フレームの1,2投目のピン数を加算
-        point = point + frames[1].sum
-    else
-        point = point + frames[frames_index].sum
+input_scores.each do |score|
+  frame << score
+  if frame_count <= 9
+    if frame.length == 1 && frame[0] == 10
+      # 1投目で10本倒した(つまりストライク)の場合は、後ろに0を追加して
+      # 配列framesに格納
+      frame << 0
+      frames << frame
+      frame = []
+      frame_count += 1
+    elsif frame.length == 2
+      # 1フレーム分の得点がまとまった場合は、配列framesに格納
+      frames << frame
+      frame = []
+      frame_count += 1
     end
-    #次のフレームに進める
-    frames_index = frames_index + 1
-    p point
-end
-
-p point
-
-#ここから下は参考プログラム。
-#一応残しておいて、後で消す。
-=begin
-point = 0
-frames.each do |frame|
-  if frame[0] == 10 # strike
-    point += 30
-  elsif frame.sum == 10 # spare
-    point += frame[0] + 10
-  else
-    point += frame.sum
+  elsif frame_count == 10
+    # 10フレーム目はそのまま配列framesに代入するだけ
+    frames << frame
+    frame_count += 1
   end
 end
+
+point = 0
+
+frames.each_with_index do |frame, i|
+  # フレーム数を表す変数を配列のインデックスにすると参照がずれるため変数を分けている
+  frames_number = i + 1
+  point +=
+    if frames_number == 10
+      # 10フレーム目のみは単純に加算する
+      frame.sum
+    elsif frame.sum == 10 && frame[0] != 10
+      # スペアの場合
+      # 次フレームの1投目の得点を追加で加算
+      frame.sum + frames[i + 1][0]
+    elsif frame[0] == 10
+      # ストライクの場合
+      # 次のフレームの1,2投目の合計を追加で加算
+      if (frames[i + 1][1]).zero? && frames_number != 9
+        # ストライクが連続した場合は、計算を合わせるために2フレーム先の得点を足す
+        # ただし9フレーム目のみは2フレーム先はないので行わない
+        frame.sum + frames[i + 1][0] + frames[i + 2][0]
+      else
+        frame.sum + frames[i + 1][0] + frames[i + 1][1]
+      end
+    else
+      # スペアでもストライクでもない場合は、単純に1フレームの合計値を加算
+      frame.sum
+    end
+end
+
 puts point
-=end
