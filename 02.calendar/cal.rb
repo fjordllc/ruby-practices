@@ -4,7 +4,7 @@ require 'optparse'
 class Calender
   CALENDER_WEEK = ["日","月","火","水","木","金","土"]
   # カレンダーの日を取得
-  def self.get_day(cal_day=1, cal_year=Date.today.year, cal_month=Date.today.month)
+  def self.get_day(cal_day=1, cal_year, cal_month)
     # Date.new(cal_year, cal_month, cal_day)
     @start_day = Date.new(cal_year, cal_month, 1)
     @start_day_num = @start_day.strftime("%e").to_i
@@ -35,7 +35,7 @@ class Calender
     end
   end
   # カレンダーを表示
-  def self.show_calender(cal_year, cal_month)
+  def self.show_calender(cal_year=Date.today.year, cal_month=Date.today.month)
     get_day(1, cal_year, cal_month)
     # 月と年(西暦)を表示
     puts @start_day.strftime("     %-m月 %Y")
@@ -59,9 +59,15 @@ class Calender
   end
 end
 
-# Calender.show_calender(2022, 3)
 
 opt = OptionParser.new
-opt.on('-m [month]', Integer, 'show calender set month') {|v| Calender.show_calender(Date.today.year, v) }
+options = {}
+opt.on('-m month', Integer, 'Display the specified month.') {|v| options[:m] = v }
+opt.on('-y year', Integer, 'Display a calendar for the specified year.') {|v| options[:y] = v }
 opt.parse!(ARGV)
-ARGV
+
+if options.empty? then
+  Calender.show_calender()
+else
+  Calender.show_calender(options[:y], options[:m])
+end
