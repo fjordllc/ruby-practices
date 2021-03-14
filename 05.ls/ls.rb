@@ -18,7 +18,10 @@ end
 
 def file_dir(argv, opt)
   args = []
-  if argv.empty? == false
+  if argv.empty?
+    stat = dir_stat(Pathname('./'), opt)
+    args << [:first, nil, stat]
+  else
     argv.each do |arg|
       pathname = Pathname.pwd
       pathname.glob(arg) do |p|
@@ -32,9 +35,6 @@ def file_dir(argv, opt)
         end
       end
     end
-  else
-    stat = dir_stat(Pathname('./'), opt)
-    args << [:first, nil, stat]
   end
   args
 end
