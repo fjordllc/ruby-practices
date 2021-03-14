@@ -4,12 +4,12 @@
 require 'etc'
 
 def file_names
-  Dir.glob("*").sort
+  Dir.glob('*').sort
 end
 
 def file_mode_permission(file)
   eight_ary = File::Stat.new(file).mode.to_s(8)
-  alignment = sprintf("%06d", eight_ary)
+  alignment = format('%06d', eight_ary)
 end
 
 def file_type(file)
@@ -18,27 +18,11 @@ def file_type(file)
     'd'
   elsif details_filename.ftype == 'file'
     '-'
-  else details_filename.ftype == 'link'
+  else
+    details_filename.ftype == 'link'
     'l'
   end
 end
-
-# def file_eachpermission(file)
-#   file_eachpermission = file_mode_permission(file)[3] || file_mode_permission(file)[4] || file_mode_permission(file)[5]
-#   file_eachpermission.each do |n|
-#     case file_permission(n)
-#     when '0' then '---'
-#     when '1' then '--x'
-#     when '3' then '-wx'
-#     when '4' then 'r--'
-#     when '5' then 'r-x'
-#     when '6' then 'rw-'
-#     when '7' then 'rwx'
-#   end
-#   file_permission.join 
-#   end
-# end
-# puts file_eachpermission
 
 def file_eachpermission_index_three(file)
   file_eachpermission_number = file_mode_permission(file)[3]
@@ -86,11 +70,11 @@ end
 
 total_blocks = File::Stat.new($0).blocks
 total = ['total'] + [' '] + [total_blocks]
-puts total.join                       
+puts total.join
 
 file_names.each do |f|
-  details_filename = File::Stat.new(f)                                                                                                                    #常に最大桁数(最大の桁を撮ってくる(今回の場合は4桁))に合わせて表示する
-  details = [file_eachpermission(f)] + [details_filename.nlink] + [Etc.getpwuid(details_filename.uid).name] + [Etc.getgrgid(details_filename.gid).name] + [details_filename.size]+ [details_filename.mtime.strftime("%m %e %H:%M")] + [f]
+  details_filename = File::Stat.new(f) # 常に最大桁数(最大の桁を撮ってくる(今回の場合は4桁))に合わせて表示する
+  details = [file_eachpermission(f)] + [details_filename.nlink] + [Etc.getpwuid(details_filename.uid).name] + [Etc.getgrgid(details_filename.gid).name] + [details_filename.size] + [details_filename.mtime.strftime('%m %e %H:%M')] + [f]
   puts details.join('    ')
 end
 
@@ -100,7 +84,7 @@ end
 # file_names = Dir.glob("*").sort
 # file_names = Dir.glob("*").sort.reverse #-r
 # file_names = Dir.glob("*", File::FNM_DOTMATCH).sort #-a
-# file_names = Dir.glob("*", File::FNM_DOTMATCH).sort.reverse #-ar 
+# file_names = Dir.glob("*", File::FNM_DOTMATCH).sort.reverse #-ar
 
 # longest_file_name = file_names.max_by(&:size).size
 # width = TAB_WIDTH * (longest_file_name / TAB_WIDTH.to_f).ceil
