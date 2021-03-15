@@ -1,7 +1,6 @@
 require 'date'
 require 'optparse'
 require "colcolor"
-
 class Calender
   CALENDER_WEEK = ["日","月","火","水","木","金","土"]
   # カレンダーの日を取得
@@ -77,16 +76,14 @@ class Calender
     end
   end
 end
-
-# オプション
+# オプション引数を取得
 options = {}
 OptionParser.new do |opt|
   opt.on('-m [month]', Integer, 'Display the specified month.') {|v| options[:m] = v }
   opt.on('-y [year]', Integer, 'Display a calendar for the specified year.') {|v| options[:y] = v }
   opt.parse!(ARGV)
 end
-
-# オプション引数
+# オプション引数をもとに表示するカレンダーを選択
 if options.empty? then
   Calender.show_calender(Date.today.year, Date.today.month)
 elsif options.has_key?(:y) && options.has_key?(:m) then
