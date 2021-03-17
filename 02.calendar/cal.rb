@@ -79,14 +79,48 @@ end
 # オプション引数を取得
 options = {}
 OptionParser.new do |opt|
-  opt.on('-m [month]', Integer, 'Display the specified month.') {|v| options[:m] = v }
-  opt.on('-y [year]', Integer, 'Display a calendar for the specified year.') {|v| options[:y] = v }
+  opt.on('-m [month]', 'Display the specified month.') { |v| options[:m] = v }
+  opt.on('-y [year]', 'Display a calendar for the specified year.') {|v| options[:y] = v }
   opt.parse!(ARGV)
 end
-# オプション引数をもとに表示するカレンダーを選択
+# オプション存在チェック
+# -mと-yの両方がない場合は、今月のカレンダーを表示
 if options.empty? then
   Calender.show_calender(Date.today.year, Date.today.month)
-elsif options.has_key?(:y) && options.has_key?(:m) then
+  exit
+elsif options.key?(:m) then
+  if options[:m].nil?
+    options.delete(:m)
+    puts "cal: option requires an argument -- m"
+    exit
+  end
+elsif options.key?(:y) then
+  if options[:y].nil? then
+    options.delete(:y)
+    puts "cal: option requires an argument -- y"
+    exit
+  end
+end
+# 数値に変換可能かチェック
+# 変換できない場合はメッセージを表示
+unless options[:y].nil? then
+  unless options[:y] =~ /\A[-+]?[0-9]*\.?[0-9]+\Z/ then
+    puts "cal: year `#{options[:y]}' not in range 1..9999"
+    return
+  else
+    options[:y] = options[:y].to_i
+  end
+end
+unless options[:m].nil? then
+  unless options[:m] =~ /\A[-+]?[0-9]*\.?[0-9]+\Z/ then
+    puts "cal: #{options[:m]} is neither a month number (1..12) nor a name"
+    return
+  else
+    options[:m] = options[:m].to_i
+  end
+end
+# オプション引数をもとにカレンダーを表示
+if options.has_key?(:y) && options.has_key?(:m) then
   Calender.show_calender(options[:y], options[:m])
 elsif options.has_key?(:y) then
   Calender.show_calender(options[:y], Date.today.month)
