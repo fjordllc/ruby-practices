@@ -85,6 +85,7 @@ OptionParser.new do |opt|
 end
 # オプション存在チェック
 # -mと-yの両方がない場合は、今月のカレンダーを表示
+# 月と年の桁数を超えた引数の場合はメッセージを表示
 if options.empty? then
   Calender.show_calender(Date.today.year, Date.today.month)
   exit
@@ -93,11 +94,17 @@ elsif options.key?(:m) then
     options.delete(:m)
     puts "cal: option requires an argument -- m"
     exit
+  elsif options[:m].length > 2 then
+    puts "cal: #{options[:m]} is neither a month number (1..12) nor a name"
+    exit
   end
 elsif options.key?(:y) then
   if options[:y].nil? then
     options.delete(:y)
     puts "cal: option requires an argument -- y"
+    exit
+  elsif options[:y].length > 4 then
+    puts "cal: year `#{options[:y]}' not in range 1..9999"
     exit
   end
 end
