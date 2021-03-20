@@ -1,11 +1,11 @@
 for i in 1..20
   if i % 15 == 0
-    p "FizzBuzz"
+    puts "FizzBuzz"
   elsif i % 3 == 0
-    p "Fizz"
+    puts "Fizz"
   elsif i % 5 == 0
-    p "Buzz"
+    puts "Buzz"
   else
-    p i
+    puts i
   end
 end
