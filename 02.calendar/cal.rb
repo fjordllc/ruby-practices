@@ -14,7 +14,6 @@ begin
   options.parse(ARGV)
   # Hash. ex. {"m"=>"5", "y"=>"2021"}
   year_month = ARGV.getopts('m:', 'y:')
-  p year_month
 rescue OptionParser::InvalidOption, OptionParser::MissingArgument => e
   puts e.message
   puts options.help
@@ -44,6 +43,7 @@ end
 # Get last day of year month
 last_day = Date.new(year, month, -1).day
 
+# key: day, value: week number like below.
 # 0: Sun, 1: Mon, .... 6: Sat
 day_week = {}
 (1..last_day).each do |day|
