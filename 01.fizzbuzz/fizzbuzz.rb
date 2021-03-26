@@ -1,14 +1,12 @@
 #! /usr/bin/env ruby
-x = 0
-while x < 20
-    x = x + 1
-    if x.modulo(3) == 0
-        puts "fizz"
-    elsif x.modulo(5) == 0
-        puts "buzz"
-    elsif x.modulo(3) == 0 && x.modulo(5) == 0
-        puts "fizzbuzz"
-    else
-        puts x.to_s
-    end
+1.upto(20) do |i|
+  if i % 3 == 0 && i % 5 == 0
+    puts "FizzBuzz"
+  elsif i % 5 == 0
+    puts "Buzz"
+  elsif i % 3 == 0
+    puts "Fizz"
+  else
+    puts i
+  end
 end
