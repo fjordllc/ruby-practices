@@ -14,21 +14,34 @@ end
 
 def file_type(file)
   details_filename = File::Stat.new(file)
-  if details_filename.ftype == 'directory'
-    'd'
-  elsif details_filename.ftype == 'file'
-    '-'
-  else
-    details_filename.ftype == 'link'
-    'l'
+  if details_filename.ftype == 'directory' then 'd'
+  elsif details_filename.ftype == 'file' then '-'
+  elsif details_filename.ftype == 'link' then 'l'
   end
 end
 
-def file_eachpermission_index_three(file)
-  file_eachpermission_number = file_mode_permission(file)[3]
+# def file_each_permission_index(file)
+#   permissions = file_mode_permission(file)
+#   permissions.map.with_index do | permission, i | 
+#     case file_mode_permission(file)[3]
+#     when '0' then '---'
+#     when '1' then '--x'
+#     when '2' then '-w-'
+#     when '3' then '-wx'
+#     when '4' then 'r--'
+#     when '5' then 'r-x'
+#     when '6' then 'rw-'
+#     when '7' then 'rwx'
+#     end
+#   end
+# end
+# puts file_each_permission_index(file)
+
+def file_each_permission_index_three(file)
   case file_mode_permission(file)[3]
   when '0' then '---'
   when '1' then '--x'
+  when '2' then '-w-'
   when '3' then '-wx'
   when '4' then 'r--'
   when '5' then 'r-x'
@@ -37,11 +50,11 @@ def file_eachpermission_index_three(file)
   end
 end
 
-def file_eachpermission_index_four(file)
-  file_eachpermission_number = file_mode_permission(file)[4]
+def file_each_permission_index_four(file)
   case file_mode_permission(file)[4]
   when '0' then '---'
   when '1' then '--x'
+  when '2' then '-w-'
   when '3' then '-wx'
   when '4' then 'r--'
   when '5' then 'r-x'
@@ -50,11 +63,11 @@ def file_eachpermission_index_four(file)
   end
 end
 
-def file_eachpermission_index_five(file)
-  file_eachpermission_number = file_mode_permission(file)[5]
+def file_each_permission_index_five(file)
   case file_mode_permission(file)[5]
   when '0' then '---'
   when '1' then '--x'
+  when '2' then '-w-'
   when '3' then '-wx'
   when '4' then 'r--'
   when '5' then 'r-x'
@@ -63,19 +76,34 @@ def file_eachpermission_index_five(file)
   end
 end
 
-def file_eachpermission(file)
-  modestring = [file_type(file)] + [file_eachpermission_index_three(file)] + [file_eachpermission_index_four(file)] + [file_eachpermission_index_five(file)]
+def file_each_permission(file)
+  modestring = [file_type(file), 
+                file_each_permission_index_three(file), 
+                file_each_permission_index_four(file), 
+                file_each_permission_index_five(file)]
   modestring.join
 end
 
+def details_filename(file)
+  file_size = File::Stat.new(file).size
+  max_width = format('%4d', file_size)
+end
+
 total_blocks = File::Stat.new($0).blocks
-total = ['total'] + [' '] + [total_blocks]
+total = ['total ', total_blocks]
 puts total.join
 
-file_names.each do |f|
-  details_filename = File::Stat.new(f) # 常に最大桁数(最大の桁を撮ってくる(今回の場合は4桁))に合わせて表示する
-  details = [file_eachpermission(f)] + [details_filename.nlink] + [Etc.getpwuid(details_filename.uid).name] + [Etc.getgrgid(details_filename.gid).name] + [details_filename.size] + [details_filename.mtime.strftime('%m %e %H:%M')] + [f]
-  puts details.join('    ')
+file_names.each do |file_name|
+  details_filename = File::Stat.new(file_name) 
+  details = [file_each_permission(file_name),
+            '',
+            details_filename.nlink, 
+            Etc.getpwuid(details_filename.uid).name, 
+            Etc.getgrgid(details_filename.gid).name, 
+            details_filename(file_name),
+            details_filename.mtime.strftime('%m %e %H:%M'), 
+            file_name]
+  puts details.join(' ')
 end
 
 # TAB_WIDTH = 8
