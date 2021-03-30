@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
-  
+# pull request再送信
+
 require "date"
 require "optparse"
 
