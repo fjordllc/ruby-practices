@@ -1,0 +1,29 @@
+version: 2.1
+
+executors:
+  ruby:
+    docker:
+      - image: ruby:3.0-slim
+
+commands:
+  bundle-install:
+    steps:
+      - checkout
+      - run:
+          name: bundle install
+          command: bundle install --path=vendor/bundle
+
+jobs:
+  rubocop:
+    executor: ruby
+    steps:
+      - bundle-install
+      - run:
+          command: bundle exec rubocop
+          name: rubocop
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - rubocop
