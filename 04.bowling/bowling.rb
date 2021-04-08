@@ -12,8 +12,8 @@ end
 # 与えられた現在のスコアから、各フレームを最初から確認
 # FLAG (= -1)があれば、最初の FLAG を point に置換する
 def convert_flag_to_point(score, point)
-  score.map do |frame|
-    frame[frame.index(FLAG), 1] = [point] and next if frame.include?(FLAG)
+  score.each do |frame|
+    frame[frame.index(FLAG), 1] = point and next if frame.include?(FLAG)
   end
 end
 
