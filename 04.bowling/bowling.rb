@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-FRAG = -1
+FLAG = -1
 
 # X は 10 に変換。それ以外は integer にして返す
 def convert_point_to_int(point)
@@ -10,10 +10,10 @@ def convert_point_to_int(point)
 end
 
 # 与えられた現在のスコアから、各フレームを最初から確認
-# FRAG (= -1)があれば、最初の FRAG を point に置換する
-def convert_frag_to_point(score, point)
+# FLAG (= -1)があれば、最初の FLAG を point に置換する
+def convert_flag_to_point(score, point)
   score.map do |frame|
-    frame[frame.index(FRAG), 1] = [point] and next if frame.include?(FRAG)
+    frame[frame.index(FLAG), 1] = [point] and next if frame.include?(FLAG)
   end
 end
 
@@ -33,21 +33,21 @@ points.each do |point|
   frame = score[frame_index]
 
   # strike / spare の場合
-  # フレームの残りには FRAG 2つ / 1つ 立てる
+  # フレームの残りには FLAG 2つ / 1つ 立てる
   if frame.sum == 10
-    convert_frag_to_point(score, point)
+    convert_flag_to_point(score, point)
     case frame.size
     when 1 # strike
-      frame.push(FRAG, FRAG)
+      frame.push(FLAG, FLAG)
     when 2 # spare
-      frame.push(FRAG)
+      frame.push(FLAG)
     end
   end
 
   # strike / spare 以外の場合
   # ex1. 1投目で 10 未満
   # ex2. 2投目で spare が取れなかった場合
-  convert_frag_to_point(score, point) if frame.size <= 2
+  convert_flag_to_point(score, point) if frame.size <= 2
 
   # strike / spare / spareでない2投目 のいづれかの場合。
   # 次のフレームへ
