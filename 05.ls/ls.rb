@@ -82,29 +82,25 @@ def convert_permission(number)
   number.to_s.chars.map { |char| FILE_PERMISSIONS[char] }.join
 end
 
-def output(array)
-  arr_size_div = array.size.div(MAX_COLUMN_COUNT)
-  row_num = (array.size % MAX_COLUMN_COUNT).zero? ? arr_size_div : arr_size_div + 1
+def output(file_names)
+  row_count, rem = file_names.size.divmod(MAX_COLUMN_COUNT)
+  row_count += 1 unless rem.zero?
 
-  max_str = 0
-  array.each do |item|
-    item_size = item.to_s.size
-    max_str = item_size if max_str < item_size
+  max_name_length = file_names.max(1) {|a, b| a.size <=> b.size }.join.size
+
+  matrix = Array.new(row_count) { [] }
+  file_names.each_with_index do |item, index|
+    matrix[index % row_count] << item
   end
 
-  output = Array.new(row_num) { [] }
-  array.each_with_index do |item, index|
-    output[index % row_num] << item
-  end
-
-  output.each_index do |index|
-    size = output[index].size
-    format_str = "%-#{max_str}s " * size
-    puts format(format_str, *output[index]) unless size.zero?
+  matrix.each_index do |row_index|
+    column_count = matrix[row_index].size
+    format_str = "%-#{max_name_length}s " * column_count
+    puts format(format_str, *matrix[row_index])
   end
 end
 
-def output_l(hash)
+def output_l(file_info_table)
   array_size = 0
   hash.each_value do |value|
     array_size = value.size
