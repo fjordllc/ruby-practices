@@ -27,41 +27,35 @@ FILE_PERMISSIONS = {
 }.freeze
 
 def main
-  begin
-    options = ARGV.getopts('a', 'l', 'r')
-  rescue OptionParser::InvalidOption => e
-    puts e.message
-    exit
-  end
+  options = ARGV.getopts('a', 'l', 'r')
 
   path_list = ARGV
   path_list.push '.' if path_list.empty?
 
-  path_list.each do |target|
-    result = get_list_files(target, option_a: options['a'], option_r: options['r'])
+  path_list.each do |path|
+    file_names = get_file_names(path, option_a: options['a'], option_r: options['r'])
 
-    result << target if result.empty?
-
-    output_new_line(path_list.size)
+    puts "\n" if path_list.size > 1
 
     if options['l']
-      result_l = {}
-      result.each { |file| result_l[file] = get_file_stat(target, file) }
-      output_l(result_l)
+      file_info_table = file_names.to_h { |file| [file, get_file_info(path, file)] }
+      output_l(file_info_table)
     else
-      output(result)
+      output(file_names)
     end
   end
 end
 
-def get_list_files(path, option_a: false, option_r: false)
+def get_file_names(path, option_a: false, option_r: false)
+  return [path] if File.file?(path)
+
   list_file = option_a ? Dir.glob('*', File::FNM_DOTMATCH, base: path) : Dir.glob('*', base: path)
   list_file.sort!
 
   option_r ? list_file.reverse : list_file
 end
 
-def get_file_stat(path, file_name)
+def get_file_info(path, file_name)
   file_path = path == file_name ? file_name : "#{path}/#{file_name}"
 
   fs = File::Stat.new(file_path)
@@ -86,10 +80,6 @@ end
 
 def convert_permission(number)
   number.to_s.chars.map { |char| FILE_PERMISSIONS[char] }.join
-end
-
-def output_new_line(num)
-  puts "\n" if num > 1
 end
 
 def output(array)
