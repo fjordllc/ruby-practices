@@ -39,7 +39,7 @@ def main
 
     if options['l']
       file_info_table = file_names.to_h { |file| [file, get_file_info(path, file)] }
-      output_l(file_info_table)
+      output_with_l_option(file_info_table)
     else
       output(file_names)
     end
@@ -86,7 +86,7 @@ def output(file_names)
   row_count, rem = file_names.size.divmod(MAX_COLUMN_COUNT)
   row_count += 1 unless rem.zero?
 
-  max_name_length = file_names.max(1) {|a, b| a.size <=> b.size }.join.size
+  max_name_length = file_names.max(1) { |a, b| a.size <=> b.size }.join.size
 
   matrix = Array.new(row_count) { [] }
   file_names.each_with_index do |item, index|
@@ -100,29 +100,29 @@ def output(file_names)
   end
 end
 
-def output_l(file_info_table)
-  array_size = 0
-  hash.each_value do |value|
-    array_size = value.size
-    break unless array_size.zero?
+def output_with_l_option(file_info_table)
+  file_attribute_count = 0
+  file_info_table.each_value do |file_info|
+    file_attribute_count = file_info.size
   end
 
-  max_length_list = Array.new(array_size) { 0 }
+  max_length_list = Array.new(file_attribute_count) { 0 }
 
-  hash.each_value do |array|
-    array.each_with_index do |item, index|
+  file_info_table.each_value do |file_info|
+    file_info.each_with_index do |item, index|
       item_size = item.to_s.size
       max_length_list[index] = item_size if max_length_list[index] < item_size
     end
   end
 
-  total = 0
-  hash.each_value { |array| total += array[8] }
+  block_index = 8
+  total = file_info_table.each_value.sum { |file_info| file_info[block_index] }
   puts "total #{total}"
 
-  format_str = "%#{max_length_list.slice(0..7).join('s %')}s %s"
-  hash.each do |key, value|
-    puts format(format_str, *value.slice(0..7), key)
+  range_type_to_time = 0..7
+  format_str = "%#{max_length_list.slice(range_type_to_time).join('s %')}s %s"
+  file_info_table.each do |file_name, file_info|
+    puts format(format_str, *file_info.slice(range_type_to_time), file_name)
   end
 end
 
