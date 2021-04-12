@@ -3,7 +3,28 @@
 require 'etc'
 require 'optparse'
 
-CULUMN_MAX_NUM = 3
+MAX_COLUMN_COUNT = 3
+
+FILE_TYPES = {
+  'file' => '-',
+  'directory' => 'd',
+  'characterSpecial' => 'c',
+  'blockSpecial' => 'b',
+  'fifo' => 'p',
+  'link' => 'l',
+  'socket' => 's'
+}.freeze
+
+FILE_PERMISSIONS = {
+  '7' => 'rwx',
+  '6' => 'rw-',
+  '5' => 'r-x',
+  '4' => 'r--',
+  '3' => '-wx',
+  '2' => '-w-',
+  '1' => '--x',
+  '0' => '---'
+}.freeze
 
 def main
   begin
@@ -45,7 +66,7 @@ def get_file_stat(path, file_name)
 
   fs = File::Stat.new(file_path)
 
-  type = convert_type(fs.ftype)
+  type = FILE_TYPES[fs.ftype]
   mode = convert_permission(fs.mode.to_s(8).to_i % 1000)
   size = fs.size
   nlink = fs.nlink
@@ -63,33 +84,8 @@ def get_file_stat(path, file_name)
   [type + mode, nlink, uid, gid, size, month, day, time, block]
 end
 
-def convert_type(type)
-  {
-    'file' => '-',
-    'directory' => 'd',
-    'characterSpecial' => 'c',
-    'blockSpecial' => 'b',
-    'fifo' => 'p',
-    'link' => 'l',
-    'socket' => 's'
-  }[type]
-end
-
 def convert_permission(number)
-  permissions = {
-    '7' => 'rwx',
-    '6' => 'rw-',
-    '5' => 'r-x',
-    '4' => 'r--',
-    '3' => '-wx',
-    '2' => '-w-',
-    '1' => '--x',
-    '0' => '---'
-  }
-
-  a = []
-  number.to_s.chars.each { |char| a << permissions[char] }
-  a.join
+  number.to_s.chars.map { |char| FILE_PERMISSIONS[char] }.join
 end
 
 def output_new_line(num)
@@ -97,8 +93,8 @@ def output_new_line(num)
 end
 
 def output(array)
-  arr_size_div = array.size.div(CULUMN_MAX_NUM)
-  row_num = (array.size % CULUMN_MAX_NUM).zero? ? arr_size_div : arr_size_div + 1
+  arr_size_div = array.size.div(MAX_COLUMN_COUNT)
+  row_num = (array.size % MAX_COLUMN_COUNT).zero? ? arr_size_div : arr_size_div + 1
 
   max_str = 0
   array.each do |item|
