@@ -118,3 +118,9 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+
+# others
+.terraform
+*.tfstate*
+*.tfvars
