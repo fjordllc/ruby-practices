@@ -59,9 +59,9 @@ def get_file_info(path, file_name)
   file_path = path == file_name ? file_name : "#{path}/#{file_name}"
 
   fs = File::Stat.new(file_path)
-
   type = FILE_TYPES[fs.ftype]
-  mode = convert_permission(fs.mode.to_s(8).to_i % 1000)
+  mode_integer = fs.mode.to_s(8).to_i % 1000
+  mode = mode_integer.to_s.chars.map { |char| FILE_PERMISSIONS[char] }.join
   date_time = fs.mtime.localtime
 
   {
@@ -75,10 +75,6 @@ def get_file_info(path, file_name)
     day: date_time.day,
     time: date_time.strftime('%H:%M')
   }
-end
-
-def convert_permission(number)
-  number.to_s.chars.map { |char| FILE_PERMISSIONS[char] }.join
 end
 
 def output(file_names)
