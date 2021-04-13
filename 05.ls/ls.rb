@@ -84,8 +84,8 @@ def output(file_names)
   max_name_length = file_names.max(1) { |a, b| a.size <=> b.size }.join.size
 
   matrix = Array.new(row_count) { [] }
-  file_names.each_with_index do |item, index|
-    matrix[index % row_count] << item
+  file_names.each_with_index do |file_name, index|
+    matrix[index % row_count] << file_name
   end
 
   matrix.each_index do |row_index|
@@ -96,25 +96,18 @@ def output(file_names)
 end
 
 def output_with_l_option(file_info_table)
-  file_attr_count = 0
-  file_info_table.each_value do |file_info|
-    file_attr_count = file_info.size
-  end
+  display_items = %i[type_mode nlink uid gid size month day time]
+  max_length_table = {}
 
-  max_length_table = Hash.new(0)
-
-  file_info_table.each_value do |file_info|
-    file_info.each do |attr_name, attr_value|
-      attr_size = attr_value.to_s.size
-      max_length_table[attr_name] = attr_size if max_length_table[attr_name] < attr_size
-    end
+  display_items.each do |display_item|
+    table_with_max_length = file_info_table.each_value.max { |a, b| a[display_item].to_s.size <=> b[display_item].to_s.size }
+    max_length_table[display_item] = table_with_max_length[display_item].to_s.size
   end
 
   block_total = file_info_table.each_value.sum { |file_info| file_info[:block] }
   puts "total #{block_total}"
 
-  display_items = %i[type_mode nlink uid gid size month day time]
-  format_str = display_items.map { |item| "%#{max_length_table[item]}s" }.join(' ')
+  format_str = display_items.map { |display_item| "%#{max_length_table[display_item]}s" }.join(' ')
 
   file_info_table.each do |file_name, file_info|
     attr_values = file_info.fetch_values(*display_items)
