@@ -49,28 +49,28 @@ end
 def get_file_names(path, option_a: false, option_r: false)
   return [path] if File.file?(path)
 
-  list_file = option_a ? Dir.glob('*', File::FNM_DOTMATCH, base: path) : Dir.glob('*', base: path)
-  list_file.sort!
+  file_names = option_a ? Dir.glob('*', File::FNM_DOTMATCH, base: path) : Dir.glob('*', base: path)
+  file_names.sort!
 
-  option_r ? list_file.reverse : list_file
+  option_r ? file_names.reverse : file_names
 end
 
 def get_file_info(path, file_name)
   file_path = path == file_name ? file_name : "#{path}/#{file_name}"
 
-  fs = File::Stat.new(file_path)
-  type = FILE_TYPES[fs.ftype]
-  mode_integer = fs.mode.to_s(8).to_i % 1000
+  file_stat = File::Stat.new(file_path)
+  type = FILE_TYPES[file_stat.ftype]
+  mode_integer = file_stat.mode.to_s(8).to_i % 1000
   mode = mode_integer.to_s.chars.map { |char| FILE_PERMISSIONS[char] }.join
-  date_time = fs.mtime.localtime
+  date_time = file_stat.mtime.localtime
 
   {
     type_mode: type + mode,
-    nlink: fs.nlink,
-    block: fs.blocks,
-    size: fs.size,
-    uid: Etc.getpwuid(fs.uid).name,
-    gid: Etc.getgrgid(fs.gid).name,
+    nlink: file_stat.nlink,
+    block: file_stat.blocks,
+    size: file_stat.size,
+    uid: Etc.getpwuid(file_stat.uid).name,
+    gid: Etc.getgrgid(file_stat.gid).name,
     month: date_time.strftime('%b'),
     day: date_time.day,
     time: date_time.strftime('%H:%M')
