@@ -81,7 +81,7 @@ def output(file_names)
   row_count, rem = file_names.size.divmod(MAX_COLUMN_COUNT)
   row_count += 1 unless rem.zero?
 
-  max_name_length = file_names.max(1) { |a, b| a.size <=> b.size }.join.size
+  max_name_length = file_names.empty? ? 0 : file_names.max_by(&:size).size
 
   matrix = Array.new(row_count) { [] }
   file_names.each_with_index do |file_name, index|
@@ -100,7 +100,7 @@ def output_with_l_option(file_info_table)
   max_length_table = {}
 
   display_items.each do |display_item|
-    table_with_max_length = file_info_table.each_value.max { |a, b| a[display_item].to_s.size <=> b[display_item].to_s.size }
+    table_with_max_length = file_info_table.empty? ? {} : file_info_table.each_value.max_by { |file_info| file_info[display_item].to_s.size }
     max_length_table[display_item] = table_with_max_length[display_item].to_s.size
   end
 
