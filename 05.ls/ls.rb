@@ -110,8 +110,8 @@ def output_with_l_option(file_info_table)
   format_str = display_items.map { |display_item| "%#{max_length_table[display_item]}s" }.join(' ')
 
   file_info_table.each do |file_name, file_info|
-    attr_values = file_info.fetch_values(*display_items)
-    puts format("#{format_str} %s", *attr_values, file_name)
+    attributes = file_info.fetch_values(*display_items)
+    puts format("#{format_str} %s", *attributes, file_name)
   end
 end
 
