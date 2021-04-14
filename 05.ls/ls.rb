@@ -105,7 +105,7 @@ def output_with_l_option(file_info_table)
   end
 
   block_total = file_info_table.each_value.sum { |file_info| file_info[:block] }
-  puts "total #{block_total}"
+  puts "total #{block_total}" unless file_info_table.empty?
 
   format_str = display_items.map { |display_item| "%#{max_length_table[display_item]}s" }.join(' ')
 
