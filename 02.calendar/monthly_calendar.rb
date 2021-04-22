@@ -2,9 +2,9 @@
 
 require 'date'
 require 'color_echo'
-require './calender_date_unit'
+require './calendar_date_unit'
 
-class MonthlyCalender
+class MonthlyCalendar
   THIS_Y = Date.today.year
   THIS_M = Date.today.mon
   THIS_D = Date.today.day
@@ -18,7 +18,7 @@ class MonthlyCalender
     all_request_about_month = make_request_about_month
     layout_status = make_layout_status
     all_dates = all_request_about_month.map do |date|
-      this_date = CalenderDateUnit.new(date[0], date[1], @request)
+      this_date = CalendarDateUnit.new(date[0], date[1], @request)
       this_date.generate_days
     end
     merge_cal(all_dates, layout_status)
@@ -168,7 +168,7 @@ class MonthlyCalender
   end
 
   def merge_cal(all_dates, layout_status)
-    this_calender = MergeCalender.new(all_dates, layout_status)
-    this_calender.merge
+    this_calendar = MergeCalendar.new(all_dates, layout_status)
+    this_calendar.merge
   end
 end

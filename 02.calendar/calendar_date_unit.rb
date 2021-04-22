@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CalenderDateUnit
+class CalendarDateUnit
   THIS_Y = Date.today.year
   THIS_M = Date.today.mon
   THIS_D = Date.today.day

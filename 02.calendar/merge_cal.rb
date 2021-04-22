@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class MergeCalender
+class MergeCalendar
   THIS_Y = Date.today.year
   THIS_M = Date.today.mon
   THIS_D = Date.today.day
@@ -12,12 +12,12 @@ class MergeCalender
   end
 
   def merge
-    rendering_calender(@all_dates)
+    rendering_calendar(@all_dates)
   end
 
   private
 
-  def rendering_calender(all_dates)
+  def rendering_calendar(all_dates)
     rendering_string_result = ''
     replaced_all_dates = Marshal.load(Marshal.dump(all_dates))
     replaced_all_dates = replace_layout_var(replaced_all_dates)
@@ -70,11 +70,11 @@ class MergeCalender
       end
       one_month_days_string_result = join_days_string(one_month_day_cells, column)
 
-      <<~CALENDER
+      <<~CALENDAR
         #{@layout_status[:one_caption].call(first_unit[0], first_unit[1])}
         #{@layout_status[:one_week]}
         #{one_month_days_string_result}
-      CALENDER
+      CALENDAR
 
     when 2
       first_day_cells = first_unit[2]
@@ -93,11 +93,11 @@ class MergeCalender
       end
       two_month_days_string_result = join_days_string(two_months_day_cells, column)
 
-      <<~CALENDER
+      <<~CALENDAR
         #{@layout_status[:two_caption].call(first_unit[0], first_unit[1], second_unit[0], second_unit[1])}
         #{@layout_status[:two_weeks]}
         #{two_month_days_string_result}
-      CALENDER
+      CALENDAR
 
     when 3
       first_day_cells = first_unit[2]
@@ -125,33 +125,33 @@ class MergeCalender
       end
       three_month_days_string_result = join_days_string(three_months_day_cells, column)
 
-      <<~CALENDER
+      <<~CALENDAR
         #{@layout_status[:three_caption].call(first_unit[0], first_unit[1], second_unit[0], second_unit[1], third_unit[0], third_unit[1])}
         #{@layout_status[:three_weeks]}
         #{three_month_days_string_result}
-      CALENDER
+      CALENDAR
     end
   end
 
   def join_days_string(day_cells, column)
     case column
     when 6
-      <<~CALENDER
+      <<~CALENDAR
         #{day_cells[0].join}
         #{day_cells[1].join}
         #{day_cells[2].join}
         #{day_cells[3].join}
         #{day_cells[4].join}
         #{day_cells[5].join}
-      CALENDER
+      CALENDAR
     when 5
-      <<~CALENDER
+      <<~CALENDAR
         #{day_cells[0].join}
         #{day_cells[1].join}
         #{day_cells[2].join}
         #{day_cells[3].join}
         #{day_cells[4].join}
-      CALENDER
+      CALENDAR
     end
   end
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require './make_request'
-require './monthly_calender'
+require './monthly_calendar'
 require './merge_cal'
 
 class RubyCalFactory
@@ -21,7 +21,7 @@ class RubyCalFactory
   end
 
   def make_cal(request)
-    calender = MonthlyCalender.new(request)
-    calender.make_cal
+    calendar = MonthlyCalendar.new(request)
+    calendar.make_cal
   end
 end
