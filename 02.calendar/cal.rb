@@ -17,9 +17,12 @@ year = Date.today.year
 month = Date.today.mon
 first_wday = Date.new(year, month, 1).wday #初日の曜日を取得
 last_day = Date.new(year, month, -1).day
-week = %w(月 火 水 木 金 土 日)
+# week = %w(月 火 水 木 金 土 日)
 start = 6 - first_wday
 
+puts Date.today.strftime("%B %Y").center(21)
+print "  日 月 火 水 木 金 土 "
+puts ""
 WEEK_TABLE.each do |week|
   buf = ""
   week[start, 7].each do |day|
