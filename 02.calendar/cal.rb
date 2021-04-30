@@ -2,10 +2,11 @@ require "date"
 require 'optparse'
 
 opt = OptionParser.new
-opt.on('-m') {|m| month = Date.today.mon}
-opt.on('-y') {|y| year = Date.today.year}
+opt.on('-m') {|month|  Date.today.mon}
+opt.on('-y') {|year| Date.today.year}
 
 opt.parse!(ARGV)
+p ARGV
 
 WEEK_TABLE = [
   [99, 99, 99, 99, 99, 99,  1,  2,  3,  4,  5,  6,  7],
