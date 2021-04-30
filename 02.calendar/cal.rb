@@ -1,13 +1,6 @@
 require "date"
 require 'optparse'
 
-opt = OptionParser.new
-opt.on('-m') {|month|  Date.today.mon}
-opt.on('-y') {|year| Date.today.year}
-
-opt.parse!(ARGV)
-p ARGV
-
 WEEK_TABLE = [
   [99, 99, 99, 99, 99, 99,  1,  2,  3,  4,  5,  6,  7],
   [ 2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14],
@@ -20,9 +13,8 @@ WEEK_TABLE = [
 today = Date.today
 year = Date.today.year
 month = Date.today.mon
-first_wday = Date.new(year, month, 1).wday #初日の曜日を取得
+first_wday = Date.new(year, month, 1).wday
 last_day = Date.new(year, month, -1).day
-# week = %w(月 火 水 木 金 土 日)
 start = 6 - first_wday
 
 puts today.strftime("%B %Y").center(21)
