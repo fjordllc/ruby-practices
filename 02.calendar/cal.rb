@@ -1,17 +1,9 @@
 require "date"
 require 'optparse'
 
-opt = OptionParser.new
-opt.on("-y") {|year|}
-opt.on("-m") {|month|}
-
-opt.parse!(ARGV)
-
-year = ARGV[0] ? ARGV[0].to_i : Date.today.year
-month = ARGV[1] ? ARGV[1].to_i : Date.today.month
-
-p year
-p month
+options = ARGV.getopts("m:", "y:")
+p month = options["m"].to_i
+p year = options["y"].to_i
 
 WEEK_TABLE = [
   [99, 99, 99, 99, 99, 99,  1,  2,  3,  4,  5,  6,  7],
