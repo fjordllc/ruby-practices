@@ -2,12 +2,11 @@ require "date"
 require 'optparse'
 
 opt = OptionParser.new
+opt.on("-y")
+opt.on("-m")
 
-opt.on("-y") {|year|}
-opt.on("-m") {|month|}
-
-p year = ARGV[1].to_i
-p month = ARGV[3].to_i
+year = ARGV[1].to_i
+month = ARGV[3].to_i
 
 WEEK_TABLE = [
   [99, 99, 99, 99, 99, 99,  1,  2,  3,  4,  5,  6,  7],
@@ -22,8 +21,9 @@ today = Date.today
 first_wday = Date.new(year, month, 1).wday
 last_day = Date.new(year, month, -1).day
 start = 6 - first_wday
+year_month = "#{year}年 #{month}月"
 
-puts today.strftime("%B %Y").center(21)
+puts year_month.center(21)
 print "  日 月 火 水 木 金 土 "
 puts ""
 WEEK_TABLE.each do |week|
