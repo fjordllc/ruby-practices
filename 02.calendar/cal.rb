@@ -5,8 +5,8 @@ opt = OptionParser.new
 opt.on("-y")
 opt.on("-m")
 
-year = ARGV[1].to_i
-month = ARGV[3].to_i
+year = ARGV[1] ? ARGV[1].to_i : Date.today.year
+month = ARGV[3] ? ARGV[3].to_i : Date.today.month
 
 WEEK_TABLE = [
   [99, 99, 99, 99, 99, 99,  1,  2,  3,  4,  5,  6,  7],
