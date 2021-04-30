@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 
-numbers = [*1..20]
-
-numbers.each do |number|
+(1..20).each do |number|
   if number % 15 == 0
     puts "FizzBuzz"
   elsif number % 3 == 0
@@ -15,15 +13,13 @@ numbers.each do |number|
 end
 
 puts "別の解答"
-numbers = [*1..20]
-
-numbers.each do |number|
-  case
-  when number % 15 == 0
+(1..20).each do |number|
+  case 0
+  when number % 15
     puts "FizzBuzz"
-  when number % 3 == 0
+  when number % 3
     puts "Fizz"
-  when number % 5 == 0
+  when number % 5
     puts "Buzz"
   else
     puts number
