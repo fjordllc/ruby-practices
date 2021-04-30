@@ -1,9 +1,12 @@
 require "date"
+require 'optparse'
 
-# 今月の最初の日を求める
-# 今月の最後の日を求める
+opt = OptionParser.new
+opt.on('-m') {|m| month = Date.today.mon}
+opt.on('-y') {|y| year = Date.today.year}
 
-# 日付を配列として入力
+opt.parse!(ARGV)
+
 WEEK_TABLE = [
   [99, 99, 99, 99, 99, 99,  1,  2,  3,  4,  5,  6,  7],
   [ 2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14],
@@ -13,6 +16,7 @@ WEEK_TABLE = [
   [30, 31, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99],
 ]
 
+today = Date.today
 year = Date.today.year
 month = Date.today.mon
 first_wday = Date.new(year, month, 1).wday #初日の曜日を取得
@@ -20,7 +24,7 @@ last_day = Date.new(year, month, -1).day
 # week = %w(月 火 水 木 金 土 日)
 start = 6 - first_wday
 
-puts Date.today.strftime("%B %Y").center(21)
+puts today.strftime("%B %Y").center(21)
 print "  日 月 火 水 木 金 土 "
 puts ""
 WEEK_TABLE.each do |week|
