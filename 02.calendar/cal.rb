@@ -2,8 +2,8 @@ require "date"
 require 'optparse'
 
 options = ARGV.getopts("m:", "y:")
-p month = options["m"].to_i
-p year = options["y"].to_i
+month = options["m"].to_i
+year = options["y"].to_i
 
 WEEK_TABLE = [
   [99, 99, 99, 99, 99, 99,  1,  2,  3,  4,  5,  6,  7],
@@ -18,7 +18,12 @@ today = Date.today
 first_wday = Date.new(year, month, 1).wday
 last_day = Date.new(year, month, -1).day
 start = 6 - first_wday
-year_month = "#{year}年 #{month}月"
+
+if year == 0
+  year_month = "#{Date.today.year}年 #{month}月"
+else
+  year_month = "#{year}年 #{month}月"
+end
 
 puts year_month.center(21)
 print "  日 月 火 水 木 金 土 "
