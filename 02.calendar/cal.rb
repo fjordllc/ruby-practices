@@ -6,11 +6,12 @@ opt.on("-y") {|year|}
 opt.on("-m") {|month|}
 
 opt.parse!(ARGV)
-p ARGV[0]
-p ARGV[1]
 
 year = ARGV[0] ? ARGV[0].to_i : Date.today.year
 month = ARGV[1] ? ARGV[1].to_i : Date.today.month
+
+p year
+p month
 
 WEEK_TABLE = [
   [99, 99, 99, 99, 99, 99,  1,  2,  3,  4,  5,  6,  7],
@@ -25,7 +26,7 @@ today = Date.today
 first_wday = Date.new(year, month, 1).wday
 last_day = Date.new(year, month, -1).day
 start = 6 - first_wday
-year_month = "#{ARGV[0]}年 #{ARGV[1]}月"
+year_month = "#{year}年 #{month}月"
 
 puts year_month.center(21)
 print "  日 月 火 水 木 金 土 "
