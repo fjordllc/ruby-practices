@@ -2,10 +2,6 @@ require "date"
 require 'optparse'
 
 options = ARGV.getopts("m:", "y:")
-p options["m"]
-p options["y"]
-
-# options mとyがなかったら今月,今年を入れる
 if options["m"] == nil && options["y"] == nil
   month = Date.today.month
   year = Date.today.year
@@ -26,16 +22,10 @@ WEEK_TABLE = [
   [30, 31, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99],
 ]
 
-today = Date.today
 first_wday = Date.new(year, month, 1).wday
 last_day = Date.new(year, month, -1).day
 start = 6 - first_wday
-
-if year == 0
-  year_month = "#{Date.today.year}年 #{month}月"
-else
-  year_month = "#{year}年 #{month}月"
-end
+year_month = "#{year}年 #{month}月"
 
 puts year_month.center(21)
 print "  日 月 火 水 木 金 土 "
