@@ -2,15 +2,14 @@ require "date"
 require 'optparse'
 
 options = ARGV.getopts("m:", "y:")
-if options["m"] == nil && options["y"] == nil
-  month = Date.today.month
-  year = Date.today.year
-elsif options["y"] == nil
-  month = options["m"].to_i
-  year = Date.today.year
-else
-  month = options["m"].to_i
+month = Date.today.month
+year = Date.today.year
+
+if options["y"] != nil
   year = options["y"].to_i
+end
+if options["m"] != nil 
+  month = options["m"].to_i
 end
 
 WEEK_TABLE = [
