@@ -2,8 +2,20 @@ require "date"
 require 'optparse'
 
 options = ARGV.getopts("m:", "y:")
-month = options["m"].to_i
-year = options["y"].to_i
+p options["m"]
+p options["y"]
+
+# options mとyがなかったら今月,今年を入れる
+if options["m"] == nil && options["y"] == nil
+  month = Date.today.month
+  year = Date.today.year
+elsif options["y"] == nil
+  month = options["m"].to_i
+  year = Date.today.year
+else
+  month = options["m"].to_i
+  year = options["y"].to_i
+end
 
 WEEK_TABLE = [
   [99, 99, 99, 99, 99, 99,  1,  2,  3,  4,  5,  6,  7],
