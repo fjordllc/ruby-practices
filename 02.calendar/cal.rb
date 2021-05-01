@@ -32,11 +32,7 @@ puts ""
 WEEK_TABLE.each do |week|
   buf = ""
   week[start, 7].each do |day|
-    if day > last_day
-      buf << "   "
-    else
-      buf << sprintf("%3d", day)
-    end
+    day > last_day ? buf << "   " : buf << sprintf("%3d", day)
   end
   puts buf
 end
