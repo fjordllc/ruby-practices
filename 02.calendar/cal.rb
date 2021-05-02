@@ -30,6 +30,8 @@ puts year_month.center(21)
 print "  日 月 火 水 木 金 土 "
 puts ""
 WEEK_TABLE.each do |week|
+  buf = ""
+  week[start, 7].each do |day|
     buf << ((day > last_day) ? "   " : sprintf("%3d", day))
   end
   puts buf
