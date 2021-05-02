@@ -5,12 +5,8 @@ options = ARGV.getopts("m:", "y:")
 month = Date.today.month
 year = Date.today.year
 
-if options["y"] != nil
-  year = options["y"].to_i
-end
-if options["m"] != nil 
-  month = options["m"].to_i
-end
+year = options["y"].to_i if !options['y'].nil?
+month = options["m"].to_i if !options["m"].nil?
 
 WEEK_TABLE = [
   [99, 99, 99, 99, 99, 99,  1,  2,  3,  4,  5,  6,  7],
