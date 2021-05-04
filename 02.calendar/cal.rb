@@ -1,12 +1,12 @@
-require "date"
+require 'date'
 require 'optparse'
 
-options = ARGV.getopts("m:", "y:")
+options = ARGV.getopts('m:', 'y:')
 month = Date.today.month
 year = Date.today.year
 
-year = options["y"].to_i if !options['y'].nil?
-month = options["m"].to_i if !options["m"].nil?
+year = options['y'].to_i if !options['y'].nil?
+month = options['m'].to_i if !options['m'].nil?
 
 WEEK_TABLE = [
   [99, 99, 99, 99, 99, 99,  1,  2,  3,  4,  5,  6,  7],
