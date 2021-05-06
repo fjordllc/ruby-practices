@@ -6,7 +6,7 @@ options = ARGV.getopts("", "y:#{Date.today.year}", "m:#{Date.today.month}")
 y_of_today = options['y'].to_i
 m_of_today = options['m'].to_i
 
-puts ("#{m_of_today}月"+ " " + "#{y_of_today}").center(20)
+puts ("#{m_of_today}月" + " " + "#{y_of_today}").center(20)
 
 first_day = Date.new(y_of_today, m_of_today, 1)
 last_day = Date.new(y_of_today, m_of_today, -1)
@@ -28,9 +28,9 @@ print "\s" * 18 if first_day.saturday?
 (first_day..last_day).each do |everyday|
   print everyday.strftime('%e')
   print ' '
-  if everyday.saturday?
-    print "\n"
-  end
+    if everyday.saturday?
+      print "\n"
+    end
 end
 puts "\n"
 
