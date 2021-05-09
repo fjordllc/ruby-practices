@@ -1,30 +1,38 @@
-# frozen_string_literal: true
-
-require './optparse_run'
-require 'date'
+require 'optparse'
 
 class MakeRequest
   THIS_Y = Date.today.year
   THIS_M = Date.today.mon
-  THIS_D = Date.today.day
-  THIS_W = Date.today.wday
-
+  
   def initialize
-    @generate_request_result = {}
-    @default_request_status = {
-      basic_month: THIS_M,
-      basic_year: THIS_Y,
-      basic_day: THIS_D,
-      pre_month: nil,
-      next_month: nil,
-      julius: false,
-      highligth: true,
-      year_position: 'default'
-    }
+    @keys = { y: THIS_Y, m: THIS_M }
+  end
+  
+  def optparse
+    opt = OptionParser.new
+    parse_year(opt)
+    parse_month(opt)
+    opt.parse!(ARGV)
+    @keys
   end
 
-  def make_request
-    parse_arge = OptparseRun.new(@default_request_status)
-    parse_arge.optparse_run
+  def parse_year(opt)
+    opt.on('-y VAL') do |v|
+      @keys[:y] = v if correct_year?(v)
+    end
+  end
+
+  def parse_month(opt)
+    opt.on('-m VAL') do |v|
+      @keys[:m] = v if correct_month?(v)
+    end
+  end
+
+  def correct_month?(num)
+    num.to_i.between?(1, 12)
+  end
+
+  def correct_year?(num)
+    num.to_i.between?(0, 9999)
   end
 end
