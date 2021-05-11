@@ -1,51 +1,20 @@
 # frozen_string_literal: true
 
+require 'optparse'
 require 'date'
-require_relative 'make_request'
-require_relative 'ganarate_cal_elements'
-require_relative 'display'
+keys = { y: Date.today.year, m: Date.today.mon }
 
-class Rubycal
-  THIS_Y = Date.today.year
-  THIS_M = Date.today.mon
-  THIS_D = Date.today.day
-  THIS_W = Date.today.wday
+opt = OptionParser.new
+opt.on('-y VAL') { |v| keys[:y] = v }
+opt.on('-m VAL') { |v| keys[:m] = v }
+opt.parse!(ARGV)
 
-  def initialize
-    @keys = { y: THIS_Y, m: THIS_M }
-    @layout = {
-      mergin: "\s",
-      blank_cell: "\s\s",
-      blank_for_1char: "\s",
-      blank_for_2char: '',
-      column: nil
-    }
-  end
+month_last_d = Date.new(keys[:y].to_i, keys[:m].to_i, -1).day
+month_first_w = Date.new(keys[:y].to_i, keys[:m].to_i, 1).wday
 
-  def run
-    make_request
-    display_rubycal(generate_cal_elements)
-  end
-
-  def make_request
-    make_request = MakeRequest.new
-    @keys = make_request.optparse
-  end
-
-  def generate_cal_elements
-    generate_cal_elements = GanarateCalElements.new(@keys, @layout)
-    generate_cal_elements.generate
-  end
-
-  def display_rubycal(cal_elements)
-    display = Display.new(cal_elements, @layout)
-    display.run
-  end
-end
-
-def run
-  rubycal = Rubycal.new
-  rubycal.run
-end
-
-run
+days = (1..month_last_d).to_a.map { |day| day.to_s.rjust(3) }
+month_first_w.times { days.unshift("\s\s\s") }
+result = days.each_slice(7).map { |week| week << "\n"}
+puts "      #{keys[:m]}月 #{keys[:y]}年"
+puts ' 日 月 火 水 木 金 土'
+puts result.join
