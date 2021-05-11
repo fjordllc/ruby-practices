@@ -11,38 +11,32 @@ opt.on('-y [Year]') { |v| year = v }
 argv = opt.parse(ARGV)
 
 date = Date.today
-if month && year
-  date = Date.new(year.to_i, month.to_i, 1)
-elsif month && !year
-  date = Date.new(date.year, month.to_i, 1)
-elsif !month && year
-  date = Date.new(year.to_i, date.month, 1)
-else
-  date = Date.new(date.year, date.month, 1)
-end
+month ||= date.month
+year ||= date.year
 
-cal = ""
+date = Date.new(year.to_i, month.to_i, 1)
+lastday = Date.new(year.to_i, month.to_i, -1).day
+
+cal = ''
 wday = date.wday
-1.upto(date.next_month.prev_day.day) do |i|
+1.upto(lastday) do |i|
   if i == 1
-    cal += "   " * wday
+    cal += '   ' * wday
   elsif wday != 0
-    cal += " "
+    cal += ' '
   end
-  if i < 10
-    cal += " "
-  end
+  cal += ' ' if i < 10
   cal += i.to_s
   if wday == 6
     cal += "\n"
     wday = 0
-  elsif
+  else
     wday += 1
   end
 end
 
-puts <<-EOS
+puts <<~CAL
       #{date.month}月 #{date.year}
 日 月 火 水 木 金 土
 #{cal}
-EOS
+CAL
