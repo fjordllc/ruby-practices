@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'optparse'
 require 'prettyprint'
 require 'etc'
@@ -36,37 +38,33 @@ files = all ? files : files.filter { |path| !path.match?(/^\./) }
 # 反転させるかどうか切り替える
 files = reverse ? files.reverse : files
 
+def permission(stat)
+  temp = stat.directory? ? 'd' : '-'
+  format('0%o', stat.mode)[-3, 3].each_char do |i|
+    case i
+    when '7' then temp += 'rwx'
+    when '6' then temp += 'rw-'
+    when '5' then temp += 'r-x'
+    when '4' then temp += 'r--'
+    when '3' then temp += '-wx'
+    when '2' then temp += '-w-'
+    when '1' then temp += '--x'
+    when '0' then temp += '---'
+    end
+  end
+  temp
+end
+
 if long
   puts "total #{files.size}"
   p2.group do
     files.each do |file|
       stat = File.stat file
-      permission = stat.directory? ? 'd' : FileTest.symlink?(file) ? 'l' : '-'
-      ("0%o" % stat.mode)[-3, 3].each_char do |i|
-        case i
-        when '7'
-          permission += 'rwx'
-        when '6'
-          permission += 'rw-'
-        when '5'
-          permission += 'r-x'
-        when '4'
-          permission += 'r--'
-        when '3'
-          permission += '-wx'
-        when '2'
-          permission += '-w-'
-        when '1'
-          permission += '--x'
-        when '0'
-          permission += '---'
-        end
-      end
-      p2.text(permission)
+      p2.text(permission(stat))
       p2.text(stat.nlink.to_s.rjust(3))
-      p2.text(' ' + Etc.getpwuid(stat.uid).name)
-      p2.text('  ' + Etc.getgrgid(stat.gid).name)
-      p2.text('  ' + stat.size?.to_s.rjust(4))
+      p2.text(" #{Etc.getpwuid(stat.uid).name}")
+      p2.text("  #{Etc.getgrgid(stat.gid).name}")
+      p2.text("  #{stat.size?.to_s.rjust(4)}")
       p2.text(stat.mtime.strftime(' %_m %_d %R '))
       p2.text(file)
       p2.breakable
