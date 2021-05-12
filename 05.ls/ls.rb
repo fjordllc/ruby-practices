@@ -1,14 +1,10 @@
-# - 引数を受け取る
-p dir = ARGV[0]
-# カレントディレクトリを表示
-p Dir.pwd
-p Dir.glob("*")
+require "optparse"
 
-# - ディレクトリ名を受け取る
-# - ディレクトリに含まれるファイル、ディレクトリを解析する
-# - ↑ で解析した内容をコンソールに出力する
-
-Dir.foreach('.') do |item|
-  next if item == '.' or item == '..'
-  puts item
+options = ARGV.getopts('a')
+if options['a']
+  print Dir.glob("*", File::FNM_DOTMATCH).sort
+  puts "\n"
+else
+  print Dir.glob("*").sort
+  puts "\n" 
 end
