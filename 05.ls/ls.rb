@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 
 require 'optparse'
+options = ARGV.getopts('a', 'l', 'r')
 
-options = ARGV.getopts('a')
+contents = Dir.glob('*')
+
 if options['a']
-  print Dir.glob('*', File::FNM_DOTMATCH).sort
-  puts "\n"
+  puts Dir.glob('*', File::FNM_DOTMATCH).sort
+elsif options['r']
+  puts contents.reverse
 else
-  print Dir.glob('*').sort
-  puts "\n"
+  puts contents
 end
 
 permissions = {
