@@ -6,11 +6,11 @@ options = ARGV.getopts('a', 'l', 'r')
 contents = Dir.glob('*')
 
 if options['a']
-  puts Dir.glob('*', File::FNM_DOTMATCH).sort
+  puts Dir.glob('*', File::FNM_DOTMATCH).sort.join(" ").rjust(15)
 elsif options['r']
-  puts contents.reverse
+  puts contents.reverse.join(" ").rjust(15)
 else
-  puts contents
+  puts contents.join(" ").rjust(15)
 end
 
 permissions = {
