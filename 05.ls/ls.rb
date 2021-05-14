@@ -17,12 +17,13 @@ else
   puts lists.join(" ")
 end
 
-file_type = {
-  "file" => '-',
-  "directory" => 'd',
-  "symblic-link" => 'l'
-}
-
+def file_type(type)
+  file_type = {
+    "file" => '-',
+    "directory" => 'd',
+    "symblic-link" => 'l'
+  }[type]
+end
 # file_status = File.stat("#{path}#{file}")
 
 def file_mode(mode)
@@ -43,12 +44,12 @@ end
   lists.each do |list|
     file = File.stat(list) # File::Statオブジェクトを作成
     file_mode = file_mode(file.mode.to_s(8)[-3, 3].chars).join
-    file_type = file.ftype
+    file_type = file_type(file.ftype)
     file_uid = Etc.getpwuid(file.uid).name
     file_gid = Etc.getgrgid(file.gid).name
     file_size = file.size
     time_stamp = file.mtime.strftime("%m %d %H:%M")
     file_name = list
-    puts "#{file_mode} #{file_uid} #{file_gid} #{file_size} #{time_stamp} #{file_name}" 
+    puts "#{file_type}#{file_mode} #{file_uid} #{file_gid} #{file_size} #{time_stamp} #{file_name}" 
   end
 
