@@ -44,7 +44,12 @@ def file_mode(mode)
 end
 
 lists.each do |list|
-  file = File.stat(list)
-  file_mode = file_mode(file_mode.to_s(8))
-  puts "#{file_mode}"
+  file = File.stat(list) # File::Statオブジェクトを作成
+  file_type = file.ftype
+  file_uid = Etc.getpwuid(file.uid).name
+  file_gid = Etc.getgrgid(file.gid).name
+  file_size = file.size
+  time_stamp = file.mtime.strftime("%m %d %H:%M")
+  file_name = list
+  puts "#{file_uid} #{file_gid} #{file_size} #{time_stamp} #{file_name}" 
 end
