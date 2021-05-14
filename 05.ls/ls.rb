@@ -36,21 +36,19 @@ def file_mode(mode)
     '6' => 'rw-',
     '7' => 'rwx'
   }
-  mode.to_s(8)[3, 5].chars.map {|i| permissions[i]}.join
+  mode.map {|i| permissions[i]}
 end
 
-
-attribute = nil
 def attribute(attribute)
   lists.each do |list|
     file = File.stat(list) # File::Statオブジェクトを作成
-    file_mode = filemode(file.mode)
+    file_mode = filemode(file.mode.to_s[3, 5])
     file_type = file.ftype
     file_uid = Etc.getpwuid(file.uid).name
     file_gid = Etc.getgrgid(file.gid).name
     file_size = file.size
     time_stamp = file.mtime.strftime("%m %d %H:%M")
     file_name = list
-    puts "#{file_uid} #{file_gid} #{file_size} #{time_stamp} #{file_name}" 
+    puts "#{file_mode} #{file_uid} #{file_gid} #{file_size} #{time_stamp} #{file_name}" 
   end
 end
