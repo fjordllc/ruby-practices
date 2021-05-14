@@ -42,7 +42,7 @@ end
 
   lists.each do |list|
     file = File.stat(list) # File::Statオブジェクトを作成
-    file_mode = file_mode(file.mode.to_s(8)[3, 5].chars).join
+    file_mode = file_mode(file.mode.to_s(8)[-3, 3].chars).join
     file_type = file.ftype
     file_uid = Etc.getpwuid(file.uid).name
     file_gid = Etc.getgrgid(file.gid).name
