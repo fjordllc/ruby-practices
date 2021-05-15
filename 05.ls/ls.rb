@@ -71,10 +71,12 @@ lines.each do |line|
   end
 end
 
-# transposeする。ljustはとりあえず24にしてみる
-lines.transpose.each do |new_line|
-  new_line.each do |file|
-    print file.ljust(24)
+unless options['l']
+  # transposeする。ljustはとりあえず24にしてみる
+  lines.transpose.each do |new_line|
+    new_line.each do |file|
+      print file.ljust(24)
+    end
+    print "\n"
   end
-  print "\n"
 end
