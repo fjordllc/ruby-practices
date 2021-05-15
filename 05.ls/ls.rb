@@ -7,13 +7,13 @@ options = ARGV.getopts('a', 'l', 'r')
 # カレントディレクトリに含まれるファイルを配列で取得
 lists = Dir.glob('*')
 
-if options['a']
-  files = Dir.glob('*', File::FNM_DOTMATCH).sort
-elsif options['r']
-  files = lists.reverse
-else
-  files = lists
-end
+files = if options['a']
+          Dir.glob('*', File::FNM_DOTMATCH).sort
+        elsif options['r']
+          lists.reverse
+        else
+          lists
+        end
 
 if options['l']
   def file_type(type)
@@ -56,20 +56,21 @@ if options['l']
   end
 end
 
-if (files.size % 3).zero?
-  first_column = files.size / 3 + 1
-else
-  first_column = files.size / 3 + files.size % 3
-end
-#最初の列のファイル数に合わせて配列を作る。配列の要素数が足りない時はスペースを詰め込む
+first_column = if (files.size % 3).zero?
+                 files.size / 3 + 1
+               else
+                 files.size / 3 + files.size % 3
+               end
+# 最初の列のファイル数に合わせて配列を作る。配列の要素数が足りない時はスペースを詰め込む
 lines = files.each_slice(first_column).to_a
 lines.each do |line|
-  if line.size < first_column
-    (first_column - line.size).times do 
-      line << " "
-    end
+  next unless line.size < first_column
+
+  (first_column - line.size).times do
+    line << ' '
   end
 end
+
 # transposeする。ljustはとりあえず24にしてみる
 lines.transpose.each do |new_line|
   new_line.each do |file|
