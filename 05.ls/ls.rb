@@ -40,8 +40,12 @@ def file_mode(mode)
   mode.map {|i| permissions[i]}
 end
 
+# totalを取得
+file_blocks = lists.map {|list| File.stat(list).blocks}
+total = file_blocks.sum
+puts "#{total}"
 
-  lists.each do |list|
+lists.each do |list|
     file = File.stat(list) # File::Statオブジェクトを作成
     file_mode = file_mode(file.mode.to_s(8)[-3, 3].chars).join
     file_type = file_type(file.ftype)
@@ -51,8 +55,4 @@ end
     time_stamp = file.mtime.strftime("%m %d %H:%M")
     file_name = list
     puts "#{file_type}#{file_mode} #{file_uid} #{file_gid} #{file_size} #{time_stamp} #{file_name}" 
-  end
-
-# totalを取得
-file_blocks = lists.map {|list| File.stat(list).blocks}
-p file_blocks.sum
+end
