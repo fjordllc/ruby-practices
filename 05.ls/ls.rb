@@ -10,18 +10,16 @@ lists = Dir.glob('*')
 # p lists.each_slice(3).to_a.transpose
 
 if options['a']
-  puts Dir.glob('*', File::FNM_DOTMATCH).sort.join(" ")
+  puts Dir.glob('*', File::FNM_DOTMATCH).sort.join(' ')
 elsif options['r']
-  puts lists.reverse.join(" ")
-else
-  puts lists.join(" ")
+  puts lists.reverse.join(' ')
 end
 
 def file_type(type)
   file_type = {
-    "file" => '-',
-    "directory" => 'd',
-    "symblic-link" => 'l'
+    'file' => '-',
+    'directory' => 'd',
+    'symblic-link' => 'l'
   }[type]
 end
 # file_status = File.stat("#{path}#{file}")
@@ -37,22 +35,22 @@ def file_mode(mode)
     '6' => 'rw-',
     '7' => 'rwx'
   }
-  mode.map {|i| permissions[i]}
+  mode.map { |i| permissions[i] }
 end
 
 # totalを取得
-file_blocks = lists.map {|list| File.stat(list).blocks}
+file_blocks = lists.map { |list| File.stat(list).blocks }
 total = file_blocks.sum
-puts "#{total}"
+puts "total #{total}"
 
 lists.each do |list|
-    file = File.stat(list) # File::Statオブジェクトを作成
-    file_mode = file_mode(file.mode.to_s(8)[-3, 3].chars).join
-    file_type = file_type(file.ftype)
-    file_uid = Etc.getpwuid(file.uid).name
-    file_gid = Etc.getgrgid(file.gid).name
-    file_size = file.size
-    time_stamp = file.mtime.strftime("%m %d %H:%M")
-    file_name = list
-    puts "#{file_type}#{file_mode} #{file_uid} #{file_gid} #{file_size} #{time_stamp} #{file_name}" 
+  file = File.stat(list) # File::Statオブジェクトを作成
+  file_mode = file_mode(file.mode.to_s(8)[-3, 3].chars).join
+  file_type = file_type(file.ftype)
+  file_uid = Etc.getpwuid(file.uid).name
+  file_gid = Etc.getgrgid(file.gid).name
+  file_size = file.size
+  time_stamp = file.mtime.strftime('%m %d %H:%M')
+  file_name = list
+  puts "#{file_type}#{file_mode} #{file_uid} #{file_gid} #{file_size} #{time_stamp} #{file_name}"
 end
