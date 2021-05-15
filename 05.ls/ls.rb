@@ -6,7 +6,7 @@ require 'etc'
 options = ARGV.getopts('a', 'l', 'r')
 
 # カレントディレクトリに含まれるファイルを配列で取得
-p lists = Dir.glob('*')
+lists = Dir.glob('*')
 # p lists.each_slice(3).to_a.transpose
 
 if options['a']
@@ -53,3 +53,6 @@ end
     puts "#{file_type}#{file_mode} #{file_uid} #{file_gid} #{file_size} #{time_stamp} #{file_name}" 
   end
 
+# totalを取得
+file_blocks = lists.map {|list| File.stat(list).blocks}
+p file_blocks.sum
