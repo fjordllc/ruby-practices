@@ -19,6 +19,10 @@ month = params[:month] ? params[:month].to_i : today.month
 last_mday = Date.new(year, month, -1).mday
 SAT = 6
 
+def inverse_color(str)
+  "\e[30m\e[47m#{str}\e[0m"
+end
+
 
 puts "      #{month}月 #{year}"
 puts "日 月 火 水 木 金 土"
@@ -31,6 +35,8 @@ puts "日 月 火 水 木 金 土"
   else
     " #{v}"
   end
+
+  mday = inverse_color(mday) if date == today
 
   formatted_mday = if (date.cwday == SAT || last_mday == v)
     mday << "\n"
