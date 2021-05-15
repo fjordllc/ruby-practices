@@ -10,7 +10,10 @@ params = {}
 opt.on('-y YEAR') {|v| params[:year] = v }
 opt.on('-m MONTH') {|v| params[:month] = v }
 
-opt.parse!(ARGV)
+begin
+  opt.parse!(ARGV)
+rescue OptionParser::ParseError
+end
 
 today = Date.today
 
