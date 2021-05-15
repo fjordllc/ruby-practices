@@ -4,17 +4,15 @@ require 'optparse'
 require 'etc'
 
 options = ARGV.getopts('a', 'l', 'r')
-
 # カレントディレクトリに含まれるファイルを配列で取得
 lists = Dir.glob('*')
-# p lists.each_slice(3).to_a.transpose
 
 if options['a']
-  puts Dir.glob('*', File::FNM_DOTMATCH).sort.join(' ')
+  files = Dir.glob('*', File::FNM_DOTMATCH).sort
 elsif options['r']
-  puts lists.reverse.join(' ')
+  files = lists.reverse
 else
-  puts lists.join(' ')
+  files = lists
 end
 
 if options['l']
@@ -56,4 +54,26 @@ if options['l']
     file_name = list
     puts "#{file_type}#{file_mode} #{file_uid} #{file_gid} #{file_size} #{time_stamp} #{file_name}"
   end
+end
+
+if (files.size % 3).zero?
+  first_column = files.size / 3 + 1
+else
+  first_column = files.size / 3 + files.size % 3
+end
+#最初の列のファイル数に合わせて配列を作る。配列の要素数が足りない時はスペースを詰め込む
+lines = files.each_slice(first_column).to_a
+lines.each do |line|
+  if line.size < first_column
+    (first_column - line.size).times do 
+      line << " "
+    end
+  end
+end
+# transposeする。ljustはとりあえず24にしてみる
+lines.transpose.each do |new_line|
+  new_line.each do |file|
+    print file.ljust(24)
+  end
+  print "\n"
 end
