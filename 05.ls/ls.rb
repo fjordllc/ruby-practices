@@ -13,6 +13,8 @@ if options['a']
   puts Dir.glob('*', File::FNM_DOTMATCH).sort.join(' ')
 elsif options['r']
   puts lists.reverse.join(' ')
+else
+  puts lists.join(' ')
 end
 
 if options['l']
@@ -23,7 +25,6 @@ if options['l']
       'symblic-link' => 'l'
     }[type]
   end
-  # file_status = File.stat("#{path}#{file}")
 
   def file_mode(mode)
     permissions = {
