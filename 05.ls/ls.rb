@@ -8,11 +8,9 @@ options = ARGV.getopts('a', 'l', 'r')
 lists = Dir.glob('*')
 
 files = if options['a']
-          Dir.glob('*', File::FNM_DOTMATCH).sort
+          Dir.glob('*', File::FNM_DOTMATCH)
         elsif options['r']
           lists.reverse
-        else
-          lists
         end
 
 if options['l']
@@ -20,7 +18,7 @@ if options['l']
     file_type = {
       'file' => '-',
       'directory' => 'd',
-      'symblic-link' => 'l'
+      'link' => 'l'
     }[type]
   end
 
@@ -39,22 +37,24 @@ if options['l']
   end
 
   # totalを取得
-  file_blocks = lists.map { |list| File.stat(list).blocks }
+  file_blocks = files.map { |list| File.stat(list).blocks }
   total = file_blocks.sum
   puts "total #{total}"
 
-  lists.each do |list|
+  files.each do |list|
     file = File.stat(list) # File::Statオブジェクトを作成
     file_mode = file_mode(file.mode.to_s(8)[-3, 3].chars).join
     file_type = file_type(file.ftype)
+    file_link = file.nlink
     file_uid = Etc.getpwuid(file.uid).name
     file_gid = Etc.getgrgid(file.gid).name
     file_size = file.size
     time_stamp = file.mtime.strftime('%m %d %H:%M')
     file_name = list
-    puts "#{file_type}#{file_mode} #{file_uid} #{file_gid} #{file_size} #{time_stamp} #{file_name}"
+    puts "#{file_type}#{file_mode} #{file_link.to_s.rjust(2)} #{file_uid} #{file_gid} #{file_size.to_s.rjust(4)} #{time_stamp} #{file_name}"
   end
 end
+binding.irb
 
 first_column = if (files.size % 3).zero?
                  files.size / 3 + 1
