@@ -5,13 +5,10 @@ require 'etc'
 
 options = ARGV.getopts('a', 'l', 'r')
 # カレントディレクトリに含まれるファイルを配列で取得
-lists = Dir.glob('*')
+files = Dir.glob('*')
 
-files = if options['a']
-          Dir.glob('*', File::FNM_DOTMATCH)
-        elsif options['r']
-          lists.reverse
-        end
+files = Dir.glob('*', File::FNM_DOTMATCH) if options['a']
+files = files.reverse if options['r']
 
 if options['l']
   def file_type(type)
@@ -53,8 +50,8 @@ if options['l']
     file_name = list
     puts "#{file_type}#{file_mode} #{file_link.to_s.rjust(2)} #{file_uid} #{file_gid} #{file_size.to_s.rjust(4)} #{time_stamp} #{file_name}"
   end
+  return
 end
-binding.irb
 
 first_column = if (files.size % 3).zero?
                  files.size / 3 + 1
