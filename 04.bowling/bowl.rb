@@ -37,8 +37,8 @@ def scoremaker(lines)
   framecounter = 1
   throwcounter = 1
 
-  lines.each do |score|
-    score = scoreinterpretter(score)
+  lines.each do |lscore|
+    score = scoreinterpretter(lscore)
     if score == 10 && throwcounter == 1 && framecounter <= 10
       ls = [score]
       scores[framecounter - 1] = ls
@@ -72,16 +72,20 @@ def errorchecker(organizedscores)
   organizedscores.each.with_index do |organizedscore, i|
     if organizedscore.size == 2 && i != 9 && organizedscore[1] == 10
       puts 'ストライクなのに二投目です'
-      break
+      return false
     end
-    if organizedscores.sum > 10 && i != 9
+    if organizedscore.sum > 10 && i != 9
       puts '得点が10を超えています'
-      break
+      return false
     end
   end
+  if organizedscores.include?([0])
+    puts '正確なスコアが記入されていません'
+    return false
+  end
+  true
 end
 
-line = ARGV[0].to_s.strip.split(',')
+line = ARGV.join.to_s.strip.split(',')
 madescore = scoremaker(line)
-errorchecker(madescore)
-puts scorecalculator(madescore)
+puts scorecalculator(madescore) if errorchecker(madescore)
