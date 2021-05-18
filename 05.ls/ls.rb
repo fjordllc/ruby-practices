@@ -56,10 +56,11 @@ def permission(stat)
 end
 
 if long
-  puts "total #{files.size}"
+  blocks = 0
   p2.group do
     files.each do |file|
       stat = File.stat file
+      blocks += stat.blocks
       p2.text(permission(stat))
       p2.text(stat.nlink.to_s.rjust(3))
       p2.text(" #{Etc.getpwuid(stat.uid).name}")
@@ -70,6 +71,7 @@ if long
       p2.breakable
     end
   end
+  puts "total #{blocks}"
 else
   height = files.size / 3
   mod = files.size % 3
