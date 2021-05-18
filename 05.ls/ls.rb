@@ -65,7 +65,7 @@ if long
       p2.text(stat.nlink.to_s.rjust(3))
       p2.text(" #{Etc.getpwuid(stat.uid).name}")
       p2.text("  #{Etc.getgrgid(stat.gid).name}")
-      p2.text("  #{stat.size?.to_s.rjust(4)}")
+      p2.text("  #{stat.size.to_s.rjust(4)}")
       p2.text(stat.mtime.strftime(' %_m %_d %R '))
       p2.text(file)
       p2.breakable
