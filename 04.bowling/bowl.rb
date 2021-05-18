@@ -83,6 +83,10 @@ def errorchecker(organizedscores)
     puts '正確なスコアが記入されていません'
     return false
   end
+  if organizedscores[9].size >= 4
+    puts '最終フレームで4投以上しています'
+    return false
+  end
   true
 end
 
