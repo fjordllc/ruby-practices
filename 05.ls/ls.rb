@@ -13,8 +13,8 @@ class Array
   end
 
   # ディレクトリの場合は'/'を後ろにつける
-  def add_slash_on_dir!
-    map! do |file|
+  def add_slash_on_dir
+    map do |file|
       File.directory?(file) ? "#{file}/" : file
     end
   end
@@ -32,7 +32,7 @@ opt.parse(ARGV)
 
 p2 = PrettyPrint.new
 
-files = Dir.entries('.').sort.add_slash_on_dir!
+files = Dir.entries('.').sort.add_slash_on_dir
 # .を含むかどうか切り替える
 files = all ? files : files.filter { |path| !path.match?(/^\./) }
 # 反転させるかどうか切り替える
