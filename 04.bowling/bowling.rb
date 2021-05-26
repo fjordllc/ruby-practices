@@ -1,117 +1,119 @@
 #!/usr/bin/env ruby
 
 class Bowling
-  class << self
-    def strike?(frame)
-      frame[0] == 10
+  attr_accessor :scores, :shots, :frames
+
+  def initialize(scores)
+    @scores = scores[0].split(',')
+    # scores = ARGV[0].split(',')
+    # p "scores: #{scores}"
+    @shots = []
+    @frames = []
+  end
+
+  def run
+    build_shots
+    build_frames
+
+    calcurate_point
+  end
+
+  private
+
+  def build_shots
+    @scores.each do |score|
+      if score == 'X'
+        @shots << 10
+        @shots << 0
+      else
+        @shots << score.to_i
+      end
     end
+  end
 
-    def spare?(frame)
-      frame.sum == 10
-    end
+  def build_frames
+    @shots.each_slice(2) {|s| @frames << s }
 
-    def run(scores)
-      scores = scores[0].split(',')
-      # scores = ARGV[0].split(',')
-      # p "scores: #{scores}"
+    @frames = @frames.map {|frame| frame[0] == 10 ? frame.slice(0, 1) : frame }
 
-      shots = []
-      scores.each do |score|
-        if score == 'X'
-          shots << 10
-          shots << 0
+    @frames = @frames.filter_map.with_index do |frame, idx|
+      valid_frame = idx <= 9
+      last_frame = idx == 9
+
+      if valid_frame
+        if last_frame
+          @frames.slice(idx..).reduce {|result, frame| result + frame }
         else
-          shots << score.to_i
+          frame
         end
       end
-      # p "shots: #{shots}"
+    end
+  end
 
-      frames = []
-      shots.each_slice(2) {|s| frames << s }
+  def calcurate_point
+    point = 0
 
-      frames = frames.map {|frame| frame[0] == 10 ? frame.slice(0, 1) : frame }
+    @frames.each_with_index do |frame, idx|
+      frame_number = idx + 1
+      next_frame = @frames[idx + 1]
+      next_next_frame = @frames[idx + 2]
 
-      frames = frames.filter_map.with_index do |frame, idx|
-        valid_frame = idx <= 9
-        last_frame = idx == 9
+      if frame_number == 10
 
-        if valid_frame
-          if last_frame
-            frames.slice(idx..).reduce {|result, frame| result + frame }
-          else
-            frame
-          end
-        end
-      end
+        point += frame.sum
 
-      # p "frames: #{frames}"
-      # p "frames.count: #{frames.count}"
+      elsif frame_number == 9
 
-      point = 0
-      frames.each.with_index(1) do |frame, frame_number|
-        # strike = frame[0] == 10
-        # spare = frame.sum == 10
-
-        next_frame = frames[frame_number]
-        next_next_frame = frames[frame_number + 1]
-
-
-        if frame_number == 10
+        if strike?(frame)
+          point += frame.sum + next_frame[0..1].sum
+        elsif spare?(frame)
+          point += frame.sum + next_frame[0]
+        else
           point += frame.sum
-        elsif frame_number == 9
-          if strike?(frame)
-            point += frame.sum + next_frame[0..1].sum
-          elsif spare?(frame)
-            point += frame.sum + next_frame[0]
-          else
-            point += frame.sum
-          end
-        elsif frame_number == 8
-          if strike?(frame)
-            if strike?(next_frame)
-              point += frame.sum + next_frame.sum + next_next_frame[0]
-            elsif spare?(next_frame)
-              point += frame.sum + next_frame.sum
-            else
-              point += frame.sum
-            end
-          elsif spare?(frame)
-            point += frame.sum + next_frame[0]
-          else
-            point += frame.sum
-          end
-        else
-          if strike?(frame)
-            # 2投を取得する
-            # next_frameの1st shotが10 => strikie
-              # next_next_frameの1st shotも加える
-            # next_frameの1st shotが10以外
-              # next_frame.sumでOK
-
-            if next_frame
-              if strike?(next_frame) && next_next_frame
-                point += frame.sum + next_frame.sum + next_next_frame.sum
-              else
-                point += frame.sum + next_frame.sum
-              end
-            else
-              point += frame.sum
-            end
-          elsif spare?(frame)
-            if next_frame
-              point += frame.sum + next_frame[0]
-            else
-              point += frame.sum
-            end
-          else
-            point += frame.sum
-          end
         end
 
-        # p "#{frame_number}:#{point}"
+      elsif frame_number == 8
+
+        if strike?(frame)
+          if strike?(next_frame)
+            point += frame.sum + next_frame.sum + next_next_frame[0]
+          elsif spare?(next_frame)
+            point += frame.sum + next_frame.sum
+          else
+            point += frame.sum
+          end
+        elsif spare?(frame)
+          point += frame.sum + next_frame[0]
+        else
+          point += frame.sum
+        end
+
+      else
+
+        if strike?(frame)
+          if strike?(next_frame) && next_next_frame
+            point += frame.sum + next_frame.sum + next_next_frame.sum
+          else
+            point += frame.sum + next_frame.sum
+          end
+        elsif spare?(frame)
+          point += frame.sum + next_frame[0]
+        else
+          point += frame.sum
+        end
+
       end
 
-      p point
     end
+    # p point
+    point
+  end
+
+  def strike?(frame)
+    frame[0] == 10
+  end
+
+  def spare?(frame)
+    frame.sum == 10
   end
 end
