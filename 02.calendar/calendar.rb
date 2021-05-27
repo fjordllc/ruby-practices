@@ -3,6 +3,7 @@
 #コマンドラインのオプションを取り扱う、Dateクラスを扱うためのrequire
 require 'optparse'
 require 'date'
+require 'paint'
 require "irb"
 
 #Dateクラスの今日という日付（年、月、日）をdateに代入
@@ -41,7 +42,13 @@ print "   " * firstday_wday
 # カレンダー日出力
 # 右揃えで出力、wday==7の時（7で割り切れる時）改行
 (beginning_of_month..end_of_month).each do |n|
-  print n.to_s.rjust(2) + " "
+  # 今日の日付のとき色反転
+  if n == date.day
+    print Paint[n, :inverse] + " "
+  else
+    print n.to_s.rjust(2) + " "
+  end
+  #曜日は繰り返し１足していく
   firstday_wday += 1
   # 土曜日の時改行
   if firstday_wday % 7 == 0
@@ -49,7 +56,7 @@ print "   " * firstday_wday
   end
 end
 
-# 最終日が7で割り切れないので改行（%を取り除くため）
-if lastday_wday % 7 != 0
+# 最終日の曜日（数）が7で割り切れないので改行（%を取り除くため）
+if firstday_wday % 7 != 0
   print "\n"
 end
