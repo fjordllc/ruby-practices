@@ -25,7 +25,8 @@ beginning_of_month = beginning_date.day.to_i
 end_of_month = end_of_date.day.to_i
 
 #今月の始まりの曜日取得
-beginning_wday = beginning_date.wday
+firstday_wday = beginning_date.wday
+lastday_wday = end_of_date.wday
 
 # カレンダー出力(曜日、月と年)
 puts <<~TEXT
@@ -34,19 +35,21 @@ puts <<~TEXT
 
 TEXT
 
-#
-print "   " * beginning_wday
-
+# １行目のスペース× 曜日の数（wday=0（日曜）ならスペース0, wday=6(土曜)ならスペース6
+print "   " * firstday_wday
 
 # カレンダー日出力
+# 右揃えで出力、wday==7の時（7で割り切れる時）改行
 (beginning_of_month..end_of_month).each do |n|
   print n.to_s.rjust(2) + " "
-  beginning_wday += 1
-  if beginning_wday % 7 == 0
+  firstday_wday += 1
+  # 土曜日の時改行
+  if firstday_wday % 7 == 0
     print "\n"
   end
 end
 
-if beginning_wday % 7 != 0
+# 最終日が7で割り切れないので改行（%を取り除くため）
+if lastday_wday % 7 != 0
   print "\n"
 end
