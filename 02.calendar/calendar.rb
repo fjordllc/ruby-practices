@@ -15,8 +15,11 @@ p params
 this_month = params.values[0].to_i
 this_year = params.values[1].to_i
 
-beginning_of_month = Date.new(this_year, this_month, 1).day.to_i
-end_of_month = Date.new(this_year, this_month, -1).day.to_i
+begginng_date = Date.new(this_year, this_month, 1)
+end_of_date = Date.new(this_year, this_month, -1)
+
+beginning_of_month = begginng_date.day.to_i
+end_of_month = end_of_date.day.to_i
 
 # カレンダー出力
 puts <<~TEXT
@@ -25,11 +28,16 @@ puts <<~TEXT
 
 TEXT
 
-# binding.irb
+binding.irb
 date_of_month = [beginning_of_month]
 while beginning_of_month < end_of_month
   beginning_of_month += 1
   date_of_month << beginning_of_month
 end
 
-print date_of_month
+date_of_month.each do |n|
+  beginnng_date.
+  # if date.saturday?
+  print "#{n}  "
+  # end
+end
