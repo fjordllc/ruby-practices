@@ -36,77 +36,69 @@ class Bowling
 
     @frames = @frames.map {|frame| frame[0] == 10 ? frame.slice(0, 1) : frame }
 
-    @frames = @frames.filter_map.with_index do |frame, idx|
-      valid_frame = idx <= 9
-      last_frame = idx == 9
+    @frames = @frames
+                .take_while
+                .with_index {|_, idx| idx <= 9 }
+                .filter_map
+                .with_index do |frame, idx|
+                  last_frame = idx == 9
 
-      if valid_frame
-        if last_frame
-          @frames.slice(idx..).reduce {|result, frame| result + frame }
-        else
-          frame
-        end
-      end
-    end
+                  if last_frame
+                    @frames.slice(idx..).reduce {|result, frame| result + frame }
+                  else
+                    frame
+                  end
+                end
+    # p "@frames: #{@frames}"
+    # @frames
   end
 
   def calcurate_point
     point = 0
 
     @frames.each_with_index do |frame, idx|
-      frame_number = idx + 1
-      next_frame = @frames[idx + 1]
-      next_next_frame = @frames[idx + 2]
-
-      if frame_number == 10
-
-        point += frame.sum
-
-      elsif frame_number == 9
-
-        if strike?(frame)
-          point += frame.sum + next_frame[0..1].sum
-        elsif spare?(frame)
-          point += frame.sum + next_frame[0]
-        else
-          point += frame.sum
-        end
-
-      elsif frame_number == 8
-
-        if strike?(frame)
-          if strike?(next_frame)
-            point += frame.sum + next_frame.sum + next_next_frame[0]
-          elsif spare?(next_frame)
-            point += frame.sum + next_frame.sum
-          else
-            point += frame.sum
-          end
-        elsif spare?(frame)
-          point += frame.sum + next_frame[0]
-        else
-          point += frame.sum
-        end
-
-      else
-
-        if strike?(frame)
-          if strike?(next_frame) && next_next_frame
-            point += frame.sum + next_frame.sum + next_next_frame.sum
-          else
-            point += frame.sum + next_frame.sum
-          end
-        elsif spare?(frame)
-          point += frame.sum + next_frame[0]
-        else
-          point += frame.sum
-        end
-
-      end
-
+      point += cal_point(frame, idx)
     end
-    # p point
+
+    # p "point: #{point}"
     point
+  end
+
+  def cal_point(frame, idx)
+    next_frame = next_frame(idx)
+
+    case idx
+    when 0..7 # 1 frame - 8 frame
+      if strike?(frame)
+        if strike?(next_frame)
+          frame.sum + next_frame.sum + next_next_frame(idx)[0]
+        else
+          frame.sum + next_frame.sum
+        end
+      elsif spare?(frame)
+        frame.sum + next_frame[0]
+      else
+        frame.sum
+      end
+    when 8 # 9 frame
+      if strike?(frame)
+        frame.sum + next_frame[0..1].sum
+      elsif spare?(frame)
+        frame.sum + next_frame[0]
+      else
+        frame.sum
+      end
+    when 9 # 10 frame
+      frame.sum
+    end
+  end
+
+  def next_frame(idx)
+    @frames[idx + 1]
+  end
+
+  def next_next_frame(idx)
+    @frames[idx + 2]
   end
 
   def strike?(frame)
@@ -114,6 +106,6 @@ class Bowling
   end
 
   def spare?(frame)
-    frame.sum == 10
+    frame[0..1].sum == 10
   end
 end
