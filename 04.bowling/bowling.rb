@@ -68,51 +68,17 @@ class Bowling
     return frame.sum if idx == 9 # 10 frame
 
     next_frame = next_frame(idx)
+    next_next_frame = next_next_frame(idx)
 
     if strike?(frame)
-      if idx.between?(0, 7)
-        # 1 frame - 8 frame
-        if strike?(next_frame)
-          frame.sum + next_frame.sum + next_next_frame(idx)[0]
-        else
-          frame.sum + next_frame.sum
-        end
-      else
-        # 9 frame
-        frame.sum + next_frame[0..1].sum
-      end
+      next_next_frame_point = next_next_frame[0] if idx.between?(0, 7) && strike?(next_frame)
+
+      next_frame_point = next_frame[0..1].sum + (next_next_frame_point ||= 0)
     elsif spare?(frame)
-      frame.sum + next_frame[0]
-    else
-      frame.sum
+      next_frame_point = next_frame[0]
     end
 
-    # next_frame = next_frame(idx)
-
-    # case idx
-    # when 0..7 # 1 frame - 8 frame
-    #   if strike?(frame)
-    #     if strike?(next_frame)
-    #       frame.sum + next_frame.sum + next_next_frame(idx)[0]
-    #     else
-    #       frame.sum + next_frame.sum
-    #     end
-    #   elsif spare?(frame)
-    #     frame.sum + next_frame[0]
-    #   else
-    #     frame.sum
-    #   end
-    # when 8 # 9 frame
-    #   if strike?(frame)
-    #     frame.sum + next_frame[0..1].sum
-    #   elsif spare?(frame)
-    #     frame.sum + next_frame[0]
-    #   else
-    #     frame.sum
-    #   end
-    # when 9 # 10 frame
-    #   frame.sum
-    # end
+    frame.sum + (next_frame_point ||= 0)
   end
 
   def next_frame(idx)
