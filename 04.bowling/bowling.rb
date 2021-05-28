@@ -15,7 +15,7 @@ class Bowling
     build_shots
     build_frames
 
-    calcurate_point
+    total_point
   end
 
   private
@@ -49,22 +49,15 @@ class Bowling
                     frame
                   end
                 end
-    # p "@frames: #{@frames}"
-    # @frames
   end
 
-  def calcurate_point
-    point = 0
-
-    @frames.each_with_index do |frame, idx|
-      point += cal_point(frame, idx)
+  def total_point
+    @frames.each_with_index.reduce(0) do |result, (frame, idx)|
+      result + calcurate_point(frame, idx)
     end
-
-    # p "point: #{point}"
-    point
   end
 
-  def cal_point(frame, idx)
+  def calcurate_point(frame, idx)
     return frame.sum if idx == 9 # 10 frame
 
     next_frame = next_frame(idx)
