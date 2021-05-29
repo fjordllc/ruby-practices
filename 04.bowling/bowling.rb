@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 class Bowling
   attr_accessor :scores, :shots, :frames
@@ -32,23 +33,19 @@ class Bowling
   end
 
   def build_frames
-    @shots.each_slice(2) {|s| @frames << s }
+    @frames = @shots.each_slice(2).map do |first_frame, second_frame|
+      first_frame == 10 ? [first_frame] : [first_frame, second_frame]
+    end
 
-    @frames = @frames.map {|frame| frame[0] == 10 ? frame.slice(0, 1) : frame }
+    @frames = @frames[0..9].map.with_index do |frame, idx|
+      last_frame = idx == 9
 
-    @frames = @frames
-                .take_while
-                .with_index {|_, idx| idx <= 9 }
-                .filter_map
-                .with_index do |frame, idx|
-                  last_frame = idx == 9
-
-                  if last_frame
-                    @frames.slice(idx..).reduce {|result, frame| result + frame }
-                  else
-                    frame
-                  end
-                end
+      if last_frame
+        @frames.slice(idx..).reduce { |result, fr| result + fr }
+      else
+        frame
+      end
+    end
   end
 
   def total_point
@@ -63,15 +60,18 @@ class Bowling
     next_frame = next_frame(idx)
     next_next_frame = next_next_frame(idx)
 
+    next_frame_point = 0
+    next_next_frame_point = 0
+
     if strike?(frame)
       next_next_frame_point = next_next_frame[0] if idx.between?(0, 7) && strike?(next_frame)
 
-      next_frame_point = next_frame[0..1].sum + (next_next_frame_point ||= 0)
+      next_frame_point = next_frame[0..1].sum + next_next_frame_point
     elsif spare?(frame)
       next_frame_point = next_frame[0]
     end
 
-    frame.sum + (next_frame_point ||= 0)
+    frame.sum + next_frame_point
   end
 
   def next_frame(idx)
