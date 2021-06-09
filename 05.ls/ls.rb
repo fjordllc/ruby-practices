@@ -56,19 +56,59 @@ def directory_or_file(name)
     if name.end_with?('/')
       name
     else
-      name + '/'
+      "#{name}/"
     end
+  elsif name.end_with?('/')
+    puts "ls: #{name}: Not a directory"
+    nil
+  elsif File.exist?(name)
+    name
   else
-    if name.end_with?('/')
-      puts "ls: #{name}: Not a directory"
-      nil
-    elsif File.exist?(name)
-      name
-    else
-      puts "ls: #{name}: No such file or directory"
-      nil
-    end
+    puts "ls: #{name}: No such file or directory"
+    nil
   end
+end
+
+def puts_long_option(value, padding_hash)
+  value.each do |hash|
+    fs = File.stat(hash[:file])
+
+    result = "#{ftype_and_permission(fs.mode.to_s(8))}  " # ファイルタイプ アクセス権
+    result += "#{fs.nlink.to_s.rjust(padding_hash[:nlink])} " # ハードリンク数
+    result += "#{user_name(fs.uid).rjust(padding_hash[:user])}  " # 所有者名
+    result += "#{group_name(fs.gid).rjust(padding_hash[:group])}  " # グループ名
+    result += "#{fs.size.to_s.rjust(padding_hash[:size])} " # バイト数
+    result += "#{time(fs.mtime)} #{hash[:basename]}" # 更新日時（または更新年月日） ファイル名
+
+    puts result
+  end
+end
+
+def long_option(value)
+  padding_hash = {
+    nlink: 0,
+    user: 0,
+    group: 0,
+    size: 0
+  }
+
+  total_block_count = 0
+
+  value.each do |hash|
+    fs = File.stat(hash[:file])
+
+    # Set padding count
+    padding_hash[:nlink] = fs.nlink.to_s.length if fs.nlink.to_s.length > padding_hash[:nlink]
+    padding_hash[:user] = user_name(fs.uid).length if user_name(fs.uid).length > padding_hash[:user]
+    padding_hash[:group] = group_name(fs.gid).length if group_name(fs.gid).length > padding_hash[:group]
+    padding_hash[:size] = fs.size.to_s.length if fs.size.to_s.length > padding_hash[:size]
+
+    # Reduce total blocks
+    total_block_count += fs.blocks
+  end
+
+  puts "total #{total_block_count}"
+  puts_long_option(value, padding_hash)
 end
 
 # Implements
@@ -97,74 +137,39 @@ flags = params[:a] ? File::FNM_DOTMATCH : 0
 files = Dir.glob(pattern, flags).sort
 files = files.reverse if params[:r]
 
-file_hash_list = {}
+file_hash = {}
 
 files.each do |file|
   dirname = File.dirname(file)
   basename = File.basename(file)
 
-  if file_hash_list.key?(dirname)
-    file_hash_list[dirname] << {
+  if file_hash.key?(dirname)
+    file_hash[dirname] << {
       basename: basename,
       file: file
     }
   else
-    file_hash_list[dirname] = [{
+    file_hash[dirname] = [{
       basename: basename,
       file: file
     }]
   end
 end
 
-file_hash_list = if params[:r]
-                   file_hash_list.sort.reverse
-                 else
-                   file_hash_list.sort
-                 end
+file_hash = if params[:r]
+              file_hash.sort.reverse
+            else
+              file_hash.sort
+            end
 
-file_hash_list.sort.each_with_index do |(key, value), idx|
-  if file_hash_list.count > 1
+file_hash.each_with_index do |(key, value), idx|
+  if file_hash.count > 1
     puts if idx != 0
     puts "#{key}:"
   end
 
   if params[:l]
-    padding_hash = {
-      nlink: 0,
-      user: 0,
-      group: 0,
-      size: 0
-    }
-
-    total_block_count = 0
-
-    value.each do |file_hash|
-      fs = File.stat(file_hash[:file])
-
-      # Set padding count
-      padding_hash[:nlink] = fs.nlink.to_s.length if fs.nlink.to_s.length > padding_hash[:nlink]
-      padding_hash[:user] = user_name(fs.uid).length if user_name(fs.uid).length > padding_hash[:user]
-      padding_hash[:group] = group_name(fs.gid).length if group_name(fs.gid).length > padding_hash[:group]
-      padding_hash[:size] = fs.size.to_s.length if fs.size.to_s.length > padding_hash[:size]
-
-      # Reduce total blocks
-      total_block_count += fs.blocks
-    end
-
-    puts "total #{total_block_count}"
-
-    value.each do |file_hash|
-      fs = File.stat(file_hash[:file])
-
-      result = "#{ftype_and_permission(fs.mode.to_s(8))}  " # ファイルタイプ アクセス権
-      result += "#{fs.nlink.to_s.rjust(padding_hash[:nlink])} " # ハードリンク数
-      result += "#{user_name(fs.uid).rjust(padding_hash[:user])}  " # 所有者名
-      result += "#{group_name(fs.gid).rjust(padding_hash[:group])}  " # グループ名
-      result += "#{fs.size.to_s.rjust(padding_hash[:size])} " # バイト数
-      result += "#{time(fs.mtime)} #{file_hash[:basename]}" # 更新日時（または更新年月日） ファイル名
-
-      puts result
-    end
+    long_option(value)
   else
     window_width = `tput cols`.chomp.to_i
     cols = window_width / WORD_LENGTH
