@@ -6,7 +6,7 @@ require 'optparse'
 require 'date'
 require 'etc'
 
-WORD_LENGTH = 24
+WORD_LENGTH = 16
 
 def ftype(octal_str)
   {
