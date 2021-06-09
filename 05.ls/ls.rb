@@ -1,35 +1,12 @@
 #!/usr/bin/env ruby
 
+# frozen_string_literal: true
+
 require 'optparse'
 require 'date'
 require 'etc'
 
-opt = OptionParser.new
-
-params = {}
-
-opt.on('-r') {|v| params[:r] = v }
-opt.on('-l') {|v| params[:l] = v }
-opt.on('-a') {|v| params[:a] = v }
-
-opt.parse!(ARGV)
-
-if ARGV.count == 0
-end
-
-WORD_LENGTH= 24
-
-if params[:a]
-  files = Dir.glob('*', File::FNM_DOTMATCH)
-else
-  files = Dir.glob('*')
-end
-
-if params[:r]
-  files = files.sort.reverse
-else
-  files = files.sort
-end
+WORD_LENGTH = 24
 
 def ftype(octal_str)
   {
@@ -50,7 +27,7 @@ def permission(permission_str)
     '4' => 'r--',
     '5' => 'r-x',
     '6' => 'rw-',
-    '7' => 'rwx',
+    '7' => 'rwx'
   }[permission_str]
 end
 
@@ -61,6 +38,13 @@ def ftype_and_permission(octal_str)
   print permission.split('').map { |d| permission(d) }.join
 end
 
+def user_name(uid)
+  Etc.getpwuid(uid).name
+end
+
+def group_name(gid)
+  Etc.getgrgid(gid).name
+end
 
 def time(time)
   if time.year == Time.now.year
@@ -70,24 +54,47 @@ def time(time)
   end
 end
 
+# Implements
+
+opt = OptionParser.new
+
+params = {}
+
+opt.on('-r') { |v| params[:r] = v }
+opt.on('-l') { |v| params[:l] = v }
+opt.on('-a') { |v| params[:a] = v }
+
+opt.parse!(ARGV)
+
+files = if params[:a]
+          Dir.glob('*', File::FNM_DOTMATCH)
+        else
+          Dir.glob('*')
+        end
+
+files = if params[:r]
+          files.sort.reverse
+        else
+          files.sort
+        end
 
 if params[:l]
   padding_hash = {
     nlink: 0,
     user: 0,
     group: 0,
-    size: 0,
+    size: 0
   }
 
   total_block_count = 0
 
-  files.each do |f|
-    fs = File.stat(f)
+  files.each do |file_name|
+    fs = File.stat(file_name)
 
     # Set padding count
     padding_hash[:nlink] = fs.nlink.to_s.length if fs.nlink.to_s.length > padding_hash[:nlink]
-    padding_hash[:user] = Etc.getpwuid(fs.uid).name.length if Etc.getpwuid(fs.uid).name.length > padding_hash[:user]
-    padding_hash[:group] = Etc.getgrgid(fs.gid).name.length if Etc.getgrgid(fs.gid).name.length > padding_hash[:group]
+    padding_hash[:user] = user_name(fs.uid).length if user_name(fs.uid).length > padding_hash[:user]
+    padding_hash[:group] = group_name(fs.gid).length if group_name(fs.gid).length > padding_hash[:group]
     padding_hash[:size] = fs.size.to_s.length if fs.size.to_s.length > padding_hash[:size]
 
     # Reduce total blocks
@@ -99,18 +106,22 @@ if params[:l]
   files.each do |file_name|
     fs = File.stat(file_name)
 
-    # ファイルタイプ アクセス権 ハードリンク数 所有者名 グループ名 バイト数 更新日時（または更新年月日） ファイル名
-    puts "#{ftype_and_permission(fs.mode.to_s(8))}  #{fs.nlink.to_s.rjust(padding_hash[:nlink])} #{Etc.getpwuid(fs.uid).name.rjust(padding_hash[:user])}  #{Etc.getgrgid(fs.gid).name.rjust(padding_hash[:group])}  #{fs.size.to_s.rjust(padding_hash[:size])} #{time(fs.mtime)} #{file_name}"
+    result = "#{ftype_and_permission(fs.mode.to_s(8))}  " # ファイルタイプ アクセス権
+    result += "#{fs.nlink.to_s.rjust(padding_hash[:nlink])} " # ハードリンク数
+    result += "#{user_name(fs.uid).rjust(padding_hash[:user])}  " # 所有者名
+    result += "#{group_name(fs.gid).rjust(padding_hash[:group])}  " # グループ名
+    result += "#{fs.size.to_s.rjust(padding_hash[:size])} " # バイト数
+    result += "#{time(fs.mtime)} #{file_name}" # 更新日時（または更新年月日） ファイル名
+
+    puts result
   end
 else
-  window_width = %x{ tput cols }.chomp.to_i
-
-  cols =  window_width / WORD_LENGTH
-
-  rows = (files.count.to_f / cols.to_f).ceil
+  window_width = `tput cols`.chomp.to_i
+  cols = window_width / WORD_LENGTH
+  rows = (files.count.to_f / cols).ceil
 
   files = files.each_slice(rows).map do |list|
-    if list.count != rows
+    unless list.count == rows
       (rows - list.count).times do
         list << ''
       end
@@ -119,7 +130,7 @@ else
     list
   end
 
-  files.transpose.each do |files|
-    puts files.map { |file| print file.ljust(WORD_LENGTH) }.join
+  files.transpose.each do |file_list|
+    puts file_list.map { |file| print file.ljust(WORD_LENGTH) }.join
   end
 end
