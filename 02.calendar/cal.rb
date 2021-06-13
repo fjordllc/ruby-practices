@@ -3,11 +3,21 @@
 require 'date'
 require 'optparse'
 
-# コマンドラインオプションを取得する
-# 年、または月が指定されていない場合は本日時点の情報を利用する
-params = ARGV.getopts("y:","m:")
-year = params['y'].nil?  ? Date.today.year : params['y'].to_i
-month = params['m'].nil? ? Date.today.month : params['m'].to_i
+
+begin
+  # コマンドラインオプションを取得する
+  # 年、または月が指定されていない場合は本日時点の情報を利用する
+  params = ARGV.getopts("y:","m:")
+
+  year = params['y'].nil?  ? Date.today.year : params['y'].to_i
+  month = params['m'].nil? ? Date.today.month : params['m'].to_i
+
+  # 月には1から12までのみ指定可能とする
+  raise StandardError.new("-m option must between 1 and 12. ")
+rescue => e
+  puts e.message
+  exit
+end
 
 # 年、月は後から標準入力オプションに変更
 day_of_week = ["日","月","火","水","木","金","土"]
