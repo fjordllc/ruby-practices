@@ -1,25 +1,29 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-score = ARGV[0]
-scores = score.split(',')
-shots = []
+def main(score)
+  # score = ARGV[0]
+  scores = score.split(',')
+  shots = []
 
-scores.each do |s|
-  if s == 'X'
-    shots << 10
-    shots << 0
-  elsif s == 'S'
-    shots << 10
-  else
-    shots << s.to_i
+  scores.each do |s|
+    if s == 'X'
+      shots << 10
+      shots << 0
+    elsif s == 'S'
+      shots << 10
+    else
+      shots << s.to_i
+    end
   end
-end
-each_shot_score_sum = shots.sum
+  each_shot_score_sum = shots.sum
 
-@frames = []
-shots.each_slice(2) do |s|
-  @frames << s
+  @frames = []
+  shots.each_slice(2) do |s|
+    @frames << s
+  end
+  add_point
+  each_shot_score_sum + @add_point
 end
 
 def add_point
@@ -38,5 +42,4 @@ def add_point
   end
 end
 
-add_point
-puts each_shot_score_sum + @add_point
+
