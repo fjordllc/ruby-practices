@@ -1,21 +1,20 @@
 #!/usr/bin/env ruby
 
 require 'date'
+require 'optparse'
 
-# puts 'year:'
-# year = gets.to_i
-# puts 'month'
-# month = gets.to_i
+# コマンドラインオプションを取得する
+# 年、または月が指定されていない場合は本日時点の情報を利用する
+params = ARGV.getopts("y:","m:")
+year = params['y'].nil?  ? Date.today.year : params['y'].to_i
+month = params['m'].nil? ? Date.today.month : params['m'].to_i
 
 # 年、月は後から標準入力オプションに変更
-year = 2021
-month = 7
 day_of_week = ["日","月","火","水","木","金","土"]
 
 # ヘッダー部出力
 puts "      #{month}月 #{year}"
 puts day_of_week.join(' ')
-
 
 # データ部出力
 w_month = []
