@@ -36,11 +36,7 @@ date_obj = Date.new(year, month, 1)
 while date_obj.month == month
   str_day = date_obj.day.to_s
 
-  if str_day.size == 2
-    w_week[date_obj.wday] = str_day
-  else
-    w_week[date_obj.wday] =  " #{str_day}"
-  end
+  w_week[date_obj.wday] = str_day.rjust(2," ")
 
   # 土曜日の日付が登録されている場合、次から翌週して扱う
   if date_obj.saturday?
@@ -57,7 +53,5 @@ while date_obj.month == month
 end
 
 w_month.each do | week |
-  line_week = "#{week[0]} #{week[1]} #{week[2]} #{week[3]} #{week[4]} #{week[5]} #{week[6]}"
-  puts line_week
+  puts week.join(" ")
 end
-
