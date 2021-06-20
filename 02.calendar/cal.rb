@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require 'optparse'
 require 'date'
+require 'color_echo'
 
 # オプション定義
 # オプションの引数を渡されたら、その値をto_iで数字にする
@@ -19,6 +20,7 @@ opt_mon = option[:m]
 td = Date.today
 tdy = td.year.to_i
 tdm = td.month.to_i
+tdd = td.day
 td_date = Date.new(tdy, tdm, 1)
 
 # 週の初めの曜日
@@ -61,7 +63,13 @@ print "   " * first_wday
 # 初日から月末の日の間に繰り返す感じのeach文
 (1..last_date).each do |date|
   # (1..last_date)から順番に取り出した値(date)を右詰で出力していく
-  print date.to_s.rjust(2) + " "
+  if date == td.day
+    CE.fg(:cyan)
+    print tdd.to_s.rjust(2) + " "
+  else
+    CE.fg(:white)
+    print date.to_s.rjust(2) + " "
+  end
 
   # 次の日付を生成しておく
   first_wday += 1
