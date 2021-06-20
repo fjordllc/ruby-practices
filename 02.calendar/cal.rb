@@ -13,7 +13,8 @@ begin
 
   # 月には1から12までのみ指定可能とする
   if month < 1  or month > 12
-    raise StandardError.new("-m option must between 1 and 12. ")
+    puts "-m option must between 1 and 12. "
+    exit
   end
 rescue => e
   puts e.message
