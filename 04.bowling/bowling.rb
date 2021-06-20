@@ -2,15 +2,14 @@
 # frozen_string_literal: true
 
 def main(score)
-  # score = ARGV[0]
   scores = score.split(',')
   shots = []
-
   scores.each do |s|
-    if s == 'X'
+    case s
+    when 'X'
       shots << 10
       shots << 0
-    elsif s == 'S'
+    when 'S'
       shots << 10
     else
       shots << s.to_i
@@ -30,16 +29,16 @@ def add_point
   @add_point = 0
 
   @frames[0..8].each_with_index do |_frame, n|
-    if (@frames[n].sum == 10) && (@frames[n][0] != 10)
-      @add_point += @frames[n + 1][0]
-    elsif (@frames[n][0] == 10) && (@frames[n + 1][0] == 10)
-      @add_point += @frames[n + 1][0] + @frames[n + 2][0]
-    elsif @frames[n][0] == 10
-      @add_point += @frames[n + 1].sum
-    else
-      @add_point += 0
-    end
+    @add_point += if (@frames[n].sum == 10) && (@frames[n][0] != 10)
+                    @frames[n + 1][0]
+                  elsif (@frames[n][0] == 10) && (@frames[n + 1][0] == 10)
+                    @frames[n + 1][0] + @frames[n + 2][0]
+                  elsif @frames[n][0] == 10
+                    @frames[n + 1].sum
+                  else
+                    0
+                  end
   end
 end
 
-
+puts main(ARGV[0]) if __FILE__ == $PROGRAM_NAME
