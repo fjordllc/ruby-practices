@@ -210,7 +210,7 @@ def ls_output(arrays, file_block, files_permission, files_hardlink, files_userna
           # タイムスタンプの分が一桁の場合は先頭に０を付けてから表示
           [output, '0', files_time[i].min.to_s]
         else
-          [output, files_time[i].hour.to_s, ':']
+          [output, files_time[i].min.to_s, ':']
         end
     end
     output = [output, ' ', arrays[i]].join
