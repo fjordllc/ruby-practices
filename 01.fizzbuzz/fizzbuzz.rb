@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
-numbers = [*1..20]
-numbers.each do |number|
+(1..20).each do |number|
   if number % 15 == 0 
     puts "FizzBuzz"
   elsif number % 3 == 0
