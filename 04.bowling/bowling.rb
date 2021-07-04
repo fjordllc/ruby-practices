@@ -28,11 +28,8 @@ def calc_bonus_point(frames)
     if spare
       bonus_point += frames[n + 1][0]
     elsif strike
-      bonus_point += if strike_after_strike
-                       frames[n + 1][0] + frames[n + 2][0]
-                     else
-                       frames[n + 1].sum
-                     end
+      bonus_point += frames[n + 1].sum
+      bonus_point += frames[n + 2][0] if strike_after_strike
     end
   end
   bonus_point
