@@ -5,7 +5,7 @@
 dir_and_file_names = Dir.glob('*')
 p dir_and_file_names
 p dir_and_file_names.size
-
+p dir_and_file_names.minmax
 # dir_and_file_namesは配列
 # 列数を定数に
 NumberOfColumn = 3
@@ -15,11 +15,22 @@ p NumberOfLines
 # dir_and_file_nameの先頭からNumberOfLinesずつ取得したデータで配列を作る。
 # それはNumberOfColumn繰り返される。
 # できた配列を、要素数 == NumberOfColumnの配列に入れこみ、「配列の配列」を作る
+# dir_and_file_nameがNumberOfLinesで割り切れる時とそうでない時で条件分岐。
+# NumberOfLinesで割り切れる時はNumberOfLinesで、それ以外はNumberOfLinesで割る
+result = []
 a = dir_and_file_names.each_slice(NumberOfLines + 1).to_a
 puts '列の交換'
-a[0].zip(a[1], a[2]) { |array6|
-  p array6
-}
+puts 'そのまま表す'
+a[0].zip(a[1], a[2]) do |array|
+  puts array.join(' ')
+  result << array #戻り値として利用できる
+end
+p '戻り値として利用できる'
+p result
+
+#ブロックは渡さないので、戻り値を利用できる
+b = a[0].zip(a[1], a[2]).join(' ')
+p b
 
 # -a
 # all_dir_and_file_name = Dir.glob("*", File::FNM_OUTMATCH)
