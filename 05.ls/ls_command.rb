@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 dir = []
 if ARGV[1].nil?
   dir = '.'
