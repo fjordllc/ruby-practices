@@ -1,5 +1,4 @@
-range = 1..20
-range.each do |num|
+(1..20).each do |num|
   case
   when num % 3 == 0 && num % 5 == 0
     puts "FizzBuzz"
@@ -11,4 +10,3 @@ range.each do |num|
     puts num
   end
 end
-
