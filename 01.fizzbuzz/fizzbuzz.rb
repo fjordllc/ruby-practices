@@ -10,6 +10,5 @@ range.each do |num|
   else
     puts num
   end
-  num = num + 1
 end
 
