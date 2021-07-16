@@ -1,6 +1,5 @@
-num = 0
-while num < 20
-  num = num + 1
+range = 1..20
+range.each do |num|
   case
   when num % 3 == 0 && num % 5 == 0
     puts "FizzBuzz"
@@ -11,4 +10,6 @@ while num < 20
   else
     puts num
   end
+  num = num + 1
 end
+
