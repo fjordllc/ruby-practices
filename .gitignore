@@ -15,6 +15,9 @@
 /tmp/
 /04.bowling(with test)/
 
+.test
+test*
+
 # Used by dotenv library to load environment variables.
 # .env
 
@@ -119,3 +122,5 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+
