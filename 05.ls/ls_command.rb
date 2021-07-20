@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 dir = []
 if ARGV[1].nil?
   dir = '.'
@@ -30,8 +31,6 @@ def full_directory
           ARGV[1]
         when '-'
           ARGV[2]
-        else
-          dir = 'error'
         end
   dir = 'none' if dir.nil?
 
@@ -149,7 +148,7 @@ opt.on('-a', '--all', 'show all items') do # show all
   end
 
   option_a = []
-  z = ARGV[2] || z = '.'
+  z = ARGV[2]
   Dir.foreach(z) do |f|
     # puts f
     option_a << f
