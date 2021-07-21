@@ -25,22 +25,20 @@ def main
 end
 
 # File.statで受け取ったファイルタイプの表記を変換する
-FILETYPES = {
-  'file' => '-',
-  'directory' => 'd',
-  'link' => 'l',
-  'characterSpecial' => 'c',
-  'blockSpecial' => 'b',
-  'socket' => 's',
-  'fifo' => 'p'
-}.freeze
-
-def file_type_conversion(file)
-  FILETYPES[file.ftype]
+def convert_to_ftype(file)
+  {
+    'file' => '-',
+    'directory' => 'd',
+    'link' => 'l',
+    'characterSpecial' => 'c',
+    'blockSpecial' => 'b',
+    'socket' => 's',
+    'fifo' => 'p'
+  }[file.ftype]
 end
 
 # File.statで受け取ったファイルモードの表記を変換する
-def file_mode_conversion(file, position)
+def convert_to_fmode(file, position)
   case file.mode.to_s(8).slice(position).to_i
   when 7
     'rwx'
@@ -63,13 +61,9 @@ end
 
 # 最大幅3列にする場合の1列の要素数を計算する
 # 余りが出る場合は商+1が1列の要素数
-def clumn_item_count(num)
+def count_clumn_item(num)
   quotient, remainder = num.divmod(3)
-  if remainder.zero?
-    quotient
-  else
-    quotient + 1
-  end
+  remainder.zero? ? quotient : quotient + 1
 end
 
 def ls(scope: File::FNM_PATHNAME, reverse: false)
@@ -89,7 +83,7 @@ def ls(scope: File::FNM_PATHNAME, reverse: false)
   file_list_sorted = reverse == true ? file_list.sort.reverse : file_list.sort
 
   # 3列で並べる際の1列の要素数を求める
-  slice_num = clumn_item_count(file_list_sorted.size)
+  slice_num = count_clumn_item(file_list_sorted.size)
 
   # 1列に入る要素数で配列を区切り、行と列を入れ替える
   file_list_transposed = file_list_sorted.each_slice(slice_num).to_a.map! { |it| it.values_at(0...slice_num) }.transpose
@@ -115,8 +109,8 @@ def ls_l(scope: File::FNM_PATHNAME, reverse: false)
   file_list = []
   Dir.glob('*', scope).each do |file_item|
     stat = File.stat(file_item)
-    file_type = file_type_conversion(stat)
-    file_mode = file_mode_conversion(stat, -3) + file_mode_conversion(stat, -2) + file_mode_conversion(stat, -1)
+    file_type = convert_to_ftype(stat)
+    file_mode = convert_to_fmode(stat, -3) + convert_to_fmode(stat, -2) + convert_to_fmode(stat, -1)
     file_type_mode = file_type + file_mode
     hard_link = stat.nlink.to_s.rjust(2)
     owner_name = Etc.getpwuid(stat.uid).name
