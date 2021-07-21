@@ -107,6 +107,7 @@ end
 
 def ls_l(scope: File::FNM_PATHNAME, reverse: false)
   file_list = []
+  file_blocks = 0
   Dir.glob('*', scope).each do |file_item|
     stat = File.stat(file_item)
     file_type = convert_to_ftype(stat)
@@ -116,17 +117,18 @@ def ls_l(scope: File::FNM_PATHNAME, reverse: false)
     owner_name = Etc.getpwuid(stat.uid).name
     group_name = Etc.getgrgid(stat.gid).name
     file_size = stat.size.to_s.rjust(5)
-    month = stat.mtime.strftime('%m月')
+    month = stat.mtime.strftime('%m').rjust(2)
     day = stat.mtime.strftime('%d')
     time = stat.mtime.strftime('%H:%M')
-    year = stat.mtime.strftime('%Y')
     file_name = file_item
-    file_list << [file_type_mode, hard_link, owner_name, group_name, file_size, month, day, time, year, file_name]
+    file_blocks += stat.blocks
+    file_list << [file_type_mode, hard_link, owner_name, group_name, file_size, month, day, time, file_name]
   end
 
   file_list_sorted = reverse == true ? file_list.sort_by { |a| a[-1] }.reverse : file_list.sort_by { |a| a[-1] }
 
   # 配列の中の配列を,ではなく半角スペースで連結したものを1行ずつ表示する
+  puts "total #{file_blocks}"
   puts file_list_sorted.map! { |file_list_sorted_item| file_list_sorted_item.join(' ') }.join("\n")
 end
 
