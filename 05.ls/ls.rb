@@ -13,9 +13,19 @@ opt.on('-r') { |v| options[:reverse] = v }
 # 引数リストARGVをパースして各オプションブロックを実行
 opt.parse! { ARGV }
 
-# オプションなし
-def show_file_list_of_default
-  items = Dir.glob('*').sort.map { |item| item.to_s.ljust(16) }
+def show_file_list(options)
+  # -a オプション有無による処理分岐
+  items = if options.key?(:all)
+            Dir.glob('*', File::FNM_DOTMATCH).sort.map { |item| item.to_s.ljust(16) }
+          else
+            Dir.glob('*').sort.map { |item| item.to_s.ljust(16) }
+          end
+
+  # -r オプションによる逆順ソート処理
+  if options.key?(:reverse)
+    items.reverse!
+  end
+
 
   # １行内の出力件数
   line_size = 3
@@ -35,19 +45,11 @@ def show_file_list_of_default
   items_line_array.each { |line| puts line.join('') }
 end
 
-# -aの場合(すべてのファイル)
-# def show_file_list_of_all
-#   p "show_file_list_of_all"
-# end
 
 # # -lの場合(ファイル詳細情報付き)
-# def show_file_list_with_detail_info
-#   p "show_file_list_with_detail_info"
-# end
+def show_file_list_with_detail_info
+  p "show_file_list_with_detail_info"
+end
 
-# # -rの場合(ソート逆順)
-# def change_sort_reverse
-#   p "change_sort_reverse"
-# end
 
-show_file_list_of_default
+show_file_list(options)
