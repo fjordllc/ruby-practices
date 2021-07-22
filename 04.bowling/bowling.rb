@@ -15,10 +15,7 @@ shoots.each do |shoot|
 
   frame_points.push(shoot == 'X' ? 10 : shoot.to_i)
 
-  if shoot == 'X'
-    frames << frame_points
-    frame_points = []
-  elsif frame_points.size == 2
+  if shoot == 'X' || frame_points.size == 2
     frames << frame_points
     frame_points = []
   end
@@ -28,7 +25,7 @@ points = 0
 frames.each_with_index do |frame, index|
   # 最終フレーム分の加算
   if index == 9
-    points += frames[index].sum
+    points += frame.sum
     next
   end
 
