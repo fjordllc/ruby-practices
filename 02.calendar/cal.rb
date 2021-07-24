@@ -17,7 +17,7 @@ def cal
          end
   mon = Month.new(year, month)
 
-  puts "#{month}月 #{year}"
+  puts "#{month}月 #{year}".center(20)
   display_day_of_week
   mon.weeks { |week| display_week(week) }
 end
