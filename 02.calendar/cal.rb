@@ -4,6 +4,7 @@ require_relative 'cal_month'
 
 def cal
   opt = parse_option
+
   today = Date.today
   month = if opt.key?(:m)
             opt[:m]
@@ -15,11 +16,27 @@ def cal
          else
            today.year
          end
-  mon = Month.new(year, month)
+  begin
+    mon = Month.new(year, month)
+  rescue ArgumentError => e
+    puts "cal: #{e.message}"
+    return
+  end
 
   puts "#{month}月 #{year}".center(20)
   display_day_of_week
   mon.weeks { |week| display_week(week) }
+end
+
+def validate_option(opt)
+  opt.each do |k, v|
+    case k
+    when :m
+      validate_month(v)
+    end
+  rescue ArgumentError => e
+    raise e
+  end
 end
 
 def parse_option
