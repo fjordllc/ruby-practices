@@ -23,9 +23,9 @@ def cal
     return
   end
 
-  puts "#{month}月 #{year}".center(20)
-  display_day_of_week
-  mon.weeks { |week| display_week(week) }
+  draw_year_and_month(year, month)
+  draw_day_of_week
+  draw_weeks(mon)
 end
 
 def validate_option(opt)
@@ -49,19 +49,27 @@ def parse_option
   result
 end
 
-def display_day_of_week
-  day_of_week = %w[日 月 火 水 木 金 土]
-  sep = ' '
-  puts day_of_week.join(sep)
+def draw_year_and_month(year, month)
+  puts "#{month}月 #{year}".center(20)
 end
 
-def display_week(week)
-  displayed_week = week.map { |day| display_day(day) }
+def draw_day_of_week
+  displayed_day_of_week = %w[日 月 火 水 木 金 土]
+  sep = ' '
+  puts displayed_day_of_week.join(sep)
+end
+
+def draw_weeks(month)
+  month.weeks { |week| draw_week(week) }
+end
+
+def draw_week(week)
+  displayed_week = week.map { |day| displayed_day(day) }
   sep = ' '
   puts displayed_week.join(sep)
 end
 
-def display_day(day)
+def displayed_day(day)
   return '  ' if day.nil?
 
   if day < 10
