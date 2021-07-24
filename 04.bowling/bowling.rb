@@ -26,10 +26,7 @@ scores.each do |s|
 end
 
 # 1フレームにつき2回投げるので1つの配列に数字が2つずつ入るように分割する
-frames = []
-shots.each_slice(2) do |s|
-  frames << s
-end
+frames = shots.each_slice(2).to_a
 
 # 最終フレームを3投しているときは11フレームできるので11フレームを10フレームに結合し、11フレームは削除する
 if frames.size > 10
