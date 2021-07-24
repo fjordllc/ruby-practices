@@ -9,12 +9,7 @@ shots = []
 num_count = 0
 scores.each do |s|
   if num_count == 18
-    shots <<
-      if s == 'X'
-        10
-      else
-        s.to_i
-      end
+    shots << (s == 'X' ? 10 : s.to_i)
   elsif s == 'X'
     shots << 10
     shots << 0
