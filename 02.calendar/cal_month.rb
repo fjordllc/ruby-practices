@@ -4,6 +4,10 @@ class Month
   attr_reader :year, :mon
 
   def initialize(year, mon)
+    raise ArgumentError, "year `#{year}` not in range 1..9999" unless valid_year?(year)
+
+    raise ArgumentError, "#{mon} is neither a month number(1..12) nor a name" unless valid_month?(mon)
+
     @year = year
     @mon = mon
     @last_day = Date.new(@year, @mon, -1).day
@@ -42,5 +46,13 @@ class Month
 
   def day_of_week(day)
     Date.new(@year, @mon, day).wday
+  end
+
+  def valid_month?(month)
+    month >= 1 && month <= 12
+  end
+
+  def valid_year?(year)
+    year >= 1 && year <= 9999
   end
 end
