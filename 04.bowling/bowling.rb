@@ -37,12 +37,12 @@ end
 point = 0
 frames.each_with_index do |frame, index|
   point +=
-    if index < 8 && frame[0] == 10 && frames[index + 1][0] == 10
-      frame.sum + frames[index + 1].sum + frames[index + 2][0]
-    elsif frame[0] == 10 && frame != frames[-1]
-      frame.sum + frames[index + 1][0] + frames[index + 1][1]
-    elsif frame.sum == 10 && frame != frames[-1]
-      frame.sum + frames[index + 1][0]
+    if index < 8 && frame[0] == 10 && frames[index + 1][0] == 10 # 2回連続strike
+      10 + 10 + frames[index + 2][0]
+    elsif frame[0] == 10 && frame != frames[-1] # strike
+      10 + frames[index + 1][0..1].sum
+    elsif frame.sum == 10 && frame != frames[-1] # spare
+      10 + frames[index + 1][0]
     else
       frame.sum
     end
