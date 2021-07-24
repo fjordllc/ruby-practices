@@ -1,16 +1,35 @@
 require 'date'
+require 'optparse'
 require_relative 'cal_month'
 
 def cal
-  date = Date.today
-  year = date.year
-  month = date.month
-
+  opt = parse_option
+  today = Date.today
+  month = if opt.key?(:m)
+            opt[:m]
+          else
+            today.month
+          end
+  year = if opt.key?(:y)
+           opt[:y]
+         else
+           today.year
+         end
   mon = Month.new(year, month)
 
   puts "#{month}月 #{year}"
   display_day_of_week
   mon.weeks { |week| display_week(week) }
+end
+
+def parse_option
+  result = {}
+  opt = OptionParser.new
+  opt.on('-m MONTH', Integer) { |v| result[:m] = v }
+  opt.on('-y YEAR', Integer) { |v| result[:y] = v }
+
+  opt.parse!(ARGV)
+  result
 end
 
 def display_day_of_week
@@ -36,5 +55,3 @@ def display_day(day)
 end
 
 cal
-#week = [nil, nil, nil, 3, 4, 5, 6]
-#display_week(week)
