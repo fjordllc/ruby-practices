@@ -28,17 +28,6 @@ def cal
   draw_weeks(mon)
 end
 
-def validate_option(opt)
-  opt.each do |k, v|
-    case k
-    when :m
-      validate_month(v)
-    end
-  rescue ArgumentError => e
-    raise e
-  end
-end
-
 def parse_option
   result = {}
   opt = OptionParser.new
