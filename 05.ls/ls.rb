@@ -8,9 +8,9 @@ def main
   scope = option['a'] ? File::FNM_DOTMATCH : File::FNM_PATHNAME
   reverse = option['r'] ? true : false
   if option['l']
-    puts ls_l(scope: scope, reverse: reverse)
+    ls_l(scope: scope, reverse: reverse)
   else
-    puts ls(scope: scope, reverse: reverse)
+    ls(scope: scope, reverse: reverse)
   end
 end
 
@@ -61,12 +61,13 @@ def ls(scope: File::FNM_PATHNAME, reverse: false)
   file_list_transposed = file_list.each_slice(slice_num).to_a.map! { |it| it.values_at(0...slice_num) }.transpose
 
   # 3列表示にするために並び替えて格納した配列
-  file_list_transposed.map do |list_line|
+  file_list_ajusted = file_list_transposed.map do |list_line|
     list_line.map do |list_line_item|
       # ファイル名を最大数の幅に揃える
       list_line_item.nil? ? ' '.ljust(max_size) : list_line_item.ljust(max_size)
     end.join
   end
+  puts file_list_ajusted
 end
 
 def ls_l(scope: File::FNM_PATHNAME, reverse: false)
