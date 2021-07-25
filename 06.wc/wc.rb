@@ -3,6 +3,9 @@
 require 'byebug'
 require 'optparse'
 
+# getoptsしたあとは指定したオプションがARGVの配列から取り除かれる
+@option = ARGV.getopts('l')
+
 def main
   if ARGV.empty?
     stdin = $stdin.readlines
@@ -29,8 +32,7 @@ def stdin_measure_byte(stdin)
 end
 
 def stdin_result(stdin)
-  option = ARGV.getopts('l')
-  if option['l']
+  if @option['l']
     puts stdin_count_lines(stdin).to_s.rjust(RESULT_WORD_WIDTH)
   else
     puts stdin_count_lines(stdin).to_s.rjust(RESULT_WORD_WIDTH) + \
@@ -60,10 +62,8 @@ def file_result(file_list)
   words_sum = 0
   byte_sum = 0
 
-  option = ARGV.getopts('l')
-
   file_list.each do |file|
-    if option['l']
+    if @option['l']
       puts "#{file_count_lines(file)} #{file}"
     else
       puts "#{file_count_lines(file)}#{file_count_words(file)}#{file_measure_byte(file)} #{file}"
