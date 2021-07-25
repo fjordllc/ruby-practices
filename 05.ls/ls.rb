@@ -59,17 +59,10 @@ def count_clumn_item(num)
 end
 
 def ls(scope: File::FNM_PATHNAME, reverse: false)
-  file_list = []
-  adjusted_file_list = []
-  max_size = 0
+  file_list = Dir.glob('*', scope)
 
-  # 現在のディレクトリのファイルを配列に入れる
-  Dir.glob('*', scope).each do |file_item|
-    file_list << file_item
-
-    # ファイル名の最大数を取得する
-    max_size = file_item.size > max_size ? file_item.size : max_size
-  end
+  # ファイル名の最大数を取得する
+  max_size = file_list.max {|a, b| a.length <=> b.length }.length
 
   # reverseがtrueかfalseによって並び順を変える
   file_list_sorted = reverse == true ? file_list.sort.reverse : file_list.sort
@@ -81,6 +74,7 @@ def ls(scope: File::FNM_PATHNAME, reverse: false)
   file_list_transposed = file_list_sorted.each_slice(slice_num).to_a.map! { |it| it.values_at(0...slice_num) }.transpose
 
   # 3列表示にするために並び替えて格納した配列
+  adjusted_file_list = []
   adjusted_file_list = file_list_transposed.map do |list_line|
     line_item = []
     line_item = list_line.map do |list_line_item|
