@@ -80,16 +80,13 @@ def ls(scope: File::FNM_PATHNAME, reverse: false)
   # 1列に入る要素数で配列を区切り、行と列を入れ替える
   file_list_transposed = file_list_sorted.each_slice(slice_num).to_a.map! { |it| it.values_at(0...slice_num) }.transpose
 
-  file_list_transposed.each do |list_line|
+  # 3列表示にするために並び替えて格納した配列
+  adjusted_file_list = file_list_transposed.map do |list_line|
     line_item = []
-
-    # ファイル名を最大数の幅に揃える
-    list_line.each do |list_line_item|
-      line_item << (list_line_item.nil? ? ' '.ljust(max_size) : list_line_item.ljust(max_size))
+    line_item = list_line.map do |list_line_item|
+      # ファイル名を最大数の幅に揃える
+      list_line_item.nil? ? ' '.ljust(max_size) : list_line_item.ljust(max_size)
     end
-
-    # 3列表示にするために並び替えて格納した配列
-    adjusted_file_list << line_item
   end
 
   adjusted_file_list.each do |adjusted_file_list_item|
