@@ -59,33 +59,25 @@ def count_clumn_item(num)
 end
 
 def ls(scope: File::FNM_PATHNAME, reverse: false)
-  file_list = Dir.glob('*', scope)
+  file_list = reverse == true ? Dir.glob('*', scope).reverse : Dir.glob('*', scope)
 
   # ファイル名の最大数を取得する
   max_size = file_list.max {|a, b| a.length <=> b.length }.length
 
-  # reverseがtrueかfalseによって並び順を変える
-  file_list_sorted = reverse == true ? file_list.sort.reverse : file_list.sort
-
   # 3列で並べる際の1列の要素数を求める
-  slice_num = count_clumn_item(file_list_sorted.size)
+  slice_num = count_clumn_item(file_list.size)
 
   # 1列に入る要素数で配列を区切り、行と列を入れ替える
-  file_list_transposed = file_list_sorted.each_slice(slice_num).to_a.map! { |it| it.values_at(0...slice_num) }.transpose
+  file_list_transposed = file_list.each_slice(slice_num).to_a.map! { |it| it.values_at(0...slice_num) }.transpose
 
   # 3列表示にするために並び替えて格納した配列
-  adjusted_file_list = []
   adjusted_file_list = file_list_transposed.map do |list_line|
-    line_item = []
     line_item = list_line.map do |list_line_item|
       # ファイル名を最大数の幅に揃える
       list_line_item.nil? ? ' '.ljust(max_size) : list_line_item.ljust(max_size)
-    end
+    end.join
   end
-
-  adjusted_file_list.each do |adjusted_file_list_item|
-    puts adjusted_file_list_item.join(' ')
-  end
+  puts adjusted_file_list
 end
 
 def ls_l(scope: File::FNM_PATHNAME, reverse: false)
