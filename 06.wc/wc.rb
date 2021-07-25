@@ -4,7 +4,7 @@ require 'byebug'
 require 'optparse'
 
 def main
-  if FileTest.pipe?($stdin)
+  if ARGV.empty?
     stdin = $stdin.readlines
     stdin_result(stdin)
   else
@@ -21,7 +21,7 @@ def stdin_count_lines(stdin)
 end
 
 def stdin_count_words(stdin)
-  stdin.join.split(/\n|\t| +|　+|/).size
+  stdin.join.split(/\n|\t| +|　+/).size
 end
 
 def stdin_measure_byte(stdin)
@@ -76,9 +76,9 @@ def file_result(file_list)
   return unless file_list.size >= 2
 
   if option['l']
-    puts "#{lines_sum.to_s.rjust(RESULT_WORD_WIDTH)} #{total}"
+    puts "#{lines_sum.to_s.rjust(RESULT_WORD_WIDTH)} total"
   else
-    puts "#{lines_sum.to_s.rjust(RESULT_WORD_WIDTH)}#{words_sum.to_s.rjust(RESULT_WORD_WIDTH)}#{byte_sum.to_s.rjust(RESULT_WORD_WIDTH)} #{total}"
+    puts "#{lines_sum.to_s.rjust(RESULT_WORD_WIDTH)}#{words_sum.to_s.rjust(RESULT_WORD_WIDTH)}#{byte_sum.to_s.rjust(RESULT_WORD_WIDTH)} total"
   end
 end
 
