@@ -39,24 +39,16 @@ end
 
 # File.statで受け取ったファイルモードの表記を変換する
 def convert_to_fmode(file, position)
-  case file.mode.to_s(8).slice(position).to_i
-  when 7
-    'rwx'
-  when 6
-    'rw-'
-  when 5
-    'r-x'
-  when 4
-    'r--'
-  when 3
-    '-wx'
-  when 2
-    '-w-'
-  when 1
-    '--x'
-  else
-    '-0-7'
-  end
+  {
+    7 => 'rwx',
+    6 => 'rw-',
+    5 => 'r-x',
+    4 => 'r--',
+    3 => '-wx',
+    2 => '-w-',
+    1 => '--x',
+    0 => '---'
+  }[file.mode.to_s(8).slice(position).to_i]
 end
 
 # 最大幅3列にする場合の1列の要素数を計算する
