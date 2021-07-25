@@ -5,22 +5,12 @@ require 'optparse'
 
 def main
   option = ARGV.getopts('alr')
-  if option['a'] && option['l'] && option['r']
-    ls_l(scope: File::FNM_DOTMATCH, reverse: true)
-  elsif option['a'] && option['l']
-    ls_l(scope: File::FNM_DOTMATCH)
-  elsif option['l'] && option['r']
-    ls_l(reverse: true)
-  elsif option['a'] && option['r']
-    ls(scope: File::FNM_DOTMATCH, reverse: true)
-  elsif option['a']
-    ls(scope: File::FNM_DOTMATCH)
-  elsif option['l']
-    ls_l
-  elsif option['r']
-    ls(reverse: true)
+  scope = option['a'] ? File::FNM_DOTMATCH : File::FNM_PATHNAME
+  reverse = option['r'] ? true : false
+  if option['l']
+    ls_l(scope: scope, reverse: reverse)
   else
-    ls
+    ls(scope: scope, reverse: reverse)
   end
 end
 
