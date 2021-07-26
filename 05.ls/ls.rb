@@ -6,11 +6,10 @@ require 'optparse'
 def main
   option = ARGV.getopts('alr')
   scope = option['a'] ? File::FNM_DOTMATCH : File::FNM_PATHNAME
-  reverse = option['r'] ? true : false
   if option['l']
-    ls_l(scope: scope, reverse: reverse)
+    ls_l(scope: scope, reverse: option['r'])
   else
-    ls(scope: scope, reverse: reverse)
+    ls(scope: scope, reverse: option['r'])
   end
 end
 
@@ -49,7 +48,7 @@ def count_clumn_item(num)
 end
 
 def ls(scope: File::FNM_PATHNAME, reverse: false)
-  file_list = reverse == true ? Dir.glob('*', scope).reverse : Dir.glob('*', scope)
+  file_list = reverse ? Dir.glob('*', scope).reverse : Dir.glob('*', scope)
 
   # ファイル名の最大数を取得する
   max_size = file_list.max_by(&:length).size
@@ -90,7 +89,7 @@ def ls_l(scope: File::FNM_PATHNAME, reverse: false)
   end
 
   puts "total #{file_blocks}"
-  puts reverse == true ? file_list.reverse : file_list
+  puts reverse ? file_list.reverse : file_list
 end
 
 main
