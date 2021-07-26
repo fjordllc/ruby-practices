@@ -3,53 +3,93 @@
 
 require 'optparse'
 
-# オプション設定
+class LS
+  # ファイルタイプ略語対応
+  FILE_TYPE = {
+    'file' => '-' ,
+    'directory' => 'd',
+    'characterSpecial' => 'c',
+    'blockSpeclal' => 'b',
+    'fifo' => 'p',
+    'link' => 'l',
+    'socket' => 's',
+  }
+
+  # 初期化処理
+  def initialize(options)
+  end
+
+  # ファイル一覧作成
+  def create_file_list_array(options)
+    files = if options[:all] == true
+              Dir.glob('*', File::FNM_DOTMATCH).sort
+            else
+              Dir.glob('*').sort
+            end
+
+    # ソート順反転処理（-r オプション）
+    options[:reverse] == true ? files.reverse! : files
+  end
+
+
+  # ファイル情報取得処理（-l オプションあり）
+
+
+  # 結果表示処理
+  def show_file_list(files)
+
+    # 一行の列数を指定
+    on_line_items = 3
+
+    line_cnt = (files.size % on_line_items).zero? ? files.size / on_line_items : files.size / on_line_items + 1
+    lines = Array.new(line_cnt){ [] }
+
+    index = 0
+    longest_word_length = 0
+    files.each do |file|
+      longest_word_length = file.length if file.length > longest_word_length
+
+      lines[index] << file
+      index += 1
+      index = 0 if index == line_cnt
+    end
+
+    lines.each do |line|
+      puts line.map{ |item| item.ljust(longest_word_length) }.join('   ')
+    end
+  end
+end
+
+# main ------------------------------------------------------------------------
+# オプション引数取得
 opt = OptionParser.new
-options = {}
+options = {:all => false, :list => false, :reverse => false}
+
+# 単一指定
 opt.on('-a') { |v| options[:all] = v }
 opt.on('-l') { |v| options[:list] = v }
-opt.on('-r') { |v| options[:reverse] = v }
+opt.on('-r') { |v| options[:reverse] = v}
 
-# 引数リストARGVをパースして各オプションブロックを実行
+# 混合指定
+# [note] 指定外のオプションが指定された場合の終了処理が必要
+ARGV.each do |arg|
+  if options[:all] == false
+    options[:all] = arg.include? 'a'
+  end
+
+  if options[:list] == false
+    options[:list] = arg.include? 'l'
+  end
+
+  if options[:reverse] == false
+    options[:reverse] = arg.include? 'r'
+  end
+end
+
+# 引数リストをparseにｓて各オプションのブロックを実行
 opt.parse! { ARGV }
 
-def show_file_list(options)
-  # -a オプション有無による処理分岐
-  items = if options.key?(:all)
-            Dir.glob('*', File::FNM_DOTMATCH).sort.map { |item| item.to_s.ljust(16) }
-          else
-            Dir.glob('*').sort.map { |item| item.to_s.ljust(16) }
-          end
-
-  # -r オプションによる逆順ソート処理
-  if options.key?(:reverse)
-    items.reverse!
-  end
-
-
-  # １行内の出力件数
-  line_size = 3
-
-  # 出力する行数を取得（出力件数で割って余りが出た場合は１行追加）
-  line_cnt = (items.size % line_size).zero? ? items.size / line_size : items.size / line_size + 1
-  items_line_array = Array.new(line_cnt) { [] }
-
-  cnt = 0
-  items.each do |item|
-    items_line_array[cnt] << item
-    cnt += 1
-
-    cnt = 0 if cnt == items_line_array.size
-  end
-
-  items_line_array.each { |line| puts line.join('') }
-end
-
-
-# # -lの場合(ファイル詳細情報付き)
-def show_file_list_with_detail_info
-  p "show_file_list_with_detail_info"
-end
-
-
-show_file_list(options)
+# start
+ls = LS.new(options)
+files = ls.create_file_list_array(options)
+ls.show_file_list(files)
