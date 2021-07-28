@@ -6,6 +6,8 @@ def cal
   opt = parse_option
 
   today = Date.today
+  # オプションから年と月を取得。
+  # 引数がない場合は今日の年または月を取得
   month = if opt.key?(:m)
             opt[:m]
           else
@@ -23,6 +25,7 @@ def cal
     return
   end
 
+  # カレンダーを描画
   draw_year_and_month(year, month)
   draw_day_of_week
   draw_weeks(one_month)
@@ -59,8 +62,10 @@ def draw_week(week)
 end
 
 def displayed_day(day)
+  # 曜日列に日付がない場合は空白表示
   return '  ' if day.nil?
 
+  # 日付の文字数が1文字の場合は空白を追加して幅を調整
   if day < 10
     " #{day}"
   else

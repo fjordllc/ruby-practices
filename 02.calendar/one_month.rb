@@ -1,5 +1,7 @@
 require 'date'
 
+# 月間を表すクラス
+# 年月を引数にわたしてその月の週や週の数などを取得
 class OneMonth
   attr_reader :year, :month
 
@@ -15,12 +17,16 @@ class OneMonth
     init_weeks
   end
 
+  # 月間に含まれる週ごとの日付を要素とするArrayオブジェクトを返す
+  # 週の日付の並び順は日曜日の日付を始めとして土曜日の日付を格納
+  # 曜日に紐づく日付が存在しない場合の要素はnil
   def weeks
     @weeks.each { |week| yield week.values }
   end
 
   private
 
+  # @weeksを作成するための初期処理
   def init_weeks
     d = 1
     while d <= @last_day
@@ -44,6 +50,7 @@ class OneMonth
     end
   end
 
+  # 日付に応じた曜日(0から6までで、0は日曜)を返す
   def day_of_week(day)
     Date.new(@year, @month, day).wday
   end
