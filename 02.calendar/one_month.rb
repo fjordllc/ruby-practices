@@ -1,16 +1,16 @@
 require 'date'
 
-class Month
-  attr_reader :year, :mon
+class OneMonth
+  attr_reader :year, :month
 
-  def initialize(year, mon)
+  def initialize(year, month)
     raise ArgumentError, "year `#{year}` not in range 1..9999" unless valid_year?(year)
 
-    raise ArgumentError, "#{mon} is neither a month number(1..12) nor a name" unless valid_month?(mon)
+    raise ArgumentError, "#{month} is neither a month number(1..12) nor a name" unless valid_month?(month)
 
     @year = year
-    @mon = mon
-    @last_day = Date.new(@year, @mon, -1).day
+    @month = month
+    @last_day = Date.new(@year, @month, -1).day
     @weeks = []
     init_weeks
   end
@@ -45,7 +45,7 @@ class Month
   end
 
   def day_of_week(day)
-    Date.new(@year, @mon, day).wday
+    Date.new(@year, @month, day).wday
   end
 
   def valid_month?(month)

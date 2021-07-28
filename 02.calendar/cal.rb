@@ -1,6 +1,6 @@
 require 'date'
 require 'optparse'
-require_relative 'cal_month'
+require_relative 'one_month'
 
 def cal
   opt = parse_option
@@ -17,7 +17,7 @@ def cal
            today.year
          end
   begin
-    mon = Month.new(year, month)
+    one_month = OneMonth.new(year, month)
   rescue ArgumentError => e
     puts "cal: #{e.message}"
     return
@@ -25,7 +25,7 @@ def cal
 
   draw_year_and_month(year, month)
   draw_day_of_week
-  draw_weeks(mon)
+  draw_weeks(one_month)
 end
 
 def parse_option
