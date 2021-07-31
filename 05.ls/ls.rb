@@ -53,7 +53,7 @@ class Ls
     group_permission_labels = PERMISSION_PATTERN[group_permission_number]
     others_permission_labels = PERMISSION_PATTERN[others_permission_number]
 
-    permission_labels = owner_permission_labels + group_permission_labels + others_permission_labels
+    owner_permission_labels + group_permission_labels + others_permission_labels
   end
 
   # ファイル情報取得処理（-l オプションあり）
@@ -76,33 +76,33 @@ class Ls
     files_with_detail_info
   end
 
-  # 結果表示処理
-  def show_file_list(files, options)
+  # 結果表示処理('-l'オプションなし版)
+  def show_file_list(files)
+    # 一行の列数を指定
+    on_line_items = 3
 
-    if options[:list] == true
-      files.each do |file|
-        puts file
-      end
-    else
-      # 一行の列数を指定
-      on_line_items = 3
+    line_cnt = (files.size % on_line_items).zero? ? files.size / on_line_items : files.size / on_line_items + 1
+    lines = Array.new(line_cnt) { [] }
 
-      line_cnt = (files.size % on_line_items).zero? ? files.size / on_line_items : files.size / on_line_items + 1
-      lines = Array.new(line_cnt){ [] }
+    index = 0
+    longest_word_length = 0
+    files.each do |file|
+      longest_word_length = file.length if file.length > longest_word_length
 
-      index = 0
-      longest_word_length = 0
-      files.each do |file|
-        longest_word_length = file.length if file.length > longest_word_length
+      lines[index] << file
+      index += 1
+      index = 0 if index == line_cnt
+    end
 
-        lines[index] << file
-        index += 1
-        index = 0 if index == line_cnt
-      end
+    lines.each do |line|
+      puts line.map { |item| item.ljust(longest_word_length) }.join('   ')
+    end
+  end
 
-      lines.each do |line|
-        puts line.map{ |item| item.ljust(longest_word_length) }.join('   ')
-      end
+  # 結果表示処理('-l'オプション指定時)
+  def show_file_list_with_detail_info(files)
+    files.each do |file|
+      puts file
     end
   end
 end
@@ -110,33 +110,25 @@ end
 # main ------------------------------------------------------------------------
 # オプション引数取得
 opt = OptionParser.new
-options = {:all => false, :list => false, :reverse => false}
+options = { all: false, list: false, reverse: false }
 
 # 単一指定
 opt.on('-a') { |v| options[:all] = v }
 opt.on('-l') { |v| options[:list] = v }
-opt.on('-r') { |v| options[:reverse] = v}
+opt.on('-r') { |v| options[:reverse] = v }
 
-# 混合指定
-# [note] 指定外のオプションが指定された場合の終了処理が必要
-ARGV.each do |arg|
-  if options[:all] == false
-    options[:all] = arg.include? 'a'
-  end
-
-  if options[:list] == false
-    options[:list] = arg.include? 'l'
-  end
-
-  if options[:reverse] == false
-    options[:reverse] = arg.include? 'r'
-  end
-end
-
-# 引数リストをparseにｓて各オプションのブロックを実行
+# 引数リストをparseして各オプションのブロックを実行
 opt.parse! { ARGV }
+
+# 複合指定
+ARGV.each do |arg|
+  options[:all] = true if arg.include? 'a'
+  options[:list] = true if arg.include? 'l'
+  options[:reverse] = true if arg.include? 'r'
+end
 
 # start
 ls = Ls.new
 files = ls.create_file_list_array(options)
-ls.show_file_list(files,options)
+
+options[:list] == true ? ls.show_file_list_with_detail_info(files) : ls.show_file_list(files)
