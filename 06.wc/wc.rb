@@ -2,7 +2,6 @@
 
 require 'optparse'
 
-# getoptsしたあとは指定したオプションがARGVの配列から取り除かれる
 @option = ARGV.getopts('l')
 
 def main
@@ -14,10 +13,8 @@ def main
   end
 end
 
-# 各計算結果の表記は8桁で揃える
 RESULT_WORD_WIDTH = 8
 
-# パイプで入力がある場合の計算
 def stdin_count_lines(stdin)
   stdin.size
 end
@@ -40,7 +37,6 @@ def stdin_result(stdin)
   end
 end
 
-# 引数でファイルを指定した場合の計算
 def file_count_lines(file)
   lines_number = File.read(file).each_line.count
   lines_number.to_s.rjust(RESULT_WORD_WIDTH)
