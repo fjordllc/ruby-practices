@@ -7,9 +7,9 @@ require 'optparse'
 def main
   if ARGV.empty?
     text = readline(nil)
-    stdin_result(text)
+    display_stdin_result(text)
   else
-    file_result(ARGV)
+    display_file_result(ARGV)
   end
 end
 
@@ -40,11 +40,11 @@ def count_byte(text)
   text.bytesize
 end
 
-def stdin_result(text)
+def display_stdin_result(text)
   print_counts(count_lines(text), count_words(text), count_byte(text))
 end
 
-def file_result(file_list)
+def display_file_result(file_list)
   lines_sum = 0
   words_sum = 0
   byte_sum = 0
