@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'byebug'
 require 'optparse'
 
 # getoptsしたあとは指定したオプションがARGVの配列から取り除かれる
