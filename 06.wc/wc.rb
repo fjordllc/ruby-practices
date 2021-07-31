@@ -15,6 +15,10 @@ end
 
 RESULT_WORD_WIDTH = 8
 
+def format_count(count)
+  count.to_s.rjust(RESULT_WORD_WIDTH)
+end
+
 def text_count_lines(text)
   text.each_line.count
 end
@@ -43,10 +47,10 @@ def file_count_byte(file)
 end
 
 def stdin_result(text)
-  print text_count_lines(text).to_s.rjust(RESULT_WORD_WIDTH)
+  print format_count(text_count_lines(text))
   unless @option['l']
-  puts text_count_words(text).to_s.rjust(RESULT_WORD_WIDTH) + \
-       text_count_byte(text).to_s.rjust(RESULT_WORD_WIDTH)
+    puts format_count(text_count_words(text)) + \
+         format_count(text_count_byte(text))
   end
 end
 
@@ -56,9 +60,9 @@ def file_result(file_list)
   byte_sum = 0
 
   file_list.each do |file|
-    print "#{file_count_lines(file).to_s.rjust(RESULT_WORD_WIDTH)}"
+    print "#{format_count(file_count_lines(file))}"
     unless @option['l']
-      print "#{file_count_words(file).to_s.rjust(RESULT_WORD_WIDTH)}#{file_count_byte(file).to_s.rjust(RESULT_WORD_WIDTH)}"
+      print "#{format_count(file_count_words(file))}#{format_count(file_count_byte(file))}"
     end
     puts " #{file}"
     lines_sum += file_count_lines(file)
@@ -67,9 +71,9 @@ def file_result(file_list)
   end
 
   return unless file_list.size >= 2
-  print "#{lines_sum.to_s.rjust(RESULT_WORD_WIDTH)}"
+  print "#{format_count(lines_sum)}"
   unless @option['l']
-    print "#{words_sum.to_s.rjust(RESULT_WORD_WIDTH)}#{byte_sum.to_s.rjust(RESULT_WORD_WIDTH)}"
+    print "#{format_count(words_sum)}#{format_count(byte_sum)}"
   end
   puts " total"
 end
