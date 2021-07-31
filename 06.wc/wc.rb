@@ -28,35 +28,20 @@ def print_counts(lines_num, words_num, bytes_num, name = nil)
   puts " #{name}"
 end
 
-def text_count_lines(text)
+def count_lines(text)
   text.each_line.count
 end
 
-def text_count_words(text)
+def count_words(text)
   text.split(/\n|\t| +|　+/).count
 end
 
-def text_count_byte(text)
+def count_byte(text)
   text.bytesize
 end
 
-def file_count_lines(file)
-  text = File.read(file)
-  text_count_lines(text)
-end
-
-def file_count_words(file)
-  text = File.read(file)
-  text_count_words(text)
-end
-
-def file_count_byte(file)
-  text = File.read(file)
-  text_count_byte(text)
-end
-
 def stdin_result(text)
-  print_counts(text_count_lines(text), text_count_words(text), text_count_byte(text))
+  print_counts(count_lines(text), count_words(text), count_byte(text))
 end
 
 def file_result(file_list)
@@ -66,11 +51,11 @@ def file_result(file_list)
 
   file_list.each do |file|
     text = File.read(file)
-    line_count = text_count_lines(text)
-    print_counts(line_count, text_count_words(text), text_count_byte(text), file)
+    line_count = count_lines(text)
+    print_counts(line_count, count_words(text), count_byte(text), file)
     lines_sum += line_count
-    words_sum += text_count_words(text)
-    byte_sum += text_count_byte(text)
+    words_sum += count_words(text)
+    byte_sum += count_byte(text)
   end
 
   return unless file_list.size >= 2
