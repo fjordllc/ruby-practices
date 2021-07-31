@@ -6,8 +6,8 @@ require 'optparse'
 
 def main
   if ARGV.empty?
-    stdin = $stdin.readlines
-    stdin_result(stdin)
+    text = readline(nil)
+    stdin_result(text)
   else
     file_result(ARGV)
   end
@@ -15,41 +15,42 @@ end
 
 RESULT_WORD_WIDTH = 8
 
-def stdin_count_lines(stdin)
-  stdin.size
+def text_count_lines(text)
+  text.each_line.count
 end
 
-def stdin_count_words(stdin)
-  stdin.join.split(/\n|\t| +|　+/).size
+def text_count_words(text)
+  text.split(/\n|\t| +|　+/).count
 end
 
-def stdin_measure_byte(stdin)
-  stdin.join.size
-end
-
-def stdin_result(stdin)
-  if @option['l']
-    puts stdin_count_lines(stdin).to_s.rjust(RESULT_WORD_WIDTH)
-  else
-    puts stdin_count_lines(stdin).to_s.rjust(RESULT_WORD_WIDTH) + \
-         stdin_count_words(stdin).to_s.rjust(RESULT_WORD_WIDTH) + \
-         stdin_measure_byte(stdin).to_s.rjust(RESULT_WORD_WIDTH)
-  end
+def text_count_byte(text)
+  text.bytesize
 end
 
 def file_count_lines(file)
-  lines_number = File.read(file).each_line.count
-  lines_number.to_s.rjust(RESULT_WORD_WIDTH)
+  text = File.read(file)
+  text_count_lines(text)
 end
 
 def file_count_words(file)
-  words_number = File.read(file).split(/\n| /).count
-  words_number.to_s.rjust(RESULT_WORD_WIDTH)
+  text = File.read(file)
+  text_count_words(text)
 end
 
-def file_measure_byte(file)
-  byte_size = File.size(file)
-  byte_size.to_s.rjust(RESULT_WORD_WIDTH)
+def file_count_byte(file)
+  text = File.read(file)
+  text_count_byte(text)
+end
+
+
+def stdin_result(text)
+  if @option['l']
+    puts text_count_lines(text).to_s.rjust(RESULT_WORD_WIDTH)
+  else
+    puts text_count_lines(text).to_s.rjust(RESULT_WORD_WIDTH) + \
+         text_count_words(text).to_s.rjust(RESULT_WORD_WIDTH) + \
+         text_count_byte(text).to_s.rjust(RESULT_WORD_WIDTH)
+  end
 end
 
 def file_result(file_list)
@@ -59,13 +60,13 @@ def file_result(file_list)
 
   file_list.each do |file|
     if @option['l']
-      puts "#{file_count_lines(file)} #{file}"
+      puts "#{file_count_lines(file).to_s.rjust(RESULT_WORD_WIDTH)} #{file}"
     else
-      puts "#{file_count_lines(file)}#{file_count_words(file)}#{file_measure_byte(file)} #{file}"
+      puts "#{file_count_lines(file).to_s.rjust(RESULT_WORD_WIDTH)}#{file_count_words(file).to_s.rjust(RESULT_WORD_WIDTH)}#{file_count_byte(file).to_s.rjust(RESULT_WORD_WIDTH)} #{file}"
     end
-    lines_sum += file_count_lines(file).to_i
-    words_sum += file_count_words(file).to_i
-    byte_sum += file_measure_byte(file).to_i
+    lines_sum += file_count_lines(file)
+    words_sum += file_count_words(file)
+    byte_sum += file_count_byte(file)
   end
 
   return unless file_list.size >= 2
