@@ -6,7 +6,7 @@ dir_and_file_names = Dir.glob('*')
 # dir_and_file_names = Dir.glob('*', File::FNM_DOTMATCH)
 # ファイルの情報を取得するためのFile::Statクラスのインスタンス生成cd
 
-FORMAT = "%2s%-6s %3s %8s %8s %7s %7s %-16s \n"
+FORMAT = "%s%-6s %3s %-8s %-8s %6s %7s %-16s \n"
 
 file_number = dir_and_file_names.length
 
@@ -21,15 +21,15 @@ puts "total #{total_number}"
 
 a = Time.now
 file_number.times do |n|
-  ls_l_stat = File::Stat.new(dir_and_file_names[n])
+  ls_l_stat = File.lstat(dir_and_file_names[n])
   ft = ls_l_stat.ftype
     case ft
+      when 'link'
+      ft.replace 'l'
       when 'file'
         ft.replace '-'
       when 'directory'
         ft.replace 'd'
-      when 'link'
-        ft.replace 'l'
     end
 
   m = ls_l_stat.mode.to_s(8) # 8進数に変換

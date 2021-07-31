@@ -12,32 +12,32 @@ number_of_lines = dir_and_file_names.length / NumberOfColumn
 
 if dir_and_file_names.length % number_of_lines == 0
   a = dir_and_file_names.each_slice(number_of_lines).to_a
-  FORMAT = '%-20s'
+  FORMAT = "%-20s"
   results = a[0].zip(a[1], a[2])
   results.each do |result|
     result.each do |fed|
-      printf FORMAT, fed
+      # printf FORMAT, fed
     end
     puts "\n"
   end
 else
   a = dir_and_file_names.each_slice(number_of_lines + 1).to_a
-  FORMAT = '%-20s'
+  FORMAT = "%-20s"
   results = a[0].zip(a[1], a[2])
   results.each do |result|
     result.each do |fed|
       printf FORMAT, fed
     end
-    puts
+    puts # zipメソッドに関する
   end
 end
 
-puts "\n"
-puts '-aオプション'
+require 'optparse'
+opt = OptionParser.new
+opt.on('-a') {
+  all_dir_and_file_names = Dir.glob('*', File::FNM_DOTMATCH)
 
-all_dir_and_file_names = Dir.glob('*', File::FNM_DOTMATCH)
-
-# NumberOfColumn = 3
+NumberOfColumn = 3
 number_of_lines = all_dir_and_file_names.length / NumberOfColumn
 
 if all_dir_and_file_names.length % number_of_lines == 0
@@ -61,12 +61,12 @@ else
     puts
   end
 end
+}
 
-puts "\n"
-puts '-rオプション'
 
+opt.on('-r') {
 re_dir_and_file_names = Dir.glob('*').reverse
-p re_dir_and_file_names
+# p re_dir_and_file_names
 # 列数を定数に
 # NumberOfColumn = 3
 # 配列の要素数取得、列数で割って行数を出す。
@@ -87,12 +87,14 @@ if re_dir_and_file_names.length % number_of_lines == 0
   end
 else
   a = re_dir_and_file_names.each_slice(number_of_lines + 1).to_a
-  FORMAT = '%-20s'
+  RFORMAT = '%-20s'
   results = a[0].zip(a[1], a[2])
   results.each do |result|
     result.each do |fed|
-      printf FORMAT, fed
+      printf RFORMAT, fed
     end
     puts
   end
 end
+}
+opt.parse!(ARGV)
