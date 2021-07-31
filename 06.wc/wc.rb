@@ -2,14 +2,13 @@
 
 require 'optparse'
 
-@option = ARGV.getopts('l')
-
 def main
+  option = ARGV.getopts('l')
   if ARGV.empty?
     text = readline(nil)
-    display_stdin_result(text)
+    display_stdin_result(text, option)
   else
-    display_file_result(ARGV)
+    display_file_result(ARGV, option)
   end
 end
 
@@ -19,9 +18,9 @@ def format_count(count)
   count.to_s.rjust(RESULT_WORD_WIDTH)
 end
 
-def print_counts(lines_num, words_num, bytes_num, name = nil)
-    print format_count(lines_num)
-  unless @option['l']
+def print_counts(lines_num, words_num, bytes_num, name = nil, option = nil)
+  print format_count(lines_num)
+  unless option['l']
     print format_count(words_num) + \
           format_count(bytes_num)
   end
@@ -40,19 +39,18 @@ def count_byte(text)
   text.bytesize
 end
 
-def display_stdin_result(text)
-  print_counts(count_lines(text), count_words(text), count_byte(text))
+def display_stdin_result(text, option = nil)
+  print_counts(count_lines(text), count_words(text), count_byte(text), option)
 end
 
-def display_file_result(file_list)
+def display_file_result(file_list, option = nil)
   lines_sum = 0
   words_sum = 0
   byte_sum = 0
-
   file_list.each do |file|
     text = File.read(file)
     line_count = count_lines(text)
-    print_counts(line_count, count_words(text), count_byte(text), file)
+    print_counts(line_count, count_words(text), count_byte(text), file, option)
     lines_sum += line_count
     words_sum += count_words(text)
     byte_sum += count_byte(text)
@@ -60,7 +58,7 @@ def display_file_result(file_list)
 
   return unless file_list.size >= 2
 
-  print_counts(lines_sum, words_sum, byte_sum, "total")
+  print_counts(lines_sum, words_sum, byte_sum, "total", option)
 
 end
 
