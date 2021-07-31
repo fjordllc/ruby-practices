@@ -61,12 +61,13 @@ def file_result(file_list)
 
   file_list.each do |file|
     text = File.read(file)
-    print "#{format_count(text_count_lines(text))}"
+    line_count = text_count_lines(text)
+    print "#{format_count(line_count)}"
     unless @option['l']
       print "#{format_count(text_count_words(text))}#{format_count(text_count_byte(text))}"
     end
     puts " #{file}"
-    lines_sum += text_count_lines(text)
+    lines_sum += line_count
     words_sum += text_count_words(text)
     byte_sum += text_count_byte(text)
   end
