@@ -60,14 +60,15 @@ def file_result(file_list)
   byte_sum = 0
 
   file_list.each do |file|
-    print "#{format_count(file_count_lines(file))}"
+    text = File.read(file)
+    print "#{format_count(text_count_lines(text))}"
     unless @option['l']
-      print "#{format_count(file_count_words(file))}#{format_count(file_count_byte(file))}"
+      print "#{format_count(text_count_words(text))}#{format_count(text_count_byte(text))}"
     end
     puts " #{file}"
-    lines_sum += file_count_lines(file)
-    words_sum += file_count_words(file)
-    byte_sum += file_count_byte(file)
+    lines_sum += text_count_lines(text)
+    words_sum += text_count_words(text)
+    byte_sum += text_count_byte(text)
   end
 
   return unless file_list.size >= 2
