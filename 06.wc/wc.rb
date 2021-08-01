@@ -6,9 +6,9 @@ def main
   option = ARGV.getopts('l')
   if ARGV.empty?
     text = readline(nil)
-    display_stdin_result(text, option)
+    display_stdin_result(text, option: option)
   else
-    display_file_result(ARGV, option)
+    display_file_result(ARGV, option: option)
   end
 end
 
@@ -36,7 +36,7 @@ def print_counts(lines_num, words_num, bytes_num, name: nil, option: false)
 end
 
 def display_stdin_result(text, option: false)
-  print_counts(count_lines(text), count_words(text), count_byte(text), nil, option)
+  print_counts(count_lines(text), count_words(text), count_byte(text), name: nil, option: option)
 end
 
 def display_file_result(file_list, option: nil)
@@ -46,7 +46,7 @@ def display_file_result(file_list, option: nil)
   file_list.each do |file|
     text = File.read(file)
     line_count = count_lines(text)
-    print_counts(line_count, count_words(text), count_byte(text), file, option)
+    print_counts(line_count, count_words(text), count_byte(text), name: file, option: option)
     lines_sum += line_count
     words_sum += count_words(text)
     byte_sum += count_byte(text)
