@@ -13,7 +13,10 @@ def main
 end
 
 def display_stdin_result(text:, option: false)
-  print_counts(lines_num: count_lines(text), words_num: count_words(text), bytes_num: count_byte(text), file_name: nil, option: option)
+  line_count = count_lines(text)
+  word_count = count_words(text)
+  byte_count = count_byte(text)
+  print_counts(lines_num: line_count, words_num: word_count, bytes_num: byte_count, file_name: nil, option: option)
 end
 
 def display_file_result(file_list:, option: nil)
@@ -23,10 +26,12 @@ def display_file_result(file_list:, option: nil)
   file_list.each do |file|
     text = File.read(file)
     line_count = count_lines(text)
-    print_counts(lines_num: line_count, words_num: count_words(text), bytes_num: count_byte(text), file_name: file, option: option)
+    word_count = count_words(text)
+    byte_count = count_byte(text)
+    print_counts(lines_num: line_count, words_num: word_count, bytes_num: byte_count, file_name: file, option: option)
     lines_sum += line_count
-    words_sum += count_words(text)
-    byte_sum += count_byte(text)
+    words_sum += word_count
+    byte_sum += byte_count
   end
 
   return unless file_list.size >= 2
