@@ -6,10 +6,38 @@ def main
   option = ARGV.getopts('l')
   if ARGV.empty?
     text = readline(nil)
-    display_stdin_result(text, option: option)
+    display_stdin_result(text: text, option: option)
   else
-    display_file_result(ARGV, option: option)
+    display_file_result(file_list: ARGV, option: option)
   end
+end
+
+def display_stdin_result(text:, option: false)
+  print_counts(lines_num: count_lines(text), words_num: count_words(text), bytes_num: count_byte(text), file_name: nil, option: option)
+end
+
+def display_file_result(file_list:, option: nil)
+  lines_sum = 0
+  words_sum = 0
+  byte_sum = 0
+  file_list.each do |file|
+    text = File.read(file)
+    line_count = count_lines(text)
+    print_counts(lines_num: line_count, words_num: count_words(text), bytes_num: count_byte(text), file_name: file, option: option)
+    lines_sum += line_count
+    words_sum += count_words(text)
+    byte_sum += count_byte(text)
+  end
+
+  return unless file_list.size >= 2
+
+  print_counts(lines_num: lines_sum, words_num: words_sum, bytes_num: byte_sum, file_name: 'total', option: option)
+end
+
+def print_counts(lines_num:, words_num:, bytes_num:, file_name: nil, option: false)
+  print format_count(lines_num)
+  print format_count(words_num) + format_count(bytes_num) unless option['l']
+  puts " #{file_name}"
 end
 
 def count_lines(text)
@@ -27,34 +55,6 @@ end
 RESULT_WORD_WIDTH = 8
 def format_count(count)
   count.to_s.rjust(RESULT_WORD_WIDTH)
-end
-
-def print_counts(lines_num, words_num, bytes_num, name: nil, option: false)
-  print format_count(lines_num)
-  print format_count(words_num) + format_count(bytes_num) unless option['l']
-  puts " #{name}"
-end
-
-def display_stdin_result(text, option: false)
-  print_counts(count_lines(text), count_words(text), count_byte(text), name: nil, option: option)
-end
-
-def display_file_result(file_list, option: nil)
-  lines_sum = 0
-  words_sum = 0
-  byte_sum = 0
-  file_list.each do |file|
-    text = File.read(file)
-    line_count = count_lines(text)
-    print_counts(line_count, count_words(text), count_byte(text), name: file, option: option)
-    lines_sum += line_count
-    words_sum += count_words(text)
-    byte_sum += count_byte(text)
-  end
-
-  return unless file_list.size >= 2
-
-  print_counts(lines_sum, words_sum, byte_sum, 'total', option)
 end
 
 main
