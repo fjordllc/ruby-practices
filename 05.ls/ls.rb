@@ -21,7 +21,6 @@ dir_and_file_names =
   end
 
 if options['l']
-  # LFORMAT = "%s%-6s %3s %-8s %-8s %6s %7s %-16s \n"
   file_number = dir_and_file_names.length
 
   array_for_blocks = []
@@ -47,9 +46,11 @@ if options['l']
     end
 
     m = ls_l_stat.mode.to_s(8) # 8進数に変換
-    convert_pamissions = { '0' => '---', '1' => '--x', '2' => '-w-', '3' => '-wx', '4' => 'r--',
-                           '5' => 'r-x', '6' => 'rw-', '7' => 'rwx' }
-    converted_pamission = convert_pamissions[m[-3]] + convert_pamissions[m[-2]] + convert_pamissions[m[-1]]
+    convert_pamissions = { '0' => '---', '1' => '--x', '2' => '-w-',
+                           '3' => '-wx', '4' => 'r--', '5' => 'r-x',
+                           '6' => 'rw-', '7' => 'rwx' }
+    converted_pamission =
+      convert_pamissions[m[-3]] + convert_pamissions[m[-2]] + convert_pamissions[m[-1]]
 
     nl = ls_l_stat.nlink
     u_name = Etc.getpwuid(ls_l_stat.uid).name
