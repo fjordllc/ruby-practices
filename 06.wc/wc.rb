@@ -12,14 +12,14 @@ def main
   end
 end
 
-def display_stdin_result(text:, option: false)
+def display_stdin_result(text:, option:)
   line_count = count_lines(text)
   word_count = count_words(text)
   byte_count = count_byte(text)
   print_counts(lines_num: line_count, words_num: word_count, bytes_num: byte_count, file_name: nil, option: option)
 end
 
-def display_file_result(file_list:, option: nil)
+def display_file_result(file_list:, option:)
   lines_sum = 0
   words_sum = 0
   byte_sum = 0
@@ -39,7 +39,7 @@ def display_file_result(file_list:, option: nil)
   print_counts(lines_num: lines_sum, words_num: words_sum, bytes_num: byte_sum, file_name: 'total', option: option)
 end
 
-def print_counts(lines_num:, words_num:, bytes_num:, file_name: nil, option: false)
+def print_counts(lines_num:, words_num:, bytes_num:, file_name:, option:)
   print format_count(lines_num)
   print format_count(words_num) + format_count(bytes_num) unless option['l']
   puts " #{file_name}"
