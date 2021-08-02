@@ -10,58 +10,21 @@ def main
   options_a = options['a']
   options_l = options['l']
   options_r = options['r']
-
   items = items(options_a)
   items = sort_items(options_r, items)
-
   window_length = `tput cols`.to_i
   max_item_string_length = 0
-
   items.each do |item|
     max_item_string_length = item.to_s.length if max_item_string_length <= item.to_s.length
   end
-
   number_of_columns = window_length / (max_item_string_length + 1)
   number_of_columns = MAX_COLUMN if number_of_columns > MAX_COLUMN
-
   calculate_reminder(items, number_of_columns, options_l)
-
+  items_length, total_f_bloks = calc_item_length(items)
   if options_l
-    items_length = 0
-    while items_length < items.length
-      item = items[items_length]
-      file_stat = File.stat(File.absolute_path(item.to_s))file_type = find_file_type(file_stat.ftype)
-      file_size = file_stat.size
-      file_time_mtime = file_stat.mtime
-      mtime(file_time_mtime)
-      file_link = file_stat.nlink
-      permission_number_ary = ((file_stat.mode.to_s(2).to_i / 1) % 1_000_000_000).to_s.split('')
-      permission(permission_number_ary)
-      permission = permission_number_ary.join('')
-      owner = f_owner(file_stat)
-      group = f_group(file_stat)
-      link_st = file_link.to_s.rjust(2, ' ')
-      size_st = file_size.to_s.rjust(8, ' ')
-      print "#{file_type}#{permission} #{link_st} #{owner} #{group} #{size_st} #{file_time_mtime} #{item}"
-      print "\n"
-      items_length += 1
-    end
+    function_for_l(items, items_length, total_f_bloks)
   else
-    number_of_rows = (items.length / number_of_columns.to_i).to_i
-    transposed_items = items.each_slice(number_of_rows).to_a.transpose
-    this_item_x = 0
-    transposed_items_ary = []
-
-    while this_item_x < transposed_items.length
-      this_item_y = 0
-      while this_item_y < number_of_columns
-        print_transported_items(transposed_items, this_item_x, this_item_y, max_item_string_length)
-        transposed_items_ary << transposed_items[this_item_x][this_item_y]
-        this_item_y += 1
-      end
-      this_item_x += 1
-      print_new_line(transposed_items_ary, this_item_x, number_of_columns)
-    end
+    function_for_general(items, number_of_columns, max_item_string_length)
   end
 end
 
@@ -153,4 +116,61 @@ def print_transported_items(transposed_items, this_item_x, this_item_y, max_item
   print transposed_items[this_item_x][this_item_y].ljust(max_item_string_length.to_i + 1, ' ')
 end
 
+def function_for_l(items, items_length, total_f_bloks)
+  items_length = 0
+  puts "total #{total_f_bloks}"
+  while items_length < items.length
+    print_items_for_l(items, items_length)
+    items_length += 1
+  end
+end
+
+def print_items_for_l(items, items_length)
+  item = items[items_length]
+  file_stat = File.stat(File.absolute_path(item.to_s))
+  file_type = find_file_type(file_stat.ftype)
+  file_size = file_stat.size
+  file_time_mtime = file_stat.mtime
+  mtime(file_time_mtime)
+  file_link = file_stat.nlink
+  permission_number_ary = ((file_stat.mode.to_s(2).to_i / 1) % 1_000_000_000).to_s.split('')
+  permission(permission_number_ary)
+  permission = permission_number_ary.join('')
+  owner = f_owner(file_stat)
+  group = f_group(file_stat)
+  link_st = file_link.to_s.rjust(2, ' ')
+  size_st = file_size.to_s.rjust(8, ' ')
+  print "#{file_type}#{permission} #{link_st} #{owner} #{group} #{size_st} #{file_time_mtime} #{item}"
+  print "\n"
+end
+
+def function_for_general(items, number_of_columns, max_item_string_length)
+  number_of_rows = (items.length / number_of_columns.to_i).to_i
+  transposed_items = items.each_slice(number_of_rows).to_a.transpose
+  this_item_x = 0
+  transposed_items_ary = []
+
+  while this_item_x < transposed_items.length
+    this_item_y = 0
+    while this_item_y < number_of_columns
+      print_transported_items(transposed_items, this_item_x, this_item_y, max_item_string_length)
+      transposed_items_ary << transposed_items[this_item_x][this_item_y]
+      this_item_y += 1
+    end
+    this_item_x += 1
+    print_new_line(transposed_items_ary, this_item_x, number_of_columns)
+  end
+end
+
+def calc_item_length(items)
+  total_f_bloks = 0
+  items_length = 0
+  while items_length < items.length
+    item = items[items_length]
+    file_stat = File.stat(File.absolute_path(item.to_s))
+    total_f_bloks += file_stat.blocks
+    items_length += 1
+  end
+  [items_length, total_f_bloks]
+end
 main
