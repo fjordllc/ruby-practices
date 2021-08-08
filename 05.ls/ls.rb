@@ -30,17 +30,17 @@ class Ls
 
   # ファイル一覧作成
   def create_file_list_array(options)
-    files = if options[:all] == true
+    files = if options[:all]
               Dir.glob('*', File::FNM_DOTMATCH).sort
             else
               Dir.glob('*').sort
             end
 
     # ソート順反転処理（-r オプション）
-    options[:reverse] == true ? files.reverse! : files
+    options[:reverse] ? files.reverse! : files
 
     # ファイル情報取得処理（-l オプション）
-    options[:list] == true ? change_array_to_add_detail_info(files) : files
+    options[:list] ? change_array_to_add_detail_info(files) : files
   end
 
   # パーミッション変換処理（8進数表記の権限を文字列表記に変換）
@@ -131,4 +131,4 @@ end
 ls = Ls.new
 files = ls.create_file_list_array(options)
 
-options[:list] == true ? ls.show_file_list_with_detail_info(files) : ls.show_file_list(files)
+options[:list] ? ls.show_file_list_with_detail_info(files) : ls.show_file_list(files)
