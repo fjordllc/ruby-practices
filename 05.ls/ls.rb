@@ -31,13 +31,13 @@ class Ls
   # ファイル一覧作成
   def create_file_list_array(options)
     files = if options[:all]
-              Dir.glob('*', File::FNM_DOTMATCH).sort
+              Dir.glob('*', File::FNM_DOTMATCH)
             else
-              Dir.glob('*').sort
+              Dir.glob('*')
             end
 
     # ソート順反転処理（-r オプション）
-    options[:reverse] ? files.reverse! : files
+    sorted_files = options[:reverse] ? files.sort.reverse : files.sort
 
     # ファイル情報取得処理（-l オプション）
     options[:list] ? change_array_to_add_detail_info(files) : files
@@ -58,8 +58,11 @@ class Ls
 
   # ファイル情報取得処理（-l オプションあり）
   def change_array_to_add_detail_info(files)
+    total_block_size = 0
+
     files_with_detail_info = []
     files.each do |file|
+      total_block_size += File.stat(file).blocks
       filetype = FILE_TYPE[File.ftype(file)]
       item = File::Stat.new(file)
       # modeの返り値を8進数文字列に変換後、6桁に揃えて表記変換処理を実行
@@ -73,15 +76,15 @@ class Ls
       item_line = "#{filetype}#{permissions}  #{hardlinks} #{owner_name}  #{group_name}  #{file_size} #{last_modified} #{file_name}"
       files_with_detail_info << item_line
     end
-    files_with_detail_info
+    puts "total #{total_block_size}"
+      files_with_detail_info
   end
 
   # 結果表示処理('-l'オプションなし版)
+  # 一行の列数を指定
+  ON_LINE_ITEMS = 3
   def show_file_list(files)
-    # 一行の列数を指定
-    on_line_items = 3
-
-    line_cnt = (files.size % on_line_items).zero? ? files.size / on_line_items : files.size / on_line_items + 1
+    line_cnt = (files.size % ON_LINE_ITEMS).zero? ? files.size / ON_LINE_ITEMS : files.size / ON_LINE_ITEMS + 1
     lines = Array.new(line_cnt) { [] }
 
     index = 0
