@@ -120,13 +120,6 @@ opt.on('-r') { |v| options[:reverse] = v }
 # 引数リストをparseして各オプションのブロックを実行
 opt.parse! { ARGV }
 
-# 複合指定
-ARGV.each do |arg|
-  options[:all] = true if arg.include? 'a'
-  options[:list] = true if arg.include? 'l'
-  options[:reverse] = true if arg.include? 'r'
-end
-
 # start
 ls = Ls.new
 files = ls.create_file_list_array(options)
