@@ -88,15 +88,14 @@ class Ls
     line_cnt = (files.size / ON_LINE_ITEMS.to_f).ceil
     lines = Array.new(line_cnt) { [] }
     index = 0
-    longest_word_length = 0
 
     files.each do |file|
-      longest_word_length = file.length if file.length > longest_word_length
       lines[index] << file
       index += 1
       index = 0 if index == line_cnt
     end
 
+    longest_word_length = files.max_by(&:length).length
     lines.each do |line|
       puts line.map { |item| item.ljust(longest_word_length) }.join('   ')
     end
