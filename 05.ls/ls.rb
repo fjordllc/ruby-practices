@@ -40,11 +40,15 @@ class Ls
 
   def self.start_process(options)
     ls = Ls.new
-    files = ls.create_file_list_array(options)
-    options[:list] ? ls.show_file_list_with_detail_info(files) : ls.show_file_list(files)
+    ls.make_file_list(options)
   end
 
+  def make_file_list(options)
+    files = create_file_list_array(options)
+    options[:list] ? show_detail(files) : show_file_list(files)
+  end
 
+  private
   def create_file_list_array(options)
     files = if options[:all]
               Dir.glob('*', File::FNM_DOTMATCH)
@@ -53,34 +57,6 @@ class Ls
             end
 
     sorted_files = options[:reverse] ? files.sort.reverse : files.sort
-  end
-
-  def format_permissions(stat)
-    permission_label = ''
-    octal_mode = stat.mode.to_s(8)
-
-    octal_mode.slice(-3, 3).scan(/./).each do |number|
-      permission_label += PERMISSION_PATTERN[number]
-    end
-    permission_label
-  end
-
-  def to_detailed_info(files)
-    total_block_size = 0
-
-    files_with_detail_info = []
-    files.map do |file_name|
-      total_block_size += File.stat(file_name).blocks
-      filetype = FILE_TYPE[File.ftype(file_name)]
-      stat = File::Stat.new(file_name)
-      permissions = format_permissions(stat)
-      hardlinks = stat.nlink.to_s.rjust(2)
-      owner_name = Etc.getpwuid(stat.uid).name
-      group_name = Etc.getgrgid(stat.gid).name
-      file_size = stat.size.to_s.rjust(4)
-      last_modified = stat.mtime.strftime('%m %d %R')
-      "#{filetype}#{permissions}  #{hardlinks} #{owner_name}  #{group_name}  #{file_size} #{last_modified} #{file_name}"
-    end
   end
 
   ON_LINE_ITEMS = 3
@@ -102,11 +78,39 @@ class Ls
     end
   end
 
-  def show_file_list_with_detail_info(files)
+  def show_detail(files)
     file_list = to_detailed_info(files)
     file_list.each do |file|
       puts file
     end
+  end
+
+  def to_detailed_info(files)
+    total_block_size = 0
+
+    files_with_detail_info = []
+    files.map do |file_name|
+      total_block_size += File.stat(file_name).blocks
+      filetype = FILE_TYPE[File.ftype(file_name)]
+      stat = File::Stat.new(file_name)
+      permissions = format_permissions(stat)
+      hardlinks = stat.nlink.to_s.rjust(2)
+      owner_name = Etc.getpwuid(stat.uid).name
+      group_name = Etc.getgrgid(stat.gid).name
+      file_size = stat.size.to_s.rjust(4)
+      last_modified = stat.mtime.strftime('%m %d %R')
+      "#{filetype}#{permissions}  #{hardlinks} #{owner_name}  #{group_name}  #{file_size} #{last_modified} #{file_name}"
+    end
+  end
+
+  def format_permissions(stat)
+    permission_label = ''
+    octal_mode = stat.mode.to_s(8)
+
+    octal_mode.slice(-3, 3).scan(/./).each do |number|
+      permission_label += PERMISSION_PATTERN[number]
+    end
+    permission_label
   end
 end
 
