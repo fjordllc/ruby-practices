@@ -21,23 +21,19 @@ dir_and_file_names =
   else
     Dir.glob('*')
   end
-
 # 出力に関するプログラム
 present_time = Time.now # time_stampに関わる
 
 if options['l'] # -lオプション時の出力
-  file_number = dir_and_file_names.length
-  array_for_blocks = []
-  file_number.times do |n|
-    ls_l_stat = File::Stat.new(dir_and_file_names[n])
-    b = ls_l_stat.blocks
-    array_for_blocks << b
+  array_for_blocks = dir_and_file_names.map do |dir_and_file_name|
+    ls_l_stat = File::Stat.new(dir_and_file_name)
+    ls_l_stat.blocks
   end
   total_number = array_for_blocks.sum
   puts "total #{total_number}"
 
-  file_number.times do |n|
-    ls_l_stat = File.lstat(dir_and_file_names[n])
+  dir_and_file_names.each do |dir_and_file_name|
+    ls_l_stat = File.lstat(dir_and_file_name)
     convert_filetypes = { 'link' => 'l', 'file' => '-', 'directory' => 'd' }
     converted_filetype = convert_filetypes[ls_l_stat.ftype]
     m = ls_l_stat.mode.to_s(8)
@@ -53,31 +49,20 @@ if options['l'] # -lオプション時の出力
                  else
                    ls_l_stat.mtime.strftime('%_m %_d %_5Y')
                  end
-    file_name = dir_and_file_names[n]
+    file_name = dir_and_file_name
     filename_for_format = File.basename(file_name)
     printf L_FORMAT, converted_filetype, converted_permission, symbolic_link, user_name, group_name,
            file_size, time_stamp, filename_for_format
   end
-
 else
   # -lオプションがない時の出力
   number_of_lines = dir_and_file_names.length / NUMBER_COLUMNS
-  if (dir_and_file_names.length % number_of_lines).zero?
-    array_for_output = dir_and_file_names.each_slice(number_of_lines).to_a
-    array_for_output[0].zip(array_for_output[1], array_for_output[2]).each do |row|
-      row.each do |fed|
-        printf FORMAT, fed
-      end
-      puts
+  number_of_lines + 1 unless (dir_and_file_names.length % number_of_lines).zero?
+  array_for_output = dir_and_file_names.each_slice(number_of_lines).to_a
+  array_for_output[0].zip(array_for_output[1], array_for_output[2]).each do |row|
+    row.each do |fed|
+      printf FORMAT, fed
     end
-  else
-    array_for_output = dir_and_file_names.each_slice(number_of_lines + 1).to_a
-    results = array_for_output[0].zip(array_for_output[1], array_for_output[2])
-    results.each do |row|
-      row.each do |fed|
-        printf FORMAT, fed
-      end
-      puts
-    end
+    puts
   end
 end
