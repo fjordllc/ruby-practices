@@ -44,16 +44,14 @@ class Ls
   end
 
   # パーミッション変換処理（8進数表記の権限を文字列表記に変換）
-  def change_permissions_visible_format(permissions)
-    owner_permission_number = permissions.slice(-3, 1)
-    group_permission_number = permissions.slice(-2, 1)
-    others_permission_number = permissions.slice(-1, 1)
+  def format_permissions(stat)
+    permission_label = ""
+    octal_mode = stat.mode.to_s(8)
 
-    owner_permission_labels = PERMISSION_PATTERN[owner_permission_number]
-    group_permission_labels = PERMISSION_PATTERN[group_permission_number]
-    others_permission_labels = PERMISSION_PATTERN[others_permission_number]
-
-    owner_permission_labels + group_permission_labels + others_permission_labels
+    octal_mode.slice(-3,3).scan(/./).each do |number|
+      permission_label += PERMISSION_PATTERN[number]
+    end
+    permission_label
   end
 
   # ファイル情報取得処理（-l オプションあり）
@@ -64,17 +62,17 @@ class Ls
     files.each do |file|
       total_block_size += File.stat(file).blocks
       filetype = FILE_TYPE[File.ftype(file)]
-      item = File::Stat.new(file)
+      stat = File::Stat.new(file)
       # modeの返り値を8進数文字列に変換後、6桁に揃えて表記変換処理を実行
-      permissions = change_permissions_visible_format(item.mode.to_s(8).rjust(6, '0'))
-      hardlinks = item.nlink.to_s.rjust(2)
-      owner_name = Etc.getpwuid(item.uid).name
-      group_name = Etc.getgrgid(item.gid).name
-      file_size = item.size.to_s.rjust(4)
-      last_modified = item.mtime.strftime('%m %d %R')
+      permissions = format_permissions(stat)
+      hardlinks = stat.nlink.to_s.rjust(2)
+      owner_name = Etc.getpwuid(stat.uid).name
+      group_name = Etc.getgrgid(stat.gid).name
+      file_size = stat.size.to_s.rjust(4)
+      last_modified = stat.mtime.strftime('%m %d %R')
       file_name = file
-      item_line = "#{filetype}#{permissions}  #{hardlinks} #{owner_name}  #{group_name}  #{file_size} #{last_modified} #{file_name}"
-      files_with_detail_info << item_line
+      stat_line = "#{filetype}#{permissions}  #{hardlinks} #{owner_name}  #{group_name}  #{file_size} #{last_modified} #{file_name}"
+      files_with_detail_info << stat_line
     end
     puts "total #{total_block_size}"
       files_with_detail_info
