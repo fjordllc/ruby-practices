@@ -44,19 +44,19 @@ class Ls
   end
 
   def make_file_list(options)
-    files = create_file_list_array(options)
-    options[:list] ? show_detail(files) : show_file_list(files)
+    sorted_files = create_file_list_array(options)
+    options[:list] ? show_detail(sorted_files) : show_file_list(sorted_files)
   end
 
   private
+
   def create_file_list_array(options)
     files = if options[:all]
               Dir.glob('*', File::FNM_DOTMATCH)
             else
               Dir.glob('*')
             end
-
-    sorted_files = options[:reverse] ? files.sort.reverse : files.sort
+    options[:reverse] ? files.sort.reverse : files.sort
   end
 
   ON_LINE_ITEMS = 3
@@ -79,7 +79,8 @@ class Ls
   end
 
   def show_detail(files)
-    file_list = to_detailed_info(files)
+    total_block_size, file_list = to_detailed_info(files)
+    puts "total #{total_block_size}"
     file_list.each do |file|
       puts file
     end
@@ -87,9 +88,7 @@ class Ls
 
   def to_detailed_info(files)
     total_block_size = 0
-
-    files_with_detail_info = []
-    files.map do |file_name|
+    detailed = files.map do |file_name|
       total_block_size += File.stat(file_name).blocks
       filetype = FILE_TYPE[File.ftype(file_name)]
       stat = File::Stat.new(file_name)
@@ -101,6 +100,7 @@ class Ls
       last_modified = stat.mtime.strftime('%m %d %R')
       "#{filetype}#{permissions}  #{hardlinks} #{owner_name}  #{group_name}  #{file_size} #{last_modified} #{file_name}"
     end
+    [total_block_size, detailed]
   end
 
   def format_permissions(stat)
@@ -113,7 +113,5 @@ class Ls
     permission_label
   end
 end
-
-
 
 main
