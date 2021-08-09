@@ -40,7 +40,7 @@ class Ls
     sorted_files = options[:reverse] ? files.sort.reverse : files.sort
 
     # ファイル情報取得処理（-l オプション）
-    options[:list] ? change_array_to_add_detail_info(sorted_files) : sorted_files
+    # options[:list] ? change_array_to_add_detail_info(sorted_files) : sorted_files
   end
 
   # パーミッション変換処理（8進数表記の権限を文字列表記に変換）
@@ -103,7 +103,8 @@ class Ls
 
   # 結果表示処理('-l'オプション指定時)
   def show_file_list_with_detail_info(files)
-    files.each do |file|
+    file_list = change_array_to_add_detail_info(files)
+    file_list.each do |file|
       puts file
     end
   end
