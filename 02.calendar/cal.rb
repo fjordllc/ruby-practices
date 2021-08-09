@@ -1,9 +1,10 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require 'date'
 require 'optparse'
 
-DOW = '日 月 火 水 木 金 土'.freeze
+DOW = "日 月 火 水 木 金 土\n"
 opt = OptionParser.new
 params = {}
 
@@ -20,9 +21,7 @@ def title(month, year)
 end
 
 def render(month, year)
-  result = ''
-  result << title(month, year)
-  result << DOW
+  result = title(month, year) + DOW
   puts result
 end
 
