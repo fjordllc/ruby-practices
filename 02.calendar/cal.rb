@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'colorize'
 require 'date'
 require 'optparse'
 
@@ -31,7 +32,8 @@ def cal_content(month, year)
 
   res = ' ' * first_date.wday * (DAY_WIDTH + 1)
   (first_date..last_date).each do |date|
-    res += date.day.to_s.rjust(DAY_WIDTH)
+    tmp = date.day.to_s.rjust(DAY_WIDTH)
+    res += date == Date.today ? tmp.colorize(color: :black, background: :white) : tmp
     res += date.saturday? ? "\n" : ' '
   end
 
