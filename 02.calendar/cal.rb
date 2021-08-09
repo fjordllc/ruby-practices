@@ -18,7 +18,7 @@ opt.parse!(ARGV)
 params[:month] = Date.today.month if params[:month].nil?
 params[:year] = Date.today.year if params[:year].nil?
 
-def title(month, year)
+def header(month, year)
   "      #{month}月 #{year}\n"
 end
 
@@ -37,7 +37,7 @@ def cal_content(month, year)
 end
 
 def render(month, year)
-  result = title(month, year) + DOW + cal_content(month, year)
+  result = header(month, year) + DOW + cal_content(month, year)
   puts result
 end
 
