@@ -40,7 +40,7 @@ class Ls
     sorted_files = options[:reverse] ? files.sort.reverse : files.sort
 
     # ファイル情報取得処理（-l オプション）
-    options[:list] ? change_array_to_add_detail_info(files) : files
+    options[:list] ? change_array_to_add_detail_info(sorted_files) : sorted_files
   end
 
   # パーミッション変換処理（8進数表記の権限を文字列表記に変換）
@@ -84,14 +84,14 @@ class Ls
   # 一行の列数を指定
   ON_LINE_ITEMS = 3
   def show_file_list(files)
-    line_cnt = (files.size % ON_LINE_ITEMS).zero? ? files.size / ON_LINE_ITEMS : files.size / ON_LINE_ITEMS + 1
+    # 分母を少数にして結果を小数点以下を含む形で返すようにする。その後切り上げ処理する
+    line_cnt = (files.size / ON_LINE_ITEMS.to_f).ceil
     lines = Array.new(line_cnt) { [] }
-
     index = 0
     longest_word_length = 0
+
     files.each do |file|
       longest_word_length = file.length if file.length > longest_word_length
-
       lines[index] << file
       index += 1
       index = 0 if index == line_cnt
