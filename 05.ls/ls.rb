@@ -44,13 +44,13 @@ class Ls
   end
 
   def make_file_list(options)
-    sorted_files = create_file_list_array(options)
+    sorted_files = create_file_list(options)
     options[:list] ? show_detail(sorted_files) : show_file_list(sorted_files)
   end
 
   private
 
-  def create_file_list_array(options)
+  def create_file_list(options)
     files = if options[:all]
               Dir.glob('*', File::FNM_DOTMATCH)
             else
