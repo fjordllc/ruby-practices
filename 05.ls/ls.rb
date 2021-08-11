@@ -10,20 +10,16 @@ FORMAT = '%-20s'
 L_FORMAT = "%s%-6s %3s %-8s %-8s %6s %7s %-16s \n"
 NUMBER_COLUMNS = 3
 
-# 出力したいデータの取得
+# 出力内容取得に関する
 dir_and_file_names =
-  if options['a'] && options['r']
-    Dir.glob('*', File::FNM_DOTMATCH).reverse
-  elsif options['a']
+  if options['a']
     Dir.glob('*', File::FNM_DOTMATCH)
-  elsif options['r']
-    Dir.glob('*').reverse
   else
     Dir.glob('*')
   end
-# 出力に関するプログラム
-present_time = Time.now # time_stampに関わる
+dir_and_file_names = dir_and_file_names.reverse if options['r']
 
+# 出力に関するプログラム
 if options['l'] # -lオプション時の出力
   array_for_blocks = dir_and_file_names.map do |dir_and_file_name|
     ls_l_stat = File::Stat.new(dir_and_file_name)
@@ -44,7 +40,8 @@ if options['l'] # -lオプション時の出力
     user_name = Etc.getpwuid(ls_l_stat.uid).name
     group_name = Etc.getgrgid(ls_l_stat.gid).name
     file_size = ls_l_stat.size
-    time_stamp = if (present_time.month + 6) > ls_l_stat.mtime.month && (present_time.month - 6) < ls_l_stat.mtime.month
+    present_time = Time.now # time_stampに関わる
+    time_stamp = if (present_time - ls_l_stat.mtime) < 60 * 60 * 24 * 180 # 半年を30*6日としている
                    ls_l_stat.mtime.strftime('%_m %_d %H:%M')
                  else
                    ls_l_stat.mtime.strftime('%_m %_d %_5Y')
@@ -57,9 +54,11 @@ if options['l'] # -lオプション時の出力
 else
   # -lオプションがない時の出力
   number_of_lines = dir_and_file_names.length / NUMBER_COLUMNS
-  number_of_lines + 1 unless (dir_and_file_names.length % number_of_lines).zero?
-  array_for_output = dir_and_file_names.each_slice(number_of_lines).to_a
-  array_for_output[0].zip(array_for_output[1], array_for_output[2]).each do |row|
+  number_of_lines += 1 unless (dir_and_file_names.length % number_of_lines).zero?
+  array_for_outputs = dir_and_file_names.each_slice(number_of_lines).to_a
+  number_of_elements = array_for_outputs.map(&:size)
+  array_for_outputs.map! { |array_for_output| array_for_output.values_at(0..(number_of_elements.max - 1)) }
+  array_for_outputs.transpose.each do |row|
     row.each do |fed|
       printf FORMAT, fed
     end
