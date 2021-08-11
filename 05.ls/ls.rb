@@ -20,8 +20,8 @@ class Ls
   FILE_TYPE = {
     'file' => '-',
     'directory' => 'd',
-    'characterSpec  ial' => 'c',
-    'blockSpeclal' => 'b',
+    'characterSpecial' => 'c',
+    'blockSpecial' => 'b',
     'fifo' => 'p',
     'link' => 'l',
     'socket' => 's'
