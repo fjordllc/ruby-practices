@@ -107,7 +107,7 @@ class Ls
     permission_label = ''
     octal_mode = stat.mode.to_s(8)
 
-    octal_mode.slice(-3, 3).scan(/./).each do |number|
+    octal_mode.slice(-3, 3).each_char do |number|
       permission_label += PERMISSION_PATTERN[number]
     end
     permission_label.ljust(11, ' ')
