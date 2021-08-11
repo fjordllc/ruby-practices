@@ -97,8 +97,8 @@ class Ls
       owner_name = Etc.getpwuid(stat.uid).name
       group_name = Etc.getgrgid(stat.gid).name
       file_size = stat.size.to_s.rjust(4)
-      last_modified = stat.mtime.strftime('%_m %_d %_R').rjust(11)
-      "#{filetype}#{permissions}#{hardlinks} #{owner_name}  #{group_name}  #{file_size} #{last_modified} #{file_name}"
+      last_modified = stat.mtime.strftime('%_m %_d %_R')
+      "#{filetype}#{permissions}  #{hardlinks} #{owner_name}  #{group_name}  #{file_size} #{last_modified} #{file_name}"
     end
     [total_block_size, detailed]
   end
@@ -110,7 +110,7 @@ class Ls
     octal_mode.slice(-3, 3).each_char do |number|
       permission_label += PERMISSION_PATTERN[number]
     end
-    permission_label.ljust(11, ' ')
+    permission_label
   end
 end
 
