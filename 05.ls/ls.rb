@@ -59,10 +59,10 @@ class Ls
     options[:reverse] ? files.sort.reverse : files.sort
   end
 
-  ON_LINE_ITEMS = 3
+  ITEMS_ON_THE_LINE = 3
 
   def show_file_list(files)
-    line_cnt = (files.size / ON_LINE_ITEMS.to_f).ceil
+    line_cnt = (files.size / ITEMS_ON_THE_LINE.to_f).ceil
     lines = Array.new(line_cnt) { [] }
     index = 0
 
