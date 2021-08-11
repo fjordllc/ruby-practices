@@ -57,6 +57,7 @@ else
   number_of_lines += 1 unless (dir_and_file_names.length % number_of_lines).zero?
   array_for_outputs = dir_and_file_names.each_slice(number_of_lines).to_a
   number_of_elements = array_for_outputs.map(&:size)
+
   array_for_outputs.map! { |array_for_output| array_for_output.values_at(0..(number_of_elements.max - 1)) }
   array_for_outputs.transpose.each do |row|
     row.each do |fed|
