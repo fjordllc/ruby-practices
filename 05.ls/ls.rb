@@ -10,14 +10,23 @@ FORMAT = '%-20s'
 L_FORMAT = "%s%-6s %3s %-8s %-8s %6s %7s %-16s \n"
 NUMBER_COLUMNS = 3
 
-# 出力内容取得に関する
-dir_and_file_names =
+# 表示するデータ取得に関するプログラム
+def get_dir_and_file_name(options)
   if options['a']
     Dir.glob('*', File::FNM_DOTMATCH)
   else
     Dir.glob('*')
   end
-dir_and_file_names = dir_and_file_names.reverse if options['r']
+end
+
+def reverse_dir_and_file_name(options)
+  result = get_dir_and_file_name(options)
+  return result unless options['r']
+
+  result.reverse
+end
+
+dir_and_file_names = reverse_dir_and_file_name(options)
 
 # 出力に関するプログラム
 if options['l'] # -lオプション時の出力
