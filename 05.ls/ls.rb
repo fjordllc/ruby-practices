@@ -19,10 +19,11 @@ end
 dir_and_file_names = get_dir_and_file_name(options)
 
 # 出力に関するプログラム
-if options['l'] # -lオプション時の出力
+# -lオプション時の出力
+def output_with_option_l(dir_and_file_names)
   total_number = dir_and_file_names.sum do |dir_and_file_name|
-    ls_l_stat = File::Stat.new(dir_and_file_name)
-    ls_l_stat.blocks
+      ls_l_stat = File::Stat.new(dir_and_file_name)
+      ls_l_stat.blocks
   end
   puts "total #{total_number}"
 
@@ -49,14 +50,23 @@ if options['l'] # -lオプション時の出力
     printf L_FORMAT, converted_filetype, converted_permission, symbolic_link, user_name, group_name,
            file_size, time_stamp, filename_for_format
   end
-else
-  # -lオプションがない時の出力
+end
+
+# -lオプションがない時の出力
+def output(dir_and_file_names)
   number_of_lines = dir_and_file_names.length / NUMBER_COLUMNS
   number_of_lines += 1 unless (dir_and_file_names.length % number_of_lines).zero?
   array_for_outputs = dir_and_file_names.each_slice(number_of_lines).to_a
-  array_for_outputs.map! { |array_for_output| array_for_output.values_at(0..(array_for_outputs.max.size) - 1) }
+  array_for_outputs.map! { |array_for_output| array_for_output.values_at(0..array_for_outputs.max.size - 1) }
   array_for_outputs.transpose.each do |row|
     row.each { |fed| printf FORMAT, fed }
-    puts
+  puts
   end
 end
+
+if options['l']
+  output_with_option_l(dir_and_file_names)
+else
+  output(dir_and_file_names)
+end
+
