@@ -24,7 +24,7 @@ def output_without_option(file_name)
 end
 
 if options['l']
-  output_by_option(file_name)
-else
   output_without_option(file_name)
+else
+  gioutput_by_option(file_name)
 end
