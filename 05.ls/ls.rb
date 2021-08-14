@@ -12,29 +12,18 @@ NUMBER_COLUMNS = 3
 
 # 表示するデータ取得に関するプログラム
 def get_dir_and_file_name(options)
-  if options['a']
-    Dir.glob('*', File::FNM_DOTMATCH)
-  else
-    Dir.glob('*')
-  end
+  result = options['a'] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
+  options['r'] ? result.reverse : result
 end
 
-def reverse_dir_and_file_name(options)
-  result = get_dir_and_file_name(options)
-  return result unless options['r']
-
-  result.reverse
-end
-
-dir_and_file_names = reverse_dir_and_file_name(options)
+dir_and_file_names = get_dir_and_file_name(options)
 
 # 出力に関するプログラム
 if options['l'] # -lオプション時の出力
-  array_for_blocks = dir_and_file_names.map do |dir_and_file_name|
+  total_number = dir_and_file_names.sum do |dir_and_file_name|
     ls_l_stat = File::Stat.new(dir_and_file_name)
     ls_l_stat.blocks
   end
-  total_number = array_for_blocks.sum
   puts "total #{total_number}"
 
   dir_and_file_names.each do |dir_and_file_name|
@@ -65,13 +54,9 @@ else
   number_of_lines = dir_and_file_names.length / NUMBER_COLUMNS
   number_of_lines += 1 unless (dir_and_file_names.length % number_of_lines).zero?
   array_for_outputs = dir_and_file_names.each_slice(number_of_lines).to_a
-  number_of_elements = array_for_outputs.map(&:size)
-
-  array_for_outputs.map! { |array_for_output| array_for_output.values_at(0..(number_of_elements.max - 1)) }
+  array_for_outputs.map! { |array_for_output| array_for_output.values_at(0..(array_for_outputs.max.size) - 1) }
   array_for_outputs.transpose.each do |row|
-    row.each do |fed|
-      printf FORMAT, fed
-    end
+    row.each { |fed| printf FORMAT, fed }
     puts
   end
 end
