@@ -4,16 +4,29 @@
 require 'optparse'
 
 def main
+  files = []
+  files = standard_input if File.pipe? $stdin
+
   options = { lines: false }
   opt = OptionParser.new
   opt.on('-l') { |v| options[:lines] = v }
   opt.parse! { ARGV }
 
-  files = []
   ARGV.each { |arg| files << arg if File.file? arg }
 
   wc = Wc.new
   wc.start_process(files, options)
+end
+
+def standard_input
+  file_list = []
+  while str = $stdin.gets
+    split_str = str.split(' ')
+    unless split_str.first == 'total'
+      file_list << split_str.last
+    end
+  end
+  file_list
 end
 
 class Wc
