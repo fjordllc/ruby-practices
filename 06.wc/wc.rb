@@ -13,14 +13,7 @@ def main
   ARGV.each { |arg| files << arg if File.file? arg }
 
   wc = Wc.new
-  wc.start_process(files)
-  # files.each do |file|
-  #   wc = Wc.new
-  #   lines, words, bytes = wc.read_file(file)
-  #   wc.print_result(lines, words, bytes, file)
-  # end
-
-  # Wc.print_total_data if files.size > 1
+  wc.start_process(files, options)
 end
 
 class Wc
@@ -28,16 +21,33 @@ class Wc
   @total_words = 0
   @total_bytes = 0
 
-  def start_process(files)
+  def start_process(files, options)
     files.each do |file|
       lines, words, bytes = read_file(file)
-      print_result(lines, words, bytes, file)
+      options[:lines] ? print_lines_count(lines, file) : print_all_count(lines, words, bytes, file)
     end
-    Wc.print_total_data if files.size > 1
+
+    if files.size > 1
+      options[:lines] ? Wc.print_lines_total : Wc.print_total
+    end
+  end
+
+  def self.total(lines, words, bytes)
+    @total_lines += lines
+    @total_words += words
+    @total_bytes += bytes
+  end
+
+  def self.print_total
+    puts "#{@total_lines.to_s.rjust(8, ' ')}#{@total_words.to_s.rjust(8, ' ')}#{@total_bytes.to_s.rjust(8, ' ')} total"
+  end
+
+  def self.print_lines_total
+    puts "#{@total_lines.to_s.rjust(8, ' ')} total"
   end
 
   private
-  
+
   def read_file(file)
     @lines = 0
     @words = 0
@@ -48,22 +58,16 @@ class Wc
       @words += line.split.size
       @bytes += line.bytesize
     end
-    Wc.total_data(@lines, @words, @bytes)
+    Wc.total(@lines, @words, @bytes)
     [@lines, @words, @bytes]
   end
 
-  def self.total_data(lines, words, bytes)
-    @total_lines += lines
-    @total_words += words
-    @total_bytes += bytes
-  end
-
-  def self.print_total_data
-    puts "#{@total_lines.to_s.rjust(8, ' ')}#{@total_words.to_s.rjust(8, ' ')}#{@total_bytes.to_s.rjust(8, ' ')} total"
-  end
-
-  def print_result(lines, words, bytes, file)
+  def print_all_count(lines, words, bytes, file)
     puts "#{lines.to_s.rjust(8, ' ')}#{words.to_s.rjust(8, ' ')}#{bytes.to_s.rjust(8, ' ')} #{file}"
+  end
+
+  def print_lines_count(lines, file)
+    puts "#{lines.to_s.rjust(8, ' ')} #{file}"
   end
 end
 
