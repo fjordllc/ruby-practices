@@ -12,43 +12,59 @@ def main
   files = []
   ARGV.each { |arg| files << arg if File.file? arg }
 
-  files.each do |file|
-    wc = Wc.new
-    lines, words, bytes = wc.read_file(file)
-    wc.print_result(lines, words, bytes, file)
-  end
-  Wc.print_total
+  wc = Wc.new
+  wc.start_process(files)
+  # files.each do |file|
+  #   wc = Wc.new
+  #   lines, words, bytes = wc.read_file(file)
+  #   wc.print_result(lines, words, bytes, file)
+  # end
+
+  # Wc.print_total_data if files.size > 1
 end
 
 class Wc
   @total_lines = 0
   @total_words = 0
+  @total_bytes = 0
 
-  def initialize
+  def start_process(files)
+    files.each do |file|
+      lines, words, bytes = read_file(file)
+      print_result(lines, words, bytes, file)
+    end
+    Wc.print_total_data if files.size > 1
+  end
+
+  private
+  
+  def read_file(file)
     @lines = 0
     @words = 0
     @bytes = 0
-  end
 
-  def read_file(file)
     File.open(file).each_line do |line|
       @lines += 1 if line.include? "\n"
       @words += line.split.size
       @bytes += line.bytesize
     end
-    @total_lines += @lines
-    @total_words += @words
+    Wc.total_data(@lines, @words, @bytes)
     [@lines, @words, @bytes]
+  end
+
+  def self.total_data(lines, words, bytes)
+    @total_lines += lines
+    @total_words += words
+    @total_bytes += bytes
+  end
+
+  def self.print_total_data
+    puts "#{@total_lines.to_s.rjust(8, ' ')}#{@total_words.to_s.rjust(8, ' ')}#{@total_bytes.to_s.rjust(8, ' ')} total"
   end
 
   def print_result(lines, words, bytes, file)
     puts "#{lines.to_s.rjust(8, ' ')}#{words.to_s.rjust(8, ' ')}#{bytes.to_s.rjust(8, ' ')} #{file}"
   end
-
-  def self.print_total
-    puts @total_lines, @total_words
-  end
-
 end
 
 # start
