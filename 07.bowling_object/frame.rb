@@ -1,14 +1,14 @@
 require './shot'
 
 class Frame
-  def initialize(argv)
-    @scores = Shot.new(argv)
+  def initialize(marks)
+    @shots = Shot.new(marks).parse_marks
   end
 
-  def frames
+  def divide_into_frames
     frames = []
     frame = []
-    @scores.convert_num.each do |shot|
+    @shots.each do |shot|
       frame << shot
       if frames.size < 10
         if frame.size >= 2 || shot == 10

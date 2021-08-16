@@ -1,11 +1,10 @@
 class Shot
-  def initialize(argv)
-    @score = argv
+  def initialize(marks)
+    @marks = marks
   end
 
-  def convert_num
-    scores = @score.split(',')
-    shots = scores.map do |s|
+  def parse_marks
+    @marks.split(',').map do |s|
       if s == 'X'
         10
       else
