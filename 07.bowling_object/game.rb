@@ -15,13 +15,13 @@ class Game
       after_next_frame ||= []
       left_shots = next_frame + after_next_frame
 
-      if frame[0] == 10
-        point += frame.sum + left_shots.slice(0, 2).sum
-      elsif frame.sum == 10
-        point += frame.sum + left_shots.fetch(0)
-      else
-        point += frame.sum
-      end
+      point += if frame[0] == 10
+                 frame.sum + left_shots.slice(0, 2).sum
+               elsif frame.sum == 10
+                 frame.sum + left_shots.fetch(0)
+               else
+                 frame.sum
+               end
     end
     point
   end
