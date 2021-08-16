@@ -1,5 +1,3 @@
-require 'minitest/autorun'
-
 class Shot
   def initialize(argv)
     @score = argv
