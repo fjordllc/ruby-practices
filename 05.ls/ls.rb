@@ -12,7 +12,6 @@ NUMBER_COLUMNS = 3
 def main
   options = ARGV.getopts('a', 'r', 'l')
   dir_and_file_names = get_dir_and_file_name(options)
-
   if options['l']
     output_with_option_l(dir_and_file_names)
   else
@@ -22,7 +21,7 @@ end
 
 # 表示するデータ取得
 def get_dir_and_file_name(options)
-  result = options['a'] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
+  result = options['a'] ? Dir.glob('*', File::FNM_DOTMATCH).sort : Dir.glob('*').sort
   options['r'] ? result.reverse : result
 end
 
@@ -78,14 +77,30 @@ end
 # -lオプションがない時の出力
 def output_without_option_l(dir_and_file_names)
   number_of_lines = dir_and_file_names.length / NUMBER_COLUMNS
-  number_of_lines += 1 unless (dir_and_file_names.length % number_of_lines).zero?
-  array_for_outputs = dir_and_file_names.each_slice(number_of_lines).to_a
-  convert_matrix(array_for_outputs)
+  if (dir_and_file_names.length % NUMBER_COLUMNS).zero?
+    array_for_outputs = dir_and_file_names.each_slice(number_of_lines).to_a
+    divided_convert_matrix(array_for_outputs)
+  else
+    array_for_outputs = dir_and_file_names.each_slice(number_of_lines + 1).to_a
+    convert_matrix(array_for_outputs)
+  end
 end
 
+# ファイル数が割り切れるときの出力
+def divided_convert_matrix(array_for_outputs)
+  array_for_outputs.map! do |array_for_output|
+    array_for_output.values_at(0..array_for_outputs.map(&:size).max - 1)
+  end
+  array_for_outputs.transpose.each do |row|
+    row.each { |fed| printf FORMAT, fed }
+    puts
+  end
+end
+
+# ファイル数が割り切れないときの出力
 def convert_matrix(array_for_outputs)
   array_for_outputs.map! do |array_for_output|
-    array_for_output.values_at(0..(array_for_outputs.max.size - 1))
+    array_for_output.values_at(0..array_for_outputs.map(&:size).max - 1)
   end
   array_for_outputs.transpose.each do |row|
     row.each { |fed| printf FORMAT, fed }
