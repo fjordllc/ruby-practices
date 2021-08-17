@@ -77,27 +77,14 @@ end
 # -lオプションがない時の出力
 def output_without_option_l(dir_and_file_names)
   number_of_lines = dir_and_file_names.length / NUMBER_COLUMNS
-  if (dir_and_file_names.length % NUMBER_COLUMNS).zero?
-    array_for_outputs = dir_and_file_names.each_slice(number_of_lines).to_a
-    divided_convert_matrix(array_for_outputs)
-  else
-    array_for_outputs = dir_and_file_names.each_slice(number_of_lines + 1).to_a
-    convert_matrix(array_for_outputs)
-  end
+  array_for_outputs = if (dir_and_file_names.length % NUMBER_COLUMNS).zero?
+                        dir_and_file_names.each_slice(number_of_lines).to_a
+                      else
+                        dir_and_file_names.each_slice(number_of_lines + 1).to_a
+                      end
+  convert_matrix(array_for_outputs)
 end
 
-# ファイル数が割り切れるときの出力
-def divided_convert_matrix(array_for_outputs)
-  array_for_outputs.map! do |array_for_output|
-    array_for_output.values_at(0..array_for_outputs.map(&:size).max - 1)
-  end
-  array_for_outputs.transpose.each do |row|
-    row.each { |fed| printf FORMAT, fed }
-    puts
-  end
-end
-
-# ファイル数が割り切れないときの出力
 def convert_matrix(array_for_outputs)
   array_for_outputs.map! do |array_for_output|
     array_for_output.values_at(0..array_for_outputs.map(&:size).max - 1)
