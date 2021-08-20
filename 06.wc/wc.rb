@@ -2,8 +2,28 @@
 # frozen_string_literal: true
 
 require 'optparse'
-options = ARGV.getopts('l')
-file_names = ARGV
+
+def main
+  options = ARGV.getopts('l')
+  file_names = ARGV
+  if options['l']
+    output_by_option(file_names)
+    if ARGV.length >= 2
+      total_count_lines = sum_up_count_lines(file_names)
+      format = '%7s %-10s'
+      printf format, total_count_lines, 'total'
+    end
+  else
+    output_without_option(file_names)
+    if ARGV.length >= 2
+      total_count_lines = sum_up_count_lines(file_names)
+      total_count_words = sum_up_count_words(file_names)
+      total_count_bites = sum_up_count_bites(file_names)
+      format = '%7s %7s %7s %-10s'
+      printf format, total_count_lines, total_count_words, total_count_bites, 'total'
+    end
+  end
+end
 
 def output_by_option(file_names)
   file_names.each do |file_name|
@@ -28,33 +48,16 @@ def output_without_option(file_names)
   end
 end
 
-def upto_count_lines(file_names)
+def sum_up_count_lines(file_names)
   file_names.map { |file_name| IO.readlines(file_name).size }.sum
 end
 
-def upto_count_words(file_names)
+def sum_up_count_words(file_names)
   file_names.map { |file_name| File.read(file_name).split(/\s+/).size }.sum
 end
 
-def upto_count_bites(file_names)
+def sum_up_count_bites(file_names)
   file_names.map { |file_name| File::Stat.new(file_name).size }.sum
 end
 
-if options['l']
-  output_by_option(file_names)
-  if ARGV.length >= 2
-    total_count_lines = upto_count_lines(file_names)
-    format = '%7s %-10s'
-    # printf format, upto_count_lines(file_names), 'total'
-    printf format, total_count_lines, 'total'
-  end
-else
-  output_without_option(file_names)
-  if ARGV.length >= 2
-    total_count_lines = upto_count_lines(file_names)
-    total_count_words = upto_count_words(file_names)
-    total_count_bites = upto_count_bites(file_names)
-    format = '%7s %7s %7s %-10s'
-    printf format, total_count_lines, total_count_words, total_count_bites, 'total'
-  end
-end
+main
