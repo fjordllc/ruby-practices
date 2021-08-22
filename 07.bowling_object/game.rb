@@ -26,6 +26,3 @@ class Game
     point
   end
 end
-
-game = Game.new(ARGV[0])
-puts game.calculate_score
