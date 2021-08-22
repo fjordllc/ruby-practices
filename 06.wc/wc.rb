@@ -5,28 +5,17 @@ require 'optparse'
 
 def main
   files = []
-  files = standard_input if File.pipe? $stdin
+  options = { lines: false, pipe: false }
 
-  options = { lines: false }
   opt = OptionParser.new
   opt.on('-l') { |v| options[:lines] = v }
   opt.parse! { ARGV }
-
   ARGV.each { |arg| files << arg if File.file? arg }
+
+  options[:pipe] = File.pipe? $stdin
 
   wc = Wc.new
   wc.start_process(files, options)
-end
-
-def standard_input
-  file_list = []
-  while str = $stdin.gets
-    split_str = str.split(' ')
-    unless split_str.first == 'total'
-      file_list << split_str.last
-    end
-  end
-  file_list
 end
 
 class Wc
@@ -35,14 +24,19 @@ class Wc
   @total_bytes = 0
 
   def start_process(files, options)
-    files.each do |file|
-      lines, words, bytes = read_file(file)
-      options[:lines] ? print_lines_count(lines, file) : print_all_count(lines, words, bytes, file)
+    if options[:pipe] && files.empty?
+      lines, words, bytes = counts_from_stdout
+      options[:lines] ? print_lines_count(lines) : print_counts(lines, words, bytes)
     end
 
-    if files.size > 1
-      options[:lines] ? Wc.print_lines_total : Wc.print_total
+    files.each do |file|
+      lines, words, bytes = counts_from_file(file)
+      options[:lines] ? print_lines_count(lines, file) : print_counts(lines, words, bytes, file)
     end
+
+    return if files.size <= 1
+
+    options[:lines] ? Wc.print_lines_total : Wc.print_total
   end
 
   def self.total(lines, words, bytes)
@@ -61,13 +55,21 @@ class Wc
 
   private
 
-  def read_file(file)
+  def counts_from_stdout
+    stdout = $stdin.readlines.join
+    @lines = stdout.scan("\n").size
+    @words = stdout.split.size
+    @bytes = stdout.bytesize
+    [@lines, @words, @bytes]
+  end
+
+  def counts_from_file(file)
     @lines = 0
     @words = 0
     @bytes = 0
 
     File.open(file).each_line do |line|
-      @lines += 1 if line.include? "\n"
+      @lines += line.scan("\n").size
       @words += line.split.size
       @bytes += line.bytesize
     end
@@ -75,11 +77,11 @@ class Wc
     [@lines, @words, @bytes]
   end
 
-  def print_all_count(lines, words, bytes, file)
+  def print_counts(lines, words, bytes, file = '')
     puts "#{lines.to_s.rjust(8, ' ')}#{words.to_s.rjust(8, ' ')}#{bytes.to_s.rjust(8, ' ')} #{file}"
   end
 
-  def print_lines_count(lines, file)
+  def print_lines_count(lines, file = '')
     puts "#{lines.to_s.rjust(8, ' ')} #{file}"
   end
 end
