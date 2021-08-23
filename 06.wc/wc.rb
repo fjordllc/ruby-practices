@@ -7,12 +7,10 @@ def main
   options = ARGV.getopts('l')
   file_names = ARGV
   if options['l']
-    output_by_option(file_names)
+    output_with_option(file_names)
     if ARGV.length >= 2
-      total_count_lines = sum_up_count_lines(file_names)
-      format = '%7s %-10s'
-      printf format, total_count_lines, 'total'
-    elsif ARGV.length == 0
+      sum_up_count_with_option(file_names)
+    elsif ARGV.length.zero?
       output_by_standard_input_with_option
     end
   else
@@ -28,7 +26,7 @@ def main
   end
 end
 
-def output_by_option(file_names)
+def output_with_option(file_names)
   file_names.each do |file_name|
     count_lines = IO.readlines(file_name).length
     file_basename = File.basename(file_name)
@@ -45,7 +43,6 @@ def output_by_standard_input
   count_bites = text.to_s.bytesize
   format = '%7s %7s %7s'
   printf format, count_lines, count_words, count_bites
-  puts "\n"
 end
 
 def output_by_standard_input_with_option
@@ -61,7 +58,7 @@ end
 
 def output_without_option(file_names)
   file_names.each do |file_name|
-    text = read_to_text(file_name)
+    text = read_from_text(file_name)
     count_lines = IO.readlines(file_name).length
     count_words = text.split(/\s+/).size
     count_bites = text.bytesize
@@ -73,7 +70,7 @@ def output_without_option(file_names)
   end
 end
 
-def read_to_text(file_name)
+def read_from_text(file_name)
   File.read(file_name)
 end
 
@@ -83,6 +80,12 @@ def sum_up_count(file_names)
   total_count_bites = sum_up_count_bites(file_names)
   format = '%7s %7s %7s %-10s'
   printf format, total_count_lines, total_count_words, total_count_bites, 'total'
+end
+
+def sum_up_count_with_option(file_names)
+  total_count_lines = sum_up_count_lines(file_names)
+  format = '%7s %-10s'
+  printf format, total_count_lines, 'total'
 end
 
 def sum_up_count_lines(file_names)
