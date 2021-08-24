@@ -36,13 +36,10 @@ def output_with_option(file_names)
   end
 end
 
-def output_by_standard_input
-  text = read_text
-  count_lines = text.split("\n").length
-  count_words = text.split(/\s+/).size
-  count_bites = text.to_s.bytesize
-  format = '%7s %7s %7s'
-  printf format, count_lines, count_words, count_bites
+def sum_up_count_with_option(file_names)
+  total_count_lines = sum_up_count_lines(file_names)
+  format = '%7s %-10s'
+  printf format, total_count_lines, 'total'
 end
 
 def output_by_standard_input_with_option
@@ -54,6 +51,15 @@ end
 
 def read_text
   $stdin.read
+end
+
+def output_by_standard_input
+  text = read_text
+  count_lines = text.split("\n").length
+  count_words = text.split(/\s+/).size
+  count_bites = text.to_s.bytesize
+  format = '%7s %7s %7s'
+  printf format, count_lines, count_words, count_bites
 end
 
 def output_without_option(file_names)
@@ -80,12 +86,6 @@ def sum_up_count(file_names)
   total_count_bites = sum_up_count_bites(file_names)
   format = '%7s %7s %7s %-10s'
   printf format, total_count_lines, total_count_words, total_count_bites, 'total'
-end
-
-def sum_up_count_with_option(file_names)
-  total_count_lines = sum_up_count_lines(file_names)
-  format = '%7s %-10s'
-  printf format, total_count_lines, 'total'
 end
 
 def sum_up_count_lines(file_names)
