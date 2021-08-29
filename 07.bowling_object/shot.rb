@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class Shot
-  def initialize(marks)
-    @marks = marks
+  def initialize(mark)
+    @mark = mark
   end
 
-  def parse_marks
-    @marks.split(',').map { |s| s == 'X' ? 10 : s.to_i }
+  def score
+    @mark == 'X' ? 10 : @mark.to_i
   end
 end
