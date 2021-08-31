@@ -2,8 +2,6 @@
 require_relative 'shot'
 require_relative 'frame'
 
-require './frame'
-
 class Game
   def initialize(argv)
     @score = 0
