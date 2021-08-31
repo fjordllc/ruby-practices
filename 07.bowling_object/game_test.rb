@@ -9,7 +9,7 @@ class GameTest < Minitest::Unit::TestCase
     assert_equal 139, game.score
   end
 
-  def test_calc3
+  def test_calc2
     game = Game.new('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,X,X,X')
     assert_equal 164, game.score
   end
@@ -24,7 +24,7 @@ class GameTest < Minitest::Unit::TestCase
     assert_equal 134, game.score
   end
 
-  def test_calc3
+  def test_calc5
     game = Game.new('X,X,X,X,X,X,X,X,X,X,X,X')
     assert_equal 300, game.score
   end
