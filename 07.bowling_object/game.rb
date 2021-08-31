@@ -24,14 +24,21 @@ class Game
     @game << Frame.new(*marks)
   end
 
-      point += if frame[0] == 10
-                 frame.sum + left_shots.slice(0, 2).sum
-               elsif frame.sum == 10
-                 frame.sum + left_shots.fetch(0)
-               else
-                 frame.sum
-               end
+  def score
+    (0..9).each do |now|
+      left_shots = []
+      frame, next_frame, after_next_frame = @game.slice(now, 3)
+      next_frame ||= Frame.new("","")
+      after_next_frame ||= Frame.new("","")
+      left_shots.push(*next_frame.shots).push(*after_next_frame.shots) #次のフレームと次の次のフレームが一つの配列になる
+      if frame.strike? && now != 9
+        @score += frame.score + left_shots.slice(0, 2).sum
+      elsif frame.spare? && now != 9
+        @score += frame.score + left_shots[0]
+      else
+        @score += frame.score
+      end
     end
-    point
+    @score
   end
 end
