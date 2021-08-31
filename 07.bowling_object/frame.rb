@@ -15,6 +15,16 @@ class Frame
     [@first_shot.score, @second_shot.score].sum
   end
 
+  def shots
+    if @second_shot.nil? && @third_shot.nil?
+     [@first_shot.score]
+    elsif @third_shot.nil?
+      [@first_shot.score, @second_shot.score]
+    else
+      [@first_shot.score, @second_shot.score, @third_shot.score]
+    end
+  end
+
   def strike?
     @first_shot.score == 10
   end
