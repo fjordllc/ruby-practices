@@ -16,9 +16,9 @@ class Frame
   end
 
   def shots
-    if @second_shot.nil? && @third_shot.nil?
-     [@first_shot.score]
-    elsif @third_shot.nil?
+    if @second_shot.mark.nil? && @third_shot.mark.nil?
+      [@first_shot.score]
+    elsif @third_shot.mark.nil?
       [@first_shot.score, @second_shot.score]
     else
       [@first_shot.score, @second_shot.score, @third_shot.score]
