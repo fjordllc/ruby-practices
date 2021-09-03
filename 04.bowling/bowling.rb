@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 result = ARGV[0].split(',')
-score =[]
+score = []
 result.each do |r|
   if r == 'X'
     score << 10
@@ -16,9 +18,9 @@ end
 
 point = 0
 frames.each_with_index do |f, i|
-  next_frame = frames[i+1]
-  after_next_frame = frames[i+2]
-  number_of_frame = i+1
+  next_frame = frames[i + 1]
+  after_next_frame = frames[i + 2]
+  number_of_frame = i + 1
 
   # ストライクの時
   if f[0] == 10
@@ -37,7 +39,7 @@ frames.each_with_index do |f, i|
   elsif f.sum == 10
     point += 10
     next if number_of_frame > 9 # 9フレーム目以降は加算が無いので抜ける
-    
+
     point += next_frame.first # 直後1投の得点を加算
   # それ以外
   else
