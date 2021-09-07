@@ -3,17 +3,15 @@ require "optparse"
 
 options = ARGV.getopts("y:m:")
 
-if options["y"] == nil && options["m"] == nil
+if options["y"].nil?
   year = Date.today.year
-  month = Date.today.month
-elsif options["y"] == nil
-  year = Date.today.year
-  month = options["m"].to_i
-elsif options["m"] == nil
-  year = options["y"].to_i
-  month = Date.today.month
 else
   year = options["y"].to_i
+end
+
+if options["m"].nil?
+  month = Date.today.month
+else
   month = options["m"].to_i
 end
 
@@ -29,7 +27,7 @@ print "   " * first_wday
 days.each do |day|
   print day.day.to_s.rjust(2)
   print " "
-  if day.wday == 6
+  if day.saturday?
     print "\n"
   end
 end
