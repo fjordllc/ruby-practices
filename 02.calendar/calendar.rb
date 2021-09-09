@@ -8,8 +8,8 @@ year = Date.today.year
 month = Date.today.month
 
 opt = OptionParser.new
-opt.on('-y [year]', Integer) { |val| year = val if val != nil }
-opt.on('-m [month]', Integer) { |val| month = val if val != nil}
+opt.on('-y [year]', Integer) { |val| year = val}
+opt.on('-m [month]', Integer) { |val| month = val}
 opt.parse(ARGV)
 
 days_of_month = Date.new(year, month, -1).day
