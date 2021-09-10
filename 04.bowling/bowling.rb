@@ -22,11 +22,14 @@ frames.each_with_index do |frame, i|
   # ストライクの時
   if frame[0] == 10
     point += 10
-    next if number_of_frame > 9 # 9フレーム目以降は加算が無いので抜ける
+    # 9フレーム目以降は加算が無いので抜ける
+    next if number_of_frame > 9
 
-    if next_frame.first == 10 && after_next_frame.first == 10 # 直後2投共にストライクの時
+    # 直後2投共にストライクの時
+    if next_frame.first == 10 && after_next_frame.first == 10
       point += 20
-    elsif next_frame.first == 10 # 直後のみストライクの時
+    # 直後のみストライクの時
+    elsif next_frame.first == 10
       point += 10
       point += after_next_frame.first
     else
@@ -35,12 +38,15 @@ frames.each_with_index do |frame, i|
   # スペアの時
   elsif frame.sum == 10
     point += 10
-    next if number_of_frame > 9 # 9フレーム目以降は加算が無いので抜ける
+    # 9フレーム目以降は加算が無いので抜ける
+    next if number_of_frame > 9
 
-    point += next_frame.first # 直後1投の得点を加算
+    # 直後1投の得点を加算
+    point += next_frame.first
   # それ以外
   else
-    point += frame.sum # そのフレームの合計を加算
+    # そのフレームの合計を加算
+    point += frame.sum 
   end
 end
 
