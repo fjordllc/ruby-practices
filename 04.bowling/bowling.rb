@@ -11,10 +11,7 @@ result.each do |r|
   end
 end
 
-frames = []
-score.each_slice(2) do |s|
-  frames << s
-end
+frames = score.each_slice(2).map { |s| s }
 
 point = 0
 frames.each_with_index do |frame, i|
