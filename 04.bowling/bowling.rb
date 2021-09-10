@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
 result = ARGV[0].split(',')
-score = []
-result.each do |r|
+score = result.each_with_object([]) do |r, s|
   if r == 'X'
-    score << 10
-    score << 0
+    s << 10 << 0
   else
-    score << r.to_i
+    s << r.to_i
   end
 end
 
