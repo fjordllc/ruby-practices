@@ -29,7 +29,7 @@ frames.each_with_index do |frame, i|
     elsif next_frame.first == 10 # 直後のみストライクの時
       point += 10
       point += after_next_frame.first
-    else # それ以外
+    else
       point += next_frame.sum
     end
   # スペアの時
