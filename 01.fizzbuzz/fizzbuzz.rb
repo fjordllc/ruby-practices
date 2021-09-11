@@ -1,5 +1,5 @@
-[*1..20].each do |x|
-  if x % 15== 0
+(1..20).each do |x|
+  if x % 15 == 0
     puts "FizzBuzz"
   elsif x % 3 == 0
     puts "Fizz"
