@@ -10,8 +10,13 @@ class ShotTest < Minitest::Unit::TestCase
     assert_equal 10, shot.score
   end
 
-  def test_数字が渡されたら整数オブジェクトに
+  def test_数字が渡されたら整数オブジェクトに1
     shot = Shot.new('1')
     assert_equal 1, shot.score
+  end
+
+  def test_数字が渡されたら整数オブジェクトに2
+    shot = Shot.new('5')
+    assert_equal 5, shot.score
   end
 end
