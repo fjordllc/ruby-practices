@@ -2,9 +2,13 @@
 # frozen_string_literal: true
 
 require 'optparse'
+
 options = ARGV.getopts('l')
+
 FORMAT = '%7s %7s %7s %-10s'
+FORMATFORTOTAL = '%7s %7s %7s'
 FORMATFORL = '%7s %-10s'
+FORMATFORLTOTAL = '%7s'
 
 def output_result(arrays_of_base_dates, options)
   arrays_of_base_dates.each_index do |i|
@@ -26,9 +30,9 @@ def output_count_up_total(arrays_of_base_dates, options)
   total_count_words = arrays_of_base_dates.flatten.to_s.split(/\s+/).length
   total_count_bites = arrays_of_base_dates.flatten.to_s.bytesize
   if options['l']
-    printf FORMATFORL, total_count_lines, 'total'
+    printf FORMATFORLTOTAL, total_count_lines
   else
-    printf FORMAT, total_count_lines, total_count_words, total_count_bites, 'total'
+    printf FORMATFORTOTAL, total_count_lines, total_count_words, total_count_bites
   end
 end
 
@@ -50,5 +54,8 @@ else
     end
   end
   output_result(arrays_of_base_dates, options)
-  output_count_up_total(arrays_of_base_dates, options) if ARGV.length >= 2
+  if ARGV.length >= 2
+    output_count_up_total(arrays_of_base_dates, options)
+    puts ' total'
+  end
 end
