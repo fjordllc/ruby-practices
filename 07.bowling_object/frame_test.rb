@@ -7,6 +7,8 @@ require_relative 'frame'
 class FrameTest < Minitest::Unit::TestCase
   def test_3と2が入ったフレームの合計スコアは5
     frame = Frame.new('3', '2')
+    refute frame.strike?
+    refute frame.spare?
     assert_equal 5, frame.score
   end
 
