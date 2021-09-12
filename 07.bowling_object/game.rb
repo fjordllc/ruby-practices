@@ -5,7 +5,6 @@ require_relative 'frame'
 
 class Game
   def initialize(argv)
-    @score = 0
     @game = []
     devide_frames(argv.split(','))
   end
@@ -34,20 +33,19 @@ class Game
   end
 
   def score
-    (0..9).each do |n|
-      left_shots = []
-      frame, next_frame, after_next_frame = @game.slice(n, 3)
-      next_frame ||= Frame.new('', '')
-      after_next_frame ||= Frame.new('', '')
-      left_shots.push(*next_frame.shots).push(*after_next_frame.shots) # 次のフレームと次の次のフレームが一つの配列になる
-      @score += if frame.strike? && n != 9
-                  frame.score + left_shots.slice(0, 2).sum
-                elsif frame.spare? && n != 9
-                  frame.score + left_shots[0]
-                else
-                  frame.score
-                end
+    if @score.nil?
+      @score = 0
+      (0..9).each do |n|
+        left_shots = []
+        frame, next_frame, after_next_frame = @game.slice(n, 3)
+        next_frame ||= Frame.new('', '')
+        after_next_frame ||= Frame.new('', '')
+        left_shots.push(*next_frame.shots).push(*after_next_frame.shots) # 次のフレームと次の次のフレームが一つの配列になる
+        calc_bonus(frame, left_shots)
+      end
+      @score
+    else
+      @score
     end
-    @score
   end
 end
