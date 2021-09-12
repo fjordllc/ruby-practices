@@ -13,10 +13,12 @@ class FrameTest < Minitest::Unit::TestCase
   def test_Xが渡されたらストライク
     frame = Frame.new('X')
     assert frame.strike?
+    refute frame.spare?
   end
 
   def test_2投していてフレームの合計が10だったらスペア
     frame = Frame.new('5', '5')
     assert frame.spare?
+    refute frame.strike?
   end
 end
