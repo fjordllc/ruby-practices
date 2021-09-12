@@ -31,4 +31,11 @@ class GameTest < Minitest::Unit::TestCase
     game = Game.new('X,X,X,X,X,X,X,X,X,X,X,X')
     assert_equal 300, game.score
   end
+
+  def 一度スコアを確認した後に再度スコアを確認しても同じ結果を得ることができる
+    game = Game.new('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,6,4,5')
+    game.score
+    reconfirmation = game.score
+    assert_equal 139, reconfirmation
+  end
 end
