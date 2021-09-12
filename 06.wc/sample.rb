@@ -2,98 +2,53 @@
 # frozen_string_literal: true
 
 require 'optparse'
+options = ARGV.getopts('l')
+FORMAT = '%7s %7s %7s %-10s'
+FORMATFORL = '%7s %-10s'
 
-def main
-  options = ARGV.getopts('l')
-  file_names = ARGV
-
-  if ARGV.length.zero?
-    options['l'] ? output_by_standard_input_with_option : output_by_standard_input
-  elsif ARGV.length == 1
-    options['l'] ? output_with_option(file_names) : output_without_option(file_names)
-  elsif ARGV.length >= 2
-    if !options['l']
-      output_without_option(file_names)
-      sum_up_count(file_names)
+def output_result(arrays_of_base_dates, options)
+  arrays_of_base_dates.each_index do |i|
+    count_lines = arrays_of_base_dates[i].length
+    count_words = arrays_of_base_dates[i].to_s.split(/\s+/).size # 空白を取り除く
+    count_bites = arrays_of_base_dates[i].to_s.bytesize # おかしい
+    file_name = ARGV[i]
+    if options['l']
+      printf FORMATFORL, count_lines, file_name
     else
-      output_with_option(file_names)
-      sum_up_count_with_option(file_names)
+      printf FORMAT, count_lines, count_words, count_bites, file_name
+    end
+    puts "\n"
+  end
+end
+
+def output_count_up_total(arrays_of_base_dates, options)
+  total_count_lines = arrays_of_base_dates.flatten.length
+  total_count_words = arrays_of_base_dates.flatten.to_s.split(/\s+/).length
+  total_count_bites = arrays_of_base_dates.flatten.to_s.bytesize
+  if options['l']
+    printf FORMATFORL, total_count_lines, 'total'
+  else
+    printf FORMAT, total_count_lines, total_count_words, total_count_bites, 'total'
+  end
+end
+
+# 「wcコマンドの処理対象を取得するコード」
+arrays_of_base_dates = []
+if ARGV.length.zero?
+  while (line = $stdin.gets)
+    arrays_of_base_dates << line.chomp
+  end
+  output_count_up_total(arrays_of_base_dates, options) # totalなくしたい
+else
+  ARGV.each do |a|
+    base_dates = []
+    File.open(a, 'r') do |file|
+      file.each do |lines|
+        base_dates << lines
+      end
+      arrays_of_base_dates << base_dates
     end
   end
+  output_result(arrays_of_base_dates, options)
+  output_count_up_total(arrays_of_base_dates, options) if ARGV.length >= 2
 end
-
-def output_with_option(file_names)
-  file_names.each do |file_name|
-    count_lines = IO.readlines(file_name).length
-    file_basename = File.basename(file_name)
-    format = '%7s %-10s'
-    printf format, count_lines, file_basename
-    puts "\n"
-  end
-end
-
-def sum_up_count_with_option(file_names)
-  total_count_lines = sum_up_count_lines(file_names)
-  format = '%7s %-10s'
-  printf format, total_count_lines, 'total'
-end
-
-def output_by_standard_input_with_option
-  text = read_text
-  count_lines = text.split("\n").length
-  format = '%7s'
-  printf format, count_lines
-end
-
-def read_text
-  $stdin.read
-end
-
-def output_by_standard_input
-  text = read_text
-  count_lines = text.split("\n").length
-  count_words = text.split(/\s+/).size
-  count_bites = text.to_s.bytesize
-  format = '%7s %7s %7s'
-  printf format, count_lines, count_words, count_bites
-end
-
-def output_without_option(file_names)
-  file_names.each do |file_name|
-    text = read_from_text(file_name)
-    count_lines = IO.readlines(file_name).length
-    count_words = text.split(/\s+/).size
-    count_bites = text.bytesize
-    file_basename = File.basename(file_name)
-
-    format = '%7s %7s %7s %-10s'
-    printf format, count_lines, count_words, count_bites, file_basename
-    puts "\n"
-  end
-end
-
-def read_from_text(file_name)
-  File.read(file_name)
-end
-
-def sum_up_count(file_names)
-  total_count_lines = sum_up_count_lines(file_names)
-  total_count_words = sum_up_count_words(file_names)
-  total_count_bites = sum_up_count_bites(file_names)
-  format = '%7s %7s %7s %-10s'
-  printf format, total_count_lines, total_count_words, total_count_bites, 'total'
-end
-
-def sum_up_count_lines(file_names)
-  file_names.map { |file_name| IO.readlines(file_name).size }.sum
-end
-
-def sum_up_count_words(file_names)
-  file_names.map { |file_name| File.read(file_name).split(/\s+/).size }.sum
-end
-
-def sum_up_count_bites(file_names)
-  file_names.map { |file_name| File::Stat.new(file_name).size }.sum
-end
-
-main
