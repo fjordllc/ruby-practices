@@ -23,6 +23,16 @@ class Game
     @game << Frame.new(*marks)
   end
 
+  def calc_bonus(frame, left_shots)
+    @score += if frame.strike?
+      frame.score + left_shots.slice(0, 2).sum
+    elsif frame.spare?
+      frame.score + left_shots[0]
+    else
+      frame.score
+    end
+  end
+
   def score
     (0..9).each do |n|
       left_shots = []
