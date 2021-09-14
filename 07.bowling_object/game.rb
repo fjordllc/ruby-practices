@@ -5,7 +5,7 @@ require_relative 'frame'
 
 class Game
   def initialize(argv)
-    @game = []
+    @frames = []
     devide_frames(argv.split(','))
   end
 
