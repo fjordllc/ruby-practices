@@ -23,13 +23,13 @@ class Game
   end
 
   def calc_bonus(frame, left_shots)
-    @score += if frame.strike?
-                frame.score + left_shots.slice(0, 2).sum
-              elsif frame.spare?
-                frame.score + left_shots[0]
-              else
-                frame.score
-              end
+    if frame.strike?
+      frame.score + left_shots.slice(0, 2).sum
+    elsif frame.spare?
+      frame.score + left_shots[0]
+    else
+      frame.score
+    end
   end
 
   def score
@@ -41,7 +41,7 @@ class Game
         next_frame ||= Frame.new('', '')
         after_next_frame ||= Frame.new('', '')
         left_shots.push(*next_frame.shots).push(*after_next_frame.shots) # 次のフレームと次の次のフレームが一つの配列になる
-        calc_bonus(frame, left_shots)
+        @score += calc_bonus(frame, left_shots)
       end
     end
     @score
