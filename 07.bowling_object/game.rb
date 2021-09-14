@@ -32,17 +32,15 @@ class Game
     end
   end
 
-  def score
-    if @score.nil?
-      @score = 0
-      (0..9).each do |n|
-        left_shots = []
-        frame, next_frame, after_next_frame = @game.slice(n, 3)
-        next_frame ||= Frame.new('', '')
-        after_next_frame ||= Frame.new('', '')
-        left_shots.push(*next_frame.shots).push(*after_next_frame.shots) # 次のフレームと次の次のフレームが一つの配列になる
-        @score += calc_bonus(frame, left_shots)
-      end
+  def calc_score
+    @score = 0
+    (0..9).each do |n|
+      left_shots = []
+      frame, next_frame, after_next_frame = @game.slice(n, 3)
+      next_frame ||= Frame.new('', '')
+      after_next_frame ||= Frame.new('', '')
+      left_shots.push(*next_frame.shots).push(*after_next_frame.shots) # 次のフレームと次の次のフレームが一つの配列になる
+      @score += calc_bonus(frame, left_shots)
     end
     @score
   end
