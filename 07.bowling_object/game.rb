@@ -13,13 +13,13 @@ class Game
     9.times do
       first_mark = marks.shift
       if first_mark == 'X'
-        @game << Frame.new(first_mark)
+        @frames << Frame.new(first_mark)
       else
         second_mark = marks.shift
-        @game << Frame.new(first_mark, second_mark)
+        @frames << Frame.new(first_mark, second_mark)
       end
     end
-    @game << Frame.new(*marks)
+    @frames << Frame.new(*marks)
   end
 
   def calc_bonus(frame, left_shots)
@@ -36,7 +36,7 @@ class Game
     @score = 0
     (0..9).each do |n|
       left_shots = []
-      frame, next_frame, after_next_frame = @game.slice(n, 3)
+      frame, next_frame, after_next_frame = @frames.slice(n, 3)
       next_frame ||= Frame.new('', '')
       after_next_frame ||= Frame.new('', '')
       left_shots.push(*next_frame.shots).push(*after_next_frame.shots) # 次のフレームと次の次のフレームが一つの配列になる
