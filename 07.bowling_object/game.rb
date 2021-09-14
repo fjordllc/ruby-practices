@@ -44,4 +44,8 @@ class Game
     end
     @score
   end
+
+  def score
+    @score ||= calc_score
+  end
 end
