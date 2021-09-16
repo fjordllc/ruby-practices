@@ -5,39 +5,27 @@ require 'optparse'
 
 def main
   options = ARGV.getopts('l')
-  array_of_base_dates = []
+  arrays_of_lines = []
   if ARGV.length.zero?
-    data_by_standard_input(array_of_base_dates)
-    output_count_up_total(array_of_base_dates, options)
+    $stdin.each_line { |line| arrays_of_lines << line }
+    output_count_up_total(arrays_of_lines, options)
   else
-    data_by_file(array_of_base_dates)
-    output_result(array_of_base_dates, options)
+    ARGV.each do |filenames|
+      arrays_of_lines << File.open(filenames, 'r', &:readlines)
+    end
+    output_result(arrays_of_lines, options)
     if ARGV.length >= 2
-      output_count_up_total(array_of_base_dates, options)
+      output_count_up_total(arrays_of_lines, options)
       puts ' total'
     end
   end
 end
 
-def data_by_standard_input(array_of_base_dates)
-  while (line = $stdin.gets)
-    array_of_base_dates << line
-  end
-end
-
-def data_by_file(array_of_base_dates)
-  ARGV.each do |files|
-    base_dates = []
-    File.open(files, 'r') { |file| file.map { |lines| base_dates << lines } }
-    array_of_base_dates << base_dates
-  end
-end
-
-def output_result(array_of_base_dates, options)
-  array_of_base_dates.each_index do |i|
-    count_lines = array_of_base_dates[i].length
-    count_words = array_of_base_dates[i].join.split(/\s+/).length
-    count_bites = array_of_base_dates[i].join.bytesize
+def output_result(arrays_of_lines, options)
+  arrays_of_lines.each_index do |i|
+    count_lines = arrays_of_lines[i].length
+    count_words = arrays_of_lines[i].join.split(/\s+/).length
+    count_bites = arrays_of_lines[i].join.bytesize
     file_name = ARGV[i]
     if options['l']
       format_for_l = '%7s %-10s'
@@ -50,10 +38,10 @@ def output_result(array_of_base_dates, options)
   end
 end
 
-def output_count_up_total(array_of_base_dates, options)
-  total_count_lines = array_of_base_dates.flatten.length
-  total_count_words = array_of_base_dates.flatten.join.split(/\s+/).length
-  total_count_bites = array_of_base_dates.flatten.join.bytesize
+def output_count_up_total(arrays_of_lines, options)
+  total_count_lines = arrays_of_lines.flatten.length
+  total_count_words = arrays_of_lines.flatten.join.split(/\s+/).length
+  total_count_bites = arrays_of_lines.flatten.join.bytesize
   if options['l']
     printf('%7s', total_count_lines)
   else
