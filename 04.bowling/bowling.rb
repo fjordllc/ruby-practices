@@ -13,14 +13,7 @@ scores.each do |s|
   end
 end
 
-frames = []
-shots.each_slice(2) do |s|
-  frames << if s == [10, 0]
-              [s.shift]
-            else
-              s
-            end
-end
+frames = shots.each_slice(2).to_a
 
 point = 0
 frames[0..8].each_with_index do |frame, idx|
