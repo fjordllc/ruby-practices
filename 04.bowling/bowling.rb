@@ -30,7 +30,7 @@ frames[0..8].each_with_index do |frame, idx|
 end
 
 point += if frames[9][0] == STRIKE && frames[10][0] == STRIKE
-           10 + frames[10][0] + frames [11][0]
+           10 + frames[10].sum + frames[11].sum
          elsif frames[9][0] == STRIKE
            10 + frames[10].sum
          elsif frames[9].sum == 10
