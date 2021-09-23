@@ -29,14 +29,6 @@ frames[0..8].each_with_index do |frame, idx|
            end
 end
 
-point += if frames[9][0] == STRIKE && frames[10][0] == STRIKE
-           10 + frames[10].sum + frames[11].sum
-         elsif frames[9][0] == STRIKE
-           10 + frames[10].sum
-         elsif frames[9].sum == 10
-           10 + frames[10].sum
-         else
-           frames[9].sum
-         end
+point += frames[9..11].sum(&:sum)
 
 puts point
