@@ -1,7 +1,7 @@
 require "date"
 require "optparse"
 
-Month_name = {
+MONTH_NAME = {
   "1" => "Jan", 
   "2" => "Feb",
   "3" => "Mar", 
@@ -38,7 +38,7 @@ class Calendar
   end
 
   def convert_month_to_english(month)
-    Month_name[month.to_s]
+    MONTH_NAME[month.to_s]
   end
 
   def print_all_weekdate
@@ -59,14 +59,12 @@ class Calendar
       # デフォルト出力フォーマット
       print_date = i.to_s
       
-      if today?(i)
-        print_date = "  " + ANSI_ESC + print_date + ANSI_ESC_END
-      end
+      print_date = "  " + ANSI_ESC + print_date + ANSI_ESC_END if today?(i)
     
-      if saturday?(@year, @month, i)
+      if Date.new(@year, @month, i).saturday?
         print_date = print_date.rjust(4) + "\n"
       end
-    
+
       print print_date.rjust(4)
 
     end
@@ -74,18 +72,9 @@ class Calendar
   end
   
   def today?(day)
-    if Date.today == Date.new(@year, @month,day)
-      return true
-    end
+    Date.today == Date.new(@year, @month, day)
   end
   
-  def saturday?(year, month, day)
-    wday = Date.new(year, month, day).wday
-    if wday == 6
-      return true
-    end
-  end
-
   def print_formatted_calender
 
     puts "        #{convert_month_to_english(@month)} #{@year}"
@@ -110,18 +99,12 @@ month = today.month
 day = today.day
 
 params = ARGV.getopts("m:", "y:")
-cmd_month  = params["m"]
-cmd_year = params["y"]
 
 # -mオプションが指定されている場合
-if cmd_month
-  month = cmd_month.to_i
-end
+month = params["m"].to_i if params["m"]
 
 # -yオプションが指定されている場合
-if cmd_year
-  year = cmd_year.to_i
-end
+year = params["y"].to_i if params['y']
 
 cal = Calendar.new(year, month, day)
 
