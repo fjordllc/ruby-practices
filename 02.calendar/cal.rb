@@ -27,10 +27,10 @@ ANSI_ESC_END = "\e[m"
 
 class Calendar
 
-  def initialize(year, month, day)
-    @year = year
-    @month = month
-    @day = day
+  def initialize(date)
+    @year = date.year
+    @month = date.month
+    @day = date.day
   end
 
   def get_first_wday
@@ -55,18 +55,12 @@ class Calendar
     set_first_position(first_date_by_num)
   
     (1..last_day).each do |i|
-   
-      # デフォルト出力フォーマット
       print_date = i.to_s
-      
       print_date = "  " + ANSI_ESC + print_date + ANSI_ESC_END if today?(i)
     
-      if Date.new(@year, @month, i).saturday?
-        print_date = print_date.rjust(4) + "\n"
-      end
-
       print print_date.rjust(4)
 
+      puts if Date.new(@year, @month, i).saturday?
     end
     puts ""
   end
@@ -88,15 +82,15 @@ class Calendar
   def set_first_position(first_date_by_num)
     print "    " * first_date_by_num
   end
+
 end
 
 
 # 今日の日付のオブジェクト
-today = Date.today
+date = Date.today
 
-year = today.year
-month = today.month
-day = today.day
+year = date.year
+month = date.month
 
 params = ARGV.getopts("m:", "y:")
 
@@ -104,9 +98,11 @@ params = ARGV.getopts("m:", "y:")
 month = params["m"].to_i if params["m"]
 
 # -yオプションが指定されている場合
-year = params["y"].to_i if params['y']
+year = params["y"].to_i if params["y"]
 
-cal = Calendar.new(year, month, day)
+date = Date.new(year, month) if params["m"]||params["y"]
+
+cal = Calendar.new(date)
 
 # カレンダー表示
 cal.print_formatted_calender
