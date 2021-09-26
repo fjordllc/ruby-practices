@@ -18,44 +18,39 @@ score_exceptions = []
 exception = ''
 shots.each_slice(2) do |s|
   frames << s
-  frames.each do |frame|
-    exception =
-      if frame[0] == 10
-        'strike'
-      elsif frame.sum == 10
-        'spare'
-      else
-        'none'
-      end
-  end
+  exception =
+    if s[0] == 10
+      :strike
+    elsif s.sum == 10
+      :spare
+    else
+      :none
+    end
   score_exceptions << exception
 end
 
-array_number = 0
-score_exceptions.each do |e|
-  if array_number <= 8 && e == 'strike' && score_exceptions[array_number + 1] == 'strike'
-    frames[array_number][1] = frames[array_number + 1][0]
-    frames[array_number][2] = frames[array_number + 2][0]
-  elsif array_number <= 8 && e == 'strike'
-    frames[array_number][1] = frames[array_number + 1][0]
-    frames[array_number][2] = frames[array_number + 1][1]
-  elsif array_number <= 8 && e == 'spare'
-    frames[array_number][2] = frames[array_number + 1][0]
-  end
-  if array_number == 9 && e == 'strike'
-    frames[9][1] = frames[10][0]
-    if frames[10][0] == 10 && e == 'strike'
-      frames[9][2] = frames[11][0]
-      2.times { frames.delete_at(10) }
-    elsif e == 'strike'
-      frames[9][2] = frames[10][1]
-      2.times { frames.delete_at(10) }
-    elsif e == 'spare'
-      frames[array_number][2] = frames[array_number + 1][0]
-      frames.delete_at(array_number + 1)
+score_exceptions.each_with_index do |e, idx|
+  case e
+  when :strike
+    if idx <= 8
+      frames[idx][1] = frames[idx + 1][0]
+      frames[idx][2] =
+        if score_exceptions[idx + 1] == :strike
+          frames[idx + 2][0]
+        else
+          frames[idx + 1][1]
+        end
+    elsif idx == 9
+      frames[9][1] = frames[10][0]
+      if frames[10][0] == 10
+        frames[9][2] = frames[11][0]
+        2.times { frames.delete_at(10) }
+      end
     end
+  when :spare
+    frames[idx][2] = frames[idx + 1][0]
+    frames.delete_at(idx + 1) if idx > 8
   end
-  array_number += 1
 end
 
 point = 0
