@@ -7,7 +7,7 @@ require 'date'
 # month = 
 
 #月と年を出力
-date = Date.today
+date = Date.today # TODO 要変更
 puts ("#{date.month}月 #{date.year}").center(20)
 
 week = ['日','月','火','水','木','金','土']
@@ -23,23 +23,10 @@ days.each do |day|
     wdays = Date.new(2021, 6, day).wday
 	is_saturday = Date.new(2021, 6, day).saturday?
 
-    # 最初の日が日曜でなかったら、スペースを出力する
+    # 初日左部分のスペース埋め処理
     if day == 1
-        if wdays == 0
-            print ""
-        elsif wdays == 1
-            print "   "
-        elsif wdays == 2
-            print "      "
-        elsif wdays == 3
-            print "         "
-        elsif wdays == 4
-            print "            "
-        elsif wdays == 5
-            print "               "
-        elsif wdays == 6
-            print "                  "
-        end
+        space_quantity = 3 * wdays
+        print (' ').rjust(space_quantity) 
     end
     print ("#{i} ").rjust(3)
     if is_saturday 
