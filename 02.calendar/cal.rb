@@ -86,21 +86,18 @@ class Calendar
 end
 
 
-# 今日の日付のオブジェクト
-date = Date.today
+today = Date.today
 
 year = date.year
 month = date.month
 
 params = ARGV.getopts("m:", "y:")
 
-# -mオプションが指定されている場合
 month = params["m"].to_i if params["m"]
 
-# -yオプションが指定されている場合
 year = params["y"].to_i if params["y"]
 
-date = Date.new(year, month) if params["m"]||params["y"]
+date = Date.new(year, month) if params["m"] || params["y"]
 
 cal = Calendar.new(date)
 
