@@ -87,19 +87,16 @@ end
 
 
 today = Date.today
-
-year = date.year
-month = date.month
+year = today.year
+month = today.month
 
 params = ARGV.getopts("m:", "y:")
 
 month = params["m"].to_i if params["m"]
-
 year = params["y"].to_i if params["y"]
+today = Date.new(year, month) if params["m"] || params["y"]
 
-date = Date.new(year, month) if params["m"] || params["y"]
-
-cal = Calendar.new(date)
+cal = Calendar.new(today)
 
 # カレンダー表示
 cal.print_formatted_calender
