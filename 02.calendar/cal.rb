@@ -56,7 +56,7 @@ class Calendar
   
     (1..last_day).each do |i|
       print_date = i.to_s
-      print_date = "  " + ANSI_ESC + print_date + ANSI_ESC_END if today?(i)
+      print_date = "   " + ANSI_ESC + print_date + ANSI_ESC_END if today?(i)
     
       print print_date.rjust(4)
 
