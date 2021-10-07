@@ -1,29 +1,41 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-dir = Dir.glob('*')
+def main
+  dirs = Dir.glob('*')
+  files = []
+  total_number_of_files = dirs.size
+  number_of_lines = (total_number_of_files.to_f / MAXIMUM_COLUMN).ceil(0)
 
-maximum_column = 3.0
-total_number_of_files = dir.size
-number_of_lines = (total_number_of_files.to_f / maximum_column).ceil(0)
+  slice_the_file(dirs, number_of_lines, files)
 
-files = []
-dir.each_slice(number_of_lines) { |n| files << n }
+  align_the_number_of_elements(files, total_number_of_files)
 
-if files.size >= maximum_column && total_number_of_files % maximum_column != 0
-  (maximum_column - total_number_of_files % maximum_column).to_i.times { files[-1] << nil }
+  sorted_files = files.transpose
+
+  show_files(dirs, sorted_files)
 end
 
-def show_files(dir, files)
-  sorted_files = files.transpose
-  longest_name = dir.max_by(&:size)
+def slice_the_file(dirs, number_of_lines, files)
+  dirs.each_slice(number_of_lines) { |n| files << n }
+end
+
+def align_the_number_of_elements(files, total_number_of_files)
+  return unless files.size >= MAXIMUM_COLUMN && total_number_of_files % MAXIMUM_COLUMN != 0
+
+  (MAXIMUM_COLUMN - total_number_of_files % MAXIMUM_COLUMN).to_i.times { files.last << nil }
+end
+
+def show_files(dirs, sorted_files)
+  longest_name = dirs.max_by(&:size)
   margin = 6
   sorted_files.each do |sorted_file|
     sorted_file.each do |s|
       print s.to_s.ljust(longest_name.size + margin)
     end
-    print "\n"
+    puts "\n"
   end
 end
 
-show_files(dir, files)
+MAXIMUM_COLUMN = 3
+main
