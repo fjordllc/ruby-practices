@@ -14,16 +14,15 @@ end
 frames = [ ]
 shots.each_slice(2) do |s|
     if s.sum >= 11
-        p 'Read The Fucking Manual'
+        p '倒しているピンの数が不正です'
         exit
-    elsif s.count ==  2
     end
-    
+
     frames << s
     binding.irb
 end
 
-unless frames.count == 10
+unless frames.count == 10 || frames.count == 11
     p "フレーム数が不正だよ"
     exit
 end
@@ -37,7 +36,6 @@ frames.each do |frame|
     else
         point = point + frame.sum
     end
-    binding.irb
 end
 
 p point
