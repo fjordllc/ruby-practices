@@ -8,22 +8,25 @@ opt.on('-y'){|v| p v}
 
 opt.parse!(ARGV)
 
-if ARGV[1]
-   print "     #{ARGV[1]}月"
+month = ARGV[1]
+year = ARGV[0]
+
+if month
+   print "     #{month}月"
 else
-   ARGV[1] = Date.today.month
-   print "     #{ARGV[1]}月"
+   month = Date.today.month
+   print "     #{month}月"
 end
 
-if ARGV[0]
-   puts "  #{ARGV[0]}"
+if year
+   puts "  #{year}"
 else
-   ARGV[0] = Date.today.year
-   puts "  #{ARGV[0]}"
+   year = Date.today.year
+   puts "  #{year}"
 end
 
-first_date = Date.new(ARGV[0].to_i,ARGV[1].to_i,1)
-last_date = Date.new(ARGV[0].to_i,ARGV[1].to_i,-1)
+first_date = Date.new(year.to_i,month.to_i,1)
+last_date = Date.new(year.to_i,month.to_i,-1)
 
 puts "日 月 火 水 木 金 土"
 print "   " * first_date.wday
