@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Frame
-  attr_reader :first_shot, :second_shot, :third_shot
+  attr_reader :first_shot
 
   def initialize(first_shot, second_shot = nil, third_shot = nil)
     @first_shot = first_shot
@@ -29,13 +29,17 @@ class Frame
       divided_shots
     end
 
-    def sum_next_first_two_shots(frame_one, frame_two)
-      summing_shots = [frame_one.first_shot, frame_one.second_shot, frame_one.third_shot, frame_two.first_shot]
+    def sum_next_first_two_shots(next_frame, after_next_frame)
+      summing_shots = next_frame.to_a << after_next_frame.first_shot
       summing_shots.compact.slice(0, 2).map(&:numerate).sum
     end
   end
 
+  def to_a
+    [first_shot, @second_shot, @third_shot]
+  end
+
   def sum
-    [first_shot, second_shot, third_shot].compact.map(&:numerate).sum
+    to_a.compact.map(&:numerate).sum
   end
 end
