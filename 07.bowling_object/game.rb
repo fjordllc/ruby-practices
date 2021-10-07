@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Game
-  attr_reader :frames
-
   def initialize(frames)
     @frames = frames
   end
@@ -11,17 +9,16 @@ class Game
     point = 0
 
     (0..9).each do |count|
-      frame, next_frame, after_next_frame = frames.slice(count, 3)
-      next_frame ||= []
-      after_next_frame ||= []
-      left_shots = next_frame + after_next_frame
+      current_frame, next_frame, after_next_frame = @frames.slice(count, 3)
+      next_frame ||= Frame.new(Shot.new(0))
+      after_next_frame ||= Frame.new(Shot.new(0))
 
-      point += if frame[0] == 10
-                 frame.sum + left_shots.slice(0, 2).sum
-               elsif frame.sum == 10
-                 frame.sum + left_shots.fetch(0)
+      point += if current_frame.first_shot.numerate == 10
+                 current_frame.sum + Frame.sum_next_first_two_shots(next_frame, after_next_frame)
+               elsif current_frame.sum == 10
+                 current_frame.sum + next_frame.first_shot.numerate
                else
-                 frame.sum
+                 current_frame.sum
                end
     end
 

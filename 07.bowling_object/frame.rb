@@ -1,28 +1,41 @@
 # frozen_string_literal: true
 
 class Frame
-  attr_reader :shots
+  attr_reader :first_shot, :second_shot, :third_shot
 
-  def initialize(shots)
-    @shots = shots
-    @frames = []
-    @frame = []
+  def initialize(first_shot, second_shot = nil, third_shot = nil)
+    @first_shot = first_shot
+    @second_shot = second_shot
+    @third_shot = third_shot
   end
 
-  def score
-    shots.each do |shot|
-      @frame << shot
+  class << self
+    def divide(shots)
+      frame = []
+      divided_shots = []
 
-      if @frames.size < 10
-        if @frame.size >= 2 || shot == 10
-          @frames << @frame.dup
-          @frame.clear
+      shots.each do |shot|
+        frame << shot
+        if divided_shots.size < 10
+          if frame.size >= 2 || shot.numerate == 10
+            divided_shots << frame.dup
+            frame.clear
+          end
+        else
+          divided_shots.last << shot
         end
-      else
-        @frames.last << shot
       end
+
+      divided_shots
     end
 
-    @frames
+    def sum_next_first_two_shots(frame_one, frame_two)
+      summing_shots = [frame_one.first_shot, frame_one.second_shot, frame_one.third_shot, frame_two.first_shot]
+      summing_shots.compact.slice(0, 2).map(&:numerate).sum
+    end
+  end
+
+  def sum
+    [first_shot, second_shot, third_shot].compact.map(&:numerate).sum
   end
 end
