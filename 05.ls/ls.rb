@@ -15,11 +15,13 @@ def make_divided_list(input, num)
     ret[i] << nil while ret[i].size < num_to_add
   end
 
+  k = 0
   ret.size.times do |i|
     j = 0
-    while input.size.positive? && j < num_to_add
-      ret[i][j] = input.shift
+    while j < num_to_add && k < input.size
+      ret[i][j] = input[k]
       j += 1
+      k += 1
     end
   end
   ret
