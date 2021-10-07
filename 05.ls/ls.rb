@@ -2,8 +2,6 @@
 # frozen_string_literal: true
 
 files_of_directory = Dir.glob('*')
-max_filename_length = files_of_directory.max_by(&:size).size
-MARGIN = 2
 
 def make_divided_list(input, num)
   num_to_add = input.size / num
@@ -27,14 +25,20 @@ def make_divided_list(input, num)
   ret
 end
 
-def show_file(divided_list, max_filename_length)
+def make_adjustment_width(files_of_directory, multiple)
+  max_filename_length = files_of_directory.max_by(&:size).size
+  (max_filename_length / multiple + 1) * multiple
+end
+
+def show_file(divided_list, adjustment_width)
   divided_list.transpose.each do |list|
     list.each do |file|
-      print file.to_s.ljust(max_filename_length + MARGIN)
+      print file.to_s.ljust(adjustment_width)
     end
     print "\n"
   end
 end
 
 divided_list = make_divided_list(files_of_directory, 3)
-show_file(divided_list, max_filename_length)
+adjustment_width = make_adjustment_width(files_of_directory, 8)
+show_file(divided_list, adjustment_width)
