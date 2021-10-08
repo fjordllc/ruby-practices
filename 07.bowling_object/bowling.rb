@@ -19,7 +19,6 @@ shots.each_slice(2) do |s|
     end
 
     frames << s
-    binding.irb
 end
 
 unless frames.count == 10 || frames.count == 11
@@ -28,14 +27,25 @@ unless frames.count == 10 || frames.count == 11
 end
 
 point = 0 
-frames.each do |frame|
+
+frames[0..8].each do |frame|
     if frame[0] == 10 && frames[+1][0] == 10
         point = point + 10 + frames[+1].sum + frames[+2][0]
     elsif frame.sum == 10
         point = point + 10 + frames[+1][0]
+    elsif frame[0] == 10
+        point = point + 10 + frames[+1].sum
     else
         point = point + frame.sum
     end
+end
+
+
+if frames[10] && frames[10].count == 1
+    point = point + frames[9].sum + frames[10].sum
+else
+    p "10フレーム目が不正です"
+    point = point + frames[9].sum
 end
 
 p point
