@@ -1,103 +1,75 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env ruby#!/usr/bin/env ruby
 # frozen_string_literal: true
 
 require 'optparse'
 
 def main
   options = ARGV.getopts('l')
-  file_names = ARGV
-
-  if options['l']
-    output_with_option(file_names)
-    if ARGV.length >= 2
-      sum_up_count_with_option(file_names)
-    elsif ARGV.length.zero?
-      output_by_standard_input_with_option
-    end
+  arrays_of_lines = []
+  if ARGV.length.zero?
+    $stdin.each_line { |line| arrays_of_lines << line }
+    print_total_file(options, arrays_of_lines)
   else
-    case ARGV.length
-    when 1
-      output_without_option(file_names)
-    when 2
-      output_without_option(file_names)
-      sum_up_count(file_names)
-    else
-      output_by_standard_input
+    ARGV.each do |filename|
+      arrays_of_lines << File.readlines(filename)
+    end
+    result = convert_each_file(arrays_of_lines)
+    print_each_file(result, options)
+    if ARGV.length >= 2
+      print_total_file(options, arrays_of_lines)
+      puts ' total'
     end
   end
 end
 
-def output_with_option(file_names)
-  file_names.each do |file_name|
-    count_lines = IO.readlines(file_name).length
-    file_basename = File.basename(file_name)
-    format = '%7s %-10s'
-    printf format, count_lines, file_basename
+def convert_each_file(arrays_of_lines)
+  result = []
+  arrays_of_lines.each_with_index do |arrays_of_line, i|
+    hash = {
+      count_lines: arrays_of_line.flatten.length,
+      count_words: arrays_of_line.join.split(/\s+/).length,
+      count_bites: arrays_of_line.join.bytesize,
+      file_name: ARGV[i]
+    }
+    result << hash
+  end
+  result
+end
+
+# ２つ以上のファイルの合計値を出すメソッド
+# def convert_total_file(arrays_of_lines)
+#   total_hash = {
+#     count_lines: arrays_of_lines.flatten.length,
+#     count_words: arrays_of_lines.join.split(/\s+/).length,
+#     count_bites: arrays_of_lines.join.bytesize
+#   }
+# end
+
+def print_each_file(result, options)
+  result.each_with_index do |_m, n|
+    if options['l']
+      format_for_l = '%7s %-10s'
+      printf format_for_l, result[n][:count_lines], result[n][:file_name]
+    else
+      format = '%7s %7s %7s %-10s'
+      printf format, result[n][:count_lines], result[n][:count_words], result[n][:count_bites], result[n][:file_name]
+    end
     puts "\n"
   end
 end
 
-def sum_up_count_with_option(file_names)
-  total_count_lines = sum_up_count_lines(file_names)
-  format = '%7s %-10s'
-  printf format, total_count_lines, 'total'
-end
-
-def output_by_standard_input_with_option
-  text = read_text
-  count_lines = text.split("\n").length
-  format = '%7s'
-  printf format, count_lines
-end
-
-def read_text
-  $stdin.read
-end
-
-def output_by_standard_input
-  text = read_text
-  count_lines = text.split("\n").length
-  count_words = text.split(/\s+/).size
-  count_bites = text.to_s.bytesize
-  format = '%7s %7s %7s'
-  printf format, count_lines, count_words, count_bites
-end
-
-def output_without_option(file_names)
-  file_names.each do |file_name|
-    text = read_from_text(file_name)
-    count_lines = IO.readlines(file_name).length
-    count_words = text.split(/\s+/).size
-    count_bites = text.bytesize
-    file_basename = File.basename(file_name)
-    format = '%7s %7s %7s %-10s'
-    printf format, count_lines, count_words, count_bites, file_basename
-    puts "\n"
+def print_total_file(options, arrays_of_lines)
+  total_hash = {
+    count_lines: arrays_of_lines.flatten.length,
+    count_words: arrays_of_lines.join.split(/\s+/).length,
+    count_bites: arrays_of_lines.join.bytesize
+  }
+  if options['l']
+    printf('%7s', total_hash[:count_lines])
+  else
+    format_for_total = '%7s %7s %7s'
+    printf format_for_total, total_hash[:count_lines], total_hash[:count_words], total_hash[:count_bites]
   end
-end
-
-def read_from_text(file_name)
-  File.read(file_name)
-end
-
-def sum_up_count(file_names)
-  total_count_lines = sum_up_count_lines(file_names)
-  total_count_words = sum_up_count_words(file_names)
-  total_count_bites = sum_up_count_bites(file_names)
-  format = '%7s %7s %7s %-10s'
-  printf format, total_count_lines, total_count_words, total_count_bites, 'total'
-end
-
-def sum_up_count_lines(file_names)
-  file_names.map { |file_name| IO.readlines(file_name).size }.sum
-end
-
-def sum_up_count_words(file_names)
-  file_names.map { |file_name| File.read(file_name).split(/\s+/).size }.sum
-end
-
-def sum_up_count_bites(file_names)
-  file_names.map { |file_name| File::Stat.new(file_name).size }.sum
 end
 
 main
