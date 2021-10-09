@@ -25,25 +25,16 @@ end
 def convert_each_file(arrays_of_lines)
   result = []
   arrays_of_lines.each_with_index do |arrays_of_line, i|
-    hash = {
+    hash_for_each_file = {
       count_lines: arrays_of_line.flatten.length,
       count_words: arrays_of_line.join.split(/\s+/).length,
       count_bites: arrays_of_line.join.bytesize,
       file_name: ARGV[i]
     }
-    result << hash
+    result << hash_for_each_file
   end
   result
 end
-
-# ２つ以上のファイルの合計値を出すメソッド
-# def convert_total_file(arrays_of_lines)
-#   total_hash = {
-#     count_lines: arrays_of_lines.flatten.length,
-#     count_words: arrays_of_lines.join.split(/\s+/).length,
-#     count_bites: arrays_of_lines.join.bytesize
-#   }
-# end
 
 def print_each_file(result, options)
   result.each_with_index do |_m, n|
@@ -59,16 +50,19 @@ def print_each_file(result, options)
 end
 
 def print_total_file(options, arrays_of_lines)
-  total_hash = {
+  hash_for_total_file = {
     count_lines: arrays_of_lines.flatten.length,
     count_words: arrays_of_lines.join.split(/\s+/).length,
     count_bites: arrays_of_lines.join.bytesize
   }
   if options['l']
-    printf('%7s', total_hash[:count_lines])
+    printf('%7s', hash_for_total_file[:count_lines])
   else
     format_for_total = '%7s %7s %7s'
-    printf format_for_total, total_hash[:count_lines], total_hash[:count_words], total_hash[:count_bites]
+    printf format_for_total,
+           hash_for_total_file[:count_lines],
+           hash_for_total_file[:count_words],
+           hash_for_total_file[:count_bites]
   end
 end
 
