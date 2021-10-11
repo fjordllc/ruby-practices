@@ -3,8 +3,13 @@ require 'date'
 
 # コマンドラインから引数を受け取る(月:-m, 年:-y)
 options = ARGV.getopts("m:y:")
-mon = options["m"].to_i
-year = options["y"].to_i
+if options.values.none?
+  mon = Date.today.mon
+  year = Date.today.year
+else
+  mon = options["m"].to_i
+  year = options["y"].to_i
+end
 
 # コマンドライン引数で受け取った年と月を表示する
 cal_width = 20
