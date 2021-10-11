@@ -43,9 +43,11 @@ end
 
 if frames[10] && frames[10].count == 1
   point = point + frames[9].sum + frames[10].sum
+elsif frames[10].nil?
+  point += frames[9].sum
 else
   p '10フレーム目が不正です'
-  point += frames[9].sum
+  exit
 end
 
 p point
