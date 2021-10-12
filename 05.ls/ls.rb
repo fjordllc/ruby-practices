@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+MAXIMUM_COLUMN = 3
+
 def main
   dirs = Dir.glob('*')
   files = []
@@ -33,9 +35,8 @@ def show_files(dirs, sorted_files)
     sorted_file.each do |s|
       print s.to_s.ljust(longest_name.size + margin)
     end
-    puts "\n"
+    puts
   end
 end
 
-MAXIMUM_COLUMN = 3
 main
