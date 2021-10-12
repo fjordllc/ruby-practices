@@ -8,7 +8,8 @@ def main
   arrays_of_lines = []
   if ARGV.length.zero?
     $stdin.each_line { |line| arrays_of_lines << line }
-    print_total_file(options, arrays_of_lines)
+    total_hash = convert_total_file(arrays_of_lines)
+    print_total_file(total_hash, options)
   else
     ARGV.each do |filename|
       arrays_of_lines << File.readlines(filename)
@@ -16,7 +17,8 @@ def main
     result = convert_each_file(arrays_of_lines)
     print_each_file(result, options)
     if ARGV.length >= 2
-      print_total_file(options, arrays_of_lines)
+      total_hash = convert_total_file(arrays_of_lines)
+      print_total_file(total_hash, options)
       puts ' total'
     end
   end
@@ -49,20 +51,23 @@ def print_each_file(result, options)
   end
 end
 
-def print_total_file(options, arrays_of_lines)
-  hash_for_total_file = {
+def convert_total_file(arrays_of_lines)
+  {
     count_lines: arrays_of_lines.flatten.length,
     count_words: arrays_of_lines.join.split(/\s+/).length,
     count_bites: arrays_of_lines.join.bytesize
   }
+end
+
+def print_total_file(total_hash, options)
   if options['l']
-    printf('%7s', hash_for_total_file[:count_lines])
+    printf('%7s', total_hash[:count_lines])
   else
     format_for_total = '%7s %7s %7s'
     printf format_for_total,
-           hash_for_total_file[:count_lines],
-           hash_for_total_file[:count_words],
-           hash_for_total_file[:count_bites]
+           total_hash[:count_lines],
+           total_hash[:count_words],
+           total_hash[:count_bites]
   end
 end
 
