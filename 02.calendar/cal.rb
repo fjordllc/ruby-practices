@@ -17,9 +17,9 @@ last_day = Date.new(year, mon, -1).day
 days = (1..last_day).to_a
 
 first_cwday = Date.new(year, mon).cwday
-first_cwday.times { days.unshift(" ") }
+first_cwday.times { days.unshift("\s") }
 
 days = days.map { |num| num.to_s.rjust(2) }
 
 LENGTH_A_WEEK = 7
-days.each_slice(LENGTH_A_WEEK) { |day| puts day.join(" ") }
+days.each_slice(LENGTH_A_WEEK) { |day| puts day.join("\s") }
