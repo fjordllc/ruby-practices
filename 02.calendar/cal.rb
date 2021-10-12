@@ -1,25 +1,26 @@
 require 'optparse'
 require 'date'
 
-options = ARGV.getopts("m:y:")
+OPTIONS = ARGV.getopts("m:y:")
 
 DATE_TODAY = Date.today
-mon  = options["m"] ? options["m"].to_i : DATE_TODAY.mon
-year = options["y"] ? options["y"].to_i : DATE_TODAY.year
+MON  = OPTIONS["m"] ? OPTIONS["m"].to_i : DATE_TODAY.mon
+YEAR = OPTIONS["y"] ? OPTIONS["y"].to_i : DATE_TODAY.year
 
 CAL_WIDTH = 20
-puts "#{mon}月 #{year}".center(CAL_WIDTH)
+puts "#{MON}月 #{YEAR}".center(CAL_WIDTH)
 
 LINE_CWDAY = "日 月 火 水 木 金 土"
 puts LINE_CWDAY
 
-last_day = Date.new(year, mon, -1).day
-days = (1..last_day).to_a
+FIRST_DAY = 1
+LAST_DAY = Date.new(YEAR, MON, -1).day
+days = (FIRST_DAY..LAST_DAY).to_a.map(&:to_s)
 
-first_cwday = Date.new(year, mon).cwday
-first_cwday.times { days.unshift("\s") }
+FIRST_CWDAY = Date.new(YEAR, MON).cwday
+FIRST_CWDAY.times { days.unshift("\s") }
 
-days = days.map { |num| num.to_s.rjust(2) }
+days = days.map { |day| day.rjust(2) }
 
 LENGTH_A_WEEK = 7
-days.each_slice(LENGTH_A_WEEK) { |day| puts day.join("\s") }
+days.each_slice(LENGTH_A_WEEK) { |sliced_days| puts (sliced_days.join("\s")) }
