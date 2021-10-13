@@ -1,9 +1,7 @@
 #! /usr/bin/env ruby
 # frozen_string_literal: true
 
-num = 1
-
-while num <= 20
+(1..20).each do |num|
   if (num % 3).zero? && (num % 5).zero?
     puts 'FizzBuzz'
   elsif (num % 3).zero?
@@ -13,6 +11,4 @@ while num <= 20
   else
     puts num
   end
-
-  num += 1
 end
