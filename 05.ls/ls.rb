@@ -4,8 +4,7 @@
 files_of_directory = Dir.glob('*')
 
 def make_divided_list(input, num)
-  num_to_add = input.size / num
-  num_to_add += 1 if input.size % num != 0
+  num_to_add = (input.size.to_f / num).ceil
 
   ret = []
   num.times do |i|
