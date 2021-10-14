@@ -16,7 +16,7 @@ def main
     output_result(arrays_of_lines, options)
     if ARGV.length >= 2
       output_count_up_total(arrays_of_lines, options)
-      puts '  total'
+      puts ' total'
     end
   end
 end
@@ -28,14 +28,11 @@ def output_result(arrays_of_lines, options)
     count_bites = arrays_of_line.join.bytesize
     file_name = ARGV[i]
     if options['l']
-      # format_for_l = '%7s %-10s'
-      # printf format_for_l, count_lines, file_name
-      print count_lines.to_s.rjust(8), '  ', file_name.ljust(16)
+      format_for_l = '%7s %-10s'
+      printf format_for_l, count_lines, file_name
     else
-      # format = '%7s %7s %7s %-10s'
-      # printf format, count_lines, count_words, count_bites, file_name
-      print count_lines.to_s.rjust(8), count_words.to_s.rjust(8),
-            count_bites.to_s.rjust(8), '  ', file_name.ljust(16)
+      format = '%7s %7s %7s %-10s'
+      printf format, count_lines, count_words, count_bites, file_name
     end
     puts "\n"
   end
@@ -46,12 +43,10 @@ def output_count_up_total(arrays_of_lines, options)
   total_count_words = arrays_of_lines.flatten.join.split(/\s+/).length
   total_count_bites = arrays_of_lines.flatten.join.bytesize
   if options['l']
-    printf('%8s', total_count_lines)
+    printf('%7s', total_count_lines)
   else
-    # format_for_total = '%7s %7s %7s'
-    # printf format_for_total, total_count_lines, total_count_words, total_count_bites
-    print total_count_lines.to_s.rjust(8), total_count_words.to_s.rjust(8),
-          total_count_bites.to_s.rjust(8)
+    format_for_total = '%7s %7s %7s'
+    printf format_for_total, total_count_lines, total_count_words, total_count_bites
   end
 end
 
