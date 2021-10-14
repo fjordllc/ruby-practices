@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 files_of_directory = Dir.glob('*')
+dup_files_of_directory = files_of_directory.dup
 
 def make_divided_list(input, num)
   num_to_add = (input.size.to_f / num).ceil
@@ -29,5 +30,5 @@ def show_file(divided_list, adjustment_width)
 end
 
 divided_list = make_divided_list(files_of_directory, 3)
-adjustment_width = make_adjustment_width(files_of_directory, 8)
+adjustment_width = make_adjustment_width(dup_files_of_directory, 8)
 show_file(divided_list, adjustment_width)
