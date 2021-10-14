@@ -1,7 +1,11 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
-score = ARGV[0]
-scores = score.split(',').map { |s| s == 'X' ? 10 : s.to_i }
+require 'rubygems'
+require 'bundler/setup'
+
+score_pin = ARGV[0]
+scores = score_pin.split(',').map { |s| s == 'X' ? 10 : s.to_i }
 
 # フレーム作成
 shots = []
@@ -24,16 +28,16 @@ end
 # スコア計算
 total_point = 0
 frames.each_with_index do |frame, n|
-  if frame == [10] && frames[n+1] == [10] && frames[n+2] == [10]
-    total_point += 30
-  elsif frame == [10] && frames[n+1] == [10]
-    total_point += 20 + frames[n+2][0]
-  elsif frame == [10]
-    total_point += 10 + frames[n+1][0] + frames[n+1][1]
-  elsif frame.sum == 10 && n != 9
-    total_point += 10 + frames[n+1][0]
-  else
-    total_point += frame.sum
-  end
+  total_point += if frame == [10] && frames[n + 1] == [10] && frames[n + 2] == [10]
+                   30
+                 elsif frame == [10] && frames[n + 1] == [10]
+                   20 + frames[n + 2][0]
+                 elsif frame == [10]
+                   10 + frames[n + 1][0] + frames[n + 1][1]
+                 elsif frame.sum == 10 && n != 9
+                   10 + frames[n + 1][0]
+                 else
+                   frame.sum
+                 end
 end
 puts total_point
