@@ -6,20 +6,10 @@ files_of_directory = Dir.glob('*')
 def make_divided_list(input, num)
   num_to_add = (input.size.to_f / num).ceil
 
-  ret = []
-  num.times do |i|
-    ret << []
-    ret[i] << nil while ret[i].size < num_to_add
-  end
+  ret = Array.new(num) { [] }
 
-  k = 0
-  ret.size.times do |i|
-    j = 0
-    while j < num_to_add && k < input.size
-      ret[i][j] = input[k]
-      j += 1
-      k += 1
-    end
+  ret.map do |row|
+    row << input.shift while row.size < num_to_add
   end
   ret
 end
