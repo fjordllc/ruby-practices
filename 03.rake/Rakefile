@@ -1,0 +1,7 @@
+# encoding: utf-8
+
+task default: 'hello'
+
+file hello: 'hello.c' do
+  sh "gcc -o hello hello.c"
+end
