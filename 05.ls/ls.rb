@@ -2,9 +2,12 @@
 # frozen_string_literal: true
 
 MAXIMUM_COLUMN = 3
+require 'optparse'
 
 def main
-  dirs = Dir.glob('*')
+  params = ARGV.getopts('a')
+  dirs = params['a'] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
+
   files = []
   total_number_of_files = dirs.size
   number_of_lines = (total_number_of_files.to_f / MAXIMUM_COLUMN).ceil(0)
