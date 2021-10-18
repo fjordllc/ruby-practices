@@ -2,16 +2,14 @@
 # frozen_string_literal: true
 
 files_of_directory = Dir.glob('*')
-dup_files_of_directory = files_of_directory.dup
 
 def make_divided_list(input, num)
-  num_to_add = (input.size.to_f / num).ceil
+  num_to_slice = (input.size.to_f / num).ceil
 
-  ret = Array.new(num) { [] }
+  ret = []
+  input.each_slice(num_to_slice) { |row| ret << row }
+  ret.last << nil while ret.last.size < num_to_slice
 
-  ret.map do |row|
-    row << input.shift while row.size < num_to_add
-  end
   ret
 end
 
@@ -30,5 +28,5 @@ def show_file(divided_list, adjustment_width)
 end
 
 divided_list = make_divided_list(files_of_directory, 3)
-adjustment_width = make_adjustment_width(dup_files_of_directory, 8)
+adjustment_width = make_adjustment_width(files_of_directory, 8)
 show_file(divided_list, adjustment_width)
