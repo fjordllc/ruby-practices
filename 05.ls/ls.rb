@@ -1,7 +1,10 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-files_of_directory = Dir.glob('*')
+require 'optparse'
+
+options = ARGV.getopts('a')
+files_of_directory = options['a'] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
 
 def make_divided_list(input, num)
   num_to_slice = (input.size.to_f / num).ceil
