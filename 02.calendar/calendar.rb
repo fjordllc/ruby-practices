@@ -33,18 +33,22 @@ def is_today?(year, month, day)
   Date.today == Date.new(year, month, day)
 end
 
+def is_one_digit?(day)
+  day < 10
+end
+
 print before_blank
 
 (START_DAY..END_DAY).each do |day|
   display_day = is_today?(year, month, day) ? "\e[30;43m#{day.to_s}\e[0m" : day.to_s
   # 土曜日かつ1桁の場合（2021年の10月なら2が該当）
-  if day < 10 && is_saturday?(year, month, day)
+  if is_one_digit?(day) && is_saturday?(year, month, day)
     print " " + display_day + "\n"
   # 2桁で土曜日で改行したい場合
   elsif is_saturday?(year, month, day)
     print display_day + "\n"
   # 1桁で土曜以外の場合
-  elsif day < 10 && !is_saturday?(year, month, day)
+  elsif is_one_digit?(day) && !is_saturday?(year, month, day)
     print " " + display_day + " "
   # 2桁で土曜以外の場合
   else
