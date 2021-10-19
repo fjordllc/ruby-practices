@@ -2,7 +2,6 @@ require 'optparse'
 require 'date'
 
 params = ARGV.getopts("y:", "m:")
-p params
 
 year = params["y"]&.to_i || Date.today.year
 month = params["m"]&.to_i || Date.today.mon
