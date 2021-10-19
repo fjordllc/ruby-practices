@@ -30,19 +30,19 @@ end
 
 point = 0
 frames[0..8].each_with_index do |frame, idx|
-  point = if frame[0] == 10 && frames[idx + 1][0] == 10 #2連続でストライク
-            point + 10 + frames[idx + 1].sum + frames[idx + 2][0]
-          elsif frame[0] == 10 #１連続でストライク
-            point + 10 + frames[idx + 1].sum
-          elsif frame.sum == 10 #スペア
-            point + 10 + frames[idx + 1][0]
-          else
-            point + frame.sum
-          end
+  point += if frame[0] == 10 && frames[idx + 1][0] == 10
+             10 + frames[idx + 1].sum + frames[idx + 2][0]
+           elsif frame[0] == 10
+             10 + frames[idx + 1].sum
+           elsif frame.sum == 10
+             10 + frames[idx + 1][0]
+           else
+             frame.sum
+           end
 end
 
 if frames[10] && frames[10].count == 1
-  point = point + frames[9].sum + frames[10].sum
+  point += frames[9].sum + frames[10].sum
 elsif frames[10].nil?
   point += frames[9].sum
 else
