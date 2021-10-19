@@ -28,9 +28,7 @@ end
 # スコア計算
 total_point = 0
 frames.each_with_index do |frame, n|
-  total_point += if frame == [10] && frames[n + 1] == [10] && frames[n + 2] == [10]
-                   30
-                 elsif frame == [10] && frames[n + 1] == [10]
+  total_point += if frame == [10] && frames[n + 1] == [10]
                    20 + frames[n + 2][0]
                  elsif frame == [10]
                    10 + frames[n + 1][0] + frames[n + 1][1]
