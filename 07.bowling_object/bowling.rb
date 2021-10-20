@@ -28,17 +28,16 @@ unless frames.count == 10 || frames.count == 11
   exit
 end
 
-point = 0
-frames[0..8].each_with_index do |frame, idx|
-  point += if frame[0] == 10 && frames[idx + 1][0] == 10
-             10 + frames[idx + 1].sum + frames[idx + 2][0]
-           elsif frame[0] == 10
-             10 + frames[idx + 1].sum
-           elsif frame.sum == 10
-             10 + frames[idx + 1][0]
-           else
-             frame.sum
-           end
+point = frames[0..8].each_with_index.sum do |frame, idx|
+  if frame[0] == 10 && frames[idx + 1][0] == 10
+    10 + frames[idx + 1].sum + frames[idx + 2][0]
+  elsif frame[0] == 10
+    10 + frames[idx + 1].sum
+  elsif frame.sum == 10
+    10 + frames[idx + 1][0]
+  else
+    frame.sum
+  end
 end
 
 if frames[10] && frames[10].count == 1
