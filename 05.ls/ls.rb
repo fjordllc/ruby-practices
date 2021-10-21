@@ -5,8 +5,8 @@ MAXIMUM_COLUMN = 3
 require 'optparse'
 
 def main
-  params = ARGV.getopts('a')
-  dirs = params['a'] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
+  params = ARGV.getopts('r')
+  dirs = params['r'] ? Dir.glob('*').reverse : Dir.glob('*')
 
   files = []
   total_number_of_files = dirs.size
