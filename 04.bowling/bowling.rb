@@ -21,7 +21,6 @@ frames = []
 shots.each_slice(2) do |s|
   if s == [10, 0]
     frames << [s.shift]
-    next
   else
     frames << s
   end
