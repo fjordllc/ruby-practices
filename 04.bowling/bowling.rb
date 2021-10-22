@@ -19,11 +19,11 @@ end
 # フレームごとに分割
 frames = []
 shots.each_slice(2) do |s|
-  if s == [10, 0]
-    frames << [s.shift]
-  else
-    frames << s
-  end
+  frames << if s == [10, 0]
+              [s.shift]
+            else
+              s
+            end
 end
 
 # 10フレーム目が3投ある場合、全て連結する
