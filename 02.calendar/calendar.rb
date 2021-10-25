@@ -9,9 +9,6 @@ month = params["m"]&.to_i || Date.today.mon
 START_DAY = 1
 END_DAY = Date.new(year, month, -1).day
 
-before_blank = "   " * Date.new(year, month, START_DAY).wday
-after_blank =  "\n"
-
 day_of_week_list = ["日", "月", "火", "水", "木", "金", "土"]
 
 print "      #{month}月 #{year}      \n"
@@ -36,7 +33,7 @@ def is_one_digit?(day)
   day < 10
 end
 
-print before_blank
+print "   " * Date.new(year, month, START_DAY).wday
 
 (START_DAY..END_DAY).each do |day|
   display_day = is_today?(year, month, day) ? "\e[30;43m#{day.to_s}\e[0m" : day.to_s
@@ -55,4 +52,4 @@ print before_blank
   end
 end
 
-print after_blank
+print "\n"
