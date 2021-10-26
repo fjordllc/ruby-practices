@@ -73,8 +73,8 @@ class Calendar
     end
 
     def print_calendar(month: Date.today.month, year: Date.today.year)
-      print_headers(month, year)
       if(month <= 12 && month >= 1)
+        print_headers(month, year)
         first_day = weekday_for_given_date 1, month, year
         spacing_before_first_day_of_month(first_day)
         day = 1
