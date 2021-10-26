@@ -57,7 +57,16 @@ class Calendar
       end
     end
 
+    def spacing_before_first_day_of_month first_day
+      i = 0
+      while i < first_day
+        print "    "
+        i = i + 1
+      end
+    end
+
     def weekday_for_given_date date, month, year
+      #サカモトのアルゴリズム (https://en.wikipedia.org/wiki/Determination_of_the_day_of_the_week)
       offset = [0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4]
       year = year - 1 if month < 3
       (year + year / 4 - year / 100 + year / 400 + offset[month - 1] + date) % 7
@@ -66,12 +75,8 @@ class Calendar
     def print_calendar(month: Date.today.month, year: Date.today.year)
       print_headers(month, year)
       if(month <= 12 && month >= 1)
-        weekday = weekday_for_given_date 1, month, year
-        i = 1
-        while i < weekday
-          print "     "
-          i = i + 1
-        end
+        first_day = weekday_for_given_date 1, month, year
+        spacing_before_first_day_of_month(first_day)
         day = 1
         while day <= days_in_month(month, year)
           if day < 10
@@ -79,7 +84,7 @@ class Calendar
           else
             print "#{day}  "
           end
-          if((weekday + day) % 7 == 0)
+          if((first_day + day) % 7 == 0)
             puts "\n"
           end
           day += 1
