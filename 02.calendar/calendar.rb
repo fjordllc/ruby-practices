@@ -13,7 +13,7 @@ day_of_week_list = ["日", "月", "火", "水", "木", "金", "土"]
 
 print "      #{month}月 #{year}      \n"
 
-print day_of_week_list.join(" ") + "\n"
+print "#{day_of_week_list.join(' ')}\n"
 
 def is_saturday?(year, month, day)
   Date.new(year, month, day).wday == 6
