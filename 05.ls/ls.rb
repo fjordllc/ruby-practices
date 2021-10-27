@@ -9,8 +9,7 @@ files_of_directory = options['a'] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob
 def make_divided_list(input, num)
   num_to_slice = (input.size.to_f / num).ceil
 
-  ret = []
-  input.each_slice(num_to_slice) { |row| ret << row }
+  ret = input.each_slice(num_to_slice).to_a
   ret.last << nil while ret.last.size < num_to_slice
 
   ret
