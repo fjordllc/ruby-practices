@@ -1,11 +1,9 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# 引数をとって、1投ごとに分割
 score = ARGV[0]
 scores = score.split(',')
 
-# 数字に変換
 shots = []
 scores.each do |s|
   if s == 'X' # strike
@@ -16,7 +14,6 @@ scores.each do |s|
   end
 end
 
-# フレームごとに分割
 frames = []
 shots.each_slice(2) do |s|
   frames << if s == [10, 0]
@@ -26,16 +23,14 @@ shots.each_slice(2) do |s|
             end
 end
 
-# 10フレーム目が3投ある場合、全て連結する
 if frames[9].sum == 10
   frame_last = frames.slice!(9..).flatten
   frames << frame_last
 end
 
-# スコアを計算
 point = 0
 frames.each_with_index do |frame, index|
-  if index <= 8 # 8フレーム目までの計算
+  if index <= 8
     strike = frame[0] == 10
     spare = frame.sum >= 10
     next_score_first = frames[index + 1][0]
@@ -50,9 +45,6 @@ frames.each_with_index do |frame, index|
              end
   else
     point += frame.sum
-    p "#{index + 1}投目: #{frame} #{point}点"
   end
-
-  p "#{index + 1}投目: #{frame} #{point}点"
 end
 puts point
