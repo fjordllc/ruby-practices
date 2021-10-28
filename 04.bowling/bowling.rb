@@ -35,12 +35,12 @@ end
 # スコアを計算
 point = 0
 frames.each_with_index do |frame, index|
-  strike = frame.size == 1 && frame[0] == 10
-  spare = frame.size == 2 && frame.sum == 10
-  next_score_first = frames[index + 1][0] if frames[index + 1]
-  next_score_second = frames[index + 1][1] || frames[index + 2][0] if frames[index + 1] || frames[index + 2]
-
   if index <= 8 # 8フレーム目までの計算
+    strike = frame[0] == 10
+    spare = frame.sum >= 10
+    next_score_first = frames[index + 1][0]
+    next_score_second = frames[index + 1][1] || frames[index + 2][0]
+
     point += if strike
                10 + next_score_first + next_score_second
              elsif spare
@@ -48,10 +48,9 @@ frames.each_with_index do |frame, index|
              else
                frame.sum
              end
-  elsif index == 9 # 10フレーム目の計算
+  else
     point += frame.sum
     p "#{index + 1}投目: #{frame} #{point}点"
-    break
   end
 
   p "#{index + 1}投目: #{frame} #{point}点"
