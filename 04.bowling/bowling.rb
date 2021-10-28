@@ -32,7 +32,7 @@ point = 0
 frames.each_with_index do |frame, index|
   if index <= 8
     strike = frame[0] == 10
-    spare = frame.sum >= 10
+    spare = frame.size >= 2 && frame.sum >= 10
     next_score_first = frames[index + 1][0]
     next_score_second = frames[index + 1][1] || frames[index + 2][0]
 
