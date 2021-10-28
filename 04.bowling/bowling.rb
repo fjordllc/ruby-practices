@@ -28,9 +28,8 @@ end
 
 # 10フレーム目が3投ある場合、全て連結する
 if frames[9].sum == 10
-  frames[9] += frames[10] if frames[10]
-  frames[9] += frames[11] if frames[11]
-  frames.slice!(10, frames.size)
+  frame_last = frames.slice!(9..).flatten
+  frames << frame_last
 end
 
 # スコアを計算
