@@ -28,23 +28,23 @@ if frames[9].sum == 10
   frames << frame_last
 end
 
-point = 0
-frames.each_with_index do |frame, index|
-  if index <= 8
-    strike = frame[0] == 10
-    spare = frame.size >= 2 && frame.sum >= 10
-    next_score_first = frames[index + 1][0]
-    next_score_second = frames[index + 1][1] || frames[index + 2][0]
+point =
+  frames.each_with_index.sum do |frame, index|
+    if index <= 8
+      strike = frame[0] == 10
+      spare = !strike && frame.sum == 10
+      next_score_first = frames[index + 1][0]
+      next_score_second = frames[index + 1][1] || frames[index + 2][0]
 
-    point += if strike
-               10 + next_score_first + next_score_second
-             elsif spare
-               10 + next_score_first
-             else
-               frame.sum
-             end
-  else
-    point += frame.sum
+      if strike
+        10 + next_score_first + next_score_second
+      elsif spare
+        10 + next_score_first
+      else
+        frame.sum
+      end
+    else
+      frame.sum
+    end
   end
-end
 puts point
