@@ -1,7 +1,9 @@
-base = ARGV[0].split(",")
+# frozen_string_literal: true
+
+base = ARGV[0].split(',')
 score = []
 base.each do |value|
-  if value == "X"
+  if value == 'X'
     score << 10
     score << 0
   else
@@ -25,28 +27,23 @@ end
 
 total_points = 0
 frames.each_with_index do |frame, index|
+  total_points += frame.sum
   # 最終フレームの場合
-  if index == frames.size - 1
-    total_points += frame.sum
-    break
+  break if index == frames.size - 1
+
   # ストライクの場合
-  elsif frame[0] == 10
-    # 最初の投球の次の投球もストライクの場合
-    if frames[index + 1][0] == 10
-      total_points += frame.sum
-      total_points += frames[index + 1][0]
-      total_points += index + 1 == frames.size - 1 ? frames[index + 1][2] : frames[index + 2][0]
-    else 
-      total_points += frame.sum
-      total_points += frames[index + 1][0]
-      total_points += frames[index + 1][1]
-    end
+  if frame[0] == 10
+    total_points += frames[index + 1][0]
+    total_points +=
+      # 最初の投球の次の投球もストライクの場合
+      if frames[index + 1][0] == 10
+        index + 1 == frames.size - 1 ? frames[index + 1][2] : frames[index + 2][0]
+      else
+        frames[index + 1][1]
+      end
   # スペアの場合
   elsif frame[0] != 10 && frame.sum == 10
-    total_points += frame.sum
     total_points += frames[index + 1][0]
-  else
-    total_points += frame.sum
   end
 end
 
