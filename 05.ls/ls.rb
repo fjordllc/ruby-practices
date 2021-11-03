@@ -61,6 +61,10 @@ def make_file_mode(file_stat)
   ].join
 end
 
+def make_last_modified_time(file_stat)
+  file_stat.mtime.strftime(file_stat.mtime.between?(Time.now - 15_552_000, Time.now) ? '%_m %e %R' : '%_m %e  %Y')
+end
+
 def show_total_of_blocks(files)
   total = 0
 
