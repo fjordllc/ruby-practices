@@ -33,14 +33,6 @@ def show_files(files)
   end
 end
 
-file_stat_list = files_of_directory.map { |file| File::Stat.new(file) }
-numbers_of_adjustment_width = {
-  max_digit_of_num_of_link: file_stat_list.map { |stat| stat.nlink.to_s.size }.max,
-  max_user_name_length: file_stat_list.map { |stat| Etc.getpwuid(stat.uid).name.size }.max,
-  max_group_name_length: file_stat_list.map { |stat| Etc.getgrgid(stat.gid).name.size }.max,
-  max_digit_of_file_size: file_stat_list.map { |stat| stat.size.to_s.size }.max
-}
-
 def convert_to_symbol(str)
   {
     '0' => '---',
@@ -63,6 +55,16 @@ end
 
 def make_last_modified_time(file_stat)
   file_stat.mtime.strftime(file_stat.mtime.between?(Time.now - 15_552_000, Time.now) ? '%_m %e %R' : '%_m %e  %Y')
+end
+
+def make_adjustment_width_numbers(files)
+  file_stat_list = files.map { |file| File::Stat.new(file) }
+  {
+    max_digit_of_num_of_link: file_stat_list.map { |stat| stat.nlink.to_s.size }.max,
+    max_owner_name_length: file_stat_list.map { |stat| Etc.getpwuid(stat.uid).name.size }.max,
+    max_group_name_length: file_stat_list.map { |stat| Etc.getgrgid(stat.gid).name.size }.max,
+    max_digit_of_num_of_byte: file_stat_list.map { |stat| stat.size.to_s.size }.max
+  }
 end
 
 def show_total_of_blocks(files)
