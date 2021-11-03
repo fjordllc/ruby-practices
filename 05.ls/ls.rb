@@ -91,8 +91,12 @@ def show_total_of_blocks(files)
   puts "total #{total}"
 end
 
-divided_list = make_divided_list(files_of_directory, 3)
-adjustment_width = make_adjustment_width(files_of_directory, 8)
+def show_file_stats(files)
+  display_format_list = make_display_format_list(files)
+  file_stats = display_format_list.map { |stat| stat.join(' ') }.join("\n")
+  show_total_of_blocks(files)
+  puts file_stats
+end
 
 if options['l'] == true
   show_total_of_blocks(files_of_directory)
