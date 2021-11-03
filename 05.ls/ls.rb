@@ -77,26 +77,21 @@ def show_total_of_blocks(files)
   puts "total #{total}"
 end
 
-def show_file_stats(files, numbers)
-  files.each do |file|
+def make_display_format_list(files)
+  numbers = make_adjustment_width_numbers(files)
+
+  files.map do |file|
     fs = File::Stat.new(file)
-    file_permission = [
-      fs.ftype == 'file' ? '-' : fs.ftype[0],
-      fs.mode.to_s(8)[-3, 3].chars.map { |num| convert_to_permission(num) }.join
-    ].join
-    time_format = fs.mtime.between?(Time.now - 15_552_000, Time.now) ? '%_m %e %R' : '%_m %e  %Y'
 
-    file_stats = [
-      file_permission,
+    [
+      make_file_mode(fs),
       fs.nlink.to_s.rjust(numbers[:max_digit_of_num_of_link] + 1),
-      Etc.getpwuid(fs.uid).name.ljust(numbers[:max_user_name_length] + 1),
+      Etc.getpwuid(fs.uid).name.ljust(numbers[:max_owner_name_length] + 1),
       Etc.getgrgid(fs.gid).name.ljust(numbers[:max_group_name_length] + 1),
-      fs.size.to_s.rjust(numbers[:max_digit_of_file_size]),
-      fs.mtime.strftime(time_format),
+      fs.size.to_s.rjust(numbers[:max_digit_of_num_of_byte]),
+      make_last_modified_time(fs),
       file
-    ].join(' ')
-
-    puts file_stats
+    ]
   end
 end
 
