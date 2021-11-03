@@ -21,10 +21,13 @@ def make_adjustment_width(files, multiple)
   (max_filename_length / multiple + 1) * multiple
 end
 
-def show_files(list, num)
-  list.transpose.each do |files|
-    files.each do |file|
-      print file.to_s.ljust(num)
+def show_files(files)
+  divided_list = make_divided_list(files, 3)
+  adjustment_width = make_adjustment_width(files, 8)
+
+  divided_list.transpose.each do |files_divided|
+    files_divided.each do |file|
+      print file.to_s.ljust(adjustment_width)
     end
     print "\n"
   end
