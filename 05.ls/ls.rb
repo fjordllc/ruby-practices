@@ -48,7 +48,7 @@ end
 
 def make_file_mode(file_stat)
   [
-    file_stat.ftype == 'file' ? '-' : fs.ftype[0],
+    file_stat.ftype == 'file' ? '-' : file_stat.ftype[0],
     file_stat.mode.to_s(8)[-3, 3].chars.map { |str| convert_to_symbol(str) }.join
   ].join
 end
@@ -67,13 +67,12 @@ def make_adjustment_width_numbers(files)
   }
 end
 
-
 def make_display_format_list(files)
   numbers = make_adjustment_width_numbers(files)
-  
+
   files.map do |file|
     fs = File::Stat.new(file)
-    
+
     [
       make_file_mode(fs),
       fs.nlink.to_s.rjust(numbers[:max_digit_of_num_of_link] + 1),
@@ -98,9 +97,4 @@ def show_file_stats(files)
   puts file_stats
 end
 
-if options['l'] == true
-  show_total_of_blocks(files_of_directory)
-  show_file_stats(files_of_directory, numbers_of_adjustment_width)
-else
-  show_files(divided_list, adjustment_width)
-end
+options['l'] == true ? show_file_stats(files_of_directory) : show_files(files_of_directory)
