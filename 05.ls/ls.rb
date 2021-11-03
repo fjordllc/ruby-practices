@@ -67,22 +67,13 @@ def make_adjustment_width_numbers(files)
   }
 end
 
-def show_total_of_blocks(files)
-  total = 0
-
-  files.each do |file|
-    file = File::Stat.new(file)
-    total += file.blocks
-  end
-  puts "total #{total}"
-end
 
 def make_display_format_list(files)
   numbers = make_adjustment_width_numbers(files)
-
+  
   files.map do |file|
     fs = File::Stat.new(file)
-
+    
     [
       make_file_mode(fs),
       fs.nlink.to_s.rjust(numbers[:max_digit_of_num_of_link] + 1),
@@ -93,6 +84,11 @@ def make_display_format_list(files)
       file
     ]
   end
+end
+
+def show_total_of_blocks(files)
+  total = files.map { |file| File::Stat.new(file).blocks }.sum
+  puts "total #{total}"
 end
 
 divided_list = make_divided_list(files_of_directory, 3)
