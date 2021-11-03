@@ -54,6 +54,13 @@ def convert_to_symbol(str)
   }[str]
 end
 
+def make_file_mode(file_stat)
+  [
+    file_stat.ftype == 'file' ? '-' : fs.ftype[0],
+    file_stat.mode.to_s(8)[-3, 3].chars.map { |str| convert_to_symbol(str) }.join
+  ].join
+end
+
 def show_total_of_blocks(files)
   total = 0
 
