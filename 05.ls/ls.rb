@@ -41,7 +41,7 @@ numbers_of_adjustment_width = {
   max_digit_of_file_size: file_stat_list.map { |stat| stat.size.to_s.size }.max
 }
 
-def convert_to_permission(num)
+def convert_to_symbol(str)
   {
     '0' => '---',
     '1' => '--x',
@@ -51,7 +51,7 @@ def convert_to_permission(num)
     '5' => 'r-x',
     '6' => 'rw-',
     '7' => 'rwx'
-  }[num]
+  }[str]
 end
 
 def show_total_of_blocks(files)
