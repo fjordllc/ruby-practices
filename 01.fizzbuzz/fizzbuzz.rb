@@ -11,7 +11,6 @@ def print_results
     else
       p i
     end
-    i += 1
   end
 end
 
