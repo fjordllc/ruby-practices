@@ -36,11 +36,9 @@ frames.each.with_index(1) do |frame, index|
       else
         frames[index][1]
       end
-
   # スペアの場合
   elsif frame.sum == 10
     total_points += frames[index][0]
-
   end
 end
 
