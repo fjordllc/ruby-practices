@@ -12,18 +12,14 @@ base.each do |value|
 end
 
 frames = []
-frame_count = 1
 MAX_FRAME_COUNT = 10
 
-while frame_count <= MAX_FRAME_COUNT
-  if frame_count == MAX_FRAME_COUNT
-    frames << score.slice((frame_count - 1) * 2..-1)
-    break
-  else
-    frames << score.slice((frame_count - 1) * 2, 2)
-    frame_count += 1
-  end
+while frames.count < (MAX_FRAME_COUNT - 1)
+  # 9フレーム目までの処理
+  frames << score.slice((frames.count) * 2, 2)
 end
+# 10フレーム目までの処理
+frames << score.slice((frames.count) * 2..-1)
 
 total_points = 0
 frames.each_with_index do |frame, index|
@@ -42,7 +38,7 @@ frames.each_with_index do |frame, index|
         frames[index + 1][1]
       end
   # スペアの場合
-  elsif frame[0] != 10 && frame.sum == 10
+  elsif frame.sum == 10
     total_points += frames[index + 1][0]
   end
 end
