@@ -4,8 +4,16 @@
 require 'optparse'
 require 'etc'
 
-options = ARGV.getopts('l')
-files_of_directory = Dir.glob('*')
+options = ARGV.getopts('alr')
+files_of_directory = if options['a'] == true && options['r'] == true
+                       Dir.glob('*', File::FNM_DOTMATCH).reverse
+                     elsif options['a'] == true
+                       Dir.glob('*', File::FNM_DOTMATCH)
+                     elsif options['r'] == true
+                       Dir.glob('*').reverse
+                     else
+                       Dir.glob('*')
+                     end
 
 def make_divided_list(files, num)
   num_to_slice = (files.size.to_f / num).ceil
