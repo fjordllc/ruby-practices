@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 def build_display_column
   files = Dir.glob("*")
   display_column_size = (files.size / 3.0).ceil
