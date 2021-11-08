@@ -5,8 +5,7 @@ argument.push(Dir.pwd) if argument.size <= 0
 
 def gets_argument(argument)
   counter = 0
-  argument.each do |p|
-    counter += 1
+  argument.each_with_index do |p, idx|
 		#ファイルの情報を受け取って、変数に代入
     get_file = Dir.glob('*', base: p)
 		#ファイルの中で一番長い文字の値を取得
@@ -17,7 +16,7 @@ def gets_argument(argument)
     make_jam(get_file)
     out_puts(@final_sort_order)
 		#引数が2個以上与えられた時、一つ目の出力と二つ目の出力の間に空行
-    if counter == 1 && argument.size >= 2
+    if idx >= 0 && argument.size >= 2
       puts '  '
       puts '  '
     end
@@ -55,4 +54,5 @@ def out_puts(_final_sort_order)
     end
   end
 end
+
 gets_argument(argument)
