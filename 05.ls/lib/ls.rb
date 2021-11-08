@@ -25,13 +25,8 @@ end
 
 def make_jam(files_name)
 	#3つに分割する際に、３で割り切れない時はnilで帳尻合わせ
-  case files_name.size % 3
-  when 1
-    2.times do
-      files_name.push(nil)
-    end
-  when 2
-    files_name.push(nil)
+  (3 - files_name.size % 3).times do 
+	files_name.push(nil)
   end
 	#3行に出力するためにファイル数を３つに均等に分割
   @one_third_mom = files_name.size / 3
