@@ -1,20 +1,4 @@
-# frozen_string_literal: true
-
-argument = ARGV
-argument.push(Dir.pwd) if argument.size <= 0
-
-def gets_argument(argument)
-  counter = 0
-  argument.each_with_index do |p, idx|
-		#ファイルの情報を受け取って、変数に代入
-    files_name = Dir.glob('*', base: p)
-		#ファイルの中で一番長い文字の値を取得
-    argument_of_size = files_name.map(&:size)
-    @maximum_size = argument_of_size.max
-		#引数が2個以上与えられた時、ディレクトリ名：のように出力
-    puts "#{p}:" if argument.size > 1
-    make_jam(files_name)
-    out_puts(@final_sort_order)
+puts(@final_sort_order)
 		#引数が2個以上与えられた時、一つ目の出力と二つ目の出力の間に空行
     if idx >= 0 && argument.size >= 2
       puts '  '
@@ -34,7 +18,7 @@ def make_jam(files_name)
   @final_sort_order = @one_third_file.transpose
 end
 
-def out_puts(_final_sort_order)
+def outputs(_final_sort_order)
   count = 0
   @final_sort_order.each do |e|
     e.each do |f|
