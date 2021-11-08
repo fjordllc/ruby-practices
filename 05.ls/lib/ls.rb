@@ -7,13 +7,13 @@ def gets_argument(argument)
   counter = 0
   argument.each_with_index do |p, idx|
 		#ファイルの情報を受け取って、変数に代入
-    get_file = Dir.glob('*', base: p)
+    files_name = Dir.glob('*', base: p)
 		#ファイルの中で一番長い文字の値を取得
-    argument_of_size = get_file.map(&:size)
+    argument_of_size = files_name.map(&:size)
     @maximum_size = argument_of_size.max
 		#引数が2個以上与えられた時、ディレクトリ名：のように出力
     puts "#{p}:" if argument.size > 1
-    make_jam(get_file)
+    make_jam(files_name)
     out_puts(@final_sort_order)
 		#引数が2個以上与えられた時、一つ目の出力と二つ目の出力の間に空行
     if idx >= 0 && argument.size >= 2
@@ -23,19 +23,19 @@ def gets_argument(argument)
   end
 end
 
-def make_jam(get_file)
+def make_jam(files_name)
 	#3つに分割する際に、３で割り切れない時はnilで帳尻合わせ
-  case get_file.size % 3
+  case files_name.size % 3
   when 1
     2.times do
-      get_file.push(nil)
+      files_name.push(nil)
     end
   when 2
-    get_file.push(nil)
+    files_name.push(nil)
   end
 	#3行に出力するためにファイル数を３つに均等に分割
-  @one_third_mom = get_file.size / 3
-  @one_third_file = get_file.each_slice(@one_third_mom).to_a
+  @one_third_mom = files_name.size / 3
+  @one_third_file = files_name.each_slice(@one_third_mom).to_a
   @final_sort_order = @one_third_file.transpose
 end
 
