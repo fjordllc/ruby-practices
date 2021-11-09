@@ -34,6 +34,7 @@ def make_jam(files_name)
   @final_sort_order = @one_third_file.transpose
 end
 
+#@final_sort_order配列の最後から２番目までを出力
 def outputs(_final_sort_order)
   count = 0
   @final_sort_order[0...-2].each do |e|
@@ -50,6 +51,7 @@ def outputs(_final_sort_order)
   end
 end
 
+#@final_sort_order配列の最後の２つを出力
 def outputs2(_final_sort_order2)
   counters = 0
   @final_sort_order[-2..].each do |r|
