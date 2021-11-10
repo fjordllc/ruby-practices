@@ -29,9 +29,8 @@ def print_calendar(month: Date.today.month, year: Date.today.year)
   date = Date.new(year, month, 1)
   first_wday = date.wday
   print(' ' * 4 * first_wday)
-  first_day_of_month = Date.new(year, month, 1)
   last_day_of_month = Date.new(year, month, -1)
-  (first_day_of_month..last_day_of_month).each do |d|
+  (date..last_day_of_month).each do |d|
     print d.mday.to_s.ljust(4)
     puts "\n" if d.saturday?
   end
