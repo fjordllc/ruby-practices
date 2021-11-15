@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-COLUMN_COUNT = 3.0
-CURRENT_DIRECTORY_FILES = Dir.glob('*')
-
 def calc_file_count_per_column(files, column_count)
   (files.size / column_count).ceil
 end
