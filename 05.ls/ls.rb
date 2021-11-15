@@ -8,10 +8,12 @@ def calc_file_count_per_column(files, column_count)
 end
 
 def build_display_column
-  file_count_per_column = calc_file_count_per_column(CURRENT_DIRECTORY_FILES, COLUMN_COUNT)
+  column_count = 3.0
+  current_directory_files = Dir.glob('*')
 
+  file_count_per_column = calc_file_count_per_column(current_directory_files, column_count)
   devided_file_list = []
-  CURRENT_DIRECTORY_FILES.each_slice(file_count_per_column) { |file| devided_file_list << file }
+  current_directory_files.each_slice(file_count_per_column) { |file| devided_file_list << file }
 
   adjusted_file_list = []
   devided_file_list.each do |column|
@@ -23,19 +25,25 @@ def build_display_column
   if last_column.size != file_count_per_column
     empty_column_data_size = file_count_per_column - last_column.size
     count = 0
-    while count < empty_column_data_size
+    while last_column.size < empty_column_data_size
       last_column << ''
       count += 1
     end
   end
-  adjusted_file_list.flatten
+
+  adjusted_file_list.transpose
 end
 
 def display_files
-  file_count_per_column = calc_file_count_per_column(CURRENT_DIRECTORY_FILES, COLUMN_COUNT)
-  (0...file_count_per_column).each do |n|
-    row = build_display_column.select.with_index { |_, i| i % file_count_per_column == n }
-    row.each.with_index { |row_data, i| print i % 3 == 2 ? "#{row_data}\n" : row_data }
+  build_display_column.each do |list|
+    list.each do |value|
+      suffix = "\n"
+      if value == list.last
+        print "#{value}#{suffix}"
+      else
+        print value
+      end
+    end
   end
 end
 
