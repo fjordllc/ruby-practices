@@ -25,7 +25,7 @@ def build_display_column
   if last_column.size != file_count_per_column
     empty_column_data_size = file_count_per_column - last_column.size
     count = 0
-    while last_column.size < empty_column_data_size
+    while count < empty_column_data_size
       last_column << ''
       count += 1
     end
