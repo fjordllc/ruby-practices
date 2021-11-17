@@ -14,23 +14,19 @@ end
 
 frames = []
 shots.each_slice(2) do |s|
-  if s == [10, 0]
-    frames << [s.shift]
+  frames << if s == [10, 0]
+    [s.shift]
   else
-    frames << s
+    s
   end
 
-  if frames[10]
-    frames[9].concat(frames[10])
-  end
+  frames[9].concat(frames[10]) if frames[10]
   frames.slice!(10)
 end
 
 point = 0
-strike = []
-spare = []
 frames.each_with_index do |frame, i|
-  if frame[0] == 10 && i != 9 #strikeかつ、10フレーム目は除外
+  if frame[0] == 10 && i != 9 # strikeかつ、10フレーム目は除外
     point += frame.sum
     i += 1
     point += frames[i][0]
@@ -41,7 +37,7 @@ frames.each_with_index do |frame, i|
     else
       point += frames[i][1]
     end
-  elsif frame.sum == 10 && i != 9 #spareかつ、10フレーム目は除外
+  elsif frame.sum == 10 && i != 9 # spareかつ、10フレーム目は除外
     point += frame.sum
     i += 1
     point += frames[i][0]
