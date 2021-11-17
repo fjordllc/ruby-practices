@@ -9,11 +9,11 @@ def build_display_column
   current_directory_files = Dir.glob('*')
 
   file_count_per_column = calc_file_count_per_column(current_directory_files, column_count)
-  divided_file_list = []
-  current_directory_files.each_slice(file_count_per_column) { |file| divided_file_list << file }
+  divided_files = []
+  current_directory_files.each_slice(file_count_per_column) { |file| divided_files << file }
 
   adjusted_file_list = []
-  divided_file_list.each do |column|
+  divided_files.each do |column|
     max_str_count = column.max_by(&:size).size
     adjusted_file_list << column.map { |v| v.ljust(max_str_count + 2) }
   end
