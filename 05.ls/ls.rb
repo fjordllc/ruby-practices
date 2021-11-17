@@ -9,8 +9,7 @@ def build_display_column
   current_directory_files = Dir.glob('*')
 
   file_count_per_column = calc_file_count_per_column(current_directory_files, column_count)
-  divided_files = []
-  current_directory_files.each_slice(file_count_per_column) { |file| divided_files << file }
+  divided_files = current_directory_files.each_slice(file_count_per_column).to_a
 
   adjusted_file_list = []
   divided_files.each do |column|
