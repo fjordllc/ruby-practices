@@ -34,7 +34,7 @@ class Game
     frame_instance_ary.each_with_index do |frame, i|
       if frame.first_shot.score == 10 && !last_frame?(i)
         score.push(frame.score + add_strike_points(i))
-      elsif frame.score == 10
+      elsif frame.score == 10 && !last_frame?(i)
         score.push(frame.score + add_spare_points(i))
       else
         score.push(frame.score)
