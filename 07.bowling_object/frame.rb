@@ -13,4 +13,12 @@ class Frame
     return 10 if first_shot.score == 'X'
     [first_shot.score + second_shot.score + @third_shot.score].sum
   end
+
+  def strike?
+    first_shot.score == 10 
+  end
+
+  def spere?
+    score == 10
+  end
 end

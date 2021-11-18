@@ -32,9 +32,9 @@ class Game
   def score
     score = []
     frame_instance_ary.each_with_index do |frame, i|
-      if frame.first_shot.score == 10 && !last_frame?(i)
+      if frame.strike? && !last_frame?(i)
         score.push(frame.score + add_strike_points(i))
-      elsif frame.score == 10 && !last_frame?(i)
+      elsif frame.spere? && !last_frame?(i)
         score.push(frame.score + add_spare_points(i))
       else
         score.push(frame.score)
@@ -50,13 +50,11 @@ class Game
   private
 
   def add_strike_points(index)
-    # 次のフレームもストライクだった場合、次々のものを見る
-    # ストライクだった場合、フレーム両方に加点する
-    next_frame = frame_instance_ary[index + 1]
+    next_frame = next_frame(index)
     next_next_frame = frame_instance_ary[index + 2]
     if ninth_frame?(index)
       next_frame.first_shot.score + next_frame.second_shot.score
-    elsif next_frame.first_shot.score == 10
+    elsif next_frame.strike?
       next_frame.score + next_next_frame.first_shot.score
     else
       next_frame.score
@@ -64,8 +62,7 @@ class Game
   end
 
   def add_spare_points(index)
-    next_frame = frame_instance_ary[index + 1]
-    next_frame.first_shot.score
+    next_frame(index).first_shot.score
   end
 
   def last_frame?(frame_index)
@@ -76,5 +73,9 @@ class Game
   def ninth_frame?(frame_index)
     ninth_frame = 8
     ninth_frame == frame_index
+  end
+
+  def next_frame(index)
+    frame_instance_ary[index + 1]
   end
 end
