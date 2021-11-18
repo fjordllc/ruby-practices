@@ -3,67 +3,133 @@
 argument = ARGV
 argument.push(Dir.pwd) if argument.size <= 0
 
-def gets_argument(argument)
-  argument.each_with_index do |p, idx|
-    # ファイルの情報を受け取って、変数に代入
-    files_name = Dir.glob('*', base: p)
-    # ファイルの中で一番長い文字の値を取得
-    argument_of_size = files_name.map(&:size)
-    @maximum_size = argument_of_size.max
-    # 引数が2個以上与えられた時、ディレクトリ名：のように出力
-    puts "#{p}:" if argument.size > 1
-    make_jam(files_name)
-    outputs(@final_sort_order)
-    outputs2(@final_sort_order)
-    # 引数が2個以上与えられた時、一つ目の出力と二つ目の出力の間に空行
-    if idx >= 0 && argument.size >= 2
-      puts '  '
-      puts '  '
+# 指定ディレクトリの中のファイル情報を取得
+def get_argument(directory)
+  Dir.glob('*', base: directory)
+end
+
+# ファイルの個数を取得
+def get_argument_size(directory)
+  get_argument(directory).size
+end
+
+# ファイルの最大の文字数の値を取得
+def get_maximum_size(directory)
+  argument_of_size = get_argument(directory).map(&:size)
+  argument_of_size.max
+end
+
+# 3の倍数にファイルの要素数を調整
+def complete_array(directory)
+  add_nil_to_files_name = get_argument(directory)
+  if get_argument_size(directory) % 3 != 0
+    (3 - get_argument_size(directory) % 3).times do
+      add_nil_to_files_name.push(nil)
     end
   end
+  add_nil_to_files_name
 end
 
-def make_jam(files_name)
-  # 3つに分割する際に、３で割り切れない時はnilで帳尻合わせ
-  (3 - files_name.size % 3).times do
-    files_name.push(nil)
-  end
-  # 3行に出力するためにファイル数を３つに均等に分割
-  @one_third_mom = files_name.size / 3
-  @one_third_file = files_name.each_slice(@one_third_mom).to_a
-  @final_sort_order = @one_third_file.transpose
+# 実際の出力に合わせて転置
+def one_third_file(directory)
+  one_third_mom = complete_array(directory).size / 3
+  one_third_file = complete_array(directory).each_slice(one_third_mom).to_a
+  one_third_file.transpose
 end
 
-#@final_sort_order配列の最後から２番目までを出力
-def outputs(_final_sort_order)
-  count = 0
-  @final_sort_order[0...-2].each do |e|
-    e.each do |f|
-      count += 1
-      # 3つごと出力
-      if (count % 3).zero? && !f.nil?
-        puts f
-      # 一番文字数の多いファイル+5に幅を合わせる
-      elsif count % 3 != 0 && !f.nil?
-        print f.ljust(@maximum_size + 5)
-      end
-    end
-  end
-end
-
-#@final_sort_order配列の最後の２つを出力
-def outputs2(_final_sort_order2)
+# ３列になるとように出力
+def output(directory)
   counters = 0
-  @final_sort_order[-2..].each do |r|
-    r.each do |x|
+  one_third_file(directory).each do |files|
+    files.each do |file|
       counters += 1
-      if (counters % 4).zero?
-        puts x
-      elsif !x.nil?
-        print x.ljust(@maximum_size + 5)
+      if (counters % 3).zero? && !file.nil?
+        puts file
+      elsif counters % 3 != 0 && !file.nil?
+        print file.ljust(get_maximum_size(directory) + 5)
       end
     end
   end
 end
 
-gets_argument(argument)
+# 3倍＋１のファイル数の時に合わせて出力（ファイル数が、9個以上の時）
+def output_files_size_is_special_big(directory)
+  count = 0
+  counters = 0
+  one_third_file(directory)[0...-2].each do |files|
+    files.each do |file|
+      counters += 1
+      # 3つごと出力
+      if (counters % 3).zero? && !file.nil?
+        puts file
+      # 一番文字数の多いファイル+5に幅を合わせる
+      elsif counters % 3 != 0 && !file.nil?
+        print file.ljust(get_maximum_size(directory) + 5)
+      end
+    end
+  end
+  one_third_file(directory)[-2..].each do |files|
+    files.each do |file|
+      count += 1
+      if (count % 4).zero?
+        puts file
+      elsif !file.nil?
+        print file.ljust(get_maximum_size(directory) + 5)
+      end
+    end
+  end
+end
+
+# 3倍＋１のファイル数の時に合わせて出力（ファイル数が、9個未満の時）
+def output_when_files_size_is_special(directory)
+  count = 0
+  one_third_file(directory)[-2..].each do |files|
+    files.each do |file|
+      count += 1
+      if (count % 4).zero?
+        puts file
+      elsif !file.nil?
+        print file.ljust(get_maximum_size(directory) + 5)
+      end
+    end
+  end
+end
+
+# 引数を一つまたは渡さない時の出力
+def final_action_when_argument_is_single(argument)
+  argument.each do |directory|
+    if (get_argument_size(directory) % 3) == 1 && one_third_file(directory).size >= 3
+      output_files_size_is_special_big(directory)
+    elsif (get_argument_size(directory) % 3) == 1
+      output_when_files_size_is_special(directory)
+    else
+      output(directory)
+    end
+  end
+end
+
+# 引数を2個以上渡した時の出力(改行を入れるため)
+def final_action_when_argument_is_multi(argument)
+  argument.each_with_index do |directory, idx|
+    if (get_argument_size(argument[idx - 1]) % 3).zero? && argument.size >= 2 && idx >= 1
+      puts ' '
+    elsif idx >= 1 && get_argument_size(argument[idx - 1]) % 3 != 0 && argument.size >= 2
+      puts ' '
+      puts ' '
+    end
+    puts "#{directory}:"
+    if (get_argument_size(directory) % 3) == 1 && one_third_file(directory).size >= 3
+      output_files_size_is_special_big(directory)
+    elsif (get_argument_size(directory) % 3) == 1
+      output_when_files_size_is_special(directory)
+    else
+      output(directory)
+    end
+  end
+end
+
+if argument.size > 1
+  final_action_when_argument_is_multi(argument)
+else
+  final_action_when_argument_is_single(argument)
+end
