@@ -6,12 +6,12 @@ class GameTest < Minitest::Test
     @game = Game.new("6,3,9,1,0,3,8,2,7,3,X,3,1,8,2,X,X,4,5")
   end
 
-  def test_frame_ary
-    assert_equal [["6", "3"], ["9", "1"], ["0", "3"], ["8", "2"], ["7", "3"], ["X"], ["3", "1"], ["8", "2"], ["X"], ["X", "4", "5"]], @game.frame_ary
+  def test_frames
+    assert_equal [["6", "3"], ["9", "1"], ["0", "3"], ["8", "2"], ["7", "3"], ["X"], ["3", "1"], ["8", "2"], ["X"], ["X", "4", "5"]], @game.frames
   end
 
-  def test_frame_instance_ary
-    assert_equal 10, @game.frame_instance_ary.size
+  def test_frame_instances
+    assert_equal 10, @game.frame_instances.size
   end
 
   def test_score
