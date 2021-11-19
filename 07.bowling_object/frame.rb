@@ -18,7 +18,7 @@ class Frame
     first_shot.score == 10 
   end
 
-  def spere?
+  def spare?
     score == 10
   end
 end
