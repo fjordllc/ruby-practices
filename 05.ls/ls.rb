@@ -18,10 +18,7 @@ def build_display_column
   end
 
   last_column = adjusted_file_list.last
-  if last_column.size != file_count_per_column
-    empty_column_data_size = file_count_per_column - last_column.size
-    empty_column_data_size.times { last_column << '' }
-  end
+  (file_count_per_column - last_column.size).times { last_column << '' }
 
   adjusted_file_list.transpose
 end
