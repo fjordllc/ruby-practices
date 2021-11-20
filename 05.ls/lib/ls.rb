@@ -8,11 +8,6 @@ def get_argument(directory)
   Dir.glob('*', base: directory)
 end
 
-# ファイルの個数を取得
-def get_argument_size(directory)
-  get_argument(directory).size
-end
-
 # ファイルの最大の文字数の値を取得
 def get_maximum_size(directory)
   argument_of_size = get_argument(directory).map(&:size)
@@ -21,9 +16,10 @@ end
 
 # 3の倍数にファイルの要素数を調整
 def complete_array(directory)
+  numbers_of_files = get_argument(directory).size
   add_nil_to_files_name = get_argument(directory)
-  if get_argument_size(directory) % 3 != 0
-    (3 - get_argument_size(directory) % 3).times do
+  if numbers_of_files % 3 != 0
+    (3 - numbers_of_files % 3).times do
       add_nil_to_files_name.push(nil)
     end
   end
@@ -98,9 +94,10 @@ end
 # 引数を一つまたは渡さない時の出力
 def final_action_when_argument_is_single(argument)
   argument.each do |directory|
-    if (get_argument_size(directory) % 3) == 1 && one_third_file(directory).size >= 3
+    numbers_of_files = get_argument(directory).size
+    if (numbers_of_files % 3) == 1 && one_third_file(directory).size >= 3
       output_files_size_is_special_big(directory)
-    elsif (get_argument_size(directory) % 3) == 1
+    elsif (numbers_of_files % 3) == 1
       output_when_files_size_is_special(directory)
     else
       output(directory)
@@ -111,16 +108,18 @@ end
 # 引数を2個以上渡した時の出力(改行を入れるため)
 def final_action_when_argument_is_multi(argument)
   argument.each_with_index do |directory, idx|
-    if (get_argument_size(argument[idx - 1]) % 3).zero? && argument.size >= 2 && idx >= 1
+    last_numbers_of_files = get_argument(argument[idx - 1]).size
+    numbers_of_files = get_argument(directory).size
+    if (last_numbers_of_files % 3).zero? && argument.size >= 2 && idx >= 1
       puts ' '
-    elsif idx >= 1 && get_argument_size(argument[idx - 1]) % 3 != 0 && argument.size >= 2
+    elsif idx >= 1 && last_numbers_of_files % 3 != 0 && argument.size >= 2
       puts ' '
       puts ' '
     end
     puts "#{directory}:"
-    if (get_argument_size(directory) % 3) == 1 && one_third_file(directory).size >= 3
+    if (numbers_of_files % 3) == 1 && one_third_file(directory).size >= 3
       output_files_size_is_special_big(directory)
-    elsif (get_argument_size(directory) % 3) == 1
+    elsif (numbers_of_files % 3) == 1
       output_when_files_size_is_special(directory)
     else
       output(directory)
