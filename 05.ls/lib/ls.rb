@@ -92,7 +92,7 @@ def output_when_files_size_is_special(directory)
 end
 
 # 引数を一つまたは渡さない時の出力
-def final_action_when_argument_is_single(argument)
+def branch_output_type_when_argument_is_single(argument)
   argument.each do |directory|
     numbers_of_files = get_argument(directory).size
     if (numbers_of_files % 3) == 1 && one_third_file(directory).size >= 3
@@ -106,7 +106,7 @@ def final_action_when_argument_is_single(argument)
 end
 
 # 引数を2個以上渡した時の出力(改行を入れるため)
-def final_action_when_argument_is_multi(argument)
+def branch_output_type_when_argument_is_multi(argument)
   argument.each_with_index do |directory, idx|
     last_numbers_of_files = get_argument(argument[idx - 1]).size
     numbers_of_files = get_argument(directory).size
@@ -128,7 +128,7 @@ def final_action_when_argument_is_multi(argument)
 end
 
 if argument.size > 1
-  final_action_when_argument_is_multi(argument)
+  branch_output_type_when_argument_is_multi(argument)
 else
-  final_action_when_argument_is_single(argument)
+  branch_output_type_when_argument_is_single(argument)
 end
