@@ -17,13 +17,13 @@ end
 # 3の倍数にファイルの要素数を調整
 def complete_array(directory)
   numbers_of_files = get_argument(directory).size
-  add_nil_to_files_name = get_argument(directory)
+  add_nil_to_array_of_files = get_argument(directory)
   if numbers_of_files % 3 != 0
     (3 - numbers_of_files % 3).times do
-      add_nil_to_files_name.push(nil)
+      add_nil_to_array_of_files.push(nil)
     end
   end
-  add_nil_to_files_name
+  add_nil_to_array_of_files
 end
 
 # 実際の出力に合わせて転置
