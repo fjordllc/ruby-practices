@@ -1,12 +1,19 @@
 # frozen_string_literal: true
 
+require 'optparse'
+
+def has_a_option?
+  option = ARGV.getopts('a')
+  option['a']
+end
+
 def calc_file_count_per_column(files, column_count)
   (files.size / column_count).ceil
 end
 
 def build_display_column
   column_count = 3.0
-  current_directory_files = Dir.glob('*')
+  current_directory_files = has_a_option? ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
 
   file_count_per_column = calc_file_count_per_column(current_directory_files, column_count)
   divided_files = current_directory_files.each_slice(file_count_per_column).to_a
