@@ -1,18 +1,18 @@
 require_relative './frame'
 
 class Game
-  def initialize(pin)
-    @game = pin
+  def initialize(result)
+    @game = result
   end
 
   def frames
     frame = []
     frames = []
-    @game.split(",").each do |sa|
-      frame.push(sa)
+    @game.split(",").each do |result|
+      frame.push(result)
       if frames.length == 10
-        frames.last.push(sa)
-      elsif frame.size >= 2 || sa == 'X'
+        frames.last.push(result)
+      elsif frame.size >= 2 || result == 'X'
         frames.push(frame.dup)
         frame.clear
       end
