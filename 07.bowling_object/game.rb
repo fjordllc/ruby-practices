@@ -1,4 +1,4 @@
-require_relative './frame'
+require_relative 'frame'
 
 class Game
   def initialize(result)

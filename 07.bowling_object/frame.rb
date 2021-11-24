@@ -1,4 +1,4 @@
-require_relative './shot'
+require_relative 'shot'
 
 class Frame
   attr_reader :first_shot, :second_shot
