@@ -8,8 +8,7 @@ class Game
   def frames
     frame = []
     frames = []
-    score_ary = @game.split(",")
-    score_ary.each do |sa|
+    @game.split(",").each do |sa|
       frame.push(sa)
       if frames.length == 10
         frames.last.push(sa)
