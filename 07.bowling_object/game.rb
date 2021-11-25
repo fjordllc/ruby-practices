@@ -25,11 +25,9 @@ class Game
   end
 
   def frame_instances
-    frame_instances = []
-    frames.each do |frame|
-      frame_instances.push(Frame.new(*frame))
+    @frame_instances ||= frames.map do |frame|
+      Frame.new(*frame)
     end
-    frame_instances
   end
 
   def score
