@@ -3,6 +3,7 @@
 argument = ARGV
 argument.push(Dir.pwd) if argument.size <= 0
 
+
 # ファイルの最大の文字数の値を取得
 def get_maximum_size(filesname)
   argument_of_size = filesname.map(&:size)
@@ -28,7 +29,7 @@ def one_third_file(filesname)
 end
 
 # ３列になるとように出力
-def output(filesname,maxsize_filesname)
+def output(filesname,padding)
   counters = 0
   one_third_file(filesname).each do |files|
     files.each do |file|
@@ -36,14 +37,14 @@ def output(filesname,maxsize_filesname)
       if (counters % 3).zero? && !file.nil?
         puts file
       elsif counters % 3 != 0 && !file.nil?
-        print file.ljust(maxsize_filesname + 5) #+5は定数化する
+        print file.ljust(padding) #+5は定数化する
       end
     end
   end
 end
 
 # 3倍＋１のファイル数の時に合わせて出力（転置後の配列の個数が3個以上の時）
-def output_files_size_is_special_big(filesname,maxsize_filesname)
+def output_files_size_is_special_big(filesname,padding)
   count = 0
   counters = 0
   one_third_file(filesname)[0...-2].each do |files|
@@ -54,7 +55,7 @@ def output_files_size_is_special_big(filesname,maxsize_filesname)
         puts file
       # 一番文字数の多いファイル+5に幅を合わせる
       elsif counters % 3 != 0 && !file.nil?
-        print file.ljust(maxsize_filesname + 5)
+        print file.ljust(padding)
       end
     end
   end
@@ -64,14 +65,14 @@ def output_files_size_is_special_big(filesname,maxsize_filesname)
       if (count % 4).zero?
         puts file
       elsif !file.nil?
-        print file.ljust(maxsize_filesname + 5)
+        print file.ljust(padding)
       end
     end
   end
 end
 
 # 3倍＋１のファイル数の時に合わせて出力（転置後の配列の個数が2つの時）
-def output_when_files_size_is_special(filesname,maxsize_filesname)
+def output_when_files_size_is_special(filesname,padding)
     binding.irb
   count = 0
   one_third_file(filesname)[-2..].each do |files|
@@ -80,7 +81,7 @@ def output_when_files_size_is_special(filesname,maxsize_filesname)
       if (count % 4).zero?
         puts file
       elsif !file.nil?
-        print file.ljust(maxsize_filesname + 5)
+        print file.ljust(padding)
       end
     end
   end
@@ -94,13 +95,13 @@ end
 def branch_output_type_when_argument_is_multi(directory, multiple_argument,filesname)
   print_directory_name(directory)if multiple_argument
   numbers_of_files = filesname.size
-  maxsize_filesname = get_maximum_size(filesname)
+  padding = get_maximum_size(filesname) + 5
   if (numbers_of_files % 3) == 1 && one_third_file(filesname).size >= 3
-    output_files_size_is_special_big(filesname,maxsize_filesname)
+    output_files_size_is_special_big(filesname,padding)
   elsif (numbers_of_files % 3) == 1
-    output_when_files_size_is_special(filesname,maxsize_filesname)
+    output_when_files_size_is_special(filesname,padding)
   else
-    output(filesname,maxsize_filesname)
+    output(filesname,padding)
   end
 end
 
