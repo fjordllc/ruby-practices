@@ -30,14 +30,12 @@ end
 
 # ３列になるとように出力
 def output(filesname,padding)
-  counters = 0
   one_third_file(filesname).each do |files|
-    files.each do |file|
-      counters += 1
-      if (counters % 3).zero? && !file.nil?
+    files.each.with_index(1) do |file, index|
+      if (index % 3).zero? && !file.nil?
         puts file
-      elsif counters % 3 != 0 && !file.nil?
-        print file.ljust(padding) #+5は定数化する
+      elsif index % 3 != 0 && !file.nil?
+        print file.ljust(padding) 
       end
     end
   end
@@ -45,24 +43,20 @@ end
 
 # 3倍＋１のファイル数の時に合わせて出力（転置後の配列の個数が3個以上の時）
 def output_files_size_is_special_big(filesname,padding)
-  count = 0
-  counters = 0
   one_third_file(filesname)[0...-2].each do |files|
-    files.each do |file|
-      counters += 1
+    files.each.with_index(1) do |file, index|
       # 3つごと出力
-      if (counters % 3).zero? && !file.nil?
+      if (index % 3).zero? && !file.nil?
         puts file
       # 一番文字数の多いファイル+5に幅を合わせる
-      elsif counters % 3 != 0 && !file.nil?
+      elsif index % 3 != 0 && !file.nil?
         print file.ljust(padding)
       end
     end
   end
   one_third_file(filesname)[-2..].each do |files|
-    files.each do |file|
-      count += 1
-      if (count % 4).zero?
+    files.each.with_index(1) do |file, index|
+      if (index % 4).zero?
         puts file
       elsif !file.nil?
         print file.ljust(padding)
@@ -73,12 +67,9 @@ end
 
 # 3倍＋１のファイル数の時に合わせて出力（転置後の配列の個数が2つの時）
 def output_when_files_size_is_special(filesname,padding)
-    binding.irb
-  count = 0
   one_third_file(filesname)[-2..].each do |files|
-    files.each do |file|
-      count += 1
-      if (count % 4).zero?
+    files.each.with_index(1) do |file, index|
+      if (index % 4).zero?
         puts file
       elsif !file.nil?
         print file.ljust(padding)
