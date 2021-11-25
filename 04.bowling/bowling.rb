@@ -27,21 +27,19 @@ end
 
 point = 0
 frames.each_with_index do |frame, i|
-  if frame[0] == 10 && i != 9 # strikeかつ、10フレーム目は除外
-    i += 1
-    point += frames[i][0]
-
-    if frames[i][1].nil? # ストライクの次の次の投球がストライクの場合
-      i += 1
-      point += frames[i][0]
+  if i == 9 #10フレーム目は単純に合計する
+    point += frame.sum
+  elsif frame[0] == 10 # ストライクの場合の分岐
+    point += frames[i + 1][0]
+    if frames[i + 1][1].nil? # ストライクの次の次の投球がストライクの場合
+      point += frames[i + 2][0]
     else
-      point += frames[i][1]
+      point += frames[i + 1][1]
     end
-  elsif frame.sum == 10 && i != 9 # spareかつ、10フレーム目は除外
-    i += 1
-    point += frames[i][0]
+  elsif frame.sum == 10 # スペアの場合の分岐
+    point += frames[i + 1][0]
   end
-  point += frame.sum
+  point += frame.sum if i != 9
 end
 
 puts point
