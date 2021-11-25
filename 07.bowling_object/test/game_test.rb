@@ -6,18 +6,6 @@ class GameTest < Minitest::Test
     @game = Game.new("6,3,9,1,0,3,8,2,7,3,X,3,1,8,2,X,X,4,5")
   end
 
-  def test_frames
-    assert_equal [["6", "3"], ["9", "1"], ["0", "3"], ["8", "2"], ["7", "3"], ["X"], ["3", "1"], ["8", "2"], ["X"], ["X", "4", "5"]], @game.frames
-  end
-
-  def test_frame_instances
-    assert_equal 10, @game.frame_instances.size
-  end
-
-  def test_score
-    assert_equal [9, 10, 3, 17, 20, 14, 4, 20, 24, 19], @game.score
-  end
-
   def test_total_score
     assert_equal 140, @game.total_score
   end
@@ -47,8 +35,13 @@ class GameTest < Minitest::Test
     assert_equal 300, @game.total_score
   end
 
-  def test_total_score5
+  def test_total_score6
     @game = Game.new("0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0")
     assert_equal 0, @game.total_score
+  end
+
+  def test_total_score7
+    @game = Game.new("X,X,X,X,X,X,X,X,X,0,0,0")
+    assert_equal 240, @game.total_score
   end
 end
