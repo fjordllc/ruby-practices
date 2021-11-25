@@ -9,7 +9,7 @@ class Game
     score.sum
   end
 
-  def frames
+  def result_frame_per_array_storing
     frame = []
     frames = []
     @game.split(",").each do |result|
@@ -24,15 +24,15 @@ class Game
     frames
   end
 
-  def frame_instances
-    @frame_instances ||= frames.map do |frame|
+  def frames
+    @frames ||= result_frame_per_array_storing.map do |frame|
       Frame.new(*frame)
     end
   end
 
   def score
     score = []
-    frame_instances.each_with_index do |frame, i|
+    frames.each_with_index do |frame, i|
       if last_frame?(i)
         score.push(frame.score)
       elsif frame.strike?
@@ -50,7 +50,7 @@ class Game
 
   def add_strike_points(index)
     next_frame = next_frame(index)
-    next_next_frame = frame_instances[index + 2]
+    next_next_frame = frames[index + 2]
     if ninth_frame?(index)
       next_frame.first_shot.score + next_frame.second_shot.score
     elsif next_frame.strike?
@@ -75,6 +75,6 @@ class Game
   end
 
   def next_frame(index)
-    frame_instances[index + 1]
+    frames[index + 1]
   end
 end
