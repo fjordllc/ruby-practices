@@ -9,6 +9,8 @@ class Game
     score.sum
   end
 
+  private
+
   def result_frame_per_array_storing
     frame = []
     frames = []
@@ -45,8 +47,6 @@ class Game
     end
     score
   end
-
-  private
 
   def add_strike_points(index)
     next_frame = next_frame(index)
