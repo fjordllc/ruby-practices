@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'frame'
 
 class Game
@@ -14,7 +16,7 @@ class Game
   def result_frame_per_array_storing
     frame = []
     frames = []
-    @game.split(",").each do |result|
+    @game.split(',').each do |result|
       frame.push(result)
       if frames.length == 10
         frames.last.push(result)

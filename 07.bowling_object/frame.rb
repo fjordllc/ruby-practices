@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'shot'
 
 class Frame
@@ -11,11 +13,12 @@ class Frame
 
   def score
     return 10 if first_shot.score == 'X'
+
     [first_shot.score + second_shot.score + @third_shot.score].sum
   end
 
   def strike?
-    first_shot.score == 10 
+    first_shot.score == 10
   end
 
   def spare?
