@@ -5,6 +5,10 @@ class Game
     @game = result
   end
 
+  def total_score
+    score.sum
+  end
+
   def frames
     frame = []
     frames = []
@@ -31,19 +35,17 @@ class Game
   def score
     score = []
     frame_instances.each_with_index do |frame, i|
-      if frame.strike? && !last_frame?(i)
+      if last_frame?(i)
+        score.push(frame.score)
+      elsif frame.strike?
         score.push(frame.score + add_strike_points(i))
-      elsif frame.spare? && !last_frame?(i)
+      elsif frame.spare?
         score.push(frame.score + add_spare_points(i))
       else
         score.push(frame.score)
       end
     end
     score
-  end
-
-  def total_score
-    score.sum
   end
 
   private
