@@ -4,7 +4,7 @@ require_relative 'frame'
 
 class Game
   def initialize(result)
-    @game = result
+    @result = result
   end
 
   def total_score
@@ -16,7 +16,7 @@ class Game
   def result_frame_per_array_storing
     frame = []
     frames = []
-    @game.split(',').each do |result|
+    @result.split(',').each do |result|
       frame.push(result)
       if frames.length == 10
         frames.last.push(result)
