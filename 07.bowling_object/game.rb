@@ -13,7 +13,7 @@ class Game
 
   private
 
-  def result_frame_per_array_storing
+  def results_per_frame
     frame = []
     frames = []
     @result.split(',').each do |result|
@@ -29,7 +29,7 @@ class Game
   end
 
   def frames
-    @frames ||= result_frame_per_array_storing.map do |frame|
+    @frames ||= results_per_frame.map do |frame|
       Frame.new(*frame)
     end
   end
