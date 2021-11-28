@@ -47,48 +47,36 @@ def display_files
 end
 
 # 以下、-lオプションの対応
-def build_display_files
+def build_divided_file_details
   current_directory_files = Dir.glob('*')
-  all_file_mode = []
-  all_file_nlink = []
-  all_file_uid = []
-  all_file_gid = []
-  all_file_size = []
-  all_file_mtime = []
-  all_file_name = []
-
+  display_details_count = 7
+  divided_file_details = Array.new(display_details_count).map { [] }
   current_directory_files.each do |file|
     stat = File.lstat(file)
     file_mode = stat.mode.to_s(8)
-    file_mode = file_mode[0] == "1" ? file_mode : "0#{file_mode}"
-    all_file_mode << "#{translate_mode(file_mode)}"
-    all_file_nlink << "#{stat.nlink}"
-    all_file_uid << "#{translate_uid(stat.uid)}"
-    all_file_gid << "#{translate_gid(stat.gid)}"
-    all_file_size << "#{stat.size}"
-    all_file_mtime << "#{translate_date(stat.mtime)}"
-    all_file_name << "#{file}"
+    file_mode = file_mode[0] == '1' ? file_mode : "0#{file_mode}"
+    divided_file_details[0] << translate_mode(file_mode)
+    divided_file_details[1] << stat.nlink.to_s
+    divided_file_details[2] << translate_uid(stat.uid)
+    divided_file_details[3] << translate_gid(stat.gid)
+    divided_file_details[4] << stat.size.to_s
+    divided_file_details[5] << translate_date(stat.mtime)
+    divided_file_details[6] << file
   end
+  divided_file_details
+end
 
-  divided_file_details = [
-    all_file_mode,
-    all_file_nlink,
-    all_file_uid,
-    all_file_gid,
-    all_file_size,
-    all_file_mtime,
-    all_file_name
-  ]
-
+def build_display_files
   adjusted_file_details = []
-  divided_file_details.each.with_index do |data_list, index|
+  build_divided_file_details.each.with_index do |data_list, index|
     max_str_count = data_list.max_by(&:size).size
     # ファイルサイズや日付などを右詰にしグループ名などを左詰するための処理
-    if index == 0 || index == 2 || index == 3 || index == divided_file_details.length - 1
-      adjusted_file_details << data_list.map { |v| v.ljust(max_str_count) }
-    else
-      adjusted_file_details << data_list.map { |v| v.rjust(max_str_count) }
-    end
+    adjusted_file_details <<
+      if [1, 4, 5].include?(index)
+        data_list.map { |v| v.rjust(max_str_count) }
+      else
+        data_list.map { |v| v.ljust(max_str_count) }
+      end
   end
   adjusted_file_details.transpose
 end
@@ -116,38 +104,38 @@ end
 
 def translate_date(date)
   if date.year == Time.now.year
-    "#{date.day} #{date.month} #{date.hour.to_s.rjust(2, "0")}:#{date.min.to_s.rjust(2, "0")}"
+    "#{date.day} #{date.month} #{date.hour.to_s.rjust(2, '0')}:#{date.min.to_s.rjust(2, '0')}"
   else
     "#{date.day} #{date.month} #{date.year}"
   end
 end
 
+FILE_TYPE_HASH = {
+  '01' => 'p',
+  '02' => 'c',
+  '04' => 'd',
+  '06' => 'b',
+  '10' => '-',
+  '12' => 'l',
+  '14' => 's'
+}.freeze
+
+FILE_ACCESS_RIGHTS_HASH = {
+  '0' => '---',
+  '1' => '--x',
+  '2' => '-w-',
+  '3' => '-wx',
+  '4' => 'r--',
+  '5' => 'r-x',
+  '6' => 'rw-',
+  '7' => 'rwx'
+}.freeze
+
 def translate_mode(mode)
-  file_type_hash = {
-    '01' => 'p',
-    '02' => 'c',
-    '04' => 'd',
-    '06' => 'b',
-    '10' => '-',
-    '12' => 'l',
-    '14' => 's',
-  }
-
-  file_access_right_hash = {
-    '0' => '---',
-    '1' => '--x',
-    '2' => '-w-',
-    '3' => '-wx',
-    '4' => 'r--',
-    '5' => 'r-x',
-    '6' => 'rw-',
-    '7' => 'rwx',
-  }
-
-  file_type = file_type_hash[mode.slice(0,2)]
-  file_access_right_user = file_access_right_hash[mode.slice(3)]
-  file_access_right_group = file_access_right_hash[mode.slice(4)]
-  file_access_right_other = file_access_right_hash[mode.slice(5)]
+  file_type = FILE_TYPE_HASH[mode.slice(0, 2)]
+  file_access_right_user = FILE_ACCESS_RIGHTS_HASH[mode.slice(3)]
+  file_access_right_group = FILE_ACCESS_RIGHTS_HASH[mode.slice(4)]
+  file_access_right_other = FILE_ACCESS_RIGHTS_HASH[mode.slice(5)]
   "#{file_type}#{file_access_right_user}#{file_access_right_group}#{file_access_right_other}"
 end
 
