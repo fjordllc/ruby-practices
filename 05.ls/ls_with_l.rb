@@ -15,9 +15,6 @@ end
 def build_display_column
   column_count = 3.0
   current_directory_files = Dir.glob('*')
-
-  p current_directory_files
-
   file_count_per_column = calc_file_count_per_column(current_directory_files, column_count)
   divided_files = current_directory_files.each_slice(file_count_per_column).to_a
 
@@ -81,7 +78,18 @@ def build_display_files
   adjusted_file_details.transpose
 end
 
+def total_blocks
+  current_directory_files = Dir.glob('*')
+  block_count = 0
+  current_directory_files.each do |file|
+    stat = File.lstat(file)
+    block_count += stat.blocks
+  end
+  print "total #{block_count}\n"
+end
+
 def display_l_option_files
+  total_blocks
   build_display_files.each do |list|
     list.each do |value|
       suffix = "\n"
