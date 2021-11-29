@@ -4,12 +4,9 @@
 def main
   display_column.each do |column|
     column.each do |file|
-      if file == column.last
-        print "#{file}\n"
-      else
-        print file.ljust(column_margin)
-      end
+      print file.ljust(column_margin)
     end
+    puts ''
   end
 end
 
@@ -29,12 +26,8 @@ def display_column
 end
 
 def column_margin
-  length = 0
+  length = define_directory.map(&:length).max
   margin = 3
-
-  define_directory.each do |file|
-    length = file.length.to_i if file.length > length
-  end
 
   length + margin
 end
