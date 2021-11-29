@@ -7,7 +7,19 @@ class Game
     @result = result
   end
 
-  def total_score
+  def score
+    score = []
+    frames.each_with_index do |frame, i|
+      if last_frame?(i)
+        score.push(frame.score)
+      elsif frame.strike?
+        score.push(frame.score + add_strike_points(i))
+      elsif frame.spare?
+        score.push(frame.score + add_spare_points(i))
+      else
+        score.push(frame.score)
+      end
+    end
     score.sum
   end
 
@@ -32,22 +44,6 @@ class Game
     @frames ||= results_per_frame.map do |frame|
       Frame.new(*frame)
     end
-  end
-
-  def score
-    score = []
-    frames.each_with_index do |frame, i|
-      if last_frame?(i)
-        score.push(frame.score)
-      elsif frame.strike?
-        score.push(frame.score + add_strike_points(i))
-      elsif frame.spare?
-        score.push(frame.score + add_spare_points(i))
-      else
-        score.push(frame.score)
-      end
-    end
-    score
   end
 
   def add_strike_points(index)
