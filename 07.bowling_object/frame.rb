@@ -9,11 +9,12 @@ class Frame
     @first_shot = Shot.new(first_mark)
     @second_shot = Shot.new(second_mark)
     @third_shot = Shot.new(third_mark)
-    @shots = [@first_shot, @second_shot, @third_shot]
   end
 
   def score
-    @shots.sum(&:score)
+    return 10 if first_shot.score == 'X'
+
+    [first_shot.score + second_shot.score + @third_shot.score].sum
   end
 
   def strike?
