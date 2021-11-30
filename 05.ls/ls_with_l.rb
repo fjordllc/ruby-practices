@@ -44,14 +44,16 @@ def display_files
 end
 
 # 以下、-lオプションの対応
+DISPLAY_DETAILS_COUNT = 7
+
 def build_divided_file_details
   current_directory_files = Dir.glob('*')
-  display_details_count = 7
-  divided_file_details = Array.new(display_details_count).map { [] }
+  divided_file_details = Array.new(DISPLAY_DETAILS_COUNT).map { [] }
   current_directory_files.each do |file|
     stat = File.lstat(file)
     file_mode = stat.mode.to_s(8)
-    file_mode = file_mode[0] == '1' ? file_mode : "0#{file_mode}"
+    p file_mode
+    file_mode = file_mode[0] == '1' ? file_mode : "#{sprintf("%06d", file_mode)}"
     divided_file_details[0] << translate_mode(file_mode)
     divided_file_details[1] << stat.nlink.to_s
     divided_file_details[2] << translate_uid(stat.uid)
