@@ -1,13 +1,6 @@
-#argument = ['../']
 argument = ARGV
 argument.push(Dir.pwd) if argument.size < 1
 
-#step1
-  #1filesname = [file1, file2, file3, file4]
-  #'+ 5'はlsコマンドと幅が一緒なため付与
-
-#step2
-  #filesname = [file1, file2, file3, nil, file4, nil]
 def get_number_of_count_files_mod_by_three(filesname)
   max_column_length = 3
   count_files = filesname.count
@@ -31,7 +24,6 @@ def decide_position_of_nil(max_line_length, filesname, count_files_mod_by_three)
 end
 
 def completement_with_nil(the_end_of_second_column_index, the_end_of_third_column_index, filesname, max_line_length, count_files_mod_by_three)
-  padding = filesname.map(&:size).max + 5
   case count_files_mod_by_three
   when 1
     filesname.insert(the_end_of_second_column_index, nil)
@@ -41,31 +33,27 @@ def completement_with_nil(the_end_of_second_column_index, the_end_of_third_colum
   else
     filesname
   end
-  devide_files_by_columns(max_line_length, padding, filesname)
+  devide_files_by_columns(max_line_length, filesname)
 end
-#step3
-  #filesname = [[file1, file2], [file3, nil], [file4, nil]]
-def devide_files_by_columns(max_line_length, padding, filesname)
+
+def devide_files_by_columns(max_line_length, filesname)
   devide_files_by_column = filesname.each_slice(max_line_length).to_a
-  transpose_files_devided(devide_files_by_column, padding)
+  transpose_files_devided(devide_files_by_column,)
 end
 
-#step4
-  #filesname = [[file1, file3, file4], [file2, nil, nil]]
-def transpose_files_devided(devide_files_by_column, padding)
+def transpose_files_devided(devide_files_by_column)
   create_file_matrix = devide_files_by_column.transpose
-  output(create_file_matrix, padding)
+  output(create_file_matrix)
 end
 
-#step5
-  #標準出力に出力
-def output(create_file_matrix, padding) 
+def output(create_file_matrix) 
   create_file_matrix.each do |file_line|
-    puts file_line.compact.join(' ')
+    puts file_line.compact.join('  ')
   end
 end
 
-argument.each do |directory|
+argument.each.with_index do |directory, index|
+  puts directory if index > 0
   filesname = Dir.glob('*', base: directory)
   get_number_of_count_files_mod_by_three(filesname)
 end
