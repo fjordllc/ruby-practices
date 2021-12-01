@@ -37,12 +37,12 @@ def completement_with_nil(the_end_of_second_column_index, the_end_of_third_colum
 end
 
 def devide_files_by_columns(max_line_length, filesname)
-  devide_files_by_column = filesname.each_slice(max_line_length).to_a
-  transpose_files_devided(devide_files_by_column,)
+  files_devided_by_column = filesname.each_slice(max_line_length).to_a
+  transpose_files_devided(files_devided_by_column)
 end
 
-def transpose_files_devided(devide_files_by_column)
-  create_file_matrix = devide_files_by_column.transpose
+def transpose_files_devided(files_devided_by_column)
+  create_file_matrix = files_devided_by_column.transpose
   output(create_file_matrix)
 end
 
