@@ -29,6 +29,7 @@ point = 0
 frames.each_with_index do |frame, i|
   if i == 9 # 10フレーム目は単純に合計する
     point += frame.sum
+    break
   elsif frame[0] == 10 # ストライクの場合の分岐
     point += frames[i + 1][0]
 
@@ -40,7 +41,7 @@ frames.each_with_index do |frame, i|
   elsif frame.sum == 10 # スペアの場合の分岐
     point += frames[i + 1][0]
   end
-  point += frame.sum if i != 9
+  point += frame.sum
 end
 
 puts point
