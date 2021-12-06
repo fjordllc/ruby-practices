@@ -26,24 +26,21 @@ shots.each_slice(2) do |s|
 end
 
 point = 0
-catch :break_loop do
-  frames.each_with_index do |frame, i|
-    if i == 9 # 10フレーム目は単純に合計する
-      point += frame.sum
-      throw :break_loop
-    elsif frame[0] == 10 # ストライクの場合の分岐
-      point += frames[i + 1][0]
-
-      point += if frames[i + 1][1].nil? # ストライクの次の次の投球がストライクの場合
-                 frames[i + 2][0]
-               else
-                 frames[i + 1][1]
-               end
-    elsif frame.sum == 10 # スペアの場合の分岐
-      point += frames[i + 1][0]
-    end
+frames.each_with_index do |frame, i|
+  if i == 9 # 10フレーム目は単純に合計する
     point += frame.sum
+  elsif frame[0] == 10 # ストライクの場合の分岐
+    point += frames[i + 1][0]
+
+    point += if frames[i + 1][1].nil? # ストライクの次の次の投球がストライクの場合
+               frames[i + 2][0]
+             else
+               frames[i + 1][1]
+             end
+  elsif frame.sum == 10 # スペアの場合の分岐
+    point += frames[i + 1][0]
   end
+  point += frame.sum if i != 9
 end
 
 puts point
