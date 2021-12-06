@@ -17,7 +17,7 @@ class Wc
     args.each do |arg|
       @results.push(count_line_num_bytes_words(arg))
     end
-    return unless @results.empty?.zero?
+    return unless @results.empty?
 
     @results.push stdin_count_line_num_bytes_words
   end
@@ -84,8 +84,8 @@ class Wc
         display = result[:line_num].to_s if @l_option
         display = "#{result[:line_num]} #{result[:words]} #{result[:bytes]}" unless @l_option
       end
+      puts display
     end
-    puts display
   end
 end
 
