@@ -1,59 +1,59 @@
-argument = ARGV
-argument.push(Dir.pwd) if argument.size < 1
+# frozen_string_literal: true
 
-def get_number_of_count_files_mod_by_three(filesname)
-  max_column_length = 3
-  count_files = filesname.count
-  count_files_mod_by_three = count_files % max_column_length
-  get_max_line_length(count_files_mod_by_three, count_files, max_column_length, filesname)
+$argument = ARGV
+$argument.push(Dir.pwd) if $argument.empty?
+$max_column_length = 3
+
+def ls_main(filesnames)
+  fulfilled_filesnames = complete_filesnames(filesnames)
+  grouped_filesnames = fulfilled_filesnames.each_slice(get_max_line_length(filesnames)).to_a
+  transposed_filesnames = grouped_filesnames.transpose
+  output(transposed_filesnames)
 end
 
-def get_max_line_length(count_files_mod_by_three, count_files, max_column_length, filesname)
-  max_line_length = if count_files_mod_by_three == 0
-    count_files / max_column_length
+def complete_filesnames(filesnames)
+  count_files_mod_by_three = filesnames.count % $max_column_length
+  where_add_nil = locate_nil(filesnames)
+  add_nil(where_add_nil, filesnames, count_files_mod_by_three)
+end
+
+def locate_nil(filesnames)
+  max_line_length = get_max_line_length(filesnames)
+  { the_end_of_second_column_index: (max_line_length * 2).pred,
+    the_end_of_third_column_index: (max_line_length * 3).pred }
+end
+
+def get_max_line_length(filesnames)
+  count_files = filesnames.count
+  count_files_mod_by_three = filesnames.count % $max_column_length
+  if count_files_mod_by_three.zero?
+    count_files / $max_column_length
   else
-    (count_files / max_column_length).next
+    (count_files / $max_column_length).next
   end
-  decide_position_of_nil(max_line_length, filesname, count_files_mod_by_three)
 end
 
-def decide_position_of_nil(max_line_length, filesname, count_files_mod_by_three)
-  the_end_of_second_column_index = (max_line_length * 2).pred
-  the_end_of_third_column_index = (max_line_length * 3).pred
-  completement_with_nil(the_end_of_second_column_index, the_end_of_third_column_index, filesname, max_line_length, count_files_mod_by_three)
-end
-
-def completement_with_nil(the_end_of_second_column_index, the_end_of_third_column_index, filesname, max_line_length, count_files_mod_by_three)
+def add_nil(where_add_nil, filesnames, count_files_mod_by_three)
   case count_files_mod_by_three
   when 1
-    filesname.insert(the_end_of_second_column_index, nil)
-    filesname.insert(the_end_of_third_column_index, nil)
+    filesnames.insert(where_add_nil[:the_end_of_second_column_index], nil)
+    filesnames.insert(where_add_nil[:the_end_of_third_column_index], nil)
   when 2
-    filesname.insert(the_end_of_third_column_index, nil)
+    filesnames.insert(where_add_nil[:the_end_of_third_column_index], nil)
   else
-    filesname
+    filesnames
   end
-  devide_files_by_columns(max_line_length, filesname)
+  filesnames
 end
 
-def devide_files_by_columns(max_line_length, filesname)
-  files_devided_by_column = filesname.each_slice(max_line_length).to_a
-  transpose_files_devided(files_devided_by_column)
-end
-
-def transpose_files_devided(files_devided_by_column)
-  create_file_matrix = files_devided_by_column.transpose
-  output(create_file_matrix)
-end
-
-def output(create_file_matrix) 
-  create_file_matrix.each do |file_line|
+def output(transposed_filesnames)
+  transposed_filesnames.each do |file_line|
     puts file_line.compact.join('  ')
   end
 end
 
-argument.each.with_index do |directory, index|
-  puts directory if index > 0
-  filesname = Dir.glob('*', base: directory)
-  get_number_of_count_files_mod_by_three(filesname)
+$argument.each.with_index do |directory, _index|
+  puts directory if $argument.count.positive?
+  filesnames = Dir.glob('*', base: directory)
+  ls_main(filesnames)
 end
