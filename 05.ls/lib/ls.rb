@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-$argument = ARGV
-$argument.push(Dir.pwd) if $argument.empty?
-$max_column_length = 3
+ARGUMENT = ARGV
+ARGUMENT.push(Dir.pwd) if ARGUMENT.empty?
+MAX_COLUMN_LENGTH = 3
 
 def ls_main(filesnames)
   fulfilled_filesnames = complete_filesnames(filesnames)
@@ -12,7 +12,7 @@ def ls_main(filesnames)
 end
 
 def complete_filesnames(filesnames)
-  count_files_mod_by_three = filesnames.count % $max_column_length
+  count_files_mod_by_three = filesnames.count % MAX_COLUMN_LENGTH
   where_add_nil = locate_nil(filesnames)
   add_nil(where_add_nil, filesnames, count_files_mod_by_three)
 end
@@ -25,11 +25,11 @@ end
 
 def get_max_line_length(filesnames)
   count_files = filesnames.count
-  count_files_mod_by_three = filesnames.count % $max_column_length
+  count_files_mod_by_three = filesnames.count % MAX_COLUMN_LENGTH
   if count_files_mod_by_three.zero?
-    count_files / $max_column_length
+    count_files / MAX_COLUMN_LENGTH
   else
-    (count_files / $max_column_length).next
+    (count_files / MAX_COLUMN_LENGTH).next
   end
 end
 
@@ -52,8 +52,8 @@ def output(transposed_filesnames)
   end
 end
 
-$argument.each.with_index do |directory, _index|
-  puts directory if $argument.count.positive?
+ARGUMENT.each.with_index do |directory, _index|
+  puts directory if ARGUMENT.count > 1
   filesnames = Dir.glob('*', base: directory)
   ls_main(filesnames)
 end
