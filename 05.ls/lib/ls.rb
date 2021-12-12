@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# ARGUMENT = ARGV
-# ARGUMENT.push(Dir.pwd) if ARGUMENT.empty?
 MAX_COLUMN_LENGTH = 3
 
 def ls_main(filesnames)
@@ -52,13 +50,6 @@ def output(transposed_filesnames)
   end
 end
 
-# ARGUMENT.each.with_index do |directory, _index|
-#   puts directory if ARGUMENT.count > 1
-#   filesnames = Dir.glob('*', base: directory)
-#   binding.irb
-#   ls_main(filesnames)
-# end
-
 def main
   directory_names = ARGV.empty? ? [Dir.pwd] : ARGV
   directory_names.each.with_index do |directory, index|
@@ -67,4 +58,5 @@ def main
     ls_main(filesnames)
   end
 end
+
 main
