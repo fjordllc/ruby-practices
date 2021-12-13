@@ -26,6 +26,8 @@ FILE_ACCESS_RIGHTS_HASH = {
   '7' => 'rwx'
 }.freeze
 
+COLUMN_COUNT = 3.0
+
 def target_directory_files(options)
   target_files = options['a'] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
   options['r'] ? target_files.reverse : target_files
@@ -76,8 +78,8 @@ def parse_input(command_options, target_files)
   end
 end
 
-def calc_file_count_per_column(files, column_count)
-  (files.size / column_count).ceil
+def calc_file_count_per_column(files)
+  (files.size / COLUMN_COUNT).ceil
 end
 
 def divide_files(option_l, parsed_files, file_count_per_column)
@@ -149,9 +151,8 @@ end
 
 def ls_command
   command_options = ARGV.getopts('a', 'r', 'l')
-  column_count = 3.0
   current_directory_files = target_directory_files(command_options)
-  file_count_per_column = calc_file_count_per_column(current_directory_files, column_count)
+  file_count_per_column = calc_file_count_per_column(current_directory_files)
   option_l, parsed_files = parse_input(command_options, current_directory_files)
   divided_files = divide_files(option_l, parsed_files, file_count_per_column)
   formatted_files = format_files(option_l, divided_files, file_count_per_column)
