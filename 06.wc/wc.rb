@@ -14,13 +14,26 @@ class Wc
     @results = []
     l_option, args = parse_options
     @l_option = l_option
-    args.each do |arg|
-      @results.push(count_line_num_bytes_words(arg))
-    end
+    @results = args.map { |arg| count_line_num_bytes_words(arg) }
+
     return unless @results.empty?
 
-    @results.push stdin_count_line_num_bytes_words
+    @results.push count_line_num_bytes_words
   end
+
+  def show
+    display = ''
+    @results.each do |result|
+      display = if result[:name].empty?
+                  @l_option ? result[:line_num].to_s : "#{result[:line_num]} #{result[:words]} #{result[:bytes]}"
+                else
+                  @l_option ? "#{result[:line_num]} #{result[:name]}" : "#{result[:line_num]} #{result[:words]} #{result[:bytes]} #{result[:name]}"
+                end
+      puts display
+    end
+  end
+
+  private
 
   def parse_options
     opts = OptionParser.new
@@ -39,53 +52,19 @@ class Wc
     [l_option, args]
   end
 
-  def count_line_num_bytes_words(path)
-    line_num = 0
-    bytes = 0
-    words = 0
-    IO.readlines(path).map do |line|
-      line_num += 1
-      bytes += line.bytesize
-      words += line.split.count
-    end
+  def count_line_num_bytes_words(path = '')
+    lines = if path.empty?
+              $stdin.readlines
+            else
+              IO.readlines(path)
+            end
 
     {
-      line_num: line_num,
-      bytes: bytes,
-      words: words,
+      line_num: lines.count,
+      words: lines.sum { |line| line.split.count },
+      bytes: lines.sum(&:bytesize),
       name: path
     }
-  end
-
-  def stdin_count_line_num_bytes_words
-    line_num = 0
-    bytes = 0
-    words = 0
-    $stdin.readlines.map do |line|
-      line_num += 1
-      bytes += line.bytesize
-      words += line.split.count
-    end
-
-    {
-      line_num: line_num,
-      bytes: bytes,
-      words: words
-    }
-  end
-
-  def show
-    display = ''
-    @results.map do |result|
-      if result.key? :name
-        display = "#{result[:line_num]} #{result[:name]}" if @l_option
-        display = "#{result[:line_num]} #{result[:words]} #{result[:bytes]} #{result[:name]}" unless @l_option
-      else
-        display = result[:line_num].to_s if @l_option
-        display = "#{result[:line_num]} #{result[:words]} #{result[:bytes]}" unless @l_option
-      end
-      puts display
-    end
   end
 end
 
