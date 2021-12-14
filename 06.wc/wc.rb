@@ -14,7 +14,7 @@ def main
 end
 
 class Wc
-  attr_accessor :results, :total
+  attr_reader :results, :total
 
   def initialize(argv)
     @results = []
