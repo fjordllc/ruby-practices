@@ -133,13 +133,9 @@ end
 def output_files(command_options, formatted_files, target_files)
   total_blocks(target_files) if command_options['l']
   formatted_files.each do |list|
-    list.each do |value|
+    list.each.with_index do |value, index|
       suffix = "\n"
-      if value == list.last
-        print "#{value}#{suffix}"
-      else
-        print "#{value}  "
-      end
+      print index == list.length - 1 ? "#{value}#{suffix}" : "#{value}  "
     end
   end
 end
