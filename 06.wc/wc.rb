@@ -6,7 +6,7 @@ require 'optparse'
 require 'prettyprint'
 
 def main
-  wc = Wc.new
+  wc = Wc.new(ARGV)
   printer = Printer.new
   wc.results.each { |result| printer.format(result) }
   printer.format(wc.total, is_total: true) if wc.results.length > 1
@@ -16,9 +16,9 @@ end
 class Wc
   attr_accessor :results, :total
 
-  def initialize
+  def initialize(argv)
     @results = []
-    @l_option, args = parse_options
+    @l_option, args = parse_options(argv)
     @results = args.map { |arg| count_line_num_bytes_words(arg) }
     @results.push count_line_num_bytes_words if @results.empty?
     @total = @results.inject(
@@ -36,14 +36,14 @@ class Wc
 
   private
 
-  def parse_options
+  def parse_options(argv)
     opts = OptionParser.new
     l_option = false
 
     opts.on('-l', 'The number of lines in each input file is written to the standard output.') { l_option = true }
 
     begin
-      args = opts.parse(ARGV)
+      args = opts.parse(argv)
     rescue OptionParser::InvalidOption => e
       puts opts.to_s
       puts "error: #{e.message}"
