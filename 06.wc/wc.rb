@@ -76,15 +76,15 @@ class Printer
 
   def format(result, is_total: false)
     @p2.group do
-      @p2.text(result[:line_num].to_s.rjust(8))
+      p2_text result[:line_num]
       unless @l_option
-        @p2.text(result[:words].to_s.rjust(8))
-        @p2.text(result[:bytes].to_s.rjust(8))
+        p2_text result[:words]
+        p2_text result[:bytes]
       end
       if is_total
-        @p2.text('total'.ljust(20).dup.prepend(' '))
+        p2_last_text 'total'
       elsif !result[:name].empty?
-        @p2.text(result[:name].to_s.ljust(60).dup.prepend(' '))
+        p2_last_text result[:name]
       end
       @p2.breakable
     end
@@ -93,6 +93,16 @@ class Printer
   def output
     @p2.flush
     puts @p2.output
+  end
+
+  private
+
+  def p2_text(text)
+    @p2.text text.to_s.rjust(8)
+  end
+
+  def p2_last_text(text)
+    @p2.text text.to_s.ljust(50).dup.prepend(' ')
   end
 end
 
