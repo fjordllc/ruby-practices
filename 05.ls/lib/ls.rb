@@ -59,7 +59,7 @@ end
 
 def main(params)
   directory_names = ARGV.empty? ? [Dir.pwd] : ARGV
-  directory_names.each.with_index do |directory, _index|
+  directory_names.each do |directory|
     puts directory if directory_names.count > 1
     filesnames = params[:a] ? Dir.glob('*', File::FNM_DOTMATCH, base: directory) : Dir.glob('*', base: directory)
     ls_main(filesnames)
