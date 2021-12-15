@@ -1,5 +1,12 @@
 # frozen_string_literal: true
 
+require 'optparse'
+
+params = {}
+opt = OptionParser.new
+opt.on('-a') { |v|  v }
+opt.parse!(ARGV, into: params)
+
 MAX_COLUMN_LENGTH = 3
 
 def ls_main(filesnames)
@@ -50,13 +57,13 @@ def output(transposed_filesnames)
   end
 end
 
-def main
+def main(params)
   directory_names = ARGV.empty? ? [Dir.pwd] : ARGV
   directory_names.each.with_index do |directory, index|
     puts directory if directory_names.count > 1
-    filesnames = Dir.glob('*', base: directory)
+    filesnames = params[:a] ? Dir.glob('*', File::FNM_DOTMATCH, base: directory) : Dir.glob('*', base: directory)
     ls_main(filesnames)
   end
 end
 
-main
+main(params)
