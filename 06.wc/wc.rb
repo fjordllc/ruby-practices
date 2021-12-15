@@ -53,11 +53,7 @@ class Wc
   end
 
   def count_line_num_bytes_words(path = '')
-    lines = if path.empty?
-              $stdin.readlines
-            else
-              IO.readlines(path)
-            end
+    lines = path.empty? ? $stdin.readlines : IO.readlines(path)
 
     {
       line_num: lines.count,
