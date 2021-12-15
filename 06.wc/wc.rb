@@ -17,7 +17,6 @@ class Wc
   attr_reader :results, :total
 
   def initialize(argv)
-    @results = []
     @l_option, args = parse_options(argv)
     @results = args.map { |arg| count_line_num_bytes_words(arg) }
     @results.push count_line_num_bytes_words if @results.empty?
