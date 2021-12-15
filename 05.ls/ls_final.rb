@@ -61,16 +61,18 @@ def collect_files(command_options, target_files)
   if command_options['l']
     file_details = []
     target_files.each do |file_name|
+      file_detail = {}
       stat = File.lstat(file_name)
       file_mode = stat.mode.to_s(8)
       file_mode = file_mode[0] == '1' ? file_mode : format('%06d', file_mode).to_s
-      file_details << translate_mode(file_mode)
-      file_details << stat.nlink.to_s
-      file_details << translate_uid(stat.uid)
-      file_details << translate_gid(stat.gid)
-      file_details << stat.size.to_s
-      file_details << translate_date(stat.mtime)
-      file_details << file_name
+      file_detail['mode'] = translate_mode(file_mode)
+      file_detail['nlink'] = stat.nlink.to_s
+      file_detail['uid'] = translate_uid(stat.uid)
+      file_detail['gid'] = translate_gid(stat.gid)
+      file_detail['size'] = stat.size.to_s
+      file_detail['date'] = translate_date(stat.mtime)
+      file_detail['file_name'] = file_name
+      file_details.push(file_detail)
     end
     file_details
   else
@@ -110,12 +112,13 @@ def format_without_l_option(divided_files, file_count_per_column)
   transposed_files.transpose
 end
 
-def format_files(command_options, collected_files, current_directory_files)
+def format_files(command_options, collected_files)
   if command_options['l']
-    divided_files = collected_files.each_slice(DISPLAY_DETAILS_COUNT).to_a
+    divided_files = collected_files.map { |file| [file['mode'], file['nlink'], file['uid'], file['gid'], file['size'], file['date'], file['file_name']] }
+    p divided_files
     format_with_l_option(divided_files)
   else
-    file_count_per_column = calc_file_count_per_column(current_directory_files)
+    file_count_per_column = calc_file_count_per_column(collected_files)
     divided_files = collected_files.each_slice(file_count_per_column).to_a
     format_without_l_option(divided_files, file_count_per_column)
   end
@@ -132,10 +135,10 @@ end
 
 def output_files(command_options, formatted_files, target_files)
   total_blocks(target_files) if command_options['l']
-  formatted_files.each do |list|
-    list.each.with_index do |value, index|
+  formatted_files.each do |formatted_file|
+    formatted_file.each.with_index do |value, index|
       suffix = "\n"
-      print index == list.length - 1 ? "#{value}#{suffix}" : "#{value}  "
+      print index == formatted_file.length - 1 ? "#{value}#{suffix}" : "#{value}  "
     end
   end
 end
@@ -144,7 +147,7 @@ def ls_command
   command_options = ARGV.getopts('a', 'r', 'l')
   current_directory_files = target_directory_files(command_options)
   collected_files = collect_files(command_options, current_directory_files)
-  formatted_files = format_files(command_options, collected_files, current_directory_files)
+  formatted_files = format_files(command_options, collected_files)
   output_files(command_options, formatted_files, current_directory_files)
 end
 ls_command
