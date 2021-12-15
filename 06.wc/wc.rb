@@ -8,13 +8,13 @@ require 'prettyprint'
 def main
   wc = Wc.new(ARGV)
   printer = Printer.new
-  wc.results.each { |result| printer.format(result) }
-  printer.format(wc.total, is_total: true) if wc.results.length > 1
+  wc.results.each { |result| printer.format(result, wc.l_option) }
+  printer.format(wc.total, wc.l_option, is_total: true) if wc.results.length > 1
   printer.output
 end
 
 class Wc
-  attr_reader :results, :total
+  attr_reader :results, :total, :l_option
 
   def initialize(argv)
     @l_option, args = parse_options(argv)
@@ -69,10 +69,10 @@ class Printer
     @p2 = PrettyPrint.new
   end
 
-  def format(result, is_total: false)
+  def format(result, l_option, is_total: false)
     @p2.group do
       p2_text result[:line_num]
-      unless @l_option
+      unless l_option
         p2_text result[:words]
         p2_text result[:bytes]
       end
