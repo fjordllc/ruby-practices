@@ -57,7 +57,7 @@ def main
   opt = OptionParser.new
   opt.on('-a') { |v| v }
   opt.parse!(ARGV, into: params)
-  
+
   directory_names = ARGV.empty? ? [Dir.pwd] : ARGV
   directory_names.each do |directory|
     puts directory if directory_names.count > 1
