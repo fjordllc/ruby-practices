@@ -127,19 +127,17 @@ def output_files(formatted_files)
 end
 
 def format_and_output_files(command_options, collected_files)
+  target_files = collected_files.map { |file| file['file_name'] }
   if command_options['l']
-    target_files = collected_files.map { |file| file['file_name'] }
     divided_files = collected_files.map { |file| [file['mode'], file['nlink'], file['uid'], file['gid'], file['size'], file['date'], file['file_name']] }
     formatted_files = format_with_l_option(divided_files)
     total_blocks(target_files)
-    output_files(formatted_files)
   else
-    target_files = collected_files.map { |file| file['file_name'] }
     file_count_per_column = calc_file_count_per_column(collected_files)
     divided_files = target_files.each_slice(file_count_per_column).to_a
     formatted_files = format_without_l_option(divided_files, file_count_per_column)
-    output_files(formatted_files)
   end
+  output_files(formatted_files)
 end
 
 def ls_command
