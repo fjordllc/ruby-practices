@@ -57,27 +57,23 @@ def translate_date(date)
   end
 end
 
-def collect_files(command_options, target_files)
-  if command_options['l']
-    file_details = []
-    target_files.each do |file_name|
-      file_detail = {}
-      stat = File.lstat(file_name)
-      file_mode = stat.mode.to_s(8)
-      file_mode = file_mode[0] == '1' ? file_mode : format('%06d', file_mode).to_s
-      file_detail['mode'] = translate_mode(file_mode)
-      file_detail['nlink'] = stat.nlink.to_s
-      file_detail['uid'] = translate_uid(stat.uid)
-      file_detail['gid'] = translate_gid(stat.gid)
-      file_detail['size'] = stat.size.to_s
-      file_detail['date'] = translate_date(stat.mtime)
-      file_detail['file_name'] = file_name
-      file_details.push(file_detail)
-    end
-    file_details
-  else
-    target_files
+def collect_files(target_files)
+  file_details = []
+  target_files.each do |file_name|
+    file_detail = {}
+    stat = File.lstat(file_name)
+    file_mode = stat.mode.to_s(8)
+    file_mode = file_mode[0] == '1' ? file_mode : format('%06d', file_mode).to_s
+    file_detail['mode'] = translate_mode(file_mode)
+    file_detail['nlink'] = stat.nlink.to_s
+    file_detail['uid'] = translate_uid(stat.uid)
+    file_detail['gid'] = translate_gid(stat.gid)
+    file_detail['size'] = stat.size.to_s
+    file_detail['date'] = translate_date(stat.mtime)
+    file_detail['file_name'] = file_name
+    file_details.push(file_detail)
   end
+  file_details
 end
 
 def calc_file_count_per_column(files)
@@ -112,18 +108,6 @@ def format_without_l_option(divided_files, file_count_per_column)
   transposed_files.transpose
 end
 
-def format_files(command_options, collected_files)
-  if command_options['l']
-    divided_files = collected_files.map { |file| [file['mode'], file['nlink'], file['uid'], file['gid'], file['size'], file['date'], file['file_name']] }
-    p divided_files
-    format_with_l_option(divided_files)
-  else
-    file_count_per_column = calc_file_count_per_column(collected_files)
-    divided_files = collected_files.each_slice(file_count_per_column).to_a
-    format_without_l_option(divided_files, file_count_per_column)
-  end
-end
-
 def total_blocks(target_files)
   block_count = 0
   target_files.each do |file|
@@ -133,8 +117,7 @@ def total_blocks(target_files)
   print "total #{block_count}\n"
 end
 
-def output_files(command_options, formatted_files, target_files)
-  total_blocks(target_files) if command_options['l']
+def output_files(formatted_files)
   formatted_files.each do |formatted_file|
     formatted_file.each.with_index do |value, index|
       suffix = "\n"
@@ -143,11 +126,26 @@ def output_files(command_options, formatted_files, target_files)
   end
 end
 
+def format_and_output_files(command_options, collected_files)
+  if command_options['l']
+    target_files = collected_files.map { |file| file['file_name'] }
+    divided_files = collected_files.map { |file| [file['mode'], file['nlink'], file['uid'], file['gid'], file['size'], file['date'], file['file_name']] }
+    formatted_files = format_with_l_option(divided_files)
+    total_blocks(target_files)
+    output_files(formatted_files)
+  else
+    target_files = collected_files.map { |file| file['file_name'] }
+    file_count_per_column = calc_file_count_per_column(collected_files)
+    divided_files = target_files.each_slice(file_count_per_column).to_a
+    formatted_files = format_without_l_option(divided_files, file_count_per_column)
+    output_files(formatted_files)
+  end
+end
+
 def ls_command
   command_options = ARGV.getopts('a', 'r', 'l')
   current_directory_files = target_directory_files(command_options)
-  collected_files = collect_files(command_options, current_directory_files)
-  formatted_files = format_files(command_options, collected_files)
-  output_files(command_options, formatted_files, current_directory_files)
+  collected_files = collect_files(current_directory_files)
+  format_and_output_files(command_options, collected_files)
 end
 ls_command
