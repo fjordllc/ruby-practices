@@ -58,7 +58,7 @@ def main
   opt.parse!(ARGV, into: params)
 
   directory_names = ARGV.empty? ? [Dir.pwd] : ARGV
-  directory_names.each.with_index do |directory, index|
+  directory_names.each do |directory|
     puts directory if directory_names.count > 1
     filesnames = params[:r] ? Dir.glob('*', base: directory).reverse : Dir.glob('*', base: directory)
     ls_main(filesnames)
