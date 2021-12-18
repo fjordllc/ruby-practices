@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'optparse'
 
 MAX_COLUMN_LENGTH = 3
@@ -54,7 +55,7 @@ end
 def main
   params = {}
   opt = OptionParser.new
-  opt.on('-r'){|v| v }
+  opt.on('-r') { |v| v }
   opt.parse!(ARGV, into: params)
 
   directory_names = ARGV.empty? ? [Dir.pwd] : ARGV
