@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 require 'optparse'
 
 MAX_COLUMN_LENGTH = 3
@@ -55,14 +54,13 @@ end
 def main
   params = {}
   opt = OptionParser.new
-  opt.on('-a') { |v| v }
+  opt.on('-r'){|v| v }
   opt.parse!(ARGV, into: params)
 
   directory_names = ARGV.empty? ? [Dir.pwd] : ARGV
-  directory_names.each do |directory|
+  directory_names.each.with_index do |directory, index|
     puts directory if directory_names.count > 1
-    flags = params[:a] ? File::FNM_DOTMATCH : 0
-    filesnames = Dir.glob('*', flags, base: directory)
+    filesnames = params[:r] ? Dir.glob('*', base: directory).reverse : Dir.glob('*', base: directory)
     ls_main(filesnames)
   end
 end
