@@ -62,7 +62,7 @@ def main
   directory_names.each do |directory|
     puts directory if directory_names.count > 1
     base_filesnames = Dir.glob('*', base: directory)
-		filesnames = base_filesnames.tap{|b| break b.reverse if params[:r]}
+    filesnames = base_filesnames.tap { |b| break b.reverse if params[:r] }
     ls_main(filesnames)
   end
 end
