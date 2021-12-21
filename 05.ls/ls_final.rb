@@ -51,9 +51,9 @@ end
 
 def translate_date(date)
   if date.year == Time.now.year
-    "#{date.day} #{date.month} #{date.hour.to_s.rjust(2, '0')}:#{date.min.to_s.rjust(2, '0')}"
+    "#{date.month} #{date.day} #{date.hour.to_s.rjust(2, '0')}:#{date.min.to_s.rjust(2, '0')}"
   else
-    "#{date.day} #{date.month} #{date.year}"
+    "#{date.month} #{date.day} #{date.year}"
   end
 end
 
