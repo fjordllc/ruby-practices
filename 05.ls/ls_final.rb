@@ -86,7 +86,10 @@ def format_with_l_option(file_details)
     max_str_count = data_list.max_by(&:size).size
     # ファイルサイズや日付などを右詰にしグループ名などを左詰するための処理
     formatted_file_details <<
-      if [1, 4, 5].include?(index)
+      case index
+      when file_details.transpose.length - 1
+        data_list.map { |v| v }
+      when 1, 4, 5
         data_list.map { |v| v.rjust(max_str_count) }
       else
         data_list.map { |v| v.ljust(max_str_count) }
@@ -121,7 +124,14 @@ def output_files(formatted_files)
   formatted_files.each do |formatted_file|
     formatted_file.each.with_index do |value, index|
       suffix = "\n"
-      print index == formatted_file.length - 1 ? "#{value}#{suffix}" : "#{value}  "
+      case index
+      when 0, 2, 3
+        print "#{value}  "
+      when formatted_file.length - 1
+        print "#{value}#{suffix}"
+      else
+        print "#{value} "
+      end
     end
   end
 end
