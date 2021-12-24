@@ -58,14 +58,14 @@ RSpec.describe Frame do
     context "ストライクのとき" do
       it "trueになること" do
         @frame = Frame.new('X')
-        expect(@frame.strike?).to eq(true)
+        expect(@frame.strike?).to be_truthy
       end
     end
 
     context "スペアのとき" do
       it "falseになること" do
         @frame = Frame.new('1', '9')
-        expect(@frame.strike?).to eq(false)
+        expect(@frame.strike?).to be_falsey
       end
     end
   end
@@ -74,14 +74,14 @@ RSpec.describe Frame do
     context "スペアのとき" do
       it "trueになること" do
         @frame = Frame.new('3', '7')
-        expect(@frame.spare?).to eq(true)
+        expect(@frame.spare?).to be_truthy
       end
     end
 
     context "ストライクのとき" do
       it "falseになること" do
         @frame = Frame.new('2', '6')
-        expect(@frame.spare?).to eq(false)
+        expect(@frame.spare?).to be_falsey
       end
     end
   end
