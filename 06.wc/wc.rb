@@ -79,10 +79,14 @@ def output_file_summaries(command_options, file_summaries)
   output_total_file_summary(command_options, total_file_summary)
 end
 
-def output_text_summary(standard_input_string)
-  print standard_input_string.count("\n").to_s.rjust(8)
-  print standard_input_string.split(' ').size.to_s.rjust(8)
-  print "#{standard_input_string.bytesize.to_s.rjust(8)}\n"
+def output_text_summary(command_options, standard_input_string)
+  if command_options['l']
+    print "#{standard_input_string.count("\n").to_s.rjust(8)}\n"
+  else
+    print standard_input_string.count("\n").to_s.rjust(8)
+    print standard_input_string.split(' ').size.to_s.rjust(8)
+    print "#{standard_input_string.bytesize.to_s.rjust(8)}\n"
+  end
 end
 
 def wc_command
@@ -99,7 +103,7 @@ def wc_command
       output_file_summaries(command_options, file_summaries)
     else
       standard_input_string = standard_input
-      output_text_summary(standard_input_string)
+      output_text_summary(command_options, standard_input_string)
     end
   end
 end
