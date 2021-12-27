@@ -61,8 +61,8 @@ def main
   directory_names = ARGV.empty? ? [Dir.pwd] : ARGV
   directory_names.each do |directory|
     puts directory if directory_names.count > 1
-    filesnames = Dir.glob('*', base: directory)
-    params[:r]&.then { filesnames.reverse! }
+    base_filesnames = Dir.glob('*', base: directory)
+    filesnames = base_filesnames.then { |b| params[:r] ? b.reverse : b }
     ls_main(filesnames)
   end
 end
