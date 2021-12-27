@@ -59,5 +59,12 @@ RSpec.describe Game do
         expect(game.score).to eq(240)
       end
     end
+
+    context "9フレーム目までが全てストライクで、10フレーム目が0のとき" do
+      let(:game){ Game.new('X,X,X,X,X,X,X,X,X,0,0,0') }
+      it "scoreが240になること" do
+        expect(game.score).to eq(240)
+      end
+    end
   end
 end
