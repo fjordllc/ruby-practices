@@ -33,6 +33,7 @@ jobs:
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically
     - name: Install dependencies
       run: bundle install
+      working-directory: 07.bowling_object
     - name: Run tests
       run: bundle exec rspec
       working-directory: 07.bowling_object
