@@ -21,7 +21,10 @@ def ls
   # rowとcolumnの入れ替え
   sort_of_lists = lists.transpose
 
-  spacing_between_elements = 15
+  # 配列の最大文字数を取得し、その文字数+余白分で等間隔表示する
+  max_word_count = sort_of_lists.flatten.max_by { |x| x.to_s.length }
+  spacing_between_elements = max_word_count.to_s.length + 15
+
   sort_of_lists.each do |sort_of_file|
     sort_of_file.each do |s|
       print s.to_s.ljust(spacing_between_elements)
