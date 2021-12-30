@@ -2,13 +2,11 @@
 require 'date'
 require 'optparse'
 
-def calender
+def output_calender
   today = Date.today
   options = ARGV.getopts('y:m:')
-  option_year = options['y']
-  option_month = options['m']
-  year =  option_year == nil ? today.year : option_year.to_i
-  month = option_month == nil ? today.month : option_month.to_i
+  year =  options['y']&.to_i || today.year
+  month = options['m']&.to_i || today.month
   end_date = Date.new(year, month, -1).day
   dates = (1..end_date).map do |d|
     Date.new(year, month, d)
@@ -18,13 +16,9 @@ def calender
   puts ['日', '月', '火', '水', '木', '金', '土'].join(' ')
   print '   ' * dates.first.wday
   dates.each do |d|
-    if d.saturday?
-      print d.day.to_s.rjust(2) + "\n"
-    else
-      print d.day.to_s.rjust(2) + ' '
-    end
+    print "#{d.day.to_s.rjust(2)} "
+    print "\n" if d.saturday?
   end
-  puts "\n"
 end
 
-calender
+output_calender
