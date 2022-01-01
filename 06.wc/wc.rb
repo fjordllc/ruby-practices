@@ -69,15 +69,6 @@ def calc_total_file_summary(file_summaries)
   total_file_summary
 end
 
-def output_total_file_summary(command_options, total_file_summary)
-  print total_file_summary[:total_line_count].to_s.rjust(8)
-  unless command_options['l']
-    print total_file_summary[:total_word_count].to_s.rjust(8)
-    print total_file_summary[:total_bytesize_count].to_s.rjust(8)
-  end
-  print " total\n"
-end
-
 def output_file_summaries(command_options, file_summaries)
   file_summaries.each do |file_summary|
     print file_summary[:line_count].to_s.rjust(8)
@@ -92,6 +83,15 @@ def output_file_summaries(command_options, file_summaries)
 
   total_file_summary = calc_total_file_summary(file_summaries)
   output_total_file_summary(command_options, total_file_summary)
+end
+
+def output_total_file_summary(command_options, total_file_summary)
+  print total_file_summary[:total_line_count].to_s.rjust(8)
+  unless command_options['l']
+    print total_file_summary[:total_word_count].to_s.rjust(8)
+    print total_file_summary[:total_bytesize_count].to_s.rjust(8)
+  end
+  print " total\n"
 end
 
 def output_text_summary(command_options, standard_input_string)
