@@ -2,8 +2,23 @@
 
 require 'optparse'
 
-def standard_input
-  $stdin.read
+def wc_command
+  has_input_from_pipe = File.pipe?($stdin)
+  command_options = ARGV.getopts('l')
+  if has_input_from_pipe
+    standard_input_string = $stdin.read
+    file_summary = calc_file_summary(standard_input_string)
+    output_file_summary(command_options, file_summary)
+  else
+    file_names = ARGV
+    if file_names.length.positive?
+      file_summaries = calc_file_summaries(file_names)
+      output_file_summaries(command_options, file_summaries)
+    else
+      standard_input_string = $stdin.read
+      output_text_summary(command_options, standard_input_string)
+    end
+  end
 end
 
 def calc_file_summary(input)
@@ -86,25 +101,6 @@ def output_text_summary(command_options, standard_input_string)
     print standard_input_string.count("\n").to_s.rjust(8)
     print standard_input_string.split(' ').size.to_s.rjust(8)
     print "#{standard_input_string.bytesize.to_s.rjust(8)}\n"
-  end
-end
-
-def wc_command
-  has_input_from_pipe = File.pipe?($stdin)
-  command_options = ARGV.getopts('l')
-  if has_input_from_pipe
-    standard_input_string = standard_input
-    file_summary = calc_file_summary(standard_input_string)
-    output_file_summary(command_options, file_summary)
-  else
-    file_names = ARGV
-    if file_names.length.positive?
-      file_summaries = calc_file_summaries(file_names)
-      output_file_summaries(command_options, file_summaries)
-    else
-      standard_input_string = standard_input
-      output_text_summary(command_options, standard_input_string)
-    end
   end
 end
 
