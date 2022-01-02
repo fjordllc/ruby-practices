@@ -21,20 +21,6 @@ def wc_command
   end
 end
 
-def output_file_summary(command_options, file_summary)
-  if command_options['l']
-    puts output_file_detail(file_summary[:line_count])
-  else
-    print output_file_detail(file_summary[:line_count])
-    print output_file_detail(file_summary[:word_count])
-    puts output_file_detail(file_summary[:bytesize_count])
-  end
-end
-
-def output_file_detail(value)
-  value.to_s.rjust(8)
-end
-
 def calc_file_summaries(has_input_from_pipe, file_inputs)
   if has_input_from_pipe
     file_summary = {}
@@ -55,18 +41,18 @@ def calc_file_summaries(has_input_from_pipe, file_inputs)
   end
 end
 
-def calc_total_file_summary(file_summaries)
-  total_file_summary = {
-    total_line_count: 0,
-    total_word_count: 0,
-    total_bytesize_count: 0
-  }
-  file_summaries.each do |file_summary|
-    total_file_summary[:total_line_count] += file_summary[:line_count]
-    total_file_summary[:total_word_count] += file_summary[:word_count]
-    total_file_summary[:total_bytesize_count] += file_summary[:bytesize_count]
+def output_file_summary(command_options, file_summary)
+  if command_options['l']
+    puts output_file_detail(file_summary[:line_count])
+  else
+    print output_file_detail(file_summary[:line_count])
+    print output_file_detail(file_summary[:word_count])
+    puts output_file_detail(file_summary[:bytesize_count])
   end
-  total_file_summary
+end
+
+def output_file_detail(value)
+  value.to_s.rjust(8)
 end
 
 def output_file_summaries(command_options, file_summaries)
@@ -83,6 +69,20 @@ def output_file_summaries(command_options, file_summaries)
 
   total_file_summary = calc_total_file_summary(file_summaries)
   output_total_file_summary(command_options, total_file_summary)
+end
+
+def calc_total_file_summary(file_summaries)
+  total_file_summary = {
+    total_line_count: 0,
+    total_word_count: 0,
+    total_bytesize_count: 0
+  }
+  file_summaries.each do |file_summary|
+    total_file_summary[:total_line_count] += file_summary[:line_count]
+    total_file_summary[:total_word_count] += file_summary[:word_count]
+    total_file_summary[:total_bytesize_count] += file_summary[:bytesize_count]
+  end
+  total_file_summary
 end
 
 def output_total_file_summary(command_options, total_file_summary)
