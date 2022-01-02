@@ -31,12 +31,16 @@ end
 
 def output_file_summary(command_options, file_summary)
   if command_options['l']
-    print "#{file_summary[:line_count].to_s.rjust(8)}\n"
+    puts output_file_detail(file_summary[:line_count])
   else
-    print file_summary[:line_count].to_s.rjust(8)
-    print file_summary[:word_count].to_s.rjust(8)
-    print "#{file_summary[:bytesize_count].to_s.rjust(8)}\n"
+    print output_file_detail(file_summary[:line_count])
+    print output_file_detail(file_summary[:word_count])
+    puts output_file_detail(file_summary[:bytesize_count])
   end
+end
+
+def output_file_detail(value)
+  value.to_s.rjust(8)
 end
 
 def calc_file_summaries(file_names)
@@ -71,12 +75,12 @@ end
 
 def output_file_summaries(command_options, file_summaries)
   file_summaries.each do |file_summary|
-    print file_summary[:line_count].to_s.rjust(8)
+    print output_file_detail(file_summary[:line_count])
     unless command_options['l']
-      print file_summary[:word_count].to_s.rjust(8)
-      print file_summary[:bytesize_count].to_s.rjust(8)
+      print output_file_detail(file_summary[:word_count])
+      print output_file_detail(file_summary[:bytesize_count])
     end
-    print " #{file_summary[:file_name].to_s.rjust(8)}\n"
+    puts " #{output_file_detail(file_summary[:file_name])}"
   end
 
   return unless file_summaries.size > 1
@@ -86,21 +90,21 @@ def output_file_summaries(command_options, file_summaries)
 end
 
 def output_total_file_summary(command_options, total_file_summary)
-  print total_file_summary[:total_line_count].to_s.rjust(8)
+  print output_file_detail(total_file_summary[:total_line_count])
   unless command_options['l']
-    print total_file_summary[:total_word_count].to_s.rjust(8)
-    print total_file_summary[:total_bytesize_count].to_s.rjust(8)
+    print output_file_detail(total_file_summary[:total_word_count])
+    print output_file_detail(total_file_summary[:total_bytesize_count])
   end
   print " total\n"
 end
 
 def output_text_summary(command_options, standard_input_string)
   if command_options['l']
-    print "#{standard_input_string.count("\n").to_s.rjust(8)}\n"
+    puts output_file_detail(standard_input_string.count("\n"))
   else
-    print standard_input_string.count("\n").to_s.rjust(8)
-    print standard_input_string.split(' ').size.to_s.rjust(8)
-    print "#{standard_input_string.bytesize.to_s.rjust(8)}\n"
+    print output_file_detail(standard_input_string.count("\n"))
+    print output_file_detail(standard_input_string.split(' ').size)
+    puts output_file_detail(standard_input_string.bytesize)
   end
 end
 
