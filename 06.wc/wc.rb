@@ -43,26 +43,26 @@ end
 
 def output_file_summary(command_options, file_summary)
   if command_options['l']
-    puts output_file_detail(file_summary[:line_count])
+    puts format_value(file_summary[:line_count])
   else
-    print output_file_detail(file_summary[:line_count])
-    print output_file_detail(file_summary[:word_count])
-    puts output_file_detail(file_summary[:bytesize_count])
+    print format_value(file_summary[:line_count])
+    print format_value(file_summary[:word_count])
+    puts format_value(file_summary[:bytesize_count])
   end
 end
 
-def output_file_detail(value)
+def format_value(value)
   value.to_s.rjust(8)
 end
 
 def output_file_summaries(command_options, file_summaries)
   file_summaries.each do |file_summary|
-    print output_file_detail(file_summary[:line_count])
+    print format_value(file_summary[:line_count])
     unless command_options['l']
-      print output_file_detail(file_summary[:word_count])
-      print output_file_detail(file_summary[:bytesize_count])
+      print format_value(file_summary[:word_count])
+      print format_value(file_summary[:bytesize_count])
     end
-    puts " #{output_file_detail(file_summary[:file_name])}"
+    puts " #{format_value(file_summary[:file_name])}"
   end
 
   return unless file_summaries.size > 1
@@ -86,21 +86,21 @@ def calc_total_file_summary(file_summaries)
 end
 
 def output_total_file_summary(command_options, total_file_summary)
-  print output_file_detail(total_file_summary[:total_line_count])
+  print format_value(total_file_summary[:total_line_count])
   unless command_options['l']
-    print output_file_detail(total_file_summary[:total_word_count])
-    print output_file_detail(total_file_summary[:total_bytesize_count])
+    print format_value(total_file_summary[:total_word_count])
+    print format_value(total_file_summary[:total_bytesize_count])
   end
   print " total\n"
 end
 
 def output_text_summary(command_options, standard_input_string)
   if command_options['l']
-    puts output_file_detail(standard_input_string.count("\n"))
+    puts format_value(standard_input_string.count("\n"))
   else
-    print output_file_detail(standard_input_string.count("\n"))
-    print output_file_detail(standard_input_string.split(' ').size)
-    puts output_file_detail(standard_input_string.bytesize)
+    print format_value(standard_input_string.count("\n"))
+    print format_value(standard_input_string.split(' ').size)
+    puts format_value(standard_input_string.bytesize)
   end
 end
 
