@@ -6,39 +6,31 @@ def wc_command
   has_input_from_pipe = File.pipe?($stdin)
   command_options = ARGV.getopts('l')
   if has_input_from_pipe
-    standard_input_string = $stdin.read
-    file_summary = calc_file_summaries(has_input_from_pipe, standard_input_string)
+    file_summary = calc_file_summary($stdin.read)
     output_file_summary(command_options, file_summary)
   else
     file_names = ARGV
     if file_names.length.positive?
-      file_summaries = calc_file_summaries(has_input_from_pipe, file_names)
+      file_summaries = file_names.map do |file_name|
+        text = File.read(file_name)
+        calc_file_summary(text, file_name)
+      end
       output_file_summaries(command_options, file_summaries)
     else
       standard_input_string = $stdin.read
+      # TODO: calcとoutputどちらも使った形に書き直す（output側を整理した後）
       output_text_summary(command_options, standard_input_string)
     end
   end
 end
 
-def calc_file_summaries(has_input_from_pipe, file_inputs)
-  if has_input_from_pipe
-    file_summary = {}
-    file_summary[:line_count] = file_inputs.count("\n")
-    file_summary[:word_count] = file_inputs.tr("\n", ' ').split(' ').size
-    file_summary[:bytesize_count] = file_inputs.bytesize
-    file_summary
-  else
-    file_inputs.map do |file_name|
-      file_summary = {}
-      file_contents = File.read(file_name)
-      file_summary[:line_count] = file_contents.count("\n")
-      file_summary[:word_count] = file_contents.split(' ').size
-      file_summary[:bytesize_count] = file_contents.bytesize
-      file_summary[:file_name] = file_name
-      file_summary
-    end
-  end
+def calc_file_summary(text, file_name = nil)
+  file_summary = {}
+  file_summary[:line_count] = text.count("\n")
+  file_summary[:word_count] = text.split(' ').size
+  file_summary[:bytesize_count] = text.bytesize
+  file_summary[:file_name] = file_name
+  file_summary
 end
 
 def output_file_summary(command_options, file_summary)
