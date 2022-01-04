@@ -3,17 +3,13 @@
 require 'optparse'
 
 def wc_command
-  has_input_from_pipe = File.pipe?($stdin)
   l_option = ARGV.getopts('l')['l']
-  if has_input_from_pipe
-    input_file_summary = calc_file_summary($stdin.read)
-    output_file_summary(input_file_summary, l_option)
-  elsif ARGV.length.positive?
+  if ARGV.length.positive?
     file_summaries = ARGV.map do |file_name|
       text = File.read(file_name)
       calc_file_summary(text, file_name)
     end
-    file_summaries.map { |file_summary| output_file_summary(file_summary, l_option) }
+    file_summaries.each { |file_summary| output_file_summary(file_summary, l_option) }
     return if file_summaries.size <= 1
 
     total_file_summary = calc_total_file_summary(file_summaries)
@@ -43,9 +39,7 @@ def output_file_summary(file_summary, l_option)
   end
 
   if file_summary[:file_name]
-    print " #{format_value(file_summary[:file_name])}"
-  elsif file_summary[:file_count] && file_summary[:file_count] > 1
-    print ' total'
+    print " #{file_summary[:file_name]}"
   end
   print "\n"
 end
@@ -58,15 +52,14 @@ def calc_total_file_summary(file_summaries)
   total_file_summary = {
     line_count: 0,
     word_count: 0,
-    bytesize_count: 0,
-    file_count: 0
+    bytesize_count: 0
   }
   file_summaries.each do |file_summary|
     total_file_summary[:line_count] += file_summary[:line_count]
     total_file_summary[:word_count] += file_summary[:word_count]
     total_file_summary[:bytesize_count] += file_summary[:bytesize_count]
-    total_file_summary[:file_count] += 1
   end
+  total_file_summary[:file_name] = 'total'
   total_file_summary
 end
 
