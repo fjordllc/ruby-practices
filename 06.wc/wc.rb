@@ -30,17 +30,13 @@ def calc_file_summary(text, file_name = nil)
 end
 
 def output_file_summary(file_summary, l_option)
-  if l_option
-    print format_value(file_summary[:line_count])
-  else
-    print format_value(file_summary[:line_count])
+  print format_value(file_summary[:line_count])
+  unless l_option
     print format_value(file_summary[:word_count])
     print format_value(file_summary[:bytesize_count])
   end
 
-  if file_summary[:file_name]
-    print " #{file_summary[:file_name]}"
-  end
+  print " #{file_summary[:file_name]}" if file_summary[:file_name]
   print "\n"
 end
 
