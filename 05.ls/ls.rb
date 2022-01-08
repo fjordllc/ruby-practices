@@ -6,10 +6,10 @@ require 'optparse'
 def list_of_elements
   options = ARGV.getopts('alr')
   elements = if options['a']
-            Dir.glob('*', File::FNM_DOTMATCH).sort
-          else
-            Dir.glob('*').sort
-          end
+               Dir.glob('*', File::FNM_DOTMATCH).sort
+             else
+               Dir.glob('*').sort
+             end
 
   total_element = elements.size
 
