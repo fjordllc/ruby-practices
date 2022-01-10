@@ -3,4 +3,4 @@ inherit_gem:
   rubocop-fjord:
     - "config/rubocop.yml"
 AllCops:
-  TargetRubyVersion: 3.0.2
+  TargetRubyVersion: 3.0.3
