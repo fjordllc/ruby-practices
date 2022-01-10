@@ -7,7 +7,7 @@ require 'optparse'
 def parse_option
   opt = OptionParser.new
   option = {}
-  opt.on('-a') { |boolean| p option[:a] = boolean }
+  opt.on('-a') { |boolean| option[:a] = boolean }
   opt.parse(ARGV)
 
   if option_a?(option)
