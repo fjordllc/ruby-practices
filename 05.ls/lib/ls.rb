@@ -55,14 +55,14 @@ end
 def main
   params = {}
   opt = OptionParser.new
-  opt.on('-a') { |v| v }
+  opt.on('-r') { |v| v }
   opt.parse!(ARGV, into: params)
 
   directory_names = ARGV.empty? ? [Dir.pwd] : ARGV
   directory_names.each do |directory|
     puts directory if directory_names.count > 1
-    flags = params[:a] ? File::FNM_DOTMATCH : 0
-    filesnames = Dir.glob('*', flags, base: directory)
+    base_filesnames = Dir.glob('*', base: directory).sort!
+    filesnames = base_filesnames.then { |b| params[:r] ? b.reverse : b }
     ls_main(filesnames)
   end
 end
