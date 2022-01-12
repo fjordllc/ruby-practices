@@ -16,3 +16,4 @@ num.each do |x|
   end
 
 end
+
