@@ -105,4 +105,6 @@ calendar.each do |x|
 
   day += 1
 end
-puts week.join(" ")
+if week.length != 0
+  puts week.join(" ")
+end
