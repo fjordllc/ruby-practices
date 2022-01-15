@@ -2,6 +2,25 @@
 # frozen_string_literal: true
 
 MAXIMUM_COLUMN = 3
+FILE_TYPE = {
+  'fifo' => 'p',
+  'characterSpecial' => 'c',
+  'directory' => 'd',
+  'blockSpecial' => 'b',
+  'file' => '-',
+  'link' => 'l',
+  'socket' => 's'
+}.freeze
+PERMISSION_STRING = {
+  0 => '---',
+  1 => '--x',
+  2 => '-w-',
+  3 => '-wx',
+  4 => 'r--',
+  5 => 'r-x',
+  6 => 'rw-',
+  7 => 'rwx'
+}.freeze
 require 'optparse'
 require 'etc'
 
@@ -10,14 +29,13 @@ def main
   dirs = Dir.glob('*')
 
   if params['l']
-    array_of_hard_links = []
-    array_of_file_sizes = []
-
     show_the_total_number_of_blocks(dirs)
 
-    putting_file_details_into_an_array(dirs, array_of_hard_links, array_of_file_sizes)
+    file_stats = create_file_stats(dirs)
 
-    show_file_details(dirs, array_of_hard_links, array_of_file_sizes)
+    maximum_characters = get_maximum_number_of_characters(dirs, file_stats)
+
+    show_file_details(dirs, file_stats, maximum_characters)
 
   else
     files = []
@@ -43,31 +61,57 @@ def show_the_total_number_of_blocks(dirs)
   puts "total #{total_of_blocks}"
 end
 
-def putting_file_details_into_an_array(dirs, array_of_hard_links, array_of_file_sizes)
-  dirs.each do |dir|
-    fs = File.lstat(dir)
-    array_of_hard_links << fs.nlink.to_s
-    array_of_file_sizes << fs.size.to_s
-  end
-end
-
-def show_file_details(dirs, array_of_hard_links, array_of_file_sizes)
-  file_type = { 'fifo' => 'p', 'characterSpecial' => 'c', 'directory' => 'd', 'blockSpecial' => 'b', 'file' => '-', 'link' => 'l', 'socket' => 's' }
-  permission_string = { 0 => '---', 1 => '--x', 2 => '-w-', 3 => '-wx', 4 => 'r--', 5 => 'r-x', 6 => 'rw-', 7 => 'rwx' }
-
+def create_file_stats(dirs)
+  file_stats = []
   dirs.each do |dir|
     fs = File.lstat(dir)
     permitted_attributes = fs.mode.to_s(8).to_i.digits.take(3).reverse
-    file_permission = permission_string[permitted_attributes[0]] + permission_string[permitted_attributes[1]] + permission_string[permitted_attributes[2]]
-    hard_link = fs.nlink.to_s
-    hard_link_digit = array_of_hard_links.max_by(&:size).size
-    username = Etc.getpwuid(fs.uid).name
-    groupname = Etc.getgrgid(fs.gid).name
-    file_size = fs.size.to_s
-    file_size_digit = array_of_file_sizes.max_by(&:size).size
-    update_date = fs.mtime.strftime('%_m %e %H:%M')
-    puts "#{file_type[fs.ftype]}#{file_permission}  #{hard_link.rjust(hard_link_digit)} " \
-         "#{username}  #{groupname}  #{file_size.rjust(file_size_digit)} #{update_date} #{dir}"
+    file_stat = {
+      permitted_attributes: FILE_TYPE[fs.ftype],
+      file_permission: PERMISSION_STRING[permitted_attributes[0]] + PERMISSION_STRING[permitted_attributes[1]] + PERMISSION_STRING[permitted_attributes[2]],
+      hard_link: fs.nlink.to_s,
+      username: Etc.getpwuid(fs.uid).name,
+      groupname: Etc.getgrgid(fs.gid).name,
+      file_size: fs.size.to_s,
+      update_date: fs.mtime.strftime('%_m %e %H:%M'),
+      file_name: dir
+    }
+    file_stats << file_stat
+  end
+  file_stats
+end
+
+def get_maximum_number_of_characters(dirs, file_stats)
+  stat_number = 0
+  files_stats = { hard_links: [], usernames: [], groupnames: [], file_sizes: [] }
+  dirs.each do
+    files_stats[:hard_links] << file_stats[stat_number][:hard_link]
+    files_stats[:usernames] << file_stats[stat_number][:username]
+    files_stats[:groupnames] << file_stats[stat_number][:groupname]
+    files_stats[:file_sizes] << file_stats[stat_number][:file_size]
+    stat_number += 1
+  end
+  # ls.rb:94:3: W: Lint/UselessAssignment: Useless assignment to variable - maximum_characters.
+  # ls.rb:94:3: C: [Correctable] Style/RedundantAssignment: Redundant assignment before returning detected.
+  {
+    hard_link: files_stats[:hard_links].max_by(&:size).size,
+    username: files_stats[:usernames].max_by(&:size).size,
+    groupname: files_stats[:groupnames].max_by(&:size).size,
+    file_size: files_stats[:file_sizes].max_by(&:size).size
+  }
+end
+
+def show_file_details(dirs, file_stats, maximum_characters)
+  stat_number = 0
+  dirs.each do |dir|
+    File.lstat(dir)
+    puts "#{file_stats[stat_number][:permitted_attributes]}#{file_stats[stat_number][:file_permission]}" \
+    "  #{file_stats[stat_number][:hard_link].rjust(maximum_characters[:hard_link])}" \
+    " #{file_stats[stat_number][:username].ljust(maximum_characters[:username])}" \
+    "  #{file_stats[stat_number][:groupname].ljust(maximum_characters[:groupname])}" \
+    "  #{file_stats[stat_number][:file_size].rjust(maximum_characters[:file_size])}" \
+    " #{file_stats[stat_number][:update_date]} #{file_stats[stat_number][:file_name]}"
+    stat_number += 1
   end
 end
 
