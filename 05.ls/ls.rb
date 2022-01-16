@@ -3,21 +3,24 @@
 
 require 'optparse'
 
-def list_of_elements
+def checked_option
   options = ARGV.getopts('alr')
-  elements = if options['a']
-               Dir.glob('*', File::FNM_DOTMATCH).sort
-             else
-               Dir.glob('*').sort
-             end
+  if options['r']
+    Dir.glob('*').sort.reverse
+  else
+    Dir.glob('*').sort
+  end
+end
 
-  total_element = elements.size
+def list_of_elements
+  selected_elements = checked_option
+  total_element = selected_elements.size
 
   maximum_width = 3.0
   columns = (total_element / maximum_width).ceil
 
   lists = []
-  elements.each_slice(columns) do |list|
+  selected_elements.each_slice(columns) do |list|
     lists << list
 
     # 最大要素数を取得して、その要素数に合わせる
