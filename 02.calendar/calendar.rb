@@ -13,7 +13,11 @@ class AppOption
             o.parse!(ARGV)
         end
         options_to_i()
-    rescue OptionParser::InvalidOption
+    # rescue OptionParser::InvalidOption => e
+    rescue StandardError => e
+        puts "--- 例外が発生しました ---"
+        puts "例外クラス：#{e.class}"
+        puts "例外メッセージ：#{e.message}"
         @options = {}
     end
 
@@ -31,8 +35,6 @@ class AppOption
         @options.each do |key, value|
             @options[key] = Integer(value)
         end
-    rescue
-        
     end
 end
 
@@ -57,11 +59,20 @@ def show_month_calendar(month = Date.today.month, year = Date.today.year)
     puts calendar_title
     puts calendar_header.join(" ")
     days.each_with_index  do |day, i|
+        if day.to_s.match?(/^[0-9]+$/)
+            print "\e[31m" if today?(Date.new(year, month, day))
+        end
         print day.to_s.length < 2 ? " " + day.to_s + " " : day.to_s + " " #1桁日の表示調整
+        if day.to_s.match?(/^[0-9]+$/)
+            print "\e[0m" if today?(Date.new(year, month, day))
+        end
         puts "\n" if (i+1)%7 == 0
     end
 end
 
+def today?(date)
+    date === Date.today ? true : false
+end
 
 # 実行
 option = AppOption.new
