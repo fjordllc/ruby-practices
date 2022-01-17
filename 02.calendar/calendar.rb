@@ -52,7 +52,7 @@ def show_month_calendar(month = Date.today.month, year = Date.today.year)
     end
     
     # カレンダーの共通パーツの設定
-    calendar_title = first_day.strftime("%Y年 %m月").center(19)
+    calendar_title = first_day.strftime("%m月 %Y").center(19)
     calendar_header = ["日","月","火","水","木","金","土"]
 
     # カレンダーを表示
