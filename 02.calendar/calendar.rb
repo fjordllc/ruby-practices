@@ -16,6 +16,6 @@ puts '日 月 火 水 木 金 土'
 print "   " * first_date.wday
 
 (first_date..last_date).each do |date|
-  print date.strftime('%e') + " "
+  print date.strftime('%e ')
   puts if date.saturday?
 end
