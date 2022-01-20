@@ -33,13 +33,15 @@ end
 def print_ls_command_l_option(dirs)
   filestat_in_directory = repeat_through_file_stat(dirs)
 
-  show_the_total_number_of_blocks(dirs, filestat_in_directory)
+  show_the_total_number_of_blocks(filestat_in_directory)
 
-  file_stats = create_file_stats(dirs, filestat_in_directory)
+  file_stats = create_file_stats(filestat_in_directory)
 
-  maximum_characters = get_maximum_number_of_characters(dirs, file_stats)
+  file_stat = fetch_file_stat(file_stats)
 
-  show_file_details(dirs, file_stats, maximum_characters)
+  maximum_characters = fetch_maximum_number_of_characters(file_stat)
+
+  show_file_details(file_stats, maximum_characters)
 end
 
 def print_ls_command(dirs)
@@ -57,72 +59,70 @@ def print_ls_command(dirs)
 end
 
 def repeat_through_file_stat(dirs)
-  fs = []
+  fs_directory = []
   dirs.each do |dir|
-    fs << File.lstat(dir)
+    fs = {
+      filestat: File.lstat(dir),
+      filename: dir
+    }
+    fs_directory << fs
   end
-  fs
+  fs_directory
 end
 
-def show_the_total_number_of_blocks(dirs, filestat_in_directory)
-  stat_number = 0
+def show_the_total_number_of_blocks(filestat_in_directory)
   total_of_blocks = 0
-  dirs.each do
-    total_of_blocks += filestat_in_directory[stat_number].blocks
-    stat_number += 1
+  filestat_in_directory.each do |filestat_dir|
+    total_of_blocks += filestat_dir[:filestat].blocks
   end
   puts "total #{total_of_blocks}"
 end
 
-def create_file_stats(dirs, filestat_in_directory)
-  stat_number = 0
+def create_file_stats(filestat_in_directory)
   file_stats = []
-  dirs.each do |dir|
-    permitted_attributes = filestat_in_directory[stat_number].mode.to_s(8).to_i.digits.take(3).reverse
+  filestat_in_directory.each do |filestat_dir|
+    permitted_attributes = filestat_dir[:filestat].mode.to_s(8).to_i.digits.take(3).reverse
     file_stat = {
-      permitted_attributes: FILE_TYPE[filestat_in_directory[stat_number].ftype],
+      permitted_attributes: FILE_TYPE[filestat_dir[:filestat].ftype],
       file_permission: PERMISSION_STRING[permitted_attributes[0]] + PERMISSION_STRING[permitted_attributes[1]] + PERMISSION_STRING[permitted_attributes[2]],
-      hard_link: filestat_in_directory[stat_number].nlink.to_s,
-      username: Etc.getpwuid(filestat_in_directory[stat_number].uid).name,
-      groupname: Etc.getgrgid(filestat_in_directory[stat_number].gid).name,
-      file_size: filestat_in_directory[stat_number].size.to_s,
-      update_date: filestat_in_directory[stat_number].mtime.strftime('%_m %e %H:%M'),
-      file_name: dir
+      hard_link: filestat_dir[:filestat].nlink.to_s,
+      username: Etc.getpwuid(filestat_dir[:filestat].uid).name,
+      groupname: Etc.getgrgid(filestat_dir[:filestat].gid).name,
+      file_size: filestat_dir[:filestat].size.to_s,
+      update_date: filestat_dir[:filestat].mtime.strftime('%_m %e %H:%M'),
+      file_name: filestat_dir[:filename]
     }
     file_stats << file_stat
-    stat_number += 1
   end
   file_stats
 end
 
-def get_maximum_number_of_characters(dirs, file_stats)
-  stat_number = 0
-  files_stats = { hard_links: [], usernames: [], groupnames: [], file_sizes: [] }
-  dirs.each do
-    files_stats[:hard_links] << file_stats[stat_number][:hard_link]
-    files_stats[:usernames] << file_stats[stat_number][:username]
-    files_stats[:groupnames] << file_stats[stat_number][:groupname]
-    files_stats[:file_sizes] << file_stats[stat_number][:file_size]
-    stat_number += 1
-  end
+def fetch_file_stat(file_stats)
   {
-    hard_link: files_stats[:hard_links].max_by(&:size).size,
-    username: files_stats[:usernames].max_by(&:size).size,
-    groupname: files_stats[:groupnames].max_by(&:size).size,
-    file_size: files_stats[:file_sizes].max_by(&:size).size
+    hard_link: file_stats.map { |file_stat| file_stat[:hard_link] },
+    username: file_stats.map { |file_stat| file_stat[:username] },
+    groupname: file_stats.map { |file_stat| file_stat[:groupname] },
+    file_size: file_stats.map { |file_stat| file_stat[:file_size] }
   }
 end
 
-def show_file_details(dirs, file_stats, maximum_characters)
-  stat_number = 0
-  dirs.each do
-    puts "#{file_stats[stat_number][:permitted_attributes]}#{file_stats[stat_number][:file_permission]}" \
-    "  #{file_stats[stat_number][:hard_link].rjust(maximum_characters[:hard_link])}" \
-    " #{file_stats[stat_number][:username].ljust(maximum_characters[:username])}" \
-    "  #{file_stats[stat_number][:groupname].ljust(maximum_characters[:groupname])}" \
-    "  #{file_stats[stat_number][:file_size].rjust(maximum_characters[:file_size])}" \
-    " #{file_stats[stat_number][:update_date]} #{file_stats[stat_number][:file_name]}"
-    stat_number += 1
+def fetch_maximum_number_of_characters(file_stat)
+  {
+    max_hard_link: file_stat[:hard_link].max_by(&:size).size,
+    max_username: file_stat[:username].max_by(&:size).size,
+    max_groupname: file_stat[:groupname].max_by(&:size).size,
+    max_file_size: file_stat[:file_size].max_by(&:size).size
+  }
+end
+
+def show_file_details(file_stats, maximum_characters)
+  file_stats.each do |file_stat|
+    puts "#{file_stat[:permitted_attributes]}#{file_stat[:file_permission]}" \
+    "  #{file_stat[:hard_link].rjust(maximum_characters[:max_hard_link])}" \
+    " #{file_stat[:username].ljust(maximum_characters[:max_username])}" \
+    "  #{file_stat[:groupname].ljust(maximum_characters[:max_groupname])}" \
+    "  #{file_stat[:file_size].rjust(maximum_characters[:max_file_size])}" \
+    " #{file_stat[:update_date]} #{file_stat[:file_name]}"
   end
 end
 
