@@ -11,6 +11,7 @@ FILE_TYPE = {
   'link' => 'l',
   'socket' => 's'
 }.freeze
+
 PERMISSION_STRING = {
   0 => '---',
   1 => '--x',
@@ -21,6 +22,7 @@ PERMISSION_STRING = {
   6 => 'rw-',
   7 => 'rwx'
 }.freeze
+
 require 'optparse'
 require 'etc'
 
@@ -31,15 +33,13 @@ def main
 end
 
 def print_ls_command_l_option(dirs)
-  filestat_in_directory = repeat_through_file_stat(dirs)
+  file_stats = create_file_stats(dirs)
 
-  show_the_total_number_of_blocks(filestat_in_directory)
+  show_the_total_number_of_blocks(file_stats)
 
-  file_stats = create_file_stats(filestat_in_directory)
+  sorted_file_stats = sort_file_stats(file_stats)
 
-  file_stat = fetch_file_stat(file_stats)
-
-  maximum_characters = fetch_maximum_number_of_characters(file_stat)
+  maximum_characters = fetch_maximum_number_of_characters(sorted_file_stats)
 
   show_file_details(file_stats, maximum_characters)
 end
@@ -58,46 +58,36 @@ def print_ls_command(dirs)
   show_files(dirs, sorted_files)
 end
 
-def repeat_through_file_stat(dirs)
-  fs_directory = []
-  dirs.each do |dir|
-    fs = {
-      filestat: File.lstat(dir),
-      filename: dir
-    }
-    fs_directory << fs
-  end
-  fs_directory
-end
-
-def show_the_total_number_of_blocks(filestat_in_directory)
-  total_of_blocks = 0
-  filestat_in_directory.each do |filestat_dir|
-    total_of_blocks += filestat_dir[:filestat].blocks
-  end
-  puts "total #{total_of_blocks}"
-end
-
-def create_file_stats(filestat_in_directory)
+def create_file_stats(dirs)
   file_stats = []
-  filestat_in_directory.each do |filestat_dir|
-    permitted_attributes = filestat_dir[:filestat].mode.to_s(8).to_i.digits.take(3).reverse
+  dirs.each do |dir|
+    fs = File.lstat(dir)
+    permitted_attributes = fs.mode.to_s(8).to_i.digits.take(3).reverse
     file_stat = {
-      permitted_attributes: FILE_TYPE[filestat_dir[:filestat].ftype],
+      file_blocks: fs.blocks,
+      permitted_attributes: FILE_TYPE[fs.ftype],
       file_permission: PERMISSION_STRING[permitted_attributes[0]] + PERMISSION_STRING[permitted_attributes[1]] + PERMISSION_STRING[permitted_attributes[2]],
-      hard_link: filestat_dir[:filestat].nlink.to_s,
-      username: Etc.getpwuid(filestat_dir[:filestat].uid).name,
-      groupname: Etc.getgrgid(filestat_dir[:filestat].gid).name,
-      file_size: filestat_dir[:filestat].size.to_s,
-      update_date: filestat_dir[:filestat].mtime.strftime('%_m %e %H:%M'),
-      file_name: filestat_dir[:filename]
+      hard_link: fs.nlink.to_s,
+      username: Etc.getpwuid(fs.uid).name,
+      groupname: Etc.getgrgid(fs.gid).name,
+      file_size: fs.size.to_s,
+      update_date: fs.mtime.strftime('%_m %e %H:%M'),
+      file_name: dir
     }
     file_stats << file_stat
   end
   file_stats
 end
 
-def fetch_file_stat(file_stats)
+def show_the_total_number_of_blocks(file_stats)
+  total_of_blocks = 0
+  file_stats.each do |filestats|
+    total_of_blocks += filestats[:file_blocks]
+  end
+  puts "total #{total_of_blocks}"
+end
+
+def sort_file_stats(file_stats)
   {
     hard_link: file_stats.map { |file_stat| file_stat[:hard_link] },
     username: file_stats.map { |file_stat| file_stat[:username] },
@@ -106,12 +96,12 @@ def fetch_file_stat(file_stats)
   }
 end
 
-def fetch_maximum_number_of_characters(file_stat)
+def fetch_maximum_number_of_characters(sorted_file_stats)
   {
-    max_hard_link: file_stat[:hard_link].max_by(&:size).size,
-    max_username: file_stat[:username].max_by(&:size).size,
-    max_groupname: file_stat[:groupname].max_by(&:size).size,
-    max_file_size: file_stat[:file_size].max_by(&:size).size
+    max_hard_link: sorted_file_stats[:hard_link].max_by(&:size).size,
+    max_username: sorted_file_stats[:username].max_by(&:size).size,
+    max_groupname: sorted_file_stats[:groupname].max_by(&:size).size,
+    max_file_size: sorted_file_stats[:file_size].max_by(&:size).size
   }
 end
 
