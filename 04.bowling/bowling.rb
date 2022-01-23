@@ -42,8 +42,12 @@ class FlameScore
                    end
   end
 
-  def record_flame_score
-    
+  def record_flame_score(score)
+    if !@first_throw_score
+      @first_throw_score = score
+    else
+      @second_throw_score = score
+    end
   end
 
   def spare?
