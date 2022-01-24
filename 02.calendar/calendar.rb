@@ -5,21 +5,14 @@ require 'optparse'
 
 # 日付フォーマットの適用
 def form_day(day)
-  if day < 10
-    return " " + day.to_s(10)
-  else
-    return day.to_s(10)
-  end
+  return day.to_s(10).rjust(2)
 end
 
 # 対象月の日にちをまとめる
 def days_list(end_day)
-  day = 1
   days_list = []
-
-  end_day.times do
+  (1..end_day).each do |day|
     days_list.push(form_day(day))
-    day += 1
   end
 
   return days_list
@@ -95,15 +88,12 @@ puts WEEK.join(" ")
 
 # 日表示
 week = []
-day = 1
-calendar.each do |x|
-  week.push(x)
-  if day % 7 == 0
+calendar.each.with_index(1) do |item, index|
+  week.push(item)
+  if index % 7 == 0
     puts week.join(" ")
     week = []
   end
-
-  day += 1
 end
 if week.length != 0
   puts week.join(" ")
