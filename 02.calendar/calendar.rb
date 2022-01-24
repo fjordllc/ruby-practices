@@ -4,7 +4,7 @@ require 'date'
 require 'optparse'
 
 # 日付フォーマットの適用
-def formDay(day)
+def form_day(day)
   if day < 10
     return " " + day.to_s(10)
   else
@@ -13,29 +13,29 @@ def formDay(day)
 end
 
 # 対象月の日にちをまとめる
-def daysList(endDay)
+def days_list(end_day)
   day = 1
-  daysList = []
+  days_list = []
 
-  endDay.times do
-    daysList.push(formDay(day))
+  end_day.times do
+    days_list.push(form_day(day))
     day += 1
   end
 
-  return daysList
+  return days_list
 end
 
 # 第1週目のスペース挿入
-def addStartSpace(startWday, daysList)
-  startWday.times do
-    daysList.unshift("  ")
+def add_start_space(start_wday, days_list)
+  start_wday.times do
+    days_list.unshift("  ")
   end
 
-  return daysList
+  return days_list
 end
 
 # 対象年の確定
-def targetYear(year)
+def target_year(year)
   if year == ""
     return Date.today.year
   end
@@ -49,7 +49,7 @@ def targetYear(year)
 end
 
 # 対象月の確定
-def targetMonth(month)
+def target_month(month)
   if month == ""
     return Date.today.month
   end
@@ -64,30 +64,30 @@ end
 
 # 引数取得
 opt = OptionParser.new
-optYear = ""
+opt_year = ""
 opt.on('-y [YEAR]') do |value|
-  optYear = value
+  opt_year = value
 end
 
-optMonth = ""
+opt_month = ""
 opt.on('-m [MONTH]') do |value|
-  optMonth = value
+  opt_month = value
 end
 
 opt.parse(ARGV)
 
 
 # カレンダー情報
-year = targetYear(optYear)
-month = targetMonth(optMonth)
-startDate = Date.new(year, month, 1)
-endDate = Date.new(year, month, -1)
+year = target_year(opt_year)
+month = target_month(opt_month)
+start_date = Date.new(year, month, 1)
+end_date = Date.new(year, month, -1)
 
-days = daysList(endDate.day)
-calendar = addStartSpace(startDate.wday, days)
+days = days_list(end_date.day)
+calendar = add_start_space(start_date.wday, days)
 
 # 年月表示
-puts "      " + formDay(startDate.month) + "月 " + startDate.year.to_s
+puts "      " + form_day(start_date.month) + "月 " + start_date.year.to_s
 
 # 曜日表示
 WEEK = ["日", "月", "火", "水", "木", "金", "土"]
