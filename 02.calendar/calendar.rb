@@ -10,12 +10,9 @@ end
 
 # 対象月の日にちをまとめる
 def days_list(end_day)
-  days_list = []
-  (1..end_day).each do |day|
-    days_list.push(form_day(day))
+  return (1..end_day).map do |day|
+    form_day(day)
   end
-
-  return days_list
 end
 
 # 第1週目のスペース挿入
@@ -89,12 +86,8 @@ puts WEEK.join(" ")
 # 日表示
 week = []
 calendar.each.with_index(1) do |item, index|
-  week.push(item)
+  print("#{item} ")
   if index % 7 == 0
-    puts week.join(" ")
-    week = []
+    print("\n")
   end
-end
-if week.length != 0
-  puts week.join(" ")
 end
