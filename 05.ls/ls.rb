@@ -3,9 +3,15 @@
 
 require 'optparse'
 
-def checked_option
-  options = ARGV.getopts('alr')
-  if options['r']
+def got_option
+  ARGV.getopts('alr')
+end
+
+def print_elements
+  options = got_option
+  if options['a']
+    Dir.glob('*', File::FNM_DOTMATCH).sort
+  elsif options['r']
     Dir.glob('*').sort.reverse
   else
     Dir.glob('*').sort
@@ -13,7 +19,7 @@ def checked_option
 end
 
 def list_of_elements
-  elements = checked_option
+  elements = print_elements
   total_element = elements.size
 
   maximum_width = 3.0
