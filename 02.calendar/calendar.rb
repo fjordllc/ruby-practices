@@ -10,18 +10,14 @@ end
 
 # 対象月の日にちをまとめる
 def days_list(end_day)
-  return (1..end_day).map do |day|
+  (1..end_day).map do |day|
     form_day(day)
   end
 end
 
 # 第1週目のスペース挿入
 def add_start_space(start_wday, days_list)
-  start_wday.times do
-    days_list.unshift("  ")
-  end
-
-  return days_list
+  ["  "] * start_wday + days_list
 end
 
 # 対象年の確定
