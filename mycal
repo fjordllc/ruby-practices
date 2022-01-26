@@ -1,0 +1,56 @@
+#!/usr/bin/env ruby
+
+require 'date'
+require 'optparse'
+
+params = ARGV.getopts('m:', 'y:')
+if params['m'] == nil && params['y'] == nil
+  month = Date.today
+  month = month.strftime('%-m')
+  year = Date.today
+  year = year.strftime('%-Y')
+elsif params['y'] == nil
+  month = params['m']
+  year = Date.today
+  year = year.strftime('%-Y')
+elsif
+  month = params['m']
+  year = params['y']
+end
+
+puts "      #{month}月 #{year}"
+puts "日 月 火 水 木 金 土"
+
+first_day = Date.new(year.to_i,month.to_i,1)
+last_day = Date.new(year.to_i,month.to_i,-1) 
+
+print "   " * first_day.wday
+
+wday = first_day.wday
+
+day = first_day.day..last_day.day
+day.each do |x|
+  if wday % 7 == 0
+    if x >= 10
+      print "\n"
+      print x
+      print " "
+      wday = wday + 1 
+    else 
+      print "\n"
+      print " "
+      print x
+      print " "
+      wday = wday + 1
+    end
+  elsif x < 10
+    print " "
+    print x
+    print " "
+    wday = wday + 1
+  elsif x >= 10
+    print x
+    print " "
+    wday = wday + 1
+  end
+end
