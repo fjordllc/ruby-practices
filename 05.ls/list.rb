@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 MAX_COLUMN = 3
 COLUMN_WIDTH = 15
@@ -11,28 +12,28 @@ def main
 end
 
 def sort_segments(directory)
-  Dir.glob("*", base: directory)
+  Dir.glob('*', base: directory)
 end
 
 def create_rows(segments)
   max_row = (segments.count / MAX_COLUMN.to_f).ceil
   rows = []
-  segments.each_with_index do |s,i|
-    if i < max_row
-      row = []
-      row << s.ljust(COLUMN_WIDTH)
-      (1..MAX_COLUMN - 1).each do |r|
-        row <<  segments[i + max_row * r].ljust(COLUMN_WIDTH) if i + max_row * r < segments.size
-      end
-      rows << row 
+  segments.each_with_index do |s, i|
+    break if i == max_row
+
+    row = []
+    row << s.ljust(COLUMN_WIDTH)
+    (1..MAX_COLUMN - 1).each do |r|
+      row << segments[i + max_row * r].ljust(COLUMN_WIDTH) if i + max_row * r < segments.size
     end
+    rows << row
   end
   rows
 end
 
 def list_segments(rows)
   rows.each do |c|
-    puts c.join("")
+    puts c.join('')
   end
 end
 
