@@ -1,80 +1,76 @@
 # frozen_string_literal: true
 
-require 'byebug'
-
-TOTAL_PIN_COUNT_IN_1_FRAME = 10 # 1フレームの総ピン数
-TOTAL_FLAME = 10 # 1ゲームの総フレーム数
-# scores = '6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,6,4,5'
-scores = '6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,X,X,X'
-
 class Bowling
-  attr_reader :total_score, :flame_array
+  attr_reader :total_score, :frame_array
+
+  TOTAL_FRAME = 10 # 1ゲームの総フレーム数
 
   def initialize
     @total_score = 0
-    @flame_array = []
+    @frame_array = []
 
-    TOTAL_FLAME.times do |i|
-      if i == TOTAL_FLAME - 1
-        @flame_array.push(LastFlame.new)
+    TOTAL_FRAME.times do |i|
+      if i == TOTAL_FRAME - 1
+        @frame_array.push(LastFrame.new)
       else
-        @flame_array.push(Flame.new)
+        @frame_array.push(Frame.new)
       end
     end
   end
 
   def shot(score)
     score = score.to_i unless score == 'X'
-    @flame_array.each do |flame|
-      next if flame.is_recorded
+    @frame_array.each do |frame|
+      next if frame.is_recorded
 
-      flame.add_flame_score(score)
+      frame.add_frame_score(score)
       break
     end
   end
 
   def calculate_total_score
-    @flame_array.each_with_index do |flame, i|
-      @total_score += flame.flame_score
+    @frame_array.each_with_index do |frame, i|
+      @total_score += frame.frame_score
 
-      break if flame.instance_of?(LastFlame)
+      break if frame.instance_of?(LastFrame)
 
-      next_flame = @flame_array[i + 1]
-      if flame.strike?
-        @total_score += next_flame.first_shot_score
-        @total_score += next_flame.second_shot_score
-        @total_score += @flame_array[i + 1].first_shot_score if next_flame.strike?
-      elsif flame.spare?
-        @total_score += next_flame.first_shot_score
+      next_frame = @frame_array[i + 1]
+      if frame.strike?
+        @total_score += next_frame.first_shot_score
+        @total_score += next_frame.strike? ? @frame_array[i + 2].first_shot_score : next_frame.second_shot_score
+      elsif frame.spare?
+        @total_score += next_frame.first_shot_score
       end
     end
     @total_score
   end
 end
 
-class Flame
-  attr_reader :flame_score, :first_shot_score, :second_shot_score, :is_recorded
+class Frame
+  attr_reader :frame_score, :first_shot_score, :second_shot_score, :is_recorded
+
+  TOTAL_PIN_COUNT_IN_1_FRAME = 10 # 1フレームの総ピン数
 
   def initialize
     @first_shot_score = nil
     @second_shot_score = nil
-    @flame_score = 0
+    @frame_score = 0
     @is_recorded = false
   end
 
-  def add_flame_score(score)
+  def add_frame_score(score)
     return if @is_recorded
 
     score = score == 'X' ? TOTAL_PIN_COUNT_IN_1_FRAME : score
 
     unless @first_shot_score
       @first_shot_score = score
-      @flame_score += @first_shot_score
+      @frame_score += @first_shot_score
       @is_recorded = true if strike?
       return
     end
     @second_shot_score = score
-    @flame_score += @second_shot_score
+    @frame_score += @second_shot_score
     @is_recorded = true
   end
 
@@ -87,7 +83,7 @@ class Flame
   end
 end
 
-class LastFlame < Flame
+class LastFrame < Frame
   attr_reader :third_shot_score
 
   def initialize
@@ -95,36 +91,44 @@ class LastFlame < Flame
     @third_shot_score = 0
   end
 
-  def add_flame_score(score)
+  def add_frame_score(score)
     return if @is_recorded
 
     score = score == 'X' ? TOTAL_PIN_COUNT_IN_1_FRAME : score
 
     unless @first_shot_score
       @first_shot_score = score
-      @flame_score += @first_shot_score
+      @frame_score += @first_shot_score
       return
     end
     unless @second_shot_score
       @second_shot_score = score
-      @flame_score += @second_shot_score
+      @frame_score += @second_shot_score
       return
     end
     @third_shot_score = score
-    @flame_score += @third_shot_score
+    @frame_score += @third_shot_score
 
     @is_recorded = true
   end
+
+  def spare?
+    false
+  end
+
+  def strike?
+    false
+  end
 end
 
-scores_array = scores.split(',')
-bowling = Bowling.new
+def show_bowling_total_score(scores)
+  scores_array = scores.split(',')
+  bowling = Bowling.new
+  scores_array.each do |score|
+    bowling.shot(score)
+  end
 
-scores_array.each do |score|
-  bowling.shot(score)
+  puts bowling.calculate_total_score
 end
-total_score = bowling.calculate_total_score
-byebug
 
-p bowling
-# binding.irb
+show_bowling_total_score(ARGV[0])
