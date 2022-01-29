@@ -3,20 +3,32 @@
 
 require 'optparse'
 
-def list_of_elements
-  options = ARGV.getopts('alr')
-  elements = if options['a']
-               Dir.glob('*', File::FNM_DOTMATCH).sort
-             else
-               Dir.glob('*').sort
-             end
+def options_get
+  ARGV.getopts('alr')
+end
 
+def elements_get
+  options = options_get
+  if options['a'] && options['r']
+    Dir.glob('*', File::FNM_DOTMATCH).sort.reverse
+  elsif options['a']
+    Dir.glob('*', File::FNM_DOTMATCH).sort
+  elsif options['r']
+    Dir.glob('*').sort.reverse
+  else
+    Dir.glob('*').sort
+  end
+end
+
+def list_of_elements
+  elements = elements_get
   total_element = elements.size
 
   maximum_width = 3.0
   columns = (total_element / maximum_width).ceil
 
   lists = []
+
   elements.each_slice(columns) do |list|
     lists << list
 
@@ -30,11 +42,9 @@ end
 def main
   # rowとcolumnの入れ替え
   sort_of_lists = list_of_elements.transpose
-
   # 配列の最大文字数を取得し、その文字数+余白分で等間隔表示する
   max_word_count = sort_of_lists.flatten.max_by { |x| x.to_s.length }
   spacing_between_elements = max_word_count.length + 15
-
   sort_of_lists.each do |sort_of_list|
     sort_of_list.each do |s|
       print s.to_s.ljust(spacing_between_elements)
