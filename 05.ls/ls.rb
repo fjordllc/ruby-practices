@@ -3,17 +3,17 @@
 
 require 'optparse'
 
-def options
+def options_get
   ARGV.getopts('alr')
 end
 
-def elements
-  option = options
-  if option['a'] && option['r']
+def elements_get
+  options = options_get
+  if options['a'] && options['r']
     Dir.glob('*', File::FNM_DOTMATCH).sort.reverse
-  elsif option['a']
+  elsif options['a']
     Dir.glob('*', File::FNM_DOTMATCH).sort
-  elsif option['r']
+  elsif options['r']
     Dir.glob('*').sort.reverse
   else
     Dir.glob('*').sort
@@ -21,15 +21,15 @@ def elements
 end
 
 def list_of_elements
-  element = elements
-  total_element = element.size
+  elements = elements_get
+  total_element = elements.size
 
   maximum_width = 3.0
   columns = (total_element / maximum_width).ceil
 
   lists = []
 
-  element.each_slice(columns) do |list|
+  elements.each_slice(columns) do |list|
     lists << list
 
     # 最大要素数を取得して、その要素数に合わせる
