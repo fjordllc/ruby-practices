@@ -27,9 +27,21 @@ require 'optparse'
 require 'etc'
 
 def main
-  params = ARGV.getopts('l')
-  dirs = Dir.glob('*')
+  params = ARGV.getopts('alr')
+  dirs = select_output_of_dir(params)
   params['l'] ? print_ls_command_l_option(dirs) : print_ls_command(dirs)
+end
+
+def select_output_of_dir(params)
+  if params['a'] && params['r']
+    Dir.glob('*', File::FNM_DOTMATCH).reverse
+  elsif params['a']
+    Dir.glob('*', File::FNM_DOTMATCH)
+  elsif params['r']
+    Dir.glob('*').reverse
+  else
+    Dir.glob('*')
+  end
 end
 
 def print_ls_command_l_option(dirs)
@@ -37,9 +49,9 @@ def print_ls_command_l_option(dirs)
 
   show_the_total_number_of_blocks(file_stats)
 
-  sorted_file_stats = sort_file_stats(file_stats)
+  categorized_file_stats = categorize_file_stats(file_stats)
 
-  maximum_characters = fetch_maximum_number_of_characters(sorted_file_stats)
+  maximum_characters = fetch_maximum_number_of_characters(categorized_file_stats)
 
   show_file_details(file_stats, maximum_characters)
 end
@@ -87,7 +99,7 @@ def show_the_total_number_of_blocks(file_stats)
   puts "total #{total_of_blocks}"
 end
 
-def sort_file_stats(file_stats)
+def categorize_file_stats(file_stats)
   {
     hard_link: file_stats.map { |file_stat| file_stat[:hard_link] },
     username: file_stats.map { |file_stat| file_stat[:username] },
