@@ -24,22 +24,21 @@ score_board << if actual_throws[0] == '10'
                  [actual_throws[0].to_i, actual_throws[1].to_i, 0]
                end
 
-total = 0
+score_by_frame = [score_board[9][0] + score_board[9][1] + score_board[9][2]]
 9.times do |n|
-  total += if score_board[n][0] == 10 && score_board[n + 1][0] == 10
-             if n == 8
-               20 + score_board[n + 1][1]
-             else
-               20 + score_board[n + 2][0]
-             end
-           elsif score_board[n][0] == 10
-             10 + score_board[n + 1][0] + score_board[n + 1][1]
-           elsif score_board[n][0] + score_board[n][1] == 10
-             10 + score_board[n + 1][0]
-           else
-             score_board[n][0] + score_board[n][1]
-           end
+  score_by_frame << if score_board[n][0] == 10 && score_board[n + 1][0] == 10
+                      if n == 8
+                        20 + score_board[n + 1][1]
+                      else
+                        20 + score_board[n + 2][0]
+                      end
+                    elsif score_board[n][0] == 10
+                      10 + score_board[n + 1][0] + score_board[n + 1][1]
+                    elsif score_board[n][0] + score_board[n][1] == 10
+                      10 + score_board[n + 1][0]
+                    else
+                      score_board[n][0] + score_board[n][1]
+                    end
 end
-total += score_board[9][0] + score_board[9][1] + score_board[9][2]
 
-p total
+p score_by_frame.sum
