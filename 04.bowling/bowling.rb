@@ -1,50 +1,45 @@
 #!/usr/bin/env ruby
 
-scores0 = ARGV[0]
-scores1 = scores0.gsub(/X/, "10")
-scores_array = scores1.split(",")
+ScoresWithX = ARGV[0]
+ScoresWithoutX = ScoresWithX.gsub(/X/, '10')
+actual_throws = ScoresWithoutX.split(',')
 
 # 1-9
-n = 0
-scores_array2 = []
-while n < 9
-  n += 1
-  if scores_array[0] != "10"
-    scores_array2 << [scores_array[0].to_i, scores_array[1].to_i]
-    scores_array.slice!(0, 2)
+score_board = []
+9.times do
+  if actual_throws[0] == '10'
+    score_board << [10, 0]
+    actual_throws.shift
   else
-    scores_array2 << [10, 0]
-    scores_array.slice!(0, 1)
+    score_board << actual_throws.slice!(0, 2).map(&:to_i)
   end
 end
 
 # 10
-scores_array2 << if scores_array[0] == "10"
-                   [10, scores_array[1].to_i, scores_array[2].to_i]
-                 elsif scores_array[0].to_i + scores_array[1].to_i == 10
-                   [scores_array[0].to_i, scores_array[1].to_i, scores_array[2].to_i]
-                 else
-                   [scores_array[0].to_i, scores_array[1].to_i, 0]
-                 end
+score_board << if actual_throws[0] == '10'
+                 [10, actual_throws[1].to_i, actual_throws[2].to_i]
+               elsif actual_throws[0].to_i + actual_throws[1].to_i == 10
+                 [actual_throws[0].to_i, actual_throws[1].to_i, actual_throws[2].to_i]
+               else
+                 [actual_throws[0].to_i, actual_throws[1].to_i, 0]
+               end
 
-n = 0
 total = 0
-while n < 9
-  total += if scores_array2[n][0] == 10 && scores_array2[n + 1][0] == 10
-             if n != 8
-               20 + scores_array2[n + 2][0]
+9.times do |n|
+  total += if score_board[n][0] == 10 && score_board[n + 1][0] == 10
+             if n == 8
+               20 + score_board[n + 1][1]
              else
-               20 + scores_array2[n + 1][1]
+               20 + score_board[n + 2][0]
              end
-           elsif scores_array2[n][0] == 10
-             10 + scores_array2[n + 1][0] + scores_array2[n + 1][1]
-           elsif scores_array2[n][0] + scores_array2[n][1] == 10
-             10 + scores_array2[n + 1][0]
+           elsif score_board[n][0] == 10
+             10 + score_board[n + 1][0] + score_board[n + 1][1]
+           elsif score_board[n][0] + score_board[n][1] == 10
+             10 + score_board[n + 1][0]
            else
-             scores_array2[n][0] + scores_array2[n][1]
+             score_board[n][0] + score_board[n][1]
            end
-  n += 1
 end
-total += scores_array2[9][0] + scores_array2[9][1] + scores_array2[9][2]
+total += score_board[9][0] + score_board[9][1] + score_board[9][2]
 
 p total
