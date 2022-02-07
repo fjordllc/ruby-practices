@@ -86,24 +86,13 @@ class LastFrame < Frame
   end
 
   def add_frame_score(score)
-    return if @is_recorded
-
-    score = score == 'X' ? TOTAL_PIN_COUNT_IN_1_FRAME : score
-
-    unless @first_shot_score
-      @first_shot_score = score
-      @frame_score += @first_shot_score
+    unless @second_shot_score.nil?
+      score = score == 'X' ? TOTAL_PIN_COUNT_IN_1_FRAME : score
+      @third_shot_score = score
+      @frame_score += @third_shot_score
       return
     end
-    unless @second_shot_score
-      @second_shot_score = score
-      @frame_score += @second_shot_score
-      return
-    end
-    @third_shot_score = score
-    @frame_score += @third_shot_score
-
-    @is_recorded = true
+    super
   end
 
   def spare?
