@@ -1,48 +1,41 @@
 # frozen_string_literal: true
 
 class Bowling
-  attr_reader :total_score, :frame_array
+  attr_reader :total_score, :frames
 
   TOTAL_FRAME = 10 # 1ゲームの総フレーム数
 
   def initialize
     @total_score = 0
-    @frame_array = []
+    @frames = []
 
     TOTAL_FRAME.times do |i|
       if i == TOTAL_FRAME - 1
-        @frame_array.push(LastFrame.new)
+        @frames.push(LastFrame.new)
       else
-        @frame_array.push(Frame.new)
+        @frames.push(Frame.new)
       end
     end
   end
 
   def shot(score)
     score = score.to_i unless score == 'X'
-    @frame_array.each do |frame|
-      next if frame.is_recorded
-
-      frame.add_frame_score(score)
-      break
-    end
+    current_frame = @frames.find { |frame| frame.is_recorded == false }
+    current_frame.add_frame_score(score)
   end
 
   def calculate_total_score
-    @frame_array.each_with_index do |frame, i|
-      @total_score += frame.frame_score
-
-      break if frame.instance_of?(LastFrame)
-
-      next_frame = @frame_array[i + 1]
+    @total_score = @frames.each_with_index.sum do |frame, i|
+      frame_total_score = frame.frame_score
+      next_frame = @frames[i + 1]
       if frame.strike?
-        @total_score += next_frame.first_shot_score
-        @total_score += next_frame.strike? ? @frame_array[i + 2].first_shot_score : next_frame.second_shot_score
+        frame_total_score += next_frame.first_shot_score
+        frame_total_score += next_frame.strike? ? @frames[i + 2].first_shot_score : next_frame.second_shot_score
       elsif frame.spare?
-        @total_score += next_frame.first_shot_score
+        frame_total_score += next_frame.first_shot_score
       end
+      frame_total_score
     end
-    @total_score
   end
 end
 
