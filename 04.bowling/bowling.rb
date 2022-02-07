@@ -20,7 +20,7 @@ class Bowling
 
   def shot(score)
     score = score.to_i unless score == 'X'
-    current_frame = @frames.find { |frame| frame.is_recorded == false }
+    current_frame = @frames.find { |frame| frame.recorded? == false }
     current_frame.add_frame_score(score)
   end
 
@@ -40,7 +40,7 @@ class Bowling
 end
 
 class Frame
-  attr_reader :frame_score, :first_shot_score, :second_shot_score, :is_recorded
+  attr_reader :frame_score, :first_shot_score, :second_shot_score
 
   TOTAL_PIN_COUNT_IN_1_FRAME = 10 # 1フレームの総ピン数
 
@@ -48,23 +48,20 @@ class Frame
     @first_shot_score = nil
     @second_shot_score = nil
     @frame_score = 0
-    @is_recorded = false
   end
 
   def add_frame_score(score)
-    return if @is_recorded
+    return if recorded?
 
     score = score == 'X' ? TOTAL_PIN_COUNT_IN_1_FRAME : score
 
     unless @first_shot_score
       @first_shot_score = score
       @frame_score += @first_shot_score
-      @is_recorded = true if strike?
       return
     end
     @second_shot_score = score
     @frame_score += @second_shot_score
-    @is_recorded = true
   end
 
   def spare?
@@ -73,6 +70,10 @@ class Frame
 
   def strike?
     @first_shot_score == TOTAL_PIN_COUNT_IN_1_FRAME
+  end
+
+  def recorded?
+    strike? || !@second_shot_score.nil?
   end
 end
 
@@ -110,6 +111,10 @@ class LastFrame < Frame
   end
 
   def strike?
+    false
+  end
+
+  def recorded?
     false
   end
 end
