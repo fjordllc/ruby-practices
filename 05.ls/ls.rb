@@ -28,20 +28,13 @@ require 'etc'
 
 def main
   params = ARGV.getopts('alr')
-  dirs = select_output_of_dir(params)
-  params['l'] ? print_ls_command_l_option(dirs) : print_ls_command(dirs)
+  output_of_dirs(params)
 end
 
-def select_output_of_dir(params)
-  if params['a'] && params['r']
-    Dir.glob('*', File::FNM_DOTMATCH).reverse
-  elsif params['a']
-    Dir.glob('*', File::FNM_DOTMATCH)
-  elsif params['r']
-    Dir.glob('*').reverse
-  else
-    Dir.glob('*')
-  end
+def output_of_dirs(params)
+  dirs_on_a_option = params['a'] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
+  dirs = params['r'] ? dirs_on_a_option.reverse : dirs_on_a_option
+  params['l'] ? print_ls_command_l_option(dirs) : print_ls_command(dirs)
 end
 
 def print_ls_command_l_option(dirs)
