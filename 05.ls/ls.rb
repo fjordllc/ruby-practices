@@ -1,8 +1,18 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-names_original = Dir.glob('*') # コマンドを実行したディレクトリのファイル名の配列
-display_columns = 3 # 表示列数
+require 'optparse'
+
+options = ARGV.getopts('a', 'r', 'l')
+
+# コマンドを実行したディレクトリのファイル名の配列
+names_original = if options['a'] # オプション"-a"の場合
+                   Dir.glob('*', File::FNM_DOTMATCH)
+                 else
+                   Dir.glob('*')
+                 end
+
+display_columns = 3.0 # 表示列数。count_linesメソッドで.ceilメソッドを使うため、Floadクラスにて記述
 
 # メインのメソッド
 def print_ls(names_original, display_columns)
@@ -15,7 +25,7 @@ def print_ls(names_original, display_columns)
   names_tabbed.each_with_index do |file, i| # 空配列に順番に値を追加、を繰り返す。
     names_vertical[i % display_lines] << file.to_s
   end
-  names_vertical.each { |w| puts w.join } # 出力
+  puts names_vertical.map(&:join).join("\n") # 出力
 end
 
 # 取得したファイル名にタブを追加して長さを揃える
@@ -28,7 +38,7 @@ end
 
 # 取得した配列の要素数から表示行数を算出
 def count_lines(names_tabbed, display_columns)
-  (names_tabbed.size - 1) / display_columns + 1
+  (names_tabbed.size / display_columns).ceil
 end
 
 print_ls(names_original, display_columns)
