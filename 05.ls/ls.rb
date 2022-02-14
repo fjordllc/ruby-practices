@@ -3,14 +3,14 @@
 
 require 'optparse'
 
-options = ARGV.getopts('a', 'r', 'l')
+options = ARGV.getopts('a')
 
-# コマンドを実行したディレクトリのファイル名の配列
-names_original = if options['a'] # オプション"-a"の場合
-                   Dir.glob('*', File::FNM_DOTMATCH)
-                 else
-                   Dir.glob('*')
-                 end
+names_original = Dir.glob('*',
+                          if options['a']
+                            File::FNM_DOTMATCH
+                          else
+                            0
+                          end)
 
 display_columns = 3.0 # 表示列数。count_linesメソッドで.ceilメソッドを使うため、Floadクラスにて記述
 
