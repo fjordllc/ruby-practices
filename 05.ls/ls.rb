@@ -3,10 +3,10 @@
 
 require 'optparse'
 
-options = ARGV.getopts('a')
+options = ARGV.getopts('r')
 
-names_original = Dir.glob('*',
-                          options['a'] ? File::FNM_DOTMATCH : 0)
+names_original = Dir.glob('*')
+names_original.reverse! if options['r'] # -rオプションの場合配列を逆順に入替え
 
 display_columns = 3.0 # 表示列数。count_linesメソッドで.ceilメソッドを使うため、Floadクラスにて記述
 
