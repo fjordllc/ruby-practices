@@ -6,11 +6,7 @@ require 'optparse'
 options = ARGV.getopts('a')
 
 names_original = Dir.glob('*',
-                          if options['a']
-                            File::FNM_DOTMATCH
-                          else
-                            0
-                          end)
+                          options['a'] ? File::FNM_DOTMATCH : 0)
 
 display_columns = 3.0 # 表示列数。count_linesメソッドで.ceilメソッドを使うため、Floadクラスにて記述
 
