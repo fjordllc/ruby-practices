@@ -1,4 +1,9 @@
+# frozen_string_literal: true
+
 MAX_COLUMN_LENGTH = 3
+
+require 'etc'
+require 'optparse'
 
 def ls_main(filesnames)
   fulfilled_filesnames = complete_filesnames(filesnames)
@@ -49,11 +54,32 @@ def output(transposed_filesnames)
 end
 
 def main
+  params = {}
+  opt = OptionParser.new
+  opt.on('-l') { |v| v }
+  opt.parse!(ARGV, into: params)
+
   directory_names = ARGV.empty? ? [Dir.pwd] : ARGV
   directory_names.each do |directory|
     puts directory if directory_names.count > 1
     filesnames = Dir.glob('*', base: directory)
-    ls_main(filesnames)
+    if params[:l]
+      main_option_l(filesnames, directory)
+    else
+      ls_main(filesnames)
+    end
+  end
+end
+
+def main_option_l(filesnames, directory)
+  filesnames.each do |filename|
+    user_id    = Process.uid
+    user_name  = Etc.getpwuid(user_id).name
+    group_id   = Process.gid
+    group_name = Etc.getgrgid(group_id).name
+    file_path = File.expand_path(filename, directory)
+    stat = File::Stat.new(file_path)
+    puts "#{stat.mode.to_s(8)} #{stat.nlink} #{user_name} #{group_name}  #{File.size(file_path)} #{stat.mtime.to_s.slice!(6..15)} #{filename} "
   end
 end
 
