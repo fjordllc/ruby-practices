@@ -2,11 +2,10 @@
 # frozen_string_literal: true
 
 require 'optparse'
-require 'debug'
 
 OUTPUT_MAX_ROWS = 4
 
-module EntryFilters
+module LsFilters
   class << self
     # 隠しファイルフィルタ
     def hidden_files
@@ -16,38 +15,67 @@ module EntryFilters
   end
 end
 
-def output(file_name, filters)
-  entries = Dir.entries(file_name)
-  filters.each do |filter|
-    entries.filter! { |e| filter.call(e) }
-  end
-  form(entries.sort)
-end
+class Ls
+  attr_writer :entry, :filters
 
-def form(entries)
-  rows = (1..OUTPUT_MAX_ROWS).map { [] }
-  entries.each_with_index do |entry, index|
-    rows[index % OUTPUT_MAX_ROWS].push entry
+  def initialize(entry, filters = [LsFilters.hidden_files])
+    @entry_name = entry
+    @filters = filters
   end
 
-  rows.each do |row|
-    if row.count == 1
-      puts row[0] unless row[0].nil?
-    else
-      puts row.join("\t")
+  def output
+    entries = Dir.entries(@entry_name)
+
+    # 出力フィルタの適用
+    @filters.each do |filter|
+      entries.filter! { |e| filter.call(e) }
+    end
+
+    formatted = format(entries.sort)
+
+    (0..OUTPUT_MAX_ROWS - 1).each do |n|
+      row = []
+      formatted.each do |column|
+        row << column[n] unless column[n].nil?
+      end
+      puts row.join(' ') if row.count.positive?
+    end
+    0 # return code(success)
+  end
+
+  private
+
+  def format(entries)
+    columns = (1..(entries.count / OUTPUT_MAX_ROWS + 1)).map { [] }
+    entries.each_with_index do |entry, index|
+      column_index = index / OUTPUT_MAX_ROWS
+      columns[column_index].push entry
+    end
+
+    # 出力する列の最大文字幅を計算して返す
+    columns.map do |column|
+      max_width = column.map do |element|
+        element.chars.map { |char| char.ascii_only? ? 1 : 2 }.sum
+      end.max
+      column.map { |element| element.ljust(max_width) }
     end
   end
 end
 
-opt = OptionParser.new
-# 将来オプションを実装する
-argv = opt.parse(ARGV)
+# main
+if __FILE__ == $PROGRAM_NAME
+  opt = OptionParser.new
+  # オプションを実装する（予定）
+  argv = opt.parse(ARGV)
 
-filters = []
-filters << EntryFilters.hidden_files
+  # オプションに応じた出力フィルタ追加（予定）
+  filters = []
+  filters << LsFilters.hidden_files
 
-argv.each do |arg|
-  raise "ファイルまたはディレクトリが見つかりません: #{arg}" unless File.exist?(arg)
+  argv.each do |arg|
+    ls = Ls.new(arg, filters)
+    raise "ファイルまたはディレクトリが見つかりません: #{arg}" unless File.exist?(arg)
 
-  output(arg, filters)
+    ls.output
+  end
 end

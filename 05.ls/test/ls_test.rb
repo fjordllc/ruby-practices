@@ -3,15 +3,15 @@
 # frozen_string_literal: true
 
 require 'minitest/autorun'
+require_relative '../lib/ls'
 require 'tmpdir'
 require 'tempfile'
 require 'fileutils'
+require 'stringio'
 require 'debug'
 
-COMMAND = '../lib/ls.rb'
-
 class LsTest < Minitest::Test
-  attr_reader :testdir
+  attr_writer :testdir
 
   def setup
     # テスト用ディレクトリ生成
@@ -23,7 +23,8 @@ class LsTest < Minitest::Test
     prefix = is_ja ? '日本語のファイル' : 'testfile'
     tmpfiles = []
     (1..num).each do |n|
-      tmpfiles << Tempfile.create([prefix, n.to_s], tmpdir: @testdir)
+      File.open("#{@testdir}/#{prefix}#{n}", 'w+') { |file| file.write('test') }
+      tmpfiles << "#{prefix}#{n}"
     end
     tmpfiles.sort
   end
@@ -36,25 +37,41 @@ class LsTest < Minitest::Test
     end
   end
 
-  # ファイル・ディレクトリ削除（再帰的に全て削除）
+  # テストディレクトリ削除（再帰的に全て削除）
   def cleanup_testdir
-    FileUtils.remove_entries_secure(@testdir)
+    FileUtils.remove_entry_secure @testdir
   end
 
-  # ディレクトリ削除
-  def cleanup_dirs(dirs)
-    dirs.each { |dir| Dir.unlink(dir) }
+  # テストディレクトリ内の削除
+  def remove_all_entries(entries)
+    entries.each do |entry|
+      FileUtils.remove_entry_secure "#{@testdir}/#{entry}"
+    end
   end
 
-  def test_list_one_file
+  # 標準出力のキャプチャ
+  def capture_result(ls_instance)
+    out = StringIO.new
+    $stdout = out
+    ls_instance.output
+    out.string
+  ensure
+    $stdout = STDOUT
+  end
+
+  def test_one_file
     files = create_tmp_files(1)
-    binding.b
-    output = `#{COMMAND} #{@testdir}`
-    assert_equal output, file.basename.to_s
+    test_ls = Ls.new(@testdir)
+    assert_equal "testfile1\n", capture_result(test_ls)
+    remove_all_entries(files)
   end
 
-  # def ListOneDir
-  # end
+  def test_one_japanese_file
+    files = create_tmp_files(1, is_ja: true)
+    test_ls = Ls.new(@testdir)
+    assert_equal "日本語のファイル1\n", capture_result(test_ls)
+    remove_all_entries(files)
+  end
 
   # def ListMixedEntried
   # end
@@ -63,8 +80,6 @@ class LsTest < Minitest::Test
   # end
 
   def teardown
-    # クリーンアップ
     cleanup_testdir
-    Dir.unlink(@testdir)
   end
 end
