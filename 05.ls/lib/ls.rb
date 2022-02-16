@@ -79,8 +79,44 @@ def main_option_l(filesnames, directory)
     group_name = Etc.getgrgid(group_id).name
     file_path = File.expand_path(filename, directory)
     stat = File::Stat.new(file_path)
-    puts "#{stat.mode.to_s(8)} #{stat.nlink} #{user_name} #{group_name}  #{File.size(file_path)} #{stat.mtime.to_s.slice!(6..15)} #{filename} "
+    permission = stat.mode.to_s(8)
+    conversion_permission(permission)
+    # puts "#{stat.mode.to_s(8)} #{stat.nlink} #{user_name} #{group_name}  #{File.size(file_path)} #{stat.mtime.to_s.slice!(6..15)} #{filename} "
   end
 end
 
+def conversion_permission(permission)
+  alter = permission.to_i.digits.reverse
+  alter_result = alter[-3..-1].map do |n|
+    if n == 0
+      "---"
+    elsif n == 1
+      "--x"
+    elsif n == 2
+      "-w-"
+    elsif n == 3
+      "-wx"
+    elsif n == 4
+      "r--"
+    elsif n == 5
+      "r-x"
+    elsif n == 6
+      "rw-"
+    elsif n == 7
+      "rwx"
+    end
+  end
+  alter_result.join
+end
+
 main
+
+#1, 0, 0, 6, 4, 4 => -rw-r--r--
+#10 => -
+#6 => rw-
+#4 => r--
+#4 => r--
+#何がしたいのか
+#与えられた８進数を-rw-r--r--このように変換をしたい
+  #644の部分は６ならrw-のように数字と記法が一致しているからそれを定義していけばいいのでは？？
+  #まず下３桁から進めていく
