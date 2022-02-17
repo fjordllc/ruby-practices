@@ -79,15 +79,15 @@ def main_option_l(filesnames, directory)
     group_name = Etc.getgrgid(group_id).name
     file_path = File.expand_path(filename, directory)
     stat = File::Stat.new(file_path)
-    permission = stat.mode.to_s(8)
-    conversion_permission(permission)
-    # puts "#{stat.mode.to_s(8)} #{stat.nlink} #{user_name} #{group_name}  #{File.size(file_path)} #{stat.mtime.to_s.slice!(6..15)} #{filename} "
+    permission_octal = stat.mode.to_s(8)
+    permission = conversion_permission(permission_octal)
+    puts "#{permission} #{stat.nlink} #{user_name} #{group_name}  #{File.size(file_path)} #{stat.mtime.to_s.slice!(6..15)} #{filename} "
   end
 end
 
-def conversion_permission(permission)
-  alter = permission.to_i.digits.reverse
-  alter_result = alter[-3..-1].map do |n|
+def conversion_permission(permission_octal
+  overhaul_permission = permission_octal.to_i.digits.reverse
+  permission_conversioned = alter[-3..-1].map do |n|
     if n == 0
       "---"
     elsif n == 1
@@ -106,17 +106,14 @@ def conversion_permission(permission)
       "rwx"
     end
   end
-  alter_result.join
+  binding.irb
+  if alter[0..1].join == "10"
+    permission_conversioned.prepend("--")
+  elsif alter[0..1].join == "40"
+    permission_conversioned.prepend("d-")
+  end
+
+  print permission_conversioned.join
 end
 
 main
-
-#1, 0, 0, 6, 4, 4 => -rw-r--r--
-#10 => -
-#6 => rw-
-#4 => r--
-#4 => r--
-#何がしたいのか
-#与えられた８進数を-rw-r--r--このように変換をしたい
-  #644の部分は６ならrw-のように数字と記法が一致しているからそれを定義していけばいいのでは？？
-  #まず下３桁から進めていく
