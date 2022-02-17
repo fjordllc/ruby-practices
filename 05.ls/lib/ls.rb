@@ -106,7 +106,6 @@ def conversion_permission(permission_octal
       "rwx"
     end
   end
-  binding.irb
   if alter[0..1].join == "10"
     permission_conversioned.prepend("--")
   elsif alter[0..1].join == "40"
