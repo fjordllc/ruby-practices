@@ -85,30 +85,16 @@ def main_option_l(filesnames, directory)
   end
 end
 
-def conversion_permission(permission_octal
+def conversion_permission(permission_octal)
+  permission_table = { 0 => "---", 1 => "--x", 2 => "-w-", 3 => "-wx", 4 => "r--", 5 => "r-x", 6 => "rw-", 7 => "rwx" }
   overhaul_permission = permission_octal.to_i.digits.reverse
-  permission_conversioned = alter[-3..-1].map do |n|
-    if n == 0
-      "---"
-    elsif n == 1
-      "--x"
-    elsif n == 2
-      "-w-"
-    elsif n == 3
-      "-wx"
-    elsif n == 4
-      "r--"
-    elsif n == 5
-      "r-x"
-    elsif n == 6
-      "rw-"
-    elsif n == 7
-      "rwx"
-    end
+  permission_conversioned = overhaul_permission[-3..-1].map do |n|
+    permission_table[n]
   end
-  if alter[0..1].join == "10"
+
+  if overhaul_permission[0..1].join == "10"
     permission_conversioned.prepend("--")
-  elsif alter[0..1].join == "40"
+  elsif overhaul_permission[0..1].join == "40"
     permission_conversioned.prepend("d-")
   end
 
