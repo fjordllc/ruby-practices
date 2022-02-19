@@ -7,16 +7,6 @@ require 'debug'
 
 OUTPUT_MAX_COLUMNS = 3
 
-module LsFilters
-  class << self
-    # 隠しファイルフィルタ
-    def hide_hidden_files
-      ->(entry) { entry !~ /^\./ }
-    end
-    # フィルタを追加していく
-  end
-end
-
 class Ls
   attr_writer :entry_name, :filters
 
@@ -118,6 +108,16 @@ def main
   argv.each do |arg|
     ls.entry_name = arg
     ls.output
+  end
+end
+
+module LsFilters
+  class << self
+    # 隠しファイルフィルタ
+    def hide_hidden_files
+      ->(entry) { entry !~ /^\./ }
+    end
+    # フィルタを追加していく
   end
 end
 

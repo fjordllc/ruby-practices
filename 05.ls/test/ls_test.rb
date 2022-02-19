@@ -9,73 +9,6 @@ require 'fileutils'
 require 'stringio'
 require 'io/console/size'
 
-class TestTools
-  attr_reader :test_dir
-
-  def initialize
-    @test_dir = Dir.mktmpdir
-  end
-
-  def create_tmp_files(num_of_ascii = 1, num_of_ja = 0, auto_clean: true)
-    tmp_files = []
-    if num_of_ascii.positive?
-      (1..num_of_ascii).each do |n|
-        File.open("#{@test_dir}/test_file#{n}", 'w+') {}
-        tmp_files << "test_file#{n}"
-      end
-    end
-
-    if num_of_ja.positive?
-      (1..num_of_ja).each do |n|
-        File.open("#{@test_dir}/日本語のファイル#{n}", 'w+') {}
-        tmp_files << "日本語のファイル#{n}"
-      end
-    end
-    yield
-    remove_entries(tmp_files) if auto_clean
-  end
-
-  def create_tmp_dirs(num_of_ascii = 1, num_of_ja = 0, auto_clean: true)
-    tmp_dirs = []
-    if num_of_ascii.positive?
-      (1..num_of_ascii).each do |n|
-        Dir.mkdir("#{@test_dir}/test_dir#{n}")
-        tmp_dirs << "test_dir#{n}"
-      end
-    end
-
-    if num_of_ja.positive?
-      (1..num_of_ja).each do |n|
-        Dir.mkdir("#{@test_dir}/日本語のディレクトリ#{n}")
-        tmp_dirs << "日本語のディレクトリ#{n}"
-      end
-    end
-    yield
-    remove_entries(tmp_dirs) if auto_clean
-  end
-
-  # テストディレクトリ削除（再帰的に全て削除）
-  def cleanup
-    FileUtils.remove_entry_secure @test_dir
-  end
-
-  # テストディレクトリ内の削除
-  def remove_entries(entries)
-    entries.each do |entry|
-      FileUtils.remove_entry_secure "#{@test_dir}/#{entry}"
-    end
-  end
-
-  def capture_stdout(ls_instance)
-    out = StringIO.new
-    $stdout = out
-    ls_instance.output
-    out.string
-  ensure
-    $stdout = STDOUT
-  end
-end
-
 class LsTest < Minitest::Test
   def setup
     @test_tools = TestTools.new
@@ -167,5 +100,72 @@ class LsTest < Minitest::Test
 
   def teardown
     @test_tools.cleanup
+  end
+end
+
+class TestTools
+  attr_reader :test_dir
+
+  def initialize
+    @test_dir = Dir.mktmpdir
+  end
+
+  def create_tmp_files(num_of_ascii = 1, num_of_ja = 0, auto_clean: true)
+    tmp_files = []
+    if num_of_ascii.positive?
+      (1..num_of_ascii).each do |n|
+        File.open("#{@test_dir}/test_file#{n}", 'w+') {}
+        tmp_files << "test_file#{n}"
+      end
+    end
+
+    if num_of_ja.positive?
+      (1..num_of_ja).each do |n|
+        File.open("#{@test_dir}/日本語のファイル#{n}", 'w+') {}
+        tmp_files << "日本語のファイル#{n}"
+      end
+    end
+    yield
+    remove_entries(tmp_files) if auto_clean
+  end
+
+  def create_tmp_dirs(num_of_ascii = 1, num_of_ja = 0, auto_clean: true)
+    tmp_dirs = []
+    if num_of_ascii.positive?
+      (1..num_of_ascii).each do |n|
+        Dir.mkdir("#{@test_dir}/test_dir#{n}")
+        tmp_dirs << "test_dir#{n}"
+      end
+    end
+
+    if num_of_ja.positive?
+      (1..num_of_ja).each do |n|
+        Dir.mkdir("#{@test_dir}/日本語のディレクトリ#{n}")
+        tmp_dirs << "日本語のディレクトリ#{n}"
+      end
+    end
+    yield
+    remove_entries(tmp_dirs) if auto_clean
+  end
+
+  # テストディレクトリ削除（再帰的に全て削除）
+  def cleanup
+    FileUtils.remove_entry_secure @test_dir
+  end
+
+  # テストディレクトリ内の削除
+  def remove_entries(entries)
+    entries.each do |entry|
+      FileUtils.remove_entry_secure "#{@test_dir}/#{entry}"
+    end
+  end
+
+  def capture_stdout(ls_instance)
+    out = StringIO.new
+    $stdout = out
+    ls_instance.output
+    out.string
+  ensure
+    $stdout = STDOUT
   end
 end
