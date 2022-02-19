@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 MAX_COLUMN_LENGTH = 3
+PERMISSION_TABLE = { 0 => '---', 1 => '--x', 2 => '-w-', 3 => '-wx', 4 => 'r--', 5 => 'r-x', 6 => 'rw-', 7 => 'rwx' }.freeze
 
 require 'etc'
 require 'optparse'
@@ -86,10 +87,9 @@ def main_option_l(filesnames, directory)
 end
 
 def conversion_permission(permission_octal)
-  permission_table = { 0 => '---', 1 => '--x', 2 => '-w-', 3 => '-wx', 4 => 'r--', 5 => 'r-x', 6 => 'rw-', 7 => 'rwx' }
   overhaul_permission = permission_octal.to_i.digits.reverse
   permission_conversioned = overhaul_permission[-3..].map do |n|
-    permission_table[n]
+    PERMISSION_TABLE[n]
   end
 
   case overhaul_permission[0..1].join
