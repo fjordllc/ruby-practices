@@ -58,12 +58,16 @@ def main
   params = {}
   opt = OptionParser.new
   opt.on('-l') { |v| v }
+  opt.on('-a') { |v| v }
+  opt.on('-r') { |v| v }
   opt.parse!(ARGV, into: params)
 
   directory_names = ARGV.empty? ? [Dir.pwd] : ARGV
   directory_names.each do |directory|
     puts directory if directory_names.count > 1
-    filesnames = Dir.glob('*', base: directory)
+    flags = params[:a] ? File::FNM_DOTMATCH : 0
+    base_filesnames = Dir.glob('*', flags, base: directory)
+    filesnames = base_filesnames.then { |b| params[:r] ? b.reverse : b }
     if params[:l]
       main_option_l(filesnames, directory)
     else
