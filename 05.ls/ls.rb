@@ -4,8 +4,7 @@
 require 'etc'
 require 'optparse'
 
-options = ARGV.getopts('l')
-
+options = ARGV.getopts('a', 'r', 'l')
 # (lオプション)File::Statデータを保持したインスタンスを生成
 class FileData
   attr_reader :blocks, :type, :mode, :nlink, :uid, :gid, :size, :mtime
@@ -44,9 +43,9 @@ class FileData
   def permission_converter_d_to_b(file)
     file_mode_ary = [] # パーミッション文字列を分割して格納する配列
     3.times do |i|
-      file_mode_ary << file.mode.to_s(8)[i - 3].to_i.to_s(2).chars
+      file_mode_ary.concat(file.mode.to_s(8)[i - 3].to_i.to_s(2).chars)
     end
-    file_mode_ary.flatten
+    file_mode_ary
   end
 
   # ２進数のパーミッション(配列)をrwx(文字列)に変換
@@ -106,7 +105,7 @@ class FileData
   # タイムスタンプ (タイムスタンプが半年(推定)以上前のものは時刻が年に変わる)
   def file_mtime(file)
     time = file.mtime
-    Time.new - time < 60 * 60 * 24 * 180 ? time.strftime('%b %e %H:%M') : time.strftime('%b %d  %Y')
+    Time.new - time < 60 * 60 * 24 * 180 ? time.strftime('%b %e %H:%M') : time.strftime('%b %e  %Y')
   end
 end
 # class FileData定義終了
@@ -116,16 +115,20 @@ class PrintFileData
   def initialize(names_original)
     @names_original = names_original
     @files = @names_original.map { |filename| FileData.new(File.lstat(filename)) }
-    @nlink_space = @files.map { |file| file.nlink.size }.max + 1
-    @uid_space = @files.map { |file| file.uid.size }.max + 1
-    @gid_space = @files.map { |file| file.gid.size }.max + 2
-    @size_space = @files.map { |file| file.size.size }.max + 2
+  end
+
+  def dataspace(files)
+    @nlink_space = files.map { |file| file.nlink.size }.max + 1
+    @uid_space = files.map { |file| file.uid.size }.max + 1
+    @gid_space = files.map { |file| file.gid.size }.max + 1
+    @size_space = files.map { |file| file.size.size }.max + 2
   end
 
   # 出力する行の文字列を生成
   def print_line(files, names_original)
+    dataspace(files)
     files.size.times do |i|
-      printf("#{files[i].type}#{files[i].mode}%#{@nlink_space}s%#{@uid_space}s%#{@gid_space}s%#{@size_space}s",
+      printf("#{files[i].type}#{files[i].mode}%#{@nlink_space}s %-#{@uid_space}s%#{@gid_space}s%#{@size_space}s",
              files[i].nlink, files[i].uid, files[i].gid, files[i].size)
       print " #{files[i].mtime} #{names_original[i]}\n"
     end
@@ -139,37 +142,57 @@ class PrintFileData
 end
 # class PrintFileData定義終了
 
-# (オプションなし)出力用メソッド
-def print_ls_no_option(names_original, display_columns)
-  names_tabbed = tabbing_names(names_original) # タブ揃えされたされた文字列の配列
-  display_lines = count_lines(names_tabbed, display_columns) # 表示行数
-  names_vertical = [] # 空配列の中に行数分の空配列を追加（入れ子構造）
-  display_lines.times { names_vertical << [] }
-  names_tabbed.each_with_index do |file, i| # 空配列に順番に値を追加、を繰り返す。
-    names_vertical[i % display_lines] << file
+# (lオプション以外）クラス定義
+class PrintLSNoOption
+  def initialize(names_original, display_columns)
+    @names_original = names_original
+    @display_columns = display_columns
   end
-  puts names_vertical.map(&:join).join("\n") # 出力
-end
 
-# (オプションなし)取得したファイル名にタブを追加して長さを揃える
-def tabbing_names(names_original)
-  tab_space = names_original.map(&:size).max / 8 + 1
-  names_original.map do |w|
-    w + "\t" * (tab_space - w.size / 8)
+  # (lオプション以外）出力用メソッド
+  def print_ls(names_original, display_columns)
+    names_tabbed = tabbing_names(names_original) # タブ揃えされたされた文字列の配列
+    display_lines = count_lines(names_tabbed, display_columns) # 表示行数
+    names_vertical = [] # 空配列の中に行数分の空配列を追加（入れ子構造）
+    display_lines.times { names_vertical << [] }
+    names_tabbed.each_with_index do |file, i| # 空配列に順番に値を追加、を繰り返す。
+      names_vertical[i % display_lines] << file
+    end
+    puts names_vertical.map(&:join).join("\n") # 出力
+  end
+
+  # (lオプション以外）取得したファイル名にタブを追加して長さを揃える
+  def tabbing_names(names_original)
+    tab_space = names_original.map(&:size).max / 8 + 1
+    names_original.map do |w|
+      w + "\t" * (tab_space - w.size / 8)
+    end
+  end
+
+  # (lオプション以外）取得した配列の要素数から表示行数を算出
+  def count_lines(names_tabbed, display_columns)
+    (names_tabbed.size / display_columns).ceil
+  end
+
+  # (lオプション以外）出力
+  def print_ls_no_option
+    print_ls(@names_original, @display_columns)
   end
 end
+# class PrintLSNoOption定義終了
 
-# (オプションなし)取得した配列の要素数から表示行数を算出
-def count_lines(names_tabbed, display_columns)
-  (names_tabbed.size / display_columns).ceil
-end
-
-# 実行
-names_original = Dir.glob('*')
+# 実行スクリプト
+names_original = Dir.glob('*',
+                          if options['a'] # `-a`オプション指定の場合
+                            File::FNM_DOTMATCH
+                          else
+                            0
+                          end)
+names_original.reverse! if options['r'] # `-r`オプション指定の場合
 
 if options['l'] # `-l`オプション指定の場合
   PrintFileData.new(names_original).print_ls_l
-else # オプション指定がない場合
+else
   display_columns = 3.0 # 表示列数。count_linesメソッドで.ceilメソッドを使うため、Floadクラスにて記述
-  print_ls_no_option(names_original, display_columns)
+  PrintLSNoOption.new(names_original, display_columns).print_ls_no_option
 end
