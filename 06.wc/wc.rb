@@ -1,10 +1,12 @@
 #!/usr/bin/env ruby
 
+require 'optparse'
+
 def main
+  params = ARGV.getopts('l')
   files_data = collect_file_data
-  show_file_data(files_data)
   total_files_data = sum_file_data(files_data)
-  show_total_files_data(total_files_data)
+  params['l'] ? show_lines(files_data, total_files_data) : show_file_data(files_data, total_files_data)
 end
 
 def collect_file_data
@@ -30,16 +32,20 @@ def sum_file_data(files_data)
   } 
 end
 
-def show_file_data(files_data)
+def show_lines(files_data, total_files_data)
   files_data.each do |file_data|
-    puts "#{file_data[:lines].to_s.rjust(8)} #{file_data[:words].to_s.rjust(7)} #{file_data[:bites].to_s.rjust(7)} #{file_data[:filename]}"
+    puts "#{file_data[:lines].to_s.rjust(8)} #{file_data[:filename]}"
   end
+  puts "#{total_files_data[:total_of_lines].to_s.rjust(8)} total" if files_data.size > 1
 end
 
-def show_total_files_data(total_files_data)
-  puts "#{total_files_data[:total_of_lines].to_s.rjust(8)} #{total_files_data[:total_of_words].to_s.rjust(7)} #{total_files_data[:total_of_bites].to_s.rjust(7)} total"
+def show_file_data(files_data, total_files_data)
+  files_data.each do |file_data|
+    puts "#{file_data[:lines].to_s.rjust(8)} #{file_data[:words].to_s.rjust(7)} #{file_data[:bites].to_s.rjust(7)} " \
+    "#{file_data[:filename]}"
+  end
+   puts "#{total_files_data[:total_of_lines].to_s.rjust(8)} #{total_files_data[:total_of_words].to_s.rjust(7)} " \
+   "#{total_files_data[:total_of_bites].to_s.rjust(7)} total" if files_data.size > 1
 end
 
 main
-
-
