@@ -4,19 +4,18 @@
 
 require 'minitest/autorun'
 require_relative '../lib/ls'
-require 'tmpdir'
-require 'fileutils'
-require 'stringio'
+require_relative './test_tools'
 require 'io/console/size'
+require 'pathname'
 
-class LsTest < Minitest::Test
+class LsSimpleTest < Minitest::Test
   def setup
     @test_tools = TestTools.new
     # テストのために十分なコンソールの幅がなかった場合はエラーとする
     raise "テストに必要なコンソールの表示幅がありません。#{22 * 3}以上の幅を確保してください" if IO.console_size[1] < 66
 
     @test_ls = Ls.new
-    @test_ls.entry_name = @test_tools.test_dir
+    @test_ls.entries = [@test_tools.test_dir]
   end
 
   def test_vacant_dir
@@ -24,38 +23,72 @@ class LsTest < Minitest::Test
   end
 
   def test_one_file_with_ascii_name
-    @test_tools.create_tmp_files(1) do
-      assert_equal "test_file1\n", @test_tools.capture_stdout(@test_ls)
-    end
+    @test_tools.create_tmp_files(1)
+    assert_equal "test_file1\n", @test_tools.capture_stdout(@test_ls)
   end
 
   def test_one_file_with_japanese_name
-    @test_tools.create_tmp_files(0, 1) do
-      assert_equal "日本語のファイル1\n", @test_tools.capture_stdout(@test_ls)
-    end
+    @test_tools.create_tmp_files(1, is_ja: true)
+    assert_equal "日本語のファイル1\n", @test_tools.capture_stdout(@test_ls)
+  end
+
+  def test_absolute_filepath
+    @test_tools.create_tmp_files(1)
+    file_path = File.absolute_path(("#{@test_tools.test_dir}/test_file1"))
+    @test_ls.entries = [file_path]
+    assert_equal "#{file_path}\n", @test_tools.capture_stdout(@test_ls)
+  end
+
+  def test_relative_filepath
+    @test_tools.create_tmp_files(1)
+    file_path = Pathname.new("#{@test_tools.test_dir}/test_file1")
+    relative_file_path = file_path.relative_path_from(Dir.pwd)
+    @test_ls.entries = [relative_file_path.to_s]
+    assert_equal "#{relative_file_path}\n", @test_tools.capture_stdout(@test_ls)
   end
 
   def test_one_dir_with_ascii_name
-    @test_tools.create_tmp_dirs(1) do
-      assert_equal "test_dir1\n", @test_tools.capture_stdout(@test_ls)
-    end
+    @test_tools.create_tmp_dirs(1)
+    assert_equal "test_dir1\n", @test_tools.capture_stdout(@test_ls)
   end
 
   def test_one_dir_with_japanese_name
-    @test_tools.create_tmp_dirs(0, 1) do
-      assert_equal "日本語のディレクトリ1\n", @test_tools.capture_stdout(@test_ls)
-    end
+    @test_tools.create_tmp_dirs(1, is_ja: true)
+    assert_equal "日本語のディレクトリ1\n", @test_tools.capture_stdout(@test_ls)
+  end
+
+  def teardown
+    @test_tools.cleanup
+  end
+end
+
+class LsManyEntriesTest < Minitest::Test
+  def setup
+    @test_tools = TestTools.new
+    # テストのために十分なコンソールの幅がなかった場合はエラーとする
+    raise "テストに必要なコンソールの表示幅がありません。#{22 * 3}以上の幅を確保してください" if IO.console_size[1] < 66
+
+    @test_ls = Ls.new
+    @test_ls.entries = [@test_tools.test_dir]
   end
 
   def test_many_files_with_same_format
-    expected = <<~TEXT
+    expected1 = <<~TEXT
       test_file1 test_file4 test_file7
       test_file2 test_file5
       test_file3 test_file6
     TEXT
-    @test_tools.create_tmp_files(7) do
-      assert_equal expected, @test_tools.capture_stdout(@test_ls)
-    end
+    @test_tools.create_tmp_files(7)
+    assert_equal expected1, @test_tools.capture_stdout(@test_ls)
+  end
+
+  def test_many_files_with_same_format_part2
+    expected2 = <<~TEXT
+      test_file1 test_file3 test_file4
+      test_file2
+    TEXT
+    @test_tools.create_tmp_files(4)
+    assert_equal expected2, @test_tools.capture_stdout(@test_ls)
   end
 
   def test_many_japanese_files_with_same_format
@@ -64,9 +97,8 @@ class LsTest < Minitest::Test
       日本語のファイル2 日本語のファイル5
       日本語のファイル3 日本語のファイル6
     TEXT
-    @test_tools.create_tmp_files(0, 7) do
-      assert_equal expected, @test_tools.capture_stdout(@test_ls)
-    end
+    @test_tools.create_tmp_files(7, is_ja: true)
+    assert_equal expected, @test_tools.capture_stdout(@test_ls)
   end
 
   def test_many_files_mixed_format
@@ -76,9 +108,9 @@ class LsTest < Minitest::Test
       test_file2        日本語のファイル1
       test_file3        日本語のファイル2
     TEXT
-    @test_tools.create_tmp_files(4, 3) do
-      assert_equal expected, @test_tools.capture_stdout(@test_ls)
-    end
+    @test_tools.create_tmp_files(4)
+    @test_tools.create_tmp_files(3, is_ja: true)
+    assert_equal expected, @test_tools.capture_stdout(@test_ls)
   end
 
   def test_many_entries_mixed_format
@@ -92,10 +124,11 @@ class LsTest < Minitest::Test
       test_file1            日本語のディレクトリ2
     TEXT
 
-    @test_tools.create_tmp_files(2, 2, auto_clean: false) {}
-    @test_tools.create_tmp_dirs(2, 2) do
-      assert_equal expected, @test_tools.capture_stdout(@test_ls)
-    end
+    @test_tools.create_tmp_files(2)
+    @test_tools.create_tmp_files(2, is_ja: true)
+    @test_tools.create_tmp_dirs(2)
+    @test_tools.create_tmp_dirs(2, is_ja: true)
+    assert_equal expected, @test_tools.capture_stdout(@test_ls)
   end
 
   def teardown
@@ -103,69 +136,101 @@ class LsTest < Minitest::Test
   end
 end
 
-class TestTools
-  attr_reader :test_dir
+class LsManyArgTest < Minitest::Test
+  def setup
+    @test_tools = TestTools.new
+    # テストのために十分なコンソールの幅がなかった場合はエラーとする
+    raise "テストに必要なコンソールの表示幅がありません。#{22 * 3}以上の幅を確保してください" if IO.console_size[1] < 66
 
-  def initialize
-    @test_dir = Dir.mktmpdir
+    @test_ls = Ls.new
+    @test_ls.entries = [@test_tools.test_dir]
   end
 
-  def create_tmp_files(num_of_ascii = 1, num_of_ja = 0, auto_clean: true)
-    tmp_files = []
-    if num_of_ascii.positive?
-      (1..num_of_ascii).each do |n|
-        File.open("#{@test_dir}/test_file#{n}", 'w+') {}
-        tmp_files << "test_file#{n}"
-      end
-    end
-
-    if num_of_ja.positive?
-      (1..num_of_ja).each do |n|
-        File.open("#{@test_dir}/日本語のファイル#{n}", 'w+') {}
-        tmp_files << "日本語のファイル#{n}"
-      end
-    end
-    yield
-    remove_entries(tmp_files) if auto_clean
+  def test_many_file_args
+    expected = <<~TEXT
+      #{@test_tools.test_dir}/test_file1
+      #{@test_tools.test_dir}/test_file2
+    TEXT
+    @test_tools.create_tmp_files(2)
+    @test_ls.entries = [
+      "#{@test_tools.test_dir}/test_file1",
+      "#{@test_tools.test_dir}/test_file2"
+    ]
+    assert_equal expected, @test_tools.capture_stdout(@test_ls)
   end
 
-  def create_tmp_dirs(num_of_ascii = 1, num_of_ja = 0, auto_clean: true)
-    tmp_dirs = []
-    if num_of_ascii.positive?
-      (1..num_of_ascii).each do |n|
-        Dir.mkdir("#{@test_dir}/test_dir#{n}")
-        tmp_dirs << "test_dir#{n}"
-      end
-    end
+  def test_many_vacant_dir_args
+    expected = <<~TEXT
+      #{@test_tools.test_dir}/test_dir1:
 
-    if num_of_ja.positive?
-      (1..num_of_ja).each do |n|
-        Dir.mkdir("#{@test_dir}/日本語のディレクトリ#{n}")
-        tmp_dirs << "日本語のディレクトリ#{n}"
-      end
-    end
-    yield
-    remove_entries(tmp_dirs) if auto_clean
+      #{@test_tools.test_dir}/test_dir2:
+    TEXT
+    @test_tools.create_tmp_dirs(2)
+    @test_ls.entries = [
+      "#{@test_tools.test_dir}/test_dir1",
+      "#{@test_tools.test_dir}/test_dir2"
+    ]
+    assert_equal expected, @test_tools.capture_stdout(@test_ls)
   end
 
-  # テストディレクトリ削除（再帰的に全て削除）
-  def cleanup
-    FileUtils.remove_entry_secure @test_dir
+  def test_many_dir_args
+    expected = <<~TEXT
+      #{@test_tools.test_dir}/test_dir1:
+      test_file1 test_file4 test_file7
+      test_file2 test_file5
+      test_file3 test_file6
+
+      #{@test_tools.test_dir}/test_dir2:
+      test_dir1  test_file2 test_file3
+      test_file1
+
+      #{@test_tools.test_dir}/test_dir3:
+      test_file1
+    TEXT
+    @test_tools.create_tmp_dirs(3)
+    @test_tools.create_tmp_files(7, sub_dir: 'test_dir1')
+    @test_tools.create_tmp_files(3, sub_dir: 'test_dir2')
+    @test_tools.create_tmp_dirs(1, sub_dir: 'test_dir2')
+    @test_tools.create_tmp_files(1, sub_dir: 'test_dir3')
+
+    @test_ls.entries = [
+      "#{@test_tools.test_dir}/test_dir1",
+      "#{@test_tools.test_dir}/test_dir2",
+      "#{@test_tools.test_dir}/test_dir3"
+    ]
+    assert_equal expected, @test_tools.capture_stdout(@test_ls)
   end
 
-  # テストディレクトリ内の削除
-  def remove_entries(entries)
-    entries.each do |entry|
-      FileUtils.remove_entry_secure "#{@test_dir}/#{entry}"
-    end
+  def test_mixed_args
+    expected1 = <<~TEXT
+      #{@test_tools.test_dir}/test_file1
+      #{@test_tools.test_dir}/test_file2
+      #{@test_tools.test_dir}/test_file3
+
+      #{@test_tools.test_dir}/test_dir1:
+      test_file1 test_file4 test_file7
+      test_file2 test_file5
+      test_file3 test_file6
+
+      #{@test_tools.test_dir}/test_dir2:
+      test_file1 test_file3 test_file4
+      test_file2
+    TEXT
+    @test_tools.create_tmp_dirs(2)
+    @test_tools.create_tmp_files(3)
+    @test_tools.create_tmp_files(7, sub_dir: 'test_dir1')
+    @test_tools.create_tmp_files(4, sub_dir: 'test_dir2')
+    @test_ls.entries = [
+      "#{@test_tools.test_dir}/test_file1",
+      "#{@test_tools.test_dir}/test_file2",
+      "#{@test_tools.test_dir}/test_file3",
+      "#{@test_tools.test_dir}/test_dir1",
+      "#{@test_tools.test_dir}/test_dir2"
+    ]
+    assert_equal expected1, @test_tools.capture_stdout(@test_ls)
   end
 
-  def capture_stdout(ls_instance)
-    out = StringIO.new
-    $stdout = out
-    ls_instance.output
-    out.string
-  ensure
-    $stdout = STDOUT
+  def teardown
+    @test_tools.cleanup
   end
 end
