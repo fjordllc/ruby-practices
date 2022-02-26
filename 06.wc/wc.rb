@@ -6,7 +6,7 @@ def main
   params = ARGV.getopts('l')
   files_data = collect_file_data
   total_files_data = sum_file_data(files_data)
-  files_data.empty? ? show_stdin_data(params) : show_file_data(params, files_data, total_files_data)
+  determine_display_target(params, files_data, total_files_data)
 end
 
 def collect_file_data
@@ -30,6 +30,10 @@ def sum_file_data(files_data)
   total_of_words: files_data.sum { |words| words[:words] },
   total_of_bites: files_data.sum { |bites| bites[:bites] },
   }
+end
+
+def determine_display_target(params, files_data, total_files_data)
+  files_data.empty? ? show_stdin_data(params) : show_file_data(params, files_data, total_files_data)
 end
 
 def show_stdin_data(params)
