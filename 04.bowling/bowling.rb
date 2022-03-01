@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-score = ARGV
-score_array = score.split(',')
+score = ARGV[0]
+score_array = score.to_s.split(',')
 score_array_num = []
 score_array.each do |s|
   if s[0] == 'X'
@@ -11,6 +11,7 @@ score_array.each do |s|
     score_array_num.push(s.to_i)
   end
 end
+p score_array_num
 frames = []
 score_array_num.each_slice(2) do |s|
   frames.push(s)
