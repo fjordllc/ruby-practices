@@ -10,6 +10,9 @@ def main
   determine_display_target(params, files_data, total_files_data)
 end
 
+#ここは Array から Array を作っている箇所なので Array#map を使うようにしましょう。
+#文字列を渡して、lines, words, bytesを返してくれるメソッドがあると、
+#このファイルの中に複数存在するカウント処理を1箇所にまとめられそうですね。検討をお願いいたします
 def collect_file_data
   files_data = []
   ARGV.each do |file|
@@ -17,7 +20,7 @@ def collect_file_data
     file_data = {
       lines: read_data.count("\n"),
       words: read_data.split(/\s+/).size,
-      bites: read_data.bytesize,
+      bytes: read_data.bytesize,
       filename: File.basename(file)
     }
     files_data << file_data
@@ -29,7 +32,7 @@ def sum_file_data(files_data)
   {
     total_of_lines: files_data.sum { |lines| lines[:lines] },
     total_of_words: files_data.sum { |words| words[:words] },
-    total_of_bites: files_data.sum { |bites| bites[:bites] }
+    total_of_bytes: files_data.sum { |bytes| bytes[:bytes] }
   }
 end
 
@@ -37,6 +40,10 @@ def determine_display_target(params, files_data, total_files_data)
   files_data.empty? ? show_stdin_data(params) : show_file_data(params, files_data, total_files_data)
 end
 
+#if側の処理とelse側の処理で standard_inputs.count("\n").to_s.rjust(8) が重複しているので、
+#重複を無くせないか検討してみてください
+#ここも lines words bytes filename option を渡すと決められたフォーマットで出力するメソッドを定義しておくと、
+#出力フォーマットを1箇所にまとめられそうですね。
 def show_stdin_data(params)
   standard_inputs = $stdin.read
   if params['l']
@@ -59,13 +66,13 @@ end
 
 def output_file_data(files_data, total_files_data)
   files_data.each do |file_data|
-    puts "#{file_data[:lines].to_s.rjust(8)} #{file_data[:words].to_s.rjust(7)} #{file_data[:bites].to_s.rjust(7)} " \
+    puts "#{file_data[:lines].to_s.rjust(8)} #{file_data[:words].to_s.rjust(7)} #{file_data[:bytes].to_s.rjust(7)} " \
     "#{file_data[:filename]}"
   end
   return unless files_data.size > 1
 
   puts "#{total_files_data[:total_of_lines].to_s.rjust(8)} #{total_files_data[:total_of_words].to_s.rjust(7)} " \
-  "#{total_files_data[:total_of_bites].to_s.rjust(7)} total"
+  "#{total_files_data[:total_of_bytes].to_s.rjust(7)} total"
 end
 
 main
