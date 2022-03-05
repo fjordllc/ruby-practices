@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TranslateScore
   def initialize(input_from_command)
     @input_from_command = input_from_command

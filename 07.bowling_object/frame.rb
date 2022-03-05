@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Frame
   MAX_FRAME_COUNT = 10
 
