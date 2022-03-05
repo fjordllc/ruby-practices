@@ -39,17 +39,13 @@ def determine_display_target(params, files_data, total_files_data)
   files_data.empty? ? show_stdin_data(params) : show_file_data(params, files_data, total_files_data)
 end
 
-#if側の処理とelse側の処理で standard_inputs.count("\n").to_s.rjust(8) が重複しているので、
-#重複を無くせないか検討してみてください
 #ここも lines words bytes filename option を渡すと決められたフォーマットで出力するメソッドを定義しておくと、
 #出力フォーマットを1箇所にまとめられそうですね。
 def show_stdin_data(params)
   standard_inputs = $stdin.read
-  if params['l']
-    puts "#{standard_inputs.count("\n").to_s.rjust(8)} "
-  else
-    puts "#{standard_inputs.count("\n").to_s.rjust(8)} #{standard_inputs.split(/\s+/).size.to_s.rjust(7)} #{standard_inputs.bytesize.to_s.rjust(7)}"
-  end
+  print "#{standard_inputs.count("\n").to_s.rjust(8)}"
+  puts "#{standard_inputs.split(/\s+/).size.to_s.rjust(8)} #{standard_inputs.bytesize.to_s.rjust(7)}" unless params['l']
+  print "\n"
 end
 
 def show_file_data(params, files_data, total_files_data)
