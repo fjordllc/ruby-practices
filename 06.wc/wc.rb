@@ -10,12 +10,11 @@ def main
   determine_display_target(params, files_data, total_files_data)
 end
 
-#ここは Array から Array を作っている箇所なので Array#map を使うようにしましょう。
 #文字列を渡して、lines, words, bytesを返してくれるメソッドがあると、
 #このファイルの中に複数存在するカウント処理を1箇所にまとめられそうですね。検討をお願いいたします
 def collect_file_data
   files_data = []
-  ARGV.each do |file|
+  ARGV.map do |file|
     read_data = File.read(file)
     file_data = {
       lines: read_data.count("\n"),
