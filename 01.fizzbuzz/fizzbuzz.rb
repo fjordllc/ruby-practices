@@ -1,12 +1,12 @@
 num = 1
 
 while num <= 20
-  if num % 3 == 0 && num % 5 == 0
-    puts "FizzBuzz"
+  if (num % 3 == 0) && (num % 5 == 0)
+    puts 'FizzBuzz'
   elsif num % 5 == 0
-    puts "Buzz"
+    puts 'Buzz'
   elsif num % 3 == 0
-    puts "Fizz"
+    puts 'Fizz'
   else
     puts num
   end
