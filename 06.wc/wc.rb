@@ -8,12 +8,10 @@ def main
   collected_string = collect_string
   string_data = collect_string_data(collected_string)
   total_files_data = sum_file_data(string_data)
-  show_file_data(params, string_data, total_files_data)
+  output_string_data(params, string_data, total_files_data)
 end
 
-#文字列を渡して、lines, words, bytesを返してくれるメソッドがあると、
-#このファイルの中に複数存在するカウント処理を1箇所にまとめられそうですね。検討をお願いいたします
-#ファイルを繰り返すメソッドを作る？
+#ファイル名をwcの出力結果にくっつける
 
 def collect_string
   collected_string = []
@@ -54,26 +52,18 @@ end
 #ここも lines words bytes filename option を渡すと決められたフォーマットで出力するメソッドを定義しておくと、
 #出力フォーマットを1箇所にまとめられそうですね。
 
-def show_file_data(params, string_data, total_files_data)
-  params['l'] ? output_lines(string_data, total_files_data) : output_file_data(string_data, total_files_data)
-end
-
-def output_lines(string_data, total_files_data)
-  string_data.each do |file_data|
-    puts "#{file_data[:lines].to_s.rjust(8)} #{file_data[:filename]}"
+def output_string_data(params, string_data, total_files_data)
+  string_data.each do |string|
+    print "#{string[:lines].to_s.rjust(8)}"
+    print "#{string[:words].to_s.rjust(8)} #{string[:bytes].to_s.rjust(7)} " unless params['l']
+    puts "\n"
   end
-  puts "#{total_files_data[:total_of_lines].to_s.rjust(8)} total" if string_data.size > 1
-end
 
-def output_file_data(string_data, total_files_data)
-  string_data.each do |file_data|
-    puts "#{file_data[:lines].to_s.rjust(8)} #{file_data[:words].to_s.rjust(7)} #{file_data[:bytes].to_s.rjust(7)} " \
-    "#{file_data[:filename]}"
+  if string_data.size > 1
+    print "#{total_files_data[:total_of_lines].to_s.rjust(8)}" 
+    print "#{total_files_data[:total_of_words].to_s.rjust(8)} #{total_files_data[:total_of_bytes].to_s.rjust(7)}" unless params['l']
+    puts " total"
   end
-  return unless string_data.size > 1
-
-  puts "#{total_files_data[:total_of_lines].to_s.rjust(8)} #{total_files_data[:total_of_words].to_s.rjust(7)} " \
-  "#{total_files_data[:total_of_bytes].to_s.rjust(7)} total"
 end
 
 main
