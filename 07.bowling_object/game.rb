@@ -26,6 +26,8 @@ class Game
     total_points
   end
 
+  private
+
   def add_strike_score(total_points, frames, index)
     first_extra_point = frames[index][0]
     second_extra_point =
