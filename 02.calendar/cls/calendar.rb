@@ -65,6 +65,7 @@ class Calendar
       opt.on('-m') do |v|
         arg = arg[0].to_i
         @month = arg if v && arg > 0 && arg <= 12
+        raise_argument_error(@month, arg) if arg < 0 || arg >= 13
       end
     end
 
@@ -73,6 +74,15 @@ class Calendar
       opt.on('-y') do |v|
         arg = arg[0].to_i
         @year = arg if v && arg > 0
+        raise_argument_error(@year, arg) if arg < 0
+      end
+    end
+
+    def raise_argument_error(type, arg)
+      if type == @month
+        raise ArgumentError, "cal: #{arg} is neither a month number (1..12) nor a name"
+      elsif type == @year
+        raise ArgumentError, "cal: illegal option"
       end
     end
 end
