@@ -3,47 +3,68 @@
 require 'optparse'
 require 'date'
 
-NOW_DATE = Date.today
+TODAY = Date.today
 
-default_params = {
-  year: NOW_DATE.year,
-  month: NOW_DATE.month,
-  day: NOW_DATE.day,
-}
-
-params = default_params.dup
-
-def beginning_of_week(date)
-  date.downto(date.prev_month) {|d|
-    return d if d.wday == 0
-  }
-end
-
-def end_of_week(date)
-  date.upto(date.next_month) {|d|
-    return d if d.wday == 6 
-  }
-end
-
-def render(month: , year: )
-  month_start = Date.new(year, month, 1)
-  month_end = Date.new(year, month, -1)
-  month_range = month_start .. month_end
-  calendar_start = beginning_of_week(month_start)
-  calendar_end = end_of_week(month_end)
-  calendar_dates = calendar_start .. calendar_end
-  weeks = calendar_dates.group_by {|date| date.strftime("%U").to_i}
-  puts month_start.strftime("%-m月 %Y年")
-  puts %w(日 月 火 水 木 金 土).join(" ")
-  weeks.each do |weeknum, week|
-    puts week.map {|date|
-      if month_range.cover?(date)
-        "%2d" % date.day
+def setup_option(option: { month: TODAY.month, year: TODAY.year })
+  OptionParser.new do |opt|
+    opt.banner = 'Usage: ruby calendar'
+    opt.on("-m VALUE", Integer) do |v|
+      if (1 .. 12).cover?(v)
+        option[:month] = v
       else
-        "  "
+        raise "(1~12)"
       end
-    }.join(" ")
+    end
+    opt.on("-y VALUE", Integer) do |v|
+      option[:year] = v
+    end
+    opt.parse!(ARGV)
+  end
+  option
+end
+
+class MonthTableRenderer
+  def initialize(year:, month:)
+    @year = year
+    @month = month
+
+    @all_month = (Date.new(year, month, 1) .. Date.new(year, month, -1))
+  end
+
+  def render
+    render_header
+    all_calendar_days = beginning_of_week(@all_month.first) .. end_of_week(@all_month.last)
+    weeks = all_calendar_days.group_by {|date| date.strftime("%U").to_i}
+    weeks.each do |weeknum, week|
+      puts week.map {|date|
+        if @all_month.cover?(date)
+          "%2d" % date.day
+        else
+          "  "
+        end
+      }.join(" ")
+    end
+  end
+
+  private
+
+  def render_header
+    puts @all_month.first.strftime("%-m月 %Y年")
+    puts %w(日 月 火 水 木 金 土).join(" ")
+  end
+
+  def beginning_of_week(date)
+    date.downto(date.prev_month) {|d|
+      return d if d.wday == 0
+    }
+  end
+
+  def end_of_week(date)
+    date.upto(date.next_month) {|d|
+      return d if d.wday == 6 
+    }
   end
 end
 
-render(month: params[:month], year: params[:year])
+MonthTableRenderer.new(setup_option).render
+
