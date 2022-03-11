@@ -19,4 +19,3 @@ class Option
       end
     end
 end
-

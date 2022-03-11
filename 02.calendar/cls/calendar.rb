@@ -1,10 +1,11 @@
+require 'date'
+
 class Calendar
-  def initialize
-    today = Date.today
+  def initialize(month, year)
+    @today = Date.today
     @dates = []
-    @month = today.month
-    @year = today.year
-    init_option
+    @month = month || @today.month
+    @year = year || @today.year
     print_header
     print_week
     print_calendar
@@ -37,52 +38,22 @@ class Calendar
     def print_calendar
       calendar_init
       @dates.each do |d|
-        # 1日が日曜日以外の時に先頭に空白を入れる処理
-        if d.wday != 0 && d.day == 1
-          print "    " * d.wday
-          print "  #{d.day} "
-        # 日付が一桁の時の空白調整
-        elsif d.day < 10
-          print "  #{d.day} "
-        else
-          print " #{d.day} "
-        end
+        str = insert_space(d)
+        # 月の指定が今月の場合の今日の日付の出力色反転
+        print d == @today ? "\e[47m\e[30m#{str}\e[0m" : str
         # 曜日が土曜日の時の改行
         print "\n" if d.wday == 6
       end
     end
-
-    # コマンドライン引数の初期化
-    def init_option
-      opt = OptionParser.new
-      init_option_month(opt, ARGV)
-      init_option_year(opt, ARGV)
-      opt.parse!(ARGV)
-    end
-
-    # -mオプションの登録
-    def init_option_month(opt, arg)
-      opt.on('-m') do |v|
-        arg = arg[0].to_i
-        @month = arg if v && arg > 0 && arg <= 12
-        raise_argument_error(@month, arg) if arg < 0 || arg >= 13
+    
+    # カレンダーの各日付の空白挿入処理
+    def insert_space(d)
+      str = "  #{d.day} "
+      if d.wday != 0 && d.day == 1
+        print "    " * d.wday
+      elsif d.day >= 10
+        str = " #{d.day} "
       end
-    end
-
-    # -yオプションの登録
-    def init_option_year(opt, arg)
-      opt.on('-y') do |v|
-        arg = arg[0].to_i
-        @year = arg if v && arg > 0
-        raise_argument_error(@year, arg) if arg < 0
-      end
-    end
-
-    def raise_argument_error(type, arg)
-      if type == @month
-        raise ArgumentError, "cal: #{arg} is neither a month number (1..12) nor a name"
-      elsif type == @year
-        raise ArgumentError, "cal: illegal option"
-      end
+      return str
     end
 end

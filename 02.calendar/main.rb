@@ -1,5 +1,7 @@
-require 'date'
-require 'optparse'
+require_relative 'cls/option'
 require_relative 'cls/calendar'
 
-Calendar.new
+month = 'm'
+year = 'y'
+opt = Option.new(month, year)
+Calendar.new(opt.options[month], opt.options[year])
