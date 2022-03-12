@@ -1,20 +1,16 @@
 # frozen_string_literal: true
 
-class Frame
-  MAX_FRAME_COUNT = 10
+require_relative 'shot'
 
-  def initialize(base_scores)
-    @base_scores = base_scores
+class Frame
+  attr_reader :first_shot, :second_shot, :third_shot
+  def initialize(first_mark, second_mark, third_mark = nil)
+    @first_shot = Shot.new(first_mark) 
+    @second_shot = Shot.new(second_mark)
+    @third_shot = Shot.new(third_mark)
   end
 
-  def create_frames
-    frames = []
-
-    while frames.count < (MAX_FRAME_COUNT - 1)
-      # 9フレーム目までの処理
-      frames << @base_scores.slice(frames.count * 2, 2)
-    end
-    # 10フレーム目までの処理
-    frames << @base_scores.slice(frames.count * 2..-1)
+  def score
+    first_shot.score + second_shot.score + third_shot.score
   end
 end
