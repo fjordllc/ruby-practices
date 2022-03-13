@@ -24,6 +24,10 @@ def setup_option(option: { month: TODAY.month, year: TODAY.year })
 end
 
 class MonthTableRenderer
+  # 表示幅
+  # 7days * 半角2文字 + 間のスペースが6個
+  CALENDER_DISPLAY_WIDTH = 20
+
   def initialize(year:, month:)
     @year = year
     @month = month
@@ -48,8 +52,8 @@ class MonthTableRenderer
 
   private
 
-  def render_header
-    puts @all_month.first.strftime("%-m月 %Y年")
+  def render_header(display_width: CALENDER_DISPLAY_WIDTH)
+    puts @all_month.first.strftime("%-m月 %Y").center(display_width)
     puts %w(日 月 火 水 木 金 土).join(" ")
   end
 
