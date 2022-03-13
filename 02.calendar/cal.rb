@@ -12,13 +12,16 @@ def setup_option(option: { month: TODAY.month, year: TODAY.year })
       if (1 .. 12).cover?(v)
         option[:month] = v
       else
-        raise "(1~12)"
+        raise OptionParser::InvalidArgument.new("#{v} is neither a month number (1..12) nor a name")
       end
     end
     opt.on("-y VALUE", Integer) do |v|
       option[:year] = v
     end
     opt.parse!(ARGV)
+  rescue => e
+    puts e.message
+    exit 1
   end
   option
 end
