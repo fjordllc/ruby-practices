@@ -37,16 +37,14 @@ class MonthTableRenderer
 
   def render
     render_header
-    all_calendar_days = beginning_of_week(@all_month.first) .. end_of_week(@all_month.last)
-    weeks = all_calendar_days.group_by {|date| date.strftime("%U").to_i}
+    weeks = @all_month.group_by {|date| date.strftime("%U").to_i}
     weeks.each do |weeknum, week|
-      puts week.map {|date|
-        if @all_month.cover?(date)
-          "%2d" % date.day
-        else
-          "  "
-        end
+      # 月初に関しては日曜日から始まらないのでカレンダーがズレるためスペース調整
+      left_spaces = Array.new(week.first.wday).map{|n| "\s" * 3}.join("")
+      line = week.map{ |date|
+        "%2d" % date.day
       }.join(" ")
+      puts "#{left_spaces}#{line}"
     end
   end
 
@@ -55,18 +53,6 @@ class MonthTableRenderer
   def render_header(display_width: CALENDER_DISPLAY_WIDTH)
     puts @all_month.first.strftime("%-m月 %Y").center(display_width)
     puts %w(日 月 火 水 木 金 土).join(" ")
-  end
-
-  def beginning_of_week(date)
-    date.downto(date.prev_month) {|d|
-      return d if d.wday == 0
-    }
-  end
-
-  def end_of_week(date)
-    date.upto(date.next_month) {|d|
-      return d if d.wday == 6 
-    }
   end
 end
 
