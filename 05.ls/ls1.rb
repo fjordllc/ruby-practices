@@ -3,15 +3,15 @@
 # !/usr/bin/env ruby
 NUMBER_OF_COLUMNS = 3
 
-def get_dirs
+def dirs
   Dir.glob('*').sort
 end
 
 def add_dirs_to_arrs
   arrs_containing_dirs = Array.new(NUMBER_OF_COLUMNS) { [] }
-  number_of_elements_per_column = Rational(get_dirs.size, NUMBER_OF_COLUMNS).ceil
+  number_of_elements_per_column = Rational(dirs.size, NUMBER_OF_COLUMNS).ceil
   index = 0
-  get_dirs.each do |dir|
+  dirs.each do |dir|
     arrs_containing_dirs[index] << dir
     index += 1 if (arrs_containing_dirs[index].size % number_of_elements_per_column).zero?
   end
@@ -20,7 +20,7 @@ def add_dirs_to_arrs
 end
 
 def output_dirs
-  maximum_number_of_words = get_dirs.map(&:size).max
+  maximum_number_of_words = dirs.map(&:size).max
   add_dirs_to_arrs.each do |arr|
     arr.each do |dir|
       print dir.to_s.ljust(maximum_number_of_words + 7)
