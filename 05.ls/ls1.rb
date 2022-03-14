@@ -25,7 +25,7 @@ def output_dirs
     arr.each do |dir|
       print dir.to_s.ljust(maximum_number_of_words + 7)
     end
-    print "\n"
+    puts
   end
 end
 
