@@ -1,6 +1,8 @@
-require_relative '../bowling.rb'
+# frozen_string_literal: true
 
-describe "parse_frames" do
+require_relative './bowling'
+
+describe 'parse_frames' do
   context '全てストライクだった場合' do
     let(:releases) { 'X,X,X,X,X,X,X,X,X,X,X,X' }
     example 'フレーム数は10' do
@@ -21,7 +23,7 @@ describe "parse_frames" do
   end
 end
 
-describe "bowling" do
+describe 'bowling' do
   context '全てガーターだった場合' do
     let(:releases) { '0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0' }
     example do

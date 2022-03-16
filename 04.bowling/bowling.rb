@@ -1,31 +1,39 @@
-KEY_STRIKE = "X"
+# frozen_string_literal: true
 
-def bowling_score(releases_chars = "")
+KEY_STRIKE = 'X'
+
+def bowling_score(releases_chars = '')
   score = 0
   frames = parse_frames(releases_chars)
   frames.each.with_index do |frame, index|
-    if frame.sum < 10
-      score += frame.sum
-    else # スペア、ストライク、最終フレーム
-      score += frames[index, frames.size].flatten.take(3).sum
-    end
+    score += if frame.sum < 10
+               frame.sum
+             else # スペア、ストライク、最終フレーム
+               frames[index, frames.size].flatten.take(3).sum
+             end
   end
   score
 end
 
-def parse_frames(releases_chars = "")
-  frames = releases_chars.split(/,/).each_with_object([]) {|item, memo|
-    if item == KEY_STRIKE
-      memo.push(10, nil)
+def parse_frames(releases_chars = '')
+  frames = Array.new(10) { [] }
+  frame_index = 0
+  releases = releases_chars.split(/,/)
+  releases.each do |release|
+    if frame_index < 9
+      if release == KEY_STRIKE
+        frames[frame_index].push(10)
+        frame_index += 1 # ストライクの場合、フレームを進める
+      else
+        frames[frame_index].push(release.to_i)
+        frame_index += 1 if frames[frame_index].size == 2
+      end
+    elsif release == KEY_STRIKE
+      # 最終フレームは最後まで点数を追加する
+      frames[frame_index].push(10)
     else
-      memo.push(item.to_i)
+      frames[frame_index].push(release.to_i)
     end
-  }.group_by.with_index{|item, index|
-    index / 2
-  }.map {|key, releases|
-    releases.compact
-  }
-  frames[0,9] << frames[9,3].flatten
+  end
+  frames
 end
-
-
