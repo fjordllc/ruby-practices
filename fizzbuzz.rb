@@ -12,5 +12,6 @@ while num <= 20
     else
         print "#{num}\n"
         num = num +1
-    end   
+    end
+   
 end
