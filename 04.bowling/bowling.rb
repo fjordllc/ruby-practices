@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 # frozen_string_literal: true
 
 KEY_STRIKE = 'X'
@@ -37,3 +38,5 @@ def parse_frames(releases_chars = '')
   end
   frames
 end
+
+puts bowling_score(ARGV[0]) if $0 == __FILE__
