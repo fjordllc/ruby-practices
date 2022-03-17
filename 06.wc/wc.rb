@@ -12,33 +12,26 @@ def main
 end
 
 def collect_string
-  strings_data = []
   if ARGV.empty?
-    strings_data << { string: $stdin.read }
+    collected_string = []
+    collected_string << { string: $stdin.read.lstrip }
   else
-    ARGV.map do |file|
-      string_data = {
-        string: File.read(file),
-        filename: File.basename(file)
-      }
-      strings_data << string_data
+    collected_string = ARGV.map do |file|
+      { string: File.read(file), filename: File.basename(file) }
     end
   end
-  strings_data
+  collected_string
 end
 
 def collect_string_data(collected_string)
-  strings_data = []
   collected_string.map do |string|
-    string_data = {
+    {
       lines: string[:string].count("\n"),
       words: string[:string].split(/\s+/).size,
       bytes: string[:string].bytesize,
       filename: string[:filename]
     }
-    strings_data << string_data
   end
-  strings_data
 end
 
 def sum_file_data(string_data)
