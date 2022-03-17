@@ -39,4 +39,4 @@ def parse_frames(releases_chars = '')
   frames
 end
 
-puts bowling_score(ARGV[0]) if $0 == __FILE__
+puts bowling_score(ARGV[0]) if $PROGRAM_NAME == __FILE__
