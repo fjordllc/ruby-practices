@@ -14,10 +14,13 @@ end
 def collect_string
   if ARGV.empty?
     collected_string = []
-    collected_string << { string: $stdin.read.lstrip }
+    collected_string << { string: $stdin.read }
   else
     collected_string = ARGV.map do |file|
-      { string: File.read(file), filename: File.basename(file) }
+      {
+        string: File.read(file),
+        filename: File.basename(file)
+      }
     end
   end
   collected_string
@@ -27,7 +30,7 @@ def collect_string_data(collected_string)
   collected_string.map do |string|
     {
       lines: string[:string].count("\n"),
-      words: string[:string].split(/\s+/).size,
+      words: string[:string].lstrip.split(/\s+/).size,
       bytes: string[:string].bytesize,
       filename: string[:filename]
     }
