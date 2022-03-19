@@ -12,13 +12,11 @@ class Frame
   end
 
   def self.create_frames(input)
-    frames = []
     base_mark_string = input.split(',')
     divided_marks = divide_marks(base_mark_string)
-    divided_marks.each do |divided_mark|
-      frames << new(divided_mark[0], divided_mark[1], divided_mark[2])
+    divided_marks.map do |divided_mark|
+      new(divided_mark[0], divided_mark[1], divided_mark[2])
     end
-    frames
   end
 
   def self.divide_marks(base_mark_string)
