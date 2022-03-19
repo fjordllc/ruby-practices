@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'minitest/autorun'
-require_relative '../frame'
 require_relative '../game'
 
 class GameTest < Minitest::Test
