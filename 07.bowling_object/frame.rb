@@ -19,6 +19,12 @@ class Frame
     end
   end
 
+  def score
+    first_shot.score + second_shot.score + third_shot.score
+  end
+
+  private
+
   def self.divide_marks(base_mark_string)
     divided_marks = []
     first_string_index = 0
@@ -45,9 +51,5 @@ class Frame
 
   def self.spare?(divided_mark)
     divided_mark[0].to_i + divided_mark[1].to_i == 10
-  end
-
-  def score
-    first_shot.score + second_shot.score + third_shot.score
   end
 end
