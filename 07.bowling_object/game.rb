@@ -10,10 +10,6 @@ class Game
   end
 
   def total_score
-    result = 0
-    frames.each do |frame|
-      result += frame.score
-    end
-    result
+    frames.sum(&:score)
   end
 end
