@@ -59,5 +59,5 @@ class MonthTableRenderer
   end
 end
 
-MonthTableRenderer.new(setup_option).render
+MonthTableRenderer.new(**setup_option).render
 
