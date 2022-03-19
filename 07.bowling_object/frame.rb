@@ -13,7 +13,7 @@ class Frame
 
   def self.create_frames(input)
     frames = []
-    base_mark_string = input.delete(',')
+    base_mark_string = input.split(',')
     divided_marks = divide_marks(base_mark_string)
     divided_marks.each do |divided_mark|
       frames << new(divided_mark[0], divided_mark[1], divided_mark[2])
@@ -24,7 +24,7 @@ class Frame
   def self.divide_marks(base_mark_string)
     divided_marks = []
     first_string_index = 0
-    while first_string_index + 1 < base_mark_string.size - 1
+    while divided_marks.size < 10
       divided_mark = base_mark_string.slice(first_string_index, 3)
       if strike?(divided_mark)
         divided_marks << divided_mark
@@ -33,7 +33,7 @@ class Frame
         divided_marks << divided_mark
         first_string_index += 2
       else
-        divided_mark.chop!.concat('0')
+        divided_mark[2] = '0'
         divided_marks << divided_mark
         first_string_index += 2
       end
