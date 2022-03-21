@@ -3,9 +3,9 @@ class CheckFizzBuzz
   FIZZ_NUM = 3
   BUZZ_NUM = 5
 
-  TEXT_MULTIPLE_3 = 'FIZZ'
-  TEXT_MULTIPLE_5 = 'BUZZ'
-  TEXT_MULTIPLE_3_AND_5 = 'FIZZ_BUZZ'
+  TEXT_MULTIPLE_3 = 'Fizz'
+  TEXT_MULTIPLE_5 = 'Buzz'
+  TEXT_MULTIPLE_3_AND_5 = 'FizzBuzz'
 
   def initialize(min, max)
     @max = max
