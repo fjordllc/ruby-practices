@@ -1,5 +1,4 @@
-
-class CheckFizzBuzz
+class FizzBuzz
   FIZZ_NUM = 3
   BUZZ_NUM = 5
 
@@ -12,13 +11,13 @@ class CheckFizzBuzz
     @min = min
   end
 
-  def call_check_fizz_buzz
+  def call_convert_fizzbuzz
     @min.upto(@max) do |number|
-      puts check_fizz_buzz(number)
+      puts convert_fizzbuzz(number)
     end
   end
 
-  def check_fizz_buzz(number)
+  def convert_fizzbuzz(number)
     if (number % FIZZ_NUM).zero? && number % BUZZ_NUM != 0
       puts TEXT_MULTIPLE_3
     elsif number % FIZZ_NUM != 0 && (number % BUZZ_NUM).zero?
@@ -26,9 +25,10 @@ class CheckFizzBuzz
     elsif (number % FIZZ_NUM).zero? && (number % BUZZ_NUM).zero?
       puts TEXT_MULTIPLE_3_AND_5
     else
+
       puts number
     end
   end
-end
 
-CheckFizzBuzz.new(1,20).call_check_fizz_buzz
+  FizzBuzz.new(1, 20).call_convert_fizzbuzz
+end
