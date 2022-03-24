@@ -3,50 +3,31 @@
 
 def main
   # ファイル取得
-  files = Dir.glob('*').sort
+  files = Dir.glob('*')
 
-  # 後にtransposeを使用するため、filesの中身の数が3で割り切れる数になるまで空白を配列に追加する
-  files << ' ' until (files.size % 3).zero?
-
-  # 左揃えにするため、20を上限としてfilesの各要素に空白を追加した配列を作成
-  space_added_files = files.map do |file|
-    file.ljust(20, ' ')
-  end
-  split_files(space_added_files, files)
-end
-
-# 取得したファイルを分割して3つの配列に格納
-def split_files(space_added_files, files)
   columun_count = 3
+  files << ' ' until (files.size % columun_count).zero?
 
-  array1 = []
-  array2 = []
-  array3 = []
+  # 1列に格納するファイル数
+  row = (files.size / columun_count).ceil
 
-  divide = (files.size / columun_count).ceil
-  space_added_files.each do |file|
-    if array1.size < divide
-      array1 << file
-    elsif array2.size < divide
-      array2 << file
-    else
-      array3 << file
-    end
+  # filesの中で、最も大きいファイルサイズ＋固定で追加するスペース数を格納
+  fixed_space_size = 7
+  max_space_size = files.max_by(&:length).length + fixed_space_size
+
+  # 左揃えにするため、各要素に空白を追加
+  space_added_files = files.map do |f|
+    each_space_size = max_space_size - f.size
+    f + ' ' * each_space_size
   end
 
-  # transposeで行列を逆にする
-  transposed_array = [
-    array1,
-    array2,
-    array3
-  ].transpose
-
-  display(transposed_array)
+  transposed_arrays = space_added_files.each_slice(row).to_a.transpose
+  display(transposed_arrays)
 end
 
 # 出力
-def display(transposed_array)
-  transposed_array.each do |file|
+def display(transposed_arrays)
+  transposed_arrays.each do |file|
     puts file.join('')
   end
 end
