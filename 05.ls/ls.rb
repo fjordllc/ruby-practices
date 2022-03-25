@@ -34,3 +34,11 @@ if ARGV[0].nil?
 else
   catch_file(File.absolute_path(ARGV[0]))
 end
+
+files = array_sort(files.sort)
+files.size.times do |time|
+  3.times do |column|
+    printf('%-24s', files[time][column])
+  end
+  puts
+end
