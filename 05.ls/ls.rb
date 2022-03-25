@@ -18,3 +18,20 @@ def array_sort(array)
   end
   ans
 end
+
+def catch_file(directory = Dir.getwd)
+  p directory
+  items = []
+  Dir.foreach(directory) do |item|
+    next if item =~ /^\..*/
+    items << item
+  end
+  items
+end
+
+files =
+if ARGV[0].nil?
+  catch_file()
+else
+  catch_file(File.absolute_path(ARGV[0]))
+end
