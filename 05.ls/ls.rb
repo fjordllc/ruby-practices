@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-def array_sort(array)
+def sort_array(array)
   width = 3
   height = (array.size.to_f / width).ceil
   answer_array = []
@@ -41,7 +41,7 @@ else
   catch_file(File.absolute_path(ARGV[0]))
 end
 
-files = array_sort(files.sort)
+files = sort_array(files.sort)
 files.size.times do |time|
   3.times do |column|
     printf('%-24s', files[time][column])
