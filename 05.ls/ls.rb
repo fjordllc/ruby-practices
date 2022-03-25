@@ -16,12 +16,12 @@ def main
   max_space_size = current_dir_items.max_by(&:length).length + fixed_space_size
 
   # 左揃えにするため、各要素に空白を追加
-  space_added_current_dir_items = current_dir_items.map do |items|
+  space_added_items = current_dir_items.map do |items|
     each_space_size = max_space_size - items.size
     items + ' ' * each_space_size
   end
 
-  transposed_items = space_added_current_dir_items.each_slice(row).to_a.transpose
+  transposed_items = space_added_items.each_slice(row).to_a.transpose
   display(transposed_items)
 end
 
