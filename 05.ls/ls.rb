@@ -20,7 +20,6 @@ def array_sort(array)
 end
 
 def catch_file(directory = Dir.getwd)
-  p directory
   items = []
   Dir.foreach(directory) do |item|
     next if item =~ /^\..*/
