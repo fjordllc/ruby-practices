@@ -4,19 +4,25 @@
 def array_sort(array)
   width = 3
   height = (array.size.to_f / width).ceil
+  answer_array = []
+
+  if array.size < 3
+    middle_array = []
+    array.size.times do |time|
+      middle_array << array[time]
+    end
+    return answer_array << middle_array
+  end
 
   array = array.each_slice(height).to_a
-
-  ans = []
-
   height.times do |row|
-    num = []
+    middle_array = []
     width.times do |column|
-      num << (array[column][row])
+      middle_array << (array[column][row])
     end
-    ans << num
+    answer_array << middle_array
   end
-  ans
+  answer_array
 end
 
 def catch_file(directory = Dir.getwd)
