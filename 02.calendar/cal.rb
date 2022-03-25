@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 require 'Date'
 require 'optparse'
 
