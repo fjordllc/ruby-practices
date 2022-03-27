@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 # score = ARGV[0]
-score = '6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,6,4,5'
+score = '6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,X,0,0'
 scores = score.split(',')
 
 shots = []
@@ -33,7 +33,7 @@ score = 0
 frames.each_with_index do |frame, i|
   if i < 9
     next_first_throw = frames[i + 1][0]
-    if next_first_throw == 10
+    if next_first_throw == 10 && i != 8
       next_second_throw = frames[i + 2][0]
     else
       next_second_throw = frames[i + 1][1]
