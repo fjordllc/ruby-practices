@@ -1,15 +1,18 @@
-#!/usr/bin/env ruby
-# score = ARGV[0]
-score = '6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,X,X,X'
+# !/usr/bin/env ruby
+# frozen_string_literal: true
+
+score = ARGV[0]
+
 scores = score.split(',')
 
 shots = []
 
 scores.each do |s|
-  if s == 'X' #strikeの場合一投目が10、二投目が0
+  if s == 'X' # strikeの場合一投目が10、二投目が0
     shots << 10
     shots << 0
-  elsif shots << s.to_i
+  else
+    shots << s.to_i
   end
 end
 
@@ -19,40 +22,40 @@ shots.each_slice(2) do |s|
 end
 frames.each do |frame|
   if frame[0] == 10
-    frame.pop #ストライクの場合は1フレーム一ム1投とする
+    frame.pop # ストライクの場合は1フレーム一ム1投とする
   end
 end
 
-# 10フレーム目に３投目が存在する場合
-if frames.size == 11
+case frames.size
+when 11 # 10フレーム目に３投目が存在する場合
   frames << frames[-2].concat(frames.last)
   frames = frames.slice(0, 10)
-elsif frames.size == 12 # 10フレーム目に３投目が存在するかつ２本以上ストライクがある場合
+when 12 # 10フレーム目に３投目が存在するかつ２本以上ストライクがある場合
   frames << frames[-3].concat(frames[-1], frames.last)
   frames = frames.slice(0, 10)
+else
+  return
 end
 
 score = 0
 frames.each_with_index do |frame, i|
   if i < 9
     next_first_throw = frames[i + 1][0]
-    if next_first_throw == 10 && i != 8
-      next_second_throw = frames[i + 2][0]
-    else
-      next_second_throw = frames[i + 1][1]
-    end
-    #strikeの場合
-    if frame[0] == 10
-      score += 10 + next_first_throw + next_second_throw
-      #spareの場合
-    elsif frame.sum == 10
-      score += 10 + next_first_throw
-    else
-      score += frame.sum
-    end
+    next_second_throw = if next_first_throw == 10 && i != 8
+                          frames[i + 2][0]
+                        else
+                          frames[i + 1][1]
+                        end
+    score += if frame[0] == 10 # strikeの場合
+               10 + next_first_throw + next_second_throw
+             elsif frame.sum == 10 # spareの場合
+               10 + next_first_throw
+             else
+               frame.sum
+             end
   else
-    #10投目
-    score += frame.sum
+    score += frame.sum # 10投目
   end
 end
-puts score
+
+p score
