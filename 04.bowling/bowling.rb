@@ -21,9 +21,7 @@ frames.first(10).each_with_index do |frame, i|
   afternext_frame = frames[i + 2]
 
   if frame[0] == 10 # strike
-    if next_frame[0] == 10
-     point += afternext_frame[0]
-    end
+    point += afternext_frame[0] if next_frame[0] == 10
 
     point += 10
     point += next_frame.sum
