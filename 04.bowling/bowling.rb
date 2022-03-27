@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 # score = ARGV[0]
-score = '6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,6,3'
+score = '6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,6,4,5'
 scores = score.split(',')
 
 shots = []
@@ -23,13 +23,18 @@ frames.each do |frame|
   end
 end
 
+# 10フレーム目に３投目が存在する場合
+if frames.size == 11
+  frames << frames[-2].concat(frames.last)
+  frames = frames.slice(0, 10)
+end
 
 score = 0
 frames.each_with_index do |frame, i|
   if i < 9
     next_first_throw = frames[i + 1][0]
     if next_first_throw == 10
-      next_second_throw = frames[i +2][0]
+      next_second_throw = frames[i + 2][0]
     else
       next_second_throw = frames[i + 1][1]
     end
