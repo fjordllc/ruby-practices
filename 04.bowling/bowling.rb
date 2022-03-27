@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 # score = ARGV[0]
-score = '6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,X,0,0'
+score = '6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,X,X,X'
 scores = score.split(',')
 
 shots = []
@@ -26,6 +26,9 @@ end
 # 10フレーム目に３投目が存在する場合
 if frames.size == 11
   frames << frames[-2].concat(frames.last)
+  frames = frames.slice(0, 10)
+elsif frames.size == 12 # 10フレーム目に３投目が存在するかつ２本以上ストライクがある場合
+  frames << frames[-3].concat(frames[-1], frames.last)
   frames = frames.slice(0, 10)
 end
 
