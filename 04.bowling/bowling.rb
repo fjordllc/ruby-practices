@@ -12,11 +12,7 @@ scores.each do |s|
   end
 end
 
-frames = []
-
-shots.each_slice(2) do |s|
-  frames << s
-end
+frames = shots.each_slice(2).to_a
 
 point = 0
 
@@ -26,9 +22,7 @@ frames.first(10).each_with_index do |frame, i|
 
   if frame[0] == 10 # strike
     if next_frame[0] == 10
-      break if afternext_frame.nil?
-
-      point += afternext_frame[0]
+     point += afternext_frame[0]
     end
 
     point += 10
