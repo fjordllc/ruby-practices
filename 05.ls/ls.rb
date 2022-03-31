@@ -1,10 +1,20 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-def main
-  # ファイル取得
-  current_dir_items = Dir.glob('*')
+require 'optparse'
 
+def main
+  params = ARGV.getopts('a')
+  current_dir_items =
+    if params['a']
+      Dir.glob('*', File::FNM_DOTMATCH)
+    else
+      Dir.glob('*')
+    end
+  format(current_dir_items)
+end
+
+def format(current_dir_items)
   columun_count = 3
   current_dir_items << ' ' until (current_dir_items.size % columun_count).zero?
 
@@ -16,12 +26,14 @@ def main
   max_space_size = current_dir_items.max_by(&:length).length + fixed_space_size
 
   # 左揃えにするため、各要素に空白を追加
-  space_added_items = current_dir_items.map do |items|
-    each_space_size = max_space_size - items.size
-    items + ' ' * each_space_size
-  end
+  space_added_items =
+    current_dir_items.map do |items|
+      each_space_size = max_space_size - items.size
+      items + ' ' * each_space_size
+    end
 
   transposed_items = space_added_items.each_slice(row).to_a.transpose
+
   display(transposed_items)
 end
 
