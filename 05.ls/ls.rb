@@ -1,33 +1,66 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
-children = Dir.glob('*').sort
+class ListSegments
+  MAX_COLUMN = 3
 
-# 文字数の最大値を算出。
-string_length_max = children.map { |items| items.length }.max
+  def main
+    children = Dir.glob('*').sort
 
-MAX_COLUMN = 3
+    child_max_length = children.map(&:length).max
 
-output_row_num = children.size % 3 > 0 ? children.size / 3 + 1 : children.size / 3
+    output_row = (children.size % 3).positive? ? children.size / 3 + 1 : children.size / 3
 
-results = []
-children.each_slice(output_row_num) do |items|
-  results << items.map { |item| item }
-end
+    sliced_by_row = slice_children_each_row(children, output_row)
 
-tmp_arry = []
-i = 0
-output_row_num.times do
-  results.each do |item|
-    tmp_arry << item[i]
+    sorted_arry = sorted_arry_factory(output_row, sliced_by_row)
+
+    results = output_arry_factory(sorted_arry)
+
+    results.each do |items|
+      puts items.map { |item|
+        format("% -#{child_max_length}s ", item) unless item.nil?
+      }.join
+    end
   end
-  i += 1
+
+  private
+
+  # @param [Object] row
+  # @param [Object] children
+  # @return [Array]
+  def slice_children_each_row(children, row)
+    sliced_by_row = []
+    children.each_slice(row) do |items|
+      sliced_by_row << items.map { |item| item }
+    end
+    sliced_by_row
+  end
+
+  # @param [Object] row
+  # @param [Object] sliced_by_row
+  # @return [Array]
+  def sorted_arry_factory(row, sliced_by_row)
+    tmp_arry = []
+    i = 0
+    row.times do
+      sliced_by_row.each do |item|
+        tmp_arry << item[i]
+      end
+      i += 1
+    end
+    tmp_arry
+  end
+
+  # @param [Object] arry
+  # @return [Array]
+  def output_arry_factory(arry)
+    results = []
+    arry.each_slice(MAX_COLUMN) do |items|
+      results << items.map { |item| item }
+    end
+    results
+  end
 end
 
-sorted_results = []
-sorted_results.each_slice(MAX_COLUMN) do |items|
-  sorted_results << items.map { |item| item }
-end
-
-sorted_results.each do |items|
-  puts items.map { |item| "% -#{string_length_max}s " % item }.join
-end
+ListSegments.new.main
