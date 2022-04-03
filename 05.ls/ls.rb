@@ -4,14 +4,13 @@
 require 'optparse'
 
 def main
-  params = ARGV.getopts('a')
-  current_dir_items =
-    if params['a']
-      Dir.glob('*', File::FNM_DOTMATCH)
-    else
-      Dir.glob('*')
-    end
-  format(current_dir_items)
+  params = ARGV.getopts('r')
+  current_dir_items = Dir.glob('*')
+  if params['r']
+    format(current_dir_items.reverse)
+  else
+    format(current_dir_items)
+  end
 end
 
 def format(current_dir_items)
