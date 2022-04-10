@@ -10,7 +10,7 @@ class Command
 
   def ls
     if l_option
-      # total_blocks
+      total_blocks
       output_with_l_option
     else
       output_without_l_option
@@ -19,7 +19,8 @@ class Command
 
   private
 
-  def total_blocks(target_files)
+  def total_blocks
+    target_files = files.map { |file| file.last }
     block_count = 0
     target_files.each do |file|
       stat = File.lstat(file)
