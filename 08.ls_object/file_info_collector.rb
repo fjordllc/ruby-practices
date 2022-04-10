@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 class FileInfoCollector
   attr_reader :target_files
+
   def initialize(options)
     @target_files = FileExtractor.new(options).target_files
   end

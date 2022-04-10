@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FileInfoFormatter
   FILE_TYPE = {
     '01' => 'p',

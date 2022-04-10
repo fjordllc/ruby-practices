@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FileExtractor
   # オプションから、対象のファイル群を決めるクラス
   attr_reader :a_option, :r_option

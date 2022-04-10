@@ -1,16 +1,20 @@
+# frozen_string_literal: true
+
 class Command
   attr_reader :l_option, :files
+
   def initialize(options, files)
     @l_option = options['l']
-    @files = files 
+    @files = files
   end
 
   def ls
     if l_option
       # total_blocks
       output_with_l_option
+    else
+      output_without_l_option
     end
-    output_without_l_option
   end
 
   private
@@ -31,7 +35,7 @@ class Command
         case index
         when 0, 2, 3
           print "#{value}  "
-        when formatted_file.length - 1
+        when file.length - 1
           print "#{value}#{suffix}"
         else
           print "#{value} "
@@ -47,7 +51,7 @@ class Command
         if index == 2
           print "#{value}#{suffix}"
         else
-          print "#{value}"
+          print value.to_s
         end
       end
     end

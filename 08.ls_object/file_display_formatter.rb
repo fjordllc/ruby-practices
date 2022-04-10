@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FileDisplayFormatter
   COLUMN_COUNT = 3.0
 
