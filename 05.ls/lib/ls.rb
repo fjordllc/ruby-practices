@@ -34,7 +34,7 @@ def format_array_to_output(original_array, column_count = MAX_COLUMN_COUNT)
   # 行と列を転置した配列を作成
   rows = fit_columns.transpose.map do |row|
     # テキストが存在する最後列から余白を削除
-    row.delete_if { |item| item.match(/^\s*$/) }
+    row.delete_if(&:empty?)
     row[-1].gsub!(/\s*$/, '')
     row
   end
@@ -49,22 +49,10 @@ def group_to_columns(original_array, column_count = MAX_COLUMN_COUNT)
   # 出力時の最大列数をMAX_COUNTとした場合に行数が何行になるのかを計算
   row_count = (original_array.size.to_f / column_count).ceil
 
-  columns = [] # 出力時の縦列に相当する配列
-  column = []  # 各列の要素をまとめる配列
-
-  # original_arrayの各要素をrow_count個ずつ配列としてまとめてcolumnsの要素にする
-  original_array.each.with_index(1) do |item, i|
-    column << item
-    if (i % row_count).zero?
-      columns << column
-      column = []
-    elsif i == original_array.size
-      (row_count - column.size).times { column << '' }
-      columns << column
-    end
+  # 計算した行数に合わせて要素を二次元配列でまとめた配列を返す
+  original_array.each_slice(row_count).map do |column|
+    column.fill('', column.size, row_count - column.size)
   end
-
-  columns
 end
 
 # 出力時のファイル間の余白をターミナル幅から計算
