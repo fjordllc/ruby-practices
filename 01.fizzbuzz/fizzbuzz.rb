@@ -1,13 +1,14 @@
 def fizzbuzz
-  (1..20).each do|num|
-    if num % 15 == 0
-      p "FizzBuzz"
-    elsif num % 3 == 0
-      p "Fizz"
-    elsif num % 5 == 0
-      p "Buzz"
+  (1..20).each do |n|
+    case
+    when n % 3 == 0 && n % 5 == 0 then
+      puts 'Fizzbuzz'
+    when n % 3 == 0 then
+      puts 'Buzz'
+    when n % 5 == 0 then
+      puts 'Buzz'
     else
-      puts num
+      puts n
     end
   end
 end
