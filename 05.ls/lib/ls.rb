@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'io/console'
+
 MAX_COLUMN_COUNT = 3 # 出力時の最大列数
 MAX_ITEM_MARGIN = 2 # 出力時の文字間の最大余白（半角スペースの数）
 TERMINAL_RIGHT_PADDING = 3 # ターミナル右端の余白
@@ -61,7 +63,7 @@ def calc_margin(rows)
   # 1列しかないorターミナル幅を行の長さが超えていたら余白0を返す
   return 1 if max_length_row.size == 1 || !within_tarminal_width?(max_length_row.join)
 
-  terminal_width = terminal_size[1] - TERMINAL_RIGHT_PADDING
+  terminal_width = IO.console.winsize[1] - TERMINAL_RIGHT_PADDING
   margin = (terminal_width - max_length_row.join.length) / ((max_length_row.size - 1)).floor
   margin < MAX_ITEM_MARGIN ? margin : MAX_ITEM_MARGIN
 end
@@ -85,22 +87,11 @@ def add_column_margin(columns, margin)
   end
 end
 
-TIOCGWINSZ = 0x5413
-
-# ターミナルの幅を取得（中身は難解すぎてよくわからない...。）
-def terminal_size
-  rows = 25
-  cols = 80
-  buf = [0, 0, 0, 0].pack('SSSS')
-  rows, cols, row_pixels, col_pixels = buf.unpack('SSSS') [0..1] if $stdout.ioctl(TIOCGWINSZ, buf) >= 0
-  [rows, cols, row_pixels, col_pixels]
-end
-
 # ターミナル幅に合わせた出力列数を返す
 # 引数：配列
 # 戻り値：列数（数値）
 def calc_column_count(rows)
-  terminal_length = terminal_size[1] - TERMINAL_RIGHT_PADDING
+  terminal_length = IO.console.winsize[1] - TERMINAL_RIGHT_PADDING
   max_length_row = rows.max_by { |row| row.join.length }
   return MAX_COLUMN_COUNT if within_tarminal_width?(max_length_row.join)
 
@@ -112,12 +103,12 @@ def calc_column_count(rows)
 
     column_count += i
   end
-  column_count < MAX_COLUMN_COUNT ? column_count : MAX_COLUMN_COUNT
+  [column_count, MAX_COLUMN_COUNT].min
 end
 
 # 出力するテキストの横幅がターミナル幅を超えているか
 def within_tarminal_width?(object)
-  terminal_width = terminal_size[1] - TERMINAL_RIGHT_PADDING
+  terminal_width = IO.console.winsize[1] - TERMINAL_RIGHT_PADDING
   object_item_width = object.to_s.length
   terminal_width > object_item_width
 end
@@ -125,4 +116,4 @@ end
 # ターミナルから引数を取得しlsを実行
 param = {}
 param[:dir] = ARGV[0] if ARGV[0]
-ls(param)
+ls(**param)
