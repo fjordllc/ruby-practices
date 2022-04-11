@@ -6,9 +6,9 @@ TERMINAL_RIGHT_PADDING = 3 # ターミナル右端の余白
 
 # 引数で渡したパスに存在するファイルとディレクトリをターミナルに出力
 def ls(dir: Dir.pwd)
+  Dir.chdir(dir)
   # 対象のディレクトリを取得
-  original_array = Dir.entries(dir)
-  original_array.delete_if { |item| /^\./ =~ item }
+  original_array = Dir.glob('*')
 
   # 3列に成型
   formatted_array = format_array_to_output(original_array)
