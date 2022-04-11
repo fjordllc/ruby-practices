@@ -25,7 +25,7 @@ puts caltitle.center(20)
 puts calwday
 print ('   ' * firstdate.wday).to_s
 (firstdate..lastdate).each do |calday|
-  print "#{calday.mday.to_s.rjust(2)} ".to_s
+  print "#{calday.mday.to_s.rjust(2)} "
   puts if calday.wday == 6
 end
 puts
