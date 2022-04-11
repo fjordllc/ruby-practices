@@ -47,8 +47,7 @@ end
 # 渡された配列の並び順を列数に合わせて変換
 def group_to_columns(original_array, column_count = MAX_COLUMN_COUNT)
   # 出力時の最大列数をMAX_COUNTとした場合に行数が何行になるのかを計算
-  row_count = original_array.size / column_count
-  row_count += 1 unless (original_array.size % column_count).zero?
+  row_count = (original_array.size.to_f / column_count).ceil
 
   columns = [] # 出力時の縦列に相当する配列
   column = []  # 各列の要素をまとめる配列
