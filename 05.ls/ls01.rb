@@ -1,6 +1,11 @@
 current_files = Dir.glob('*').sort
 row_num = 3
-current_files << ' ' while current_files.length % row_num != 0
+
+def add_blank(receive_blank_file)
+  receive_blank_file << ' '
+end
+
+add_blank(current_files) while current_files.length % row_num != 0
 column_num = current_files.length / row_num
 
 
