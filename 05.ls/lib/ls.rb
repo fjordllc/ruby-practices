@@ -9,28 +9,11 @@ TERMINAL_RIGHT_PADDING = 3 # ターミナル右端の余白
 # 引数で渡したパスに存在するファイルとディレクトリをターミナルに出力
 def ls(dir: Dir.pwd)
   Dir.chdir(dir)
-  # 対象のディレクトリを取得
   original_array = Dir.glob('*')
+  columns = group_elments_by_columns(original_array)
 
-  # 3列に成型
-  formatted_array = format_array_to_output(original_array)
-  # ターミナル幅に合わせたカラム数を計算
-  column_count = calc_column_count(formatted_array)
-
-  formatted_array = format_array_to_output(original_array, column_count) if column_count < MAX_COLUMN_COUNT
-
-  # 各行を出力
-  formatted_array.each { |row| puts row.join }
-end
-
-# 配列の成型全般
-def format_array_to_output(original_array, column_count = MAX_COLUMN_COUNT)
-  # 行を列に転置するために列ごとに要素をまとめた2次元配列を作成
-  columns = group_to_columns(original_array, column_count)
-
-  # 列毎に要素の長さを合わせる
   fit_columns = columns.map do |column|
-    fit_to_longest_column_item(column)
+    fit_to_longest_item(column)
   end
 
   # 行と列を転置した配列を作成
@@ -43,7 +26,32 @@ def format_array_to_output(original_array, column_count = MAX_COLUMN_COUNT)
 
   # 各列間に余白を付与
   margin = calc_margin(rows)
-  add_column_margin(rows, margin)
+  formatted_array = add_column_margin(rows, margin)
+
+  # 出力
+  formatted_array.each { |row| puts row.join }
+end
+
+# ターミナル幅におさまる列数を計算しその列数に合わせて行毎にまとめた配列を返す
+def group_elments_by_columns(original_array)
+  terminal_width = IO.console.winsize[1] - TERMINAL_RIGHT_PADDING
+
+  column_count = MAX_COLUMN_COUNT
+  loop do
+    # 元の配列を指定した列数に分割した配列を取得
+    columns = group_to_columns(original_array, column_count)
+    # 出力されるテキストの最大幅を取得
+    max_size_row = columns.map do |column|
+      column.max_by(&:length)
+    end
+
+    # アイテム間の余白も追加
+    margin = max_size_row.size - 1
+
+    break columns if max_size_row.join.length + margin < terminal_width || column_count <= 1
+
+    column_count += -1
+  end
 end
 
 # 渡された配列の並び順を列数に合わせて変換
@@ -60,8 +68,8 @@ end
 # 出力時のファイル間の余白をターミナル幅から計算
 def calc_margin(rows)
   max_length_row = rows.max_by { |row| row.join.length }
-  # 1列しかないorターミナル幅を行の長さが超えていたら余白0を返す
-  return 1 if max_length_row.size == 1 || !within_tarminal_width?(max_length_row.join)
+  # 1列しかなければ余白0を返す
+  return 1 if max_length_row.size == 1
 
   terminal_width = IO.console.winsize[1] - TERMINAL_RIGHT_PADDING
   margin = (terminal_width - max_length_row.join.length) / ((max_length_row.size - 1)).floor
@@ -69,9 +77,9 @@ def calc_margin(rows)
 end
 
 # 配列の各要素の長さを最大の要素の幅に合わせる（短い要素の末尾に半角スペースを追加する）
-# 引数：列にあたる配列
+# 引数：配列
 # 戻り値：最長の要素に合わせて各要素に半角スペースを追加した配列
-def fit_to_longest_column_item(column)
+def fit_to_longest_item(column)
   longest_length = column.max_by(&:length).length
   column.map do |item|
     space_count = longest_length - item.length
@@ -85,32 +93,6 @@ def add_column_margin(columns, margin)
       i == column.size - 1 ? item : item + "\s" * margin
     end
   end
-end
-
-# ターミナル幅に合わせた出力列数を返す
-# 引数：配列
-# 戻り値：列数（数値）
-def calc_column_count(rows)
-  terminal_length = IO.console.winsize[1] - TERMINAL_RIGHT_PADDING
-  max_length_row = rows.max_by { |row| row.join.length }
-  return MAX_COLUMN_COUNT if within_tarminal_width?(max_length_row.join)
-
-  row_length = 0
-  column_count = 1
-  max_length_row.each_with_index do |item, i|
-    row_length += item.length
-    break if terminal_length < row_length
-
-    column_count += i
-  end
-  [column_count, MAX_COLUMN_COUNT].min
-end
-
-# 出力するテキストの横幅がターミナル幅を超えているか
-def within_tarminal_width?(object)
-  terminal_width = IO.console.winsize[1] - TERMINAL_RIGHT_PADDING
-  object_item_width = object.to_s.length
-  terminal_width > object_item_width
 end
 
 # ターミナルから引数を取得しlsを実行
