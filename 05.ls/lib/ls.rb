@@ -37,9 +37,13 @@ def group_elments_by_columns(original_array)
   terminal_width = IO.console.winsize[1] - TERMINAL_RIGHT_PADDING
 
   column_count = MAX_COLUMN_COUNT
+  # 元の配列をターミナル幅におさまる列数に分割した配列を取得
   loop do
-    # 元の配列を指定した列数に分割した配列を取得
-    columns = group_to_columns(original_array, column_count)
+    row_count = (original_array.size.to_f / column_count).ceil
+    # 計算した行数に合わせて要素を二次元配列でまとめた配列を返す
+    columns = original_array.each_slice(row_count).map do |column|
+      column.fill('', column.size, row_count - column.size)
+    end
     # 出力されるテキストの最大幅を取得
     max_size_row = columns.map do |column|
       column.max_by(&:length)
@@ -51,17 +55,6 @@ def group_elments_by_columns(original_array)
     break columns if max_size_row.join.length + margin < terminal_width || column_count <= 1
 
     column_count += -1
-  end
-end
-
-# 渡された配列の並び順を列数に合わせて変換
-def group_to_columns(original_array, column_count = MAX_COLUMN_COUNT)
-  # 出力時の最大列数をMAX_COUNTとした場合に行数が何行になるのかを計算
-  row_count = (original_array.size.to_f / column_count).ceil
-
-  # 計算した行数に合わせて要素を二次元配列でまとめた配列を返す
-  original_array.each_slice(row_count).map do |column|
-    column.fill('', column.size, row_count - column.size)
   end
 end
 
