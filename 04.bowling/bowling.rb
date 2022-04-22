@@ -1,29 +1,37 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
-lists_first_throws  = []
-lists_second_throws = []
-bonuses             = []
-i                   = 0
+class Bowling
+  def play
+    first_throws  = []
+    second_throws = []
+    bonuses       = []
+    throw_index   = 0
+    throws        = ARGV[0].split(',')
 
-(1..10).each do |current_frame|
-  if ARGV[0].split(",")[i] == "X"
-    lists_first_throws.push(10)
-    lists_second_throws.push(0)
-    bonus1 =  ARGV[0].split(",")[i + 1] == "X" ? 10 : ARGV[0].split(",")[i + 1].to_i
-    bonus2 =  ARGV[0].split(",")[i + 2] == "X" ? 10 : ARGV[0].split(",")[i + 2].to_i
-    bonuses.push(bonus1 + bonus2)
-    i += 1
-  else
-    lists_first_throws.push(ARGV[0].split(",")[i].to_i)
-    lists_second_throws.push(ARGV[0].split(",")[i + 1].to_i)
-    if ARGV[0].split(",")[i].to_i + ARGV[0].split(",")[i + 1].to_i == 10
-      bonus =  ARGV[0].split(",")[i + 2] == "X" ? 10 : ARGV[0].split(",")[i + 2].to_i
-      bonuses.push(bonus)
-    else
-      bonuses.push(0)
+    10.times do
+      if throws[throw_index] == 'X'
+        first_throws.push(10)
+        second_throws.push(0)
+        bonus1 = throws[throw_index + 1] == 'X' ? 10 : throws[throw_index + 1].to_i
+        bonus2 = throws[throw_index + 2] == 'X' ? 10 : throws[throw_index + 2].to_i
+        bonuses.push(bonus1 + bonus2)
+        throw_index += 1
+      else
+        first_throws.push(throws[throw_index].to_i)
+        second_throws.push(throws[throw_index + 1].to_i)
+        if throws[throw_index].to_i + throws[throw_index + 1].to_i == 10
+          bonus = throws[throw_index + 2] == 'X' ? 10 : throws[throw_index + 2].to_i
+          bonuses.push(bonus)
+        else
+          bonuses.push(0)
+        end
+        throw_index += 2
+      end
     end
-    i += 2
+    puts first_throws.sum + second_throws.sum + bonuses.sum
   end
 end
 
-puts lists_first_throws.sum + lists_second_throws.sum + bonuses.sum
+bowling = Bowling.new
+bowling.play
