@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 ROW_NUM = 3
-COLUMN_WIDTH = 24
+ROW_MAX_WIDTH = 24
 ALL_FILES = Dir.glob('*').sort
 
 def main
@@ -15,7 +15,7 @@ def get_transposed_all_files(column_num)
   transposed_files = ALL_FILES.each_slice(column_num).to_a.transpose
   transposed_files.first(column_num).each do |each_column|
     ROW_NUM.times do |index|
-      each_column[index] += ' ' * (COLUMN_WIDTH - each_column[index].length)
+      each_column[index] += ' ' * (ROW_MAX_WIDTH - each_column[index].length)
     end
   end
 end
