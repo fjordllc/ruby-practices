@@ -1,28 +1,27 @@
 # frozen_string_literal: true
-
 ROW_NUM = 3
-ROW_MAX_WIDTH = 24
-ALL_FILES = Dir.glob('*').sort
+ROW_MAX_WIDTH = 24 
 
 def main
-  column_num = ALL_FILES.length / ROW_NUM
-  files = get_transposed_all_files(column_num)
-  display(files)
+  all_files = Dir.glob('*').sort
+  column_num = all_files.length / ROW_NUM
+  files_in_columns = get_transposed_all_files(all_files,column_num)
+  display(files_in_columns)
 end
 
-def get_transposed_all_files(column_num)
-  ALL_FILES.push(' ') while ALL_FILES.length % ROW_NUM != 0
-  transposed_files = ALL_FILES.each_slice(column_num).to_a.transpose
-  transposed_files.first(column_num).each do |each_column|
+def get_transposed_all_files(all_files,column_num)
+  all_files.push(' ') while all_files.length % ROW_NUM != 0
+  transposed_files = all_files.each_slice(column_num).to_a.transpose
+  transposed_files.first(column_num).each do |column|
     ROW_NUM.times do |index|
-      each_column[index] += ' ' * (ROW_MAX_WIDTH - each_column[index].length)
+      column[index] += ' ' * (ROW_MAX_WIDTH - column[index].length)
     end
   end
 end
 
-def display(files)
-  files.each do |each_files|
-    puts each_files.join
+def display(files_in_columns)
+  files_in_columns.each do |column|
+    puts column.join
   end
 end
 
