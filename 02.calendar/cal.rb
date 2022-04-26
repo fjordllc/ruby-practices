@@ -14,10 +14,15 @@ opt = OptionParser.new
 year = 2022   #年の初期値
 month = 4   #月の初期値
 
-opt.on('-m', '--add ITEM', Integer, 'add an year') {|v| month = v }
-opt.on('-y', '--add ITEM', Integer, 'add an year') {|v| year = v }
+# ショートオプションのみならopt.on('-m')で平気！
+#opt.on('-m', '--add ITEM', Integer, 'add an year') {|v| month = v }
+#opt.on('-y', '--add ITEM', Integer, 'add an year') {|v| year = v }
 
-opt.parse(ARGV) #これがないと引数が渡されないみたい
+opt.on('-m month'){|v| month = v }
+opt.on('-y year'){|v| year = v }
+# opt.on('-m')だけだとtrueしか返さないので、'-m'の後に何の値かを示す引数（month）が必須
+
+opt.parse!(ARGV) #これがないと引数が渡されないみたい
 
 
 
@@ -45,15 +50,11 @@ puts "カレンダー"
 
 #カレンダーのタイトル
 def title (month, year)
-  space = "      "
-  if month.to_i > 9
-    puts space + "#{month}月" + " " + "#{year}"
-  else
-    puts space + " #{month}月" + " " + "#{year}"
-  end
+  puts "#{month}月".rjust(9) + "#{year}".rjust(6)
 end
 
 #1週間分の曜日
+=begin
 def days
   week = [" 日", "月", "火", "水", "木", "金", "土"]
   week.each do |day|
@@ -65,25 +66,17 @@ def days
   end
   puts " "
 end
+=end
 
 #1ヶ月分の日付
 def date(month, year)
-  start_date = Date.new(year, month, 1)
-  #p start_date.strftime('%a')
-  def start_count (start_date)  #1日が何曜日からスタートか？
-    if start_date.strftime('%u').to_i == 7
-      return 0
-    else
-      start_date.strftime('%u').to_i
-    end
-  end
-
-  start_space = start_count(start_date)
-
   space = "   "
+  month = month.to_i
+  year = year.to_i
+  start_date = Date.new(year, month, 1)
+  start_space = start_date.wday #1日が何曜日からスタートか？
 
-  #何日まであるか
-  end_date = Date.new(year, month, -1).strftime('%d')
+  end_date = Date.new(year, month, -1).day #何日まであるか
 
   date = 1
   start_space.times{  #曜日分スペースを入れる
@@ -94,7 +87,6 @@ def date(month, year)
 
   #ここから日付
   while x <= y
-    
     if x % 7 ==0  #7の倍数で改行する
       if date >9
         print " " + "#{date}\n"
@@ -119,6 +111,7 @@ end
 #タイトル
 title(month, year)
 #曜日
-days
+#days
+puts " 日 月 火 水 木 金 土 " # これで十分
 #日付
 date(month, year)
