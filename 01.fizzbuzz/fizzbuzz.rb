@@ -1,24 +1,16 @@
-fizz = "Fizz"   # 3の倍数
-buzz = "Buzz"   # 5の倍数
+#x = 1 #ローカル変数は基本使わない
 
-x = 1
+#while x <= 20
 
-while x <= 20
-  if x % 15 == 0
-    puts fizz + buzz
-
+(1..20).each do |x|
+  if x % 15 == 0 # 15の倍数
+    puts "Fizz" + "Buzz"
+  elsif x % 3 == 0 # 3の倍数
+    puts "Fizz"
+  elsif x % 5 == 0 # 5の倍数
+    puts "Buzz"
   else
-    if x % 3 == 0
-      puts fizz
-
-    elsif x % 5 == 0
-      puts buzz
-    
-    else
-      puts x
-    
-    end
+    puts x
   end
-
   x += 1
 end
