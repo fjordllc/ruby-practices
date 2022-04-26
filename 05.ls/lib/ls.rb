@@ -7,9 +7,24 @@ MAX_ITEM_MARGIN = 2 # 出力時の文字間の最大余白（半角スペース�
 TERMINAL_RIGHT_PADDING = 3 # ターミナル右端の余白
 
 # 引数で渡したパスに存在するファイルとディレクトリをターミナルに出力
-def ls(dir: Dir.pwd)
-  Dir.chdir(dir)
+def ls(param)
+  # 対象ディレクトリを取得
+  Dir.chdir(param[:dir]) if param[:dir]
+  
+  # -aオプションの有無
+  param[:options].each do |option|
+    option.size
+    case option
+    when /a/
+      p "aオプション"
+    when /r/
+      p "rオプション"
+    else
+      p "不正なオプション"
+    end
+  end
   original_array = Dir.glob('*')
+
   columns = group_elments_by_columns(original_array)
 
   fit_columns = columns.map do |column|
@@ -30,6 +45,12 @@ def ls(dir: Dir.pwd)
 
   # 出力
   formatted_array.each { |row| puts row.join }
+end
+
+# lsの対象となるディレクトリ情報を取得するメソッド
+def get_dir_info(dir: Dir.pwd, options)
+  Dir.chdir(:dir)
+  
 end
 
 # ターミナル幅におさまる列数を計算しその列数に合わせて行毎にまとめた配列を返す
@@ -90,5 +111,20 @@ end
 
 # ターミナルから引数を取得しlsを実行
 param = {}
-param[:dir] = ARGV[0] if ARGV[0]
+param[:options] = []
+
+ARGV.each do |option|
+  case option
+  when /^-[a-zA-Z]+/
+    p "オプション引数：#{option}"
+    param[:options] << option
+  else
+    print '対象ディレクトリ：'
+    p option
+    param[:dir] = option
+  end
+end
+
+p param[:options]
+
 ls(**param)
