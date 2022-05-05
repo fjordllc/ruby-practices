@@ -5,7 +5,6 @@ require 'optparse'
 ROW_NUM = 3
 ROW_MAX_WIDTH = 24
 
-class Files
   def main
     all_files = Dir.glob('*', File::FNM_DOTMATCH).sort
     column_num = all_files.length / ROW_NUM
@@ -28,16 +27,14 @@ class Files
       puts column.join
     end
   end
-end
 
-files = Files.new
 
-def define_option(files)
+def define_option(main)
   opt = OptionParser.new
   opt.on('-a') do
-    files.main
+    main
   end
   opt.parse(ARGV)
 end
 
-define_option(files)
+define_option(main)
