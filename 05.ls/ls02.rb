@@ -5,20 +5,21 @@ require 'optparse'
 ROW_NUM = 3
 ROW_MAX_WIDTH = 24
 
-def no_command_main
+def no_command
   all_files = Dir.glob('*').sort
-  column_num = all_files.length / ROW_NUM
-  files_in_columns = get_transposed_all_files(all_files, column_num)
-  display(files_in_columns)
+  main(all_files)
 end
 
-def a_command_main
+def a_command
   all_files = Dir.glob('*', File::FNM_DOTMATCH).sort
+  main(all_files)
+end
+
+def main(all_files)
   column_num = all_files.length / ROW_NUM
   files_in_columns = get_transposed_all_files(all_files, column_num)
   display(files_in_columns)
 end
-
 
 def get_transposed_all_files(all_files, column_num)
   all_files.push(' ') while all_files.length % ROW_NUM != 0
@@ -37,7 +38,6 @@ def display(files_in_columns)
 end
 
 opt = OptionParser.new
-opt.on('-a') { a_command_main }
+opt.on('-a') { a_command }
 opt.parse(ARGV)
-
-no_command_main if ARGV == []
+no_command if ARGV == []
