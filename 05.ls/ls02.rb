@@ -5,12 +5,12 @@ require 'optparse'
 ROW_NUM = 3
 ROW_MAX_WIDTH = 24
 
-def no_command
+def no_option
   all_files = Dir.glob('*').sort
   main(all_files)
 end
 
-def a_command
+def a_option
   all_files = Dir.glob('*', File::FNM_DOTMATCH).sort
   main(all_files)
 end
@@ -38,6 +38,6 @@ def display(files_in_columns)
 end
 
 opt = OptionParser.new
-opt.on('-a') { a_command }
+opt.on('-a') { a_option }
 opt.parse(ARGV)
-no_command if ARGV == []
+no_option if ARGV == []
