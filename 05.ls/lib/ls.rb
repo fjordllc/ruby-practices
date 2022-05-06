@@ -14,6 +14,9 @@ def ls(param)
   # -aオプションの有無
   original_array = Dir.glob('*', param[:options].grep(/a/).length >= 1 ? File::FNM_DOTMATCH : 0)
 
+  # -rオプションの判定
+  original_array.reverse! if param[:options].grep(/r/).length >= 1
+
   columns = group_elments_by_columns(original_array)
 
   fit_columns = columns.map do |column|
