@@ -12,7 +12,7 @@ def ls(param)
   Dir.chdir(param[:dir]) if param[:dir]
 
   # -aオプションの有無
-  original_array = Dir.glob('*', param[:options].grep(/a/).length >= 1 ? File::FNM_DOTMATCH : File::FNM_CASEFOLD)
+  original_array = Dir.glob('*', param[:options].grep(/a/).length >= 1 ? File::FNM_DOTMATCH : 0)
 
   columns = group_elments_by_columns(original_array)
 
