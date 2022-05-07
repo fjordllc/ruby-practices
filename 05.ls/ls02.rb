@@ -5,17 +5,22 @@ require 'optparse'
 ROW_NUM = 3
 ROW_MAX_WIDTH = 24
 
-def no_option
-  all_files = Dir.glob('*').sort
-  main(all_files)
+def main
+  opt = OptionParser.new
+  opt.on('-a')
+  opt.parse(ARGV)
+  change_order_and_display(receive_option_and_get_all_files)
 end
 
-def a_option
-  all_files = Dir.glob('*', File::FNM_DOTMATCH).sort
-  main(all_files)
+def receive_option_and_get_all_files
+  if ARGV == ['-a']
+    Dir.glob('*', File::FNM_DOTMATCH).sort
+  else
+    Dir.glob('*').sort
+  end
 end
 
-def main(all_files)
+def change_order_and_display(all_files)
   column_num = all_files.length / ROW_NUM
   files_in_columns = get_transposed_all_files(all_files, column_num)
   display(files_in_columns)
@@ -36,8 +41,4 @@ def display(files_in_columns)
     puts column.join
   end
 end
-
-opt = OptionParser.new
-opt.on('-a') { a_option }
-opt.parse(ARGV)
-no_option if ARGV == []
+main
