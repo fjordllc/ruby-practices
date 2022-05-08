@@ -6,13 +6,15 @@ ROW_NUM = 3
 ROW_MAX_WIDTH = 24
 
 def main
+  all_files = acquire_all_files
+  files_in_columns = get_transposed_all_files(all_files)
+  display(files_in_columns)
+end
+
+def acquire_all_files
   opt = OptionParser.new
   opt.on('-a')
   opt.parse(ARGV)
-  change_order_and_display(receive_option_and_get_all_files)
-end
-
-def receive_option_and_get_all_files
   if ARGV == ['-a']
     Dir.glob('*', File::FNM_DOTMATCH).sort
   else
@@ -20,14 +22,9 @@ def receive_option_and_get_all_files
   end
 end
 
-def change_order_and_display(all_files)
-  column_num = all_files.length / ROW_NUM
-  files_in_columns = get_transposed_all_files(all_files, column_num)
-  display(files_in_columns)
-end
-
-def get_transposed_all_files(all_files, column_num)
+def get_transposed_all_files(all_files)
   all_files.push(' ') while all_files.length % ROW_NUM != 0
+  column_num = all_files.length / ROW_NUM
   transposed_files = all_files.each_slice(column_num).to_a.transpose
   transposed_files.first(column_num).each do |column|
     ROW_NUM.times do |index|
@@ -41,4 +38,5 @@ def display(files_in_columns)
     puts column.join
   end
 end
+
 main
