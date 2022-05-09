@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'io/console'
+require 'etc'
 
 MAX_COLUMN_COUNT = 3 # 出力時の最大列数
 MAX_ITEM_MARGIN = 2 # 出力時の文字間の最大余白（半角スペースの数）
@@ -11,12 +12,33 @@ def ls(param)
   # 対象ディレクトリを取得
   Dir.chdir(param[:dir]) if param[:dir]
 
+  # オプションの適用
+  original_array = apply_options(param[:options])
+
+  # lオプションがあれば成型せずに1列で出力
+  if param[:options].grep(/l/).length >= 1
+    original_array.each { |row| puts row }
+  else
+    formatted_array = ls_format_items(original_array)
+    # 出力
+    formatted_array.each { |row| puts row.join }
+  end
+end
+
+# オプションの適用
+def apply_options(options)
   # -aオプションの有無
-  original_array = Dir.glob('*', param[:options].grep(/a/).length >= 1 ? File::FNM_DOTMATCH : 0)
-
+  original_array = Dir.glob('*', options.grep(/a/).length >= 1 ? File::FNM_DOTMATCH : 0)
   # -rオプションの判定
-  original_array.reverse! if param[:options].grep(/r/).length >= 1
+  original_array.reverse! if options.grep(/r/).length >= 1
+  # -lオプションの判定
+  original_array = apply_l_option(original_array) if options.grep(/l/).length >= 1
 
+  original_array
+end
+
+# 成型全般
+def ls_format_items(original_array)
   columns = group_elments_by_columns(original_array)
 
   fit_columns = columns.map do |column|
@@ -33,10 +55,7 @@ def ls(param)
 
   # 各列間に余白を付与
   margin = calc_margin(rows)
-  formatted_array = add_column_margin(rows, margin)
-
-  # 出力
-  formatted_array.each { |row| puts row.join }
+  add_column_margin(rows, margin)
 end
 
 # ターミナル幅におさまる列数を計算しその列数に合わせて行毎にまとめた配列を返す
@@ -87,11 +106,28 @@ def fit_to_longest_item(column)
   end
 end
 
+# アイテム間の余白付与
 def add_column_margin(columns, margin)
   columns.map do |column|
     column.map.with_index do |item, i|
       i == column.size - 1 ? item : item + "\s" * margin
     end
+  end
+end
+
+# lオプションがあった場合の処理
+def apply_l_option(original_array)
+  path = Dir.getwd
+
+  original_array.map do |item|
+    new_item = []
+    item_path = "#{path}/#{item}"
+    user = Etc.getpwuid(File.stat(item_path).uid).name
+    group = Etc.getgrgid(File.stat(item_path).gid).name
+    new_item << user
+    new_item << group
+    new_item << item
+    new_item.join(' ')
   end
 end
 
