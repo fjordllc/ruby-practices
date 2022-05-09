@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-aaa
+
 require 'optparse'
 
 ROW_NUM = 3
@@ -13,15 +13,14 @@ end
 
 def acquire_all_files
   opt = OptionParser.new
-  opt.on('-a')
+  opt.on('-r')
   opt.parse(ARGV)
-  if ARGV == ['-a']
-    Dir.glob('*', File::FNM_DOTMATCH).sort
+  if ARGV == ['-r']
+    Dir.glob('*').sort.reverse
   else
     Dir.glob('*').sort
   end
 end
-
 
 def get_transposed_all_files(all_files)
   all_files.push(' ') while all_files.length % ROW_NUM != 0
