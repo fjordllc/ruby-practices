@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+aaa
 require 'optparse'
 
 ROW_NUM = 3
@@ -21,6 +21,7 @@ def acquire_all_files
     Dir.glob('*').sort
   end
 end
+
 
 def get_transposed_all_files(all_files)
   all_files.push(' ') while all_files.length % ROW_NUM != 0
