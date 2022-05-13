@@ -1,9 +1,6 @@
 # コマンドライン上で与えられた引数が2つ以外の時、処理を終了する
 def check_arguments(stdin)
-  if stdin.length <2
-    puts "数値は2つ入力してください"
-    exit
-  elsif stdin.length > 2
+  unless stdin.length == 2
     puts "数値は2つ入力してください"
     exit
   end
