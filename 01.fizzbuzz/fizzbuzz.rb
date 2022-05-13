@@ -6,6 +6,15 @@ def check_arguments(stdin)
   end
 end
 
+# 整数以外を入力した場合、処理を終了する
+def check_if_integer(stdin)
+  # 整数に変換
+  stdin.map! {|n| Integer(n)}
+rescue => e
+  puts "整数を入力してください - [#{e.message}]"
+  exit
+end
+
 def check_fizzbuzz(number)
   return number if number == 0
 
@@ -22,8 +31,7 @@ end
 
 def output_fizzbuzz(stdin)
   check_arguments(stdin)
-  # 整数に変換
-  stdin.map! {|n| n.to_i}
+  check_if_integer(stdin)
   # sort!で昇順にしてから取り出す
   first = stdin.sort!.shift
   last = stdin.shift
