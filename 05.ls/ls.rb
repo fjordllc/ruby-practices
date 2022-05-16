@@ -4,48 +4,33 @@
 require 'optparse'
 
 # オプション
-dir_name = '.'
-opt = OptionParser.new
-opt.parse!(ARGV) # オプション以外の引数をARGVに代入
-dir_name = ARGV[0] if ARGV[0]
+dir_name = ARGV[0] ? "#{ARGV[0]}/*" : '*'
 
 # ディレクトリ情報取得
 files = []
 
 # ls デフォルト
 def defo_ls(dir_name, files)
-  exit_dir = Dir.exist?(dir_name)
-  if exit_dir
-    Dir.open(dir_name).each_child do |f|
-      files << f unless f.start_with?('.')
+  dir_exist = Dir.exist?(ARGV[0] || '.')
+  if dir_exist
+    Dir.glob(dir_name) do |f|
+      files << f.gsub("#{ARGV[0]}/", '')
     end
   else
-    puts "#{dir_name}: No such file or directory"
+    puts "#{ARGV[0]}: No such file or directory"
   end
 end
 
 # ls -aオプション
-# Dir.open(dir_name).each{|f|
-#   p f
-#   #files << f
-# }
-
-# 並び替え
-def row_count(file)
-  if (file.size % 3).zero?
-    file.size / 3
-  else
-    file.size / 3 + 1
-  end
-end
+# Dir.glob("*", File::FNM_DOTMATCH)
 
 # 出力
 defo_ls(dir_name, files)
-count = row_count(files)
+count = (files.size / 3.0).ceil(0)
 files_sort = files.sort
-files_sort.each_with_index do |file, i|
-  if i < count
-    print "#{file.ljust(10)} #{files_sort[i + count].ljust(10) if files_sort[i + count]} #{files_sort[i + count * 2].ljust(10) if files_sort[i + count * 2]}"
-    puts ''
-  end
+count.times do |i|
+  print files_sort[i].ljust(12).to_s
+  print files_sort[i + count].ljust(12).to_s if files_sort[i + count]
+  print files_sort[i + count * 2].ljust(12).to_s if files_sort[i + count * 2]
+  puts ''
 end
