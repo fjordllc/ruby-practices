@@ -28,7 +28,7 @@ end
 # オプションの適用
 def apply_options(options)
   # -aオプションの有無
-  original_array = Dir.glob('*', options.grep(/a/).length >= 1 ? File::FNM_DOTMATCH : 0)
+  original_array = Dir.glob('*', options.grep(/a/).length >= 1 ? File::FNM_DOTMATCH : 0).sort
   # -rオプションの判定
   original_array.reverse! if options.grep(/r/).length >= 1
   # -lオプションの判定
@@ -98,11 +98,20 @@ end
 # 配列の各要素の長さを最大の要素の幅に合わせる（短い要素の末尾に半角スペースを追加する）
 # 引数：配列
 # 戻り値：最長の要素に合わせて各要素に半角スペースを追加した配列
-def fit_to_longest_item(column)
-  longest_length = column.max_by(&:length).length
-  column.map do |item|
+def fit_to_longest_item(items, right_aligned: false)
+  longest_length = items.max_by(&:length).length
+  items.map do |item|
     space_count = longest_length - item.length
-    space_count.positive? ? item + "\s" * space_count : item
+    if space_count.positive?
+      if right_aligned
+        "\s" * space_count + item
+      else
+        item + "\s" * space_count
+      end
+    else
+      item
+    end
+    # space_count.positive? ? item + "\s" * space_count : item
   end
 end
 
@@ -117,18 +126,60 @@ end
 
 # lオプションがあった場合の処理
 def apply_l_option(original_array)
-  path = Dir.getwd
-
-  original_array.map do |item|
+  total_blocks = 0
+  l_array = original_array.map do |item|
     new_item = []
-    item_path = "#{path}/#{item}"
-    user = Etc.getpwuid(File.stat(item_path).uid).name
-    group = Etc.getgrgid(File.stat(item_path).gid).name
-    new_item << user
-    new_item << group
-    new_item << item
-    new_item.join(' ')
+    item_path = "#{Dir.getwd}/#{item}"
+    item_info = File.lstat(item_path)
+
+    new_item << format_filemode(format('%06d', item_info.mode.to_s(8)))
+    total_blocks += File.stat(item_path).blocks unless new_item[0].slice(0) == 'l'
+    new_item << item_info.nlink.to_s
+    new_item << Etc.getpwuid(item_info.uid).name
+    new_item << Etc.getgrgid(item_info.gid).name
+    new_item << item_info.size.to_s
+    new_item << item_info.ctime.strftime('%b %d %k:%M')
+    # シンボリックリンクの場合ターゲット名も出力する
+    new_item << (new_item[0].slice(0) == 'l' ? "#{item} -> #{File.readlink(item_path)}" : item)
   end
+
+  # 文字数を合わせる処理
+  formatted_l_array = l_array.transpose.map.with_index do |row, i|
+    # 最後の列（ファイル名）以外は右揃えにする
+    i == l_array[0].size - 1 ? row : fit_to_longest_item(row, right_aligned: true)
+  end.transpose
+
+  formatted_l_array.map { |item| item.join(' ') }.unshift("total #{total_blocks / 2}")
+end
+
+# lオプションのファイルモードの出力整形
+FILE_TYPES = {
+  '01' => 'p',
+  '02' => 'c',
+  '04' => 'd',
+  '06' => 'b',
+  '10' => '-',
+  '12' => 'l',
+  '14' => 's'
+}.freeze
+PERMISSIONS = {
+  '0' => '---',
+  '1' => '--x',
+  '2' => '-w-',
+  '3' => '-wx',
+  '4' => 'r--',
+  '5' => 'r-x',
+  '6' => 'rw-',
+  '7' => 'rwx'
+}.freeze
+def format_filemode(octal)
+  filemode = []
+
+  filemode << FILE_TYPES[octal.slice(0..1)]
+  octal.slice(3..5).each_char do |s|
+    filemode << PERMISSIONS[s]
+  end
+  filemode.join
 end
 
 # ターミナルから引数を取得しlsを実行
