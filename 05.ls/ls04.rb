@@ -100,9 +100,52 @@ def group
   puts groups_total
 end
 
+def size
+  current_pass = Dir.getwd 
+  files = Dir.glob('*').sort
+  sizes_total = []
+  files.each do |file|
+    pass = current_pass + '/' + file
+    stat = File.stat(pass)
+    sizes = stat.size
+    sizes_total << sizes
+  end
+  puts sizes_total
+end
+  
+def time
+  current_pass = Dir.getwd 
+  files = Dir.glob('*').sort
+  times_total = []
+  files.each do |file|
+    pass = current_pass + '/' + file
+    stat = File.stat(pass)
+    month = stat.mtime.mon
+    day = stat.mtime.mday
+    hour = stat.mtime.hour
+    min = stat.mtime.min
+    times = "#{month} #{day} #{hour}:#{min}"
+    times_total << times
+  end
+  puts times_total
+end
+
+def file
+  current_pass = Dir.getwd 
+  files = Dir.glob('*').sort
+  files_total = []
+    files_total << files
+
+  puts files_total
+end
+
+
 
 total_blocks
 permission
 link
 name
 group
+size
+time
+file
