@@ -1,3 +1,6 @@
+require 'etc'
+
+
 def total_blocks
   current_pass = Dir.getwd 
   files = Dir.glob('*').sort
@@ -8,10 +11,11 @@ def total_blocks
     blocks = stat.blocks
     blocks_total << blocks
   end
-  puts blocks_total.sum
+  puts "total #{blocks_total.sum}"
 end
 
-current_pass = Dir.getwd 
+def permission
+  current_pass = Dir.getwd 
   files = Dir.glob('*').sort
   file_mode = []
   files.each do |file|
@@ -52,11 +56,53 @@ file_mode.each do |number|
     parts4 =  "r-x" 
   end
   
-
   puts parts1 + parts2 + parts3 + parts4
 end
- 
+end
+
+def link
+  current_pass = Dir.getwd 
+  files = Dir.glob('*').sort
+  links_total = []
+  files.each do |file|
+    pass = current_pass + '/' + file
+    stat = File.stat(pass)
+    links = stat.nlink
+    links_total << links
+  end
+  puts links_total
+
+end
+
+def name
+  current_pass = Dir.getwd 
+  files = Dir.glob('*').sort
+  users_total = []
+  files.each do |file|
+    path = current_pass + '/' + file
+    users = Etc.getpwuid(File.stat(path).uid).name
+    puts "#{users}"
+    users_total << users
+  end
+  puts users_total
+end
+
+def group
+  current_pass = Dir.getwd 
+  files = Dir.glob('*').sort
+  groups_total = []
+  files.each do |file|
+    path = current_pass + '/' + file
+    groups = Etc.getgrgid(File.stat(path).gid).name
+    puts "#{groups}"
+    groups_total << groups
+  end
+  puts groups_total
+end
 
 
-
-
+total_blocks
+permission
+link
+name
+group
