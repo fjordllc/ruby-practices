@@ -90,16 +90,16 @@ def create_month_array(month_year)
   first_day = Date.new(year, month, 1)
   last_day = Date.new(year, month, -1)
   all_days = (first_day..last_day)
-  all_days_array = []
+  all_days_of_month = []
 
   all_days.each do |day| 
-    all_days_array.push day.day.to_s
-    all_days_array.push "\n" if day.wday == 6
+    all_days_of_month.push day.day.to_s
+    all_days_of_month.push "\n" if day.wday == 6
   end
 
   # 初日の曜日を揃えるための空白を挿入する
-  first_day.wday.times {all_days_array.unshift " "}
-  return all_days_array
+  first_day.wday.times {all_days_of_month.unshift " "}
+  return all_days_of_month
 end
 
 # 1年分のカレンダーを表示するためのメソッド
@@ -110,32 +110,64 @@ def add_blank(array, number_of_times)
 end
 
 # 月の初日前に、表示調整用の空白を挿入するメソッド
-def add_beggining_blank(first_day, days_array)
-  first_day.wday.times {days_array.unshift " "}
+def add_beggining_blank(first_day, all_days_of_month)
+  first_day.wday.times {all_days_of_month.unshift " "}
 end
 
 # 月の最終日以降に、表示調整用の空白を挿入するメソッド
 # カレンダーのマス目(field)は、全部で7日 * 6週
-def add_end_blank(days_of_month)
+def add_end_blank(all_days_of_month)
   number_of_calender_field = 7 * 6
-  blank_number = number_of_calender_field - days_of_month.length
-  add_blank(days_of_month, blank_number)
-  return days_of_month
+  blank_number = number_of_calender_field - all_days_of_month.length
+  add_blank(all_days_of_month, blank_number)
+  # return all_days_of_month
 end
 
 # 1日から最終日までと、空白を配列に格納するメソッド
 def set_days(month, year)
   first_day = Date.new(year, month, 1)
   last_day = Date.new(year, month, -1)
-  days_of_month = []
+  all_days_of_month = []
 
-  add_beggining_blank(first_day, days_of_month)
+  add_beggining_blank(first_day, all_days_of_month)
   (first_day..last_day).each do |day| 
-    days_of_month.push day.day.to_s
+    all_days_of_month.push day.day.to_s
   end
-  add_end_blank(days_of_month)
+  add_end_blank(all_days_of_month)
 
-  return days_of_month
+  return all_days_of_month
+end
+
+# 月のレコードを作成するメソッド
+def month_record(first_month, second_month, third_month)
+  month_record = []
+  add_blank(month_record, 3)
+  month_record.push "#{first_month}"
+
+  add_blank(month_record, 7)
+  month_record.push "#{second_month}"
+
+  add_blank(month_record, 7)
+  month_record.push "#{third_month}"
+
+  month_record.push "\n"
+  return month_record
+end
+
+# 曜日のレコードを作成するメソッド
+def day_of_week_record
+  day_of_week_record = []
+  day_of_week_array = ["日", "月", "火", "水", "木", "金", "土"]
+
+  3.times do
+    day_of_week_array.each do |day|
+      day_of_week_record.push day
+    end
+    day_of_week_record.push "   "
+  end
+
+  day_of_week_record.push "\n"
+  return day_of_week_record
 end
 
 # 3ヶ月分のカレンダーをまとめて、配列に格納するメソッド
@@ -174,51 +206,23 @@ def create_table(first_month, second_month, third_month, year)
   return table
 end
 
-# 月のレコードを作成するメソッド
-def month_record(first_month, second_month, third_month)
-  month_record = []
-  add_blank(month_record, 3)
-  month_record.push "#{first_month}"
-
-  add_blank(month_record, 7)
-  month_record.push "#{second_month}"
-
-  add_blank(month_record, 7)
-  month_record.push "#{third_month}"
-
-  month_record.push "\n"
-  return month_record
-end
-
-# 曜日のレコードを作成するメソッド
-def day_of_week_record
-  day_of_week_record = []
-  day_of_week_array = ["日", "月", "火", "水", "木", "金", "土"]
-
-  3.times do
-    day_of_week_array.each do |day|
-      day_of_week_record.push day
-    end
-    day_of_week_record.push "   "
-  end
-
-  day_of_week_record.push "\n"
-  return day_of_week_record
-end
-
 def calender(month_year)
   if month_year.length == 2
     month = month_year[:m]
     year = month_year[:y]
 
-    puts "#{month}月 #{year}".center(21)
+    # カレンダーの横幅 = 7(曜日) * 3byte
+    width = 21
+    puts "#{month}月 #{year}".center(width)
     puts " 日 月 火 水 木 金 土"
     date = create_month_array(month_year)
     date.each {|day| print day.rjust(3)}
   else
     year = month_year[:y]
 
-    puts "#{year}年".center(69)
+    # カレンダーの横幅 = (7(曜日)* 3(月) * 3byte + 2(空白) * 3byte)
+    width =  69
+    puts "#{year}年".center(width)
 
     (1..12).each_slice(3) do |month|
       first_month = month[0]
