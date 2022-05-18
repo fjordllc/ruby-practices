@@ -63,7 +63,7 @@ end
 new_file_mode
 end
 
-def link
+def get_link
   current_pass = Dir.getwd 
   files = Dir.glob('*').sort
   links_total = []
@@ -73,37 +73,35 @@ def link
     links = stat.nlink
     links_total << links
   end
-  puts links_total
+  links_total
 
 end
 
-def name
+def get_name
   current_pass = Dir.getwd 
   files = Dir.glob('*').sort
   users_total = []
   files.each do |file|
     path = current_pass + '/' + file
     users = Etc.getpwuid(File.stat(path).uid).name
-    puts "#{users}"
     users_total << users
   end
-  puts users_total
+  users_total
 end
 
-def group
+def get_group
   current_pass = Dir.getwd 
   files = Dir.glob('*').sort
   groups_total = []
   files.each do |file|
     path = current_pass + '/' + file
     groups = Etc.getgrgid(File.stat(path).gid).name
-    puts "#{groups}"
     groups_total << groups
   end
-  puts groups_total
+  groups_total
 end
 
-def size
+def get_size
   current_pass = Dir.getwd 
   files = Dir.glob('*').sort
   sizes_total = []
@@ -113,10 +111,10 @@ def size
     sizes = stat.size
     sizes_total << sizes
   end
-  puts sizes_total
+  sizes_total
 end
   
-def time
+def get_time
   current_pass = Dir.getwd 
   files = Dir.glob('*').sort
   times_total = []
@@ -130,30 +128,32 @@ def time
     times = "#{month} #{day} #{hour}:#{min}"
     times_total << times
   end
-  puts times_total
+  times_total
 end
 
-def file
+def get_file
   current_pass = Dir.getwd 
   files = Dir.glob('*').sort
-  files_total = []
-    files_total << files
 
-  puts files_total
 end
 
 def main
   permission = get_permission
-  p permission
+  link = get_link
+  name = get_name
+  group = get_group
+  size = get_size
+  time = get_time
+  file = get_file
+
+  total_blocks
+  a = permission.zip(link,name,group,size,time,file)
+  a.each do |display|
+    puts display.join
+  end
 end
 
 main
   
-  # link
-  # name
-  # group
-  # size
-  # time
-  # file
 
 
