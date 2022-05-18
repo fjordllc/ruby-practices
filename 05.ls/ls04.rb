@@ -1,6 +1,5 @@
 require 'etc'
 
-
 def total_blocks
   current_pass = Dir.getwd 
   files = Dir.glob('*').sort
@@ -14,10 +13,11 @@ def total_blocks
   puts "total #{blocks_total.sum}"
 end
 
-def permission
+def get_permission
   current_pass = Dir.getwd 
   files = Dir.glob('*').sort
   file_mode = []
+  
   files.each do |file|
     pass = current_pass + '/' + file
     stat = File.stat(pass)
@@ -25,6 +25,7 @@ def permission
     file_mode << modes
   end
   
+  new_file_mode = []
 file_mode.each do |number|
   number.insert(0, "0") if number.length < 7
 
@@ -56,8 +57,10 @@ file_mode.each do |number|
     parts4 =  "r-x" 
   end
   
-  puts parts1 + parts2 + parts3 + parts4
+  new_mode = parts1 + parts2 + parts3 + parts4
+  new_file_mode << new_mode
 end
+new_file_mode
 end
 
 def link
@@ -139,13 +142,18 @@ def file
   puts files_total
 end
 
+def main
+  permission = get_permission
+  p permission
+end
+
+main
+  
+  # link
+  # name
+  # group
+  # size
+  # time
+  # file
 
 
-total_blocks
-permission
-link
-name
-group
-size
-time
-file
