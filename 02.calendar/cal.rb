@@ -63,10 +63,8 @@ def set_month_and_year(argument, params, month_year)
     month_year[:y] = argument.shift
     convert_and_check_value(month_year)
     return
-  end
-  
   # 引数のみ指定されている時に、値を取り出す
-  if argument.length == 2
+  elsif argument.length == 2
     month_year[:m] = argument.shift
     month_year[:y] = argument.shift
     convert_and_check_value(month_year)
