@@ -104,9 +104,9 @@ def fit_to_longest_item(items, right_aligned: false)
     space_count = longest_length - item.length
     if space_count.positive?
       if right_aligned
-        item.rjust(space_count + 1)
+        item.rjust(longest_length)
       else
-        item.ljust(space_count + 1)
+        item.ljust(longest_length)
       end
     else
       item
@@ -132,7 +132,7 @@ def apply_l_option(original_array)
     item_info = File.lstat(item_path)
 
     new_item << format_filemode(format('%06d', item_info.mode.to_s(8)))
-    total_blocks += File.stat(item_path).blocks unless new_item[0].slice(0) == 'l'
+    total_blocks += item_info.blocks unless new_item[0].slice(0) == 'l'
     new_item << item_info.nlink.to_s
     new_item << Etc.getpwuid(item_info.uid).name
     new_item << Etc.getgrgid(item_info.gid).name
