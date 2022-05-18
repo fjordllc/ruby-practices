@@ -13,13 +13,13 @@ def ls(param)
   Dir.chdir(param[:dir]) if param[:dir]
 
   # オプションの適用
-  original_array = apply_options(param[:options])
+  options = apply_options(param[:options])
 
   # lオプションがあれば成型せずに1列で出力
   if param[:options].grep(/l/).length >= 1
-    original_array.each { |row| puts row }
+    options.each { |row| puts row }
   else
-    formatted_array = ls_format_items(original_array)
+    formatted_array = ls_format_items(options)
     # 出力
     formatted_array.each { |row| puts row.join }
   end
@@ -104,14 +104,13 @@ def fit_to_longest_item(items, right_aligned: false)
     space_count = longest_length - item.length
     if space_count.positive?
       if right_aligned
-        "\s" * space_count + item
+        item.rjust(space_count + 1)
       else
-        item + "\s" * space_count
+        item.ljust(space_count + 1)
       end
     else
       item
     end
-    # space_count.positive? ? item + "\s" * space_count : item
   end
 end
 
