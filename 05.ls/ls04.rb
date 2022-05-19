@@ -1,15 +1,11 @@
 require 'etc'
 
 def total_blocks
-  current_pass = Dir.getwd 
   files = Dir.glob('*').sort
-  blocks_total = []
-  files.each do |file|
-    pass = current_pass + '/' + file
-    stat = File.stat(pass)
-    blocks = stat.blocks
-    blocks_total << blocks
-  end
+  blocks_total = files.map { |file|
+    path = Dir.getwd + '/' + file
+    blocks = File.stat(path).blocks
+}
   puts "total #{blocks_total.sum}"
 end
 
@@ -19,9 +15,8 @@ def get_permission
   file_mode = []
   
   files.each do |file|
-    pass = current_pass + '/' + file
-    stat = File.stat(pass)
-    modes = "0%o" % stat.mode
+    path = current_pass + '/' + file
+    modes = "0%o" % File.stat(path).mode
     file_mode << modes
   end
   
@@ -57,7 +52,7 @@ file_mode.each do |number|
     parts4 =  "r-x" 
   end
   
-  new_mode = parts1 + parts2 + parts3 + parts4
+  new_mode = parts1 + parts2 + parts3 + parts4 + " "
   new_file_mode << new_mode
 end
 new_file_mode
@@ -66,15 +61,29 @@ end
 def get_link
   current_pass = Dir.getwd 
   files = Dir.glob('*').sort
-  links_total = []
+  links_sizes = []
+
   files.each do |file|
     pass = current_pass + '/' + file
     stat = File.stat(pass)
-    links = stat.nlink
-    links_total << links
+    links = stat.nlink 
+    links_sizes << links 
   end
-  links_total
 
+  max_length = links_sizes.max.to_s.length
+  new_links_sizes = []
+
+    links_sizes.each do |size|
+      gap = max_length - size.to_s.length
+      if gap != 0
+      a = size.to_s.insert(0, "#{" " * gap}")
+      else
+        a = size.to_s
+      end
+      new_links_sizes << a
+    end
+     
+  new_links_sizes
 end
 
 def get_name
