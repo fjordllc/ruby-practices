@@ -221,30 +221,69 @@ def get_day
   new_days
 end
 
-
-
-  
-def get_time
+def get_hour
   current_pass = Dir.getwd 
   files = Dir.glob('*').sort
-  times_total = []
-  months = []
+  hours = []
   files.each do |file|
     pass = current_pass + '/' + file
     stat = File.stat(pass)
-    
     hour = stat.mtime.hour
-    min = stat.mtime.min
-    times = "#{hour}:#{min}"
-    times_total << times
+    hours << hour
   end
-  times_total
+  max_length = hours.max.to_s.length
+  new_hours = []
+
+  hours.each do |hour|
+      gap = max_length - hour.to_s.length
+      if gap != 0
+      a = hour.to_s.insert(0, "#{"0" * gap}")
+      else
+      a = hour
+      end
+      new_hours << " " + a.to_s
+    end
+
+  new_hours
 end
+
+
+def get_min
+  current_pass = Dir.getwd 
+  files = Dir.glob('*').sort
+  mins = []
+  files.each do |file|
+    pass = current_pass + '/' + file
+    stat = File.stat(pass)
+    min = stat.mtime.min
+    mins << min
+  end
+  max_length = mins.max.to_s.length
+  new_mins = []
+
+  mins.each do |min|
+      gap = max_length - min.to_s.length
+      if gap != 0
+      a = min.to_s.insert(0, "#{"0" * gap}")
+      else
+      a = min
+      end
+      new_mins << ":" + a.to_s
+    end
+
+  new_mins
+end
+  
 
 def get_file
   current_pass = Dir.getwd 
   files = Dir.glob('*').sort
+  new_files = []
 
+  files.each do |file|
+      new_files << " " + file
+    end
+  new_files
 end
 
 def main
@@ -255,11 +294,12 @@ def main
   size = get_size
   month = get_month
   day = get_day
-  time = get_time
+  hour = get_hour
+  min = get_min
   file = get_file
 
   total_blocks
-  a = permission.zip(link,name,group,size,month,day,time,file)
+  a = permission.zip(link,name,group,size,month,day,hour,min,file)
   a.each do |display|
     puts display.join
   end
@@ -267,5 +307,3 @@ end
 
 main
   
-
-
