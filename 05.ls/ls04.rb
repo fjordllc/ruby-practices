@@ -78,11 +78,11 @@ def get_link
       if gap != 0
       a = size.to_s.insert(0, "#{" " * gap}")
       else
-        a = size.to_s
+        a = size
       end
       new_links_sizes << a
     end
-     
+
   new_links_sizes
 end
 
@@ -95,7 +95,22 @@ def get_name
     users = Etc.getpwuid(File.stat(path).uid).name
     users_total << users
   end
-  users_total
+
+  max_length = users_total.max.to_s.length
+  new_users_total = []
+
+  users_total.each do |user|
+      gap = max_length - user.to_s.length
+      if gap != 0
+      a = user.to_s.insert(0, "#{" " * gap}")
+      else
+      a = user
+      end
+      new_users_total << " " + a + " "
+    end
+    
+  new_users_total
+  
 end
 
 def get_group
@@ -107,7 +122,21 @@ def get_group
     groups = Etc.getgrgid(File.stat(path).gid).name
     groups_total << groups
   end
-  groups_total
+    max_length = groups_total.max.to_s.length
+    new_groups = []
+  
+    groups_total.each do |group|
+        gap = max_length - group.to_s.length
+        if gap != 0
+        a = group.to_s.insert(0, "#{" " * gap}")
+        else
+        a = group
+        end
+        new_groups << " " + a + " "
+      end
+      
+    new_groups
+ 
 end
 
 def get_size
@@ -120,21 +149,93 @@ def get_size
     sizes = stat.size
     sizes_total << sizes
   end
-  sizes_total
+
+  max_length = sizes_total.max.to_s.length
+  new_sizes_total = []
+
+  sizes_total.each do |size|
+      gap = max_length - size.to_s.length
+      if gap != 0
+      a = size.to_s.insert(0, "#{" " * gap}")
+      else
+      a = size
+      end
+      new_sizes_total << " " + a.to_s
+    end
+    
+    new_sizes_total
+
 end
+
+def get_month
+  current_pass = Dir.getwd 
+  files = Dir.glob('*').sort
+  months = []
+  files.each do |file|
+    pass = current_pass + '/' + file
+    stat = File.stat(pass)
+    month = stat.mtime.mon
+    months << month
+  end
+
+  max_length = months.max.to_s.length
+  new_months = []
+
+  months.each do |month|
+      gap = max_length - month.to_s.length
+      if gap != 0
+      a = month.to_s.insert(0, "#{" " * gap}")
+      else
+      a = month
+      end
+      new_months << " " + a.to_s
+    end
+
+  new_months
+end
+
+def get_day
+  current_pass = Dir.getwd 
+  files = Dir.glob('*').sort
+  days = []
+  files.each do |file|
+    pass = current_pass + '/' + file
+    stat = File.stat(pass)
+    day = stat.mtime.mday
+    days << day
+  end
+  
+  max_length = days.max.to_s.length
+  new_days = []
+
+  days.each do |day|
+      gap = max_length - day.to_s.length
+      if gap != 0
+      a = day.to_s.insert(0, "#{" " * gap}")
+      else
+      a = day
+      end
+      new_days << " " + a.to_s
+    end
+
+  new_days
+end
+
+
+
   
 def get_time
   current_pass = Dir.getwd 
   files = Dir.glob('*').sort
   times_total = []
+  months = []
   files.each do |file|
     pass = current_pass + '/' + file
     stat = File.stat(pass)
-    month = stat.mtime.mon
-    day = stat.mtime.mday
+    
     hour = stat.mtime.hour
     min = stat.mtime.min
-    times = "#{month} #{day} #{hour}:#{min}"
+    times = "#{hour}:#{min}"
     times_total << times
   end
   times_total
@@ -152,11 +253,13 @@ def main
   name = get_name
   group = get_group
   size = get_size
+  month = get_month
+  day = get_day
   time = get_time
   file = get_file
 
   total_blocks
-  a = permission.zip(link,name,group,size,time,file)
+  a = permission.zip(link,name,group,size,month,day,time,file)
   a.each do |display|
     puts display.join
   end
