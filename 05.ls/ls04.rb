@@ -221,59 +221,69 @@ def get_day
   new_days
 end
 
-def get_hour
+def get_time
   current_pass = Dir.getwd 
   files = Dir.glob('*').sort
-  hours = []
-  files.each do |file|
-    pass = current_pass + '/' + file
-    stat = File.stat(pass)
-    hour = stat.mtime.hour
-    hours << hour
-  end
-  max_length = hours.max.to_s.length
-  new_hours = []
-
-  hours.each do |hour|
-      gap = max_length - hour.to_s.length
-      if gap != 0
-      a = hour.to_s.insert(0, "#{"0" * gap}")
-      else
-      a = hour
-      end
-      new_hours << " " + a.to_s
+  times = []
+    files.each do |file|
+      pass = current_pass + '/' + file
+      stat = File.stat(pass)
+      time = stat.mtime
+      times << time
     end
 
-  new_hours
-end
-
-
-def get_min
-  current_pass = Dir.getwd 
-  files = Dir.glob('*').sort
+  new_times = []
+  hours = []
   mins = []
-  files.each do |file|
-    pass = current_pass + '/' + file
-    stat = File.stat(pass)
-    min = stat.mtime.min
-    mins << min
-  end
-  max_length = mins.max.to_s.length
+  new_hours = []
   new_mins = []
 
-  mins.each do |min|
-      gap = max_length - min.to_s.length
+  times.each do |time|
+
+    hours << time.hour
+    hours_max_length = hours.max.to_s.length
+    hours.each do |hour|
+      gap = hours_max_length - hour.to_s.length
+
+        if gap != 0
+          a = hour.to_s.insert(0, "#{"0" * gap}")
+          else
+          a = hour
+        end
+        new_hours << " " + a.to_s
+    end
+    
+    mins << time.min
+    mins_max_length = mins.max.to_s.length
+    mins.each do |min|
+      gap = mins_max_length - min.to_s.length
+
       if gap != 0
       a = min.to_s.insert(0, "#{"0" * gap}")
       else
       a = min
       end
-      new_mins << ":" + a.to_s
+
+      new_mins << " " + a.to_s
     end
 
-  new_mins
-end
+   
+    today = Time.new
+    six_month = 15552000
+    
+
+    
+    if today - time > six_month
+     final_time = "  " + time.year.to_s
+    else
+     final_time = time
+    end
+    new_times << final_time
+  end
+
+  new_times
   
+end
 
 def get_file
   current_pass = Dir.getwd 
@@ -294,16 +304,59 @@ def main
   size = get_size
   month = get_month
   day = get_day
-  hour = get_hour
-  min = get_min
+  time = get_time
   file = get_file
 
+
   total_blocks
-  a = permission.zip(link,name,group,size,month,day,hour,min,file)
+  
+  a = permission.zip(link,name,group,size,month,day,time,file)
   a.each do |display|
     puts display.join
   end
 end
 
 main
-  
+
+# def get_test
+
+#   current_pass = Dir.getwd 
+#   files = Dir.glob('*').sort
+#   times = []
+#   files.each do |file|
+#     pass = current_pass + '/' + file
+#     stat = File.stat(pass)
+#     time = stat.mtime
+#     times << time
+#   end
+
+# new_times = []
+#   times.each do |time|
+#     today = Time.new
+#     six_month = 15552000
+
+#     if today - time > six_month
+#       new_times << time.year
+#     else
+#       new_times << time
+#     end
+#   end
+#   new_times
+# end
+
+#   end
+#   max_length = hours.max.to_s.length
+#   new_hours = []
+
+#   hours.each do |hour|
+#       gap = max_length - hour.to_s.length
+#       if gap != 0
+#       a = hour.to_s.insert(0, "#{"0" * gap}")
+#       else
+#       a = hour
+#       end
+#       new_hours << " " + a.to_s
+#     end
+
+#   new_hours
+# end
