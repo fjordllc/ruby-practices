@@ -14,18 +14,15 @@ def main
   sizes = get_size(paths)
   months = get_month(paths)
   days = get_day(paths)
-  hours = get_hour(paths)
-  mins = get_min(paths)
-  times = get_time(hours, mins)
+  times = get_time(paths) 
   files = get_file
 
+
   total_blocks
-  a = permission.zip(links, names,groups,sizes,months,days,times, files)
-  a.each do |display|
+ permission.zip(links, names,groups,sizes,months,days,times,files).each do |display|
     puts display.join
   end
 end
-
 
 def get_path
   files = Dir.glob('*').sort
@@ -36,16 +33,24 @@ def get_path
  paths
 end
 
-def adjust_blank(sizes, blank_input)
+def adjust_blank(sizes)
   max_length = sizes.max.to_s.length
   with_blank_ = sizes.map do |size|
-    gap = max_length - size.to_s.length
+  gap = max_length - size.to_s.length
     a = if gap != 0
-          size.to_s.insert(0, (blank_input * gap).to_s)
+          size.to_s.insert(0, (" " * gap).to_s)
         else
           size.to_s
         end
   end
+end
+
+def into_arrays(total,blank_size)
+  final = []
+ adjust_blank(total).each do |blank|
+    final <<  "#{" " * blank_size} "+ "#{blank}"
+  end
+  final
 end
 
 def get_permission(paths)
@@ -107,104 +112,66 @@ def get_link(paths)
   links_sizes = paths.map do |path|
     links = File.stat(path).nlink
   end
-  
-  final = []
-  blanks = adjust_blank(links_sizes, " ")
-  blanks.each do |blank|
-    final <<  " " + "#{blank}"
-  end
-  final
+
+into_arrays(links_sizes, 0)
 end
 
 def get_name(paths)
   users_total = paths.map do |path|
     users = Etc.getpwuid(File.stat(path).uid).name
   end
-  final = []
-  blanks = adjust_blank(users_total, " ")
-  blanks.each do |blank|
-    final <<  " " + "#{blank}"
-  end
-  final
+  into_arrays(users_total, 0)
 end
 
 def get_group(paths)
  groups_total = paths.map do |path|
     groups = Etc.getgrgid(File.stat(path).gid).name
   end
-  final = []
-  blanks = adjust_blank(groups_total, " ")
-  blanks.each do |blank|
-    final <<  "  " + "#{blank}"
-  end
-  final
+  into_arrays(groups_total, 1)
 end
 
 def get_size(paths)
   sizes_total = paths.map do |path|
      sizes = File.stat(path).size
    end
-   final = []
-   blanks = adjust_blank(sizes_total, " ")
-   blanks.each do |blank|
-    final <<  "  " + "#{blank}"
-  end
-   final
+   into_arrays(sizes_total, 1)
  end
 
 def get_month(paths)
+  new_month = []
   months_total = paths.map do |path|
     months = File.stat(path).mtime.mon
+    new_month << months.to_s.rjust(3)
   end
-  final = []
-  blanks = adjust_blank(months_total, " ")
-  blanks.each do |blank|
-   final <<  " " + "#{blank}"
- end
-  final
+  new_month
 
 end
 
 def get_day(paths)
+  new_days = []
   days_total = paths.map do |path|
     days = File.stat(path).mtime.mday
+  new_days << days.to_s.rjust(3)
   end
-  final = []
-  blanks = adjust_blank(days_total, " ")
-  blanks.each do |blank|
-   final <<  " " + "#{blank}"
- end
-  final
-
+  new_days
 end
 
-def get_hour(paths)
-  hours_total = paths.map do |path|
-    hours = File.stat(path).mtime.hour
+def get_time(paths)
+  time_details = paths.map do |path|
+    File.stat(path).mtime
   end
-  blank = adjust_blank(hours_total, "0")
-  blank
-end
 
-def get_min(paths)
-  mins_total = paths.map do |path|
-    hours = File.stat(path).mtime.min
+new_times = []
+  time_details.each do |detail|
+    today = Time.new
+    if today - detail > SIX_MONTH
+       display = "  #{detail.year}"
+    else 
+       display = " #{detail.strftime("%H:%M")}"
+    end
+    new_times << "#{display}".rjust(6)
   end
-  blank = adjust_blank(mins_total, "0")
-  blank
-end
-
-def get_time(hours, mins)
-  newtimes = hours.zip(mins).map do |time|
-     time.join(":")
-  end
-  final = []
-  blanks = adjust_blank(newtimes, " ")
-  blanks.each do |blank|
-   final <<  " " + "#{blank}"
- end
-  final
-
+  new_times
 end
 
 def get_file
@@ -214,25 +181,3 @@ def get_file
 end
 
 main
-
-
-# def time_or_year(paths,times)
-#   time_details = paths.map do |path|
-#     File.stat(path).mtime
-#   end
-
-# new_times = []
-# today = Time.new
-  
-#   time_details.each do |detail|
-#     if today - detail > SIX_MONTH
-#        display = " #{detail.year}"
-#     else
-#       times.each do |time|
-#         display = "none"
-#       end
-#     end
-#     new_times << display
-#   end
-#   new_times
-# end
