@@ -8,7 +8,7 @@ ROW_NUM = 3
 ROW_MAX_WIDTH = 24
 
 def main
-  paths = acquire_all_files
+  paths = distingish_options
   total_block = acquire_blocks(paths)
   file_modes = acquire_file_modes
   links = acquire_links(paths)
@@ -26,7 +26,7 @@ def main
   end
 end
 
-def acquire_all_files
+def distingish_options
   opt = OptionParser.new
   opt.on('-l')
   opt.parse(ARGV)
