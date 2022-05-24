@@ -15,12 +15,9 @@ files = []
 
 # ls デフォルト
 def ls_cmd(dir_name, files, option)
+  dotmatch = option == '-a' ? File::FNM_DOTMATCH : 0
   if Dir.exist?(dir_name)
-    files = if option == '-a'
-              Dir.glob('*', File::FNM_DOTMATCH, base: dir_name)
-            else
-              Dir.glob('*', base: dir_name)
-            end
+    files = Dir.glob('*', dotmatch, base: dir_name)
     count = (files.size / 3.0).ceil(0)
     files_sort = files.sort
     count.times do |i|
