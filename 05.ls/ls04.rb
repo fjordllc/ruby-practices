@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 require 'etc'
+require 'optparse'
 
 SIX_MONTH = 15_552_000
+ROW_NUM = 3
+ROW_MAX_WIDTH = 24
 
 def main
-  paths = acquire_absolute_paths
-
+  paths = acquire_all_files
   total_block = acquire_blocks(paths)
   file_modes = acquire_file_modes
   links = acquire_links(paths)
@@ -23,6 +25,41 @@ def main
     puts row.join
   end
 end
+
+def acquire_all_files
+  opt = OptionParser.new
+  opt.on('-l')
+  opt.parse(ARGV)
+  if ARGV == ['-l']
+    acquire_absolute_paths
+  else
+    all_files = Dir.glob('*').sort
+    files_in_columns = get_transposed_all_files(all_files)
+    display(files_in_columns)
+    exit
+  end
+end
+
+# オプションなし
+
+def get_transposed_all_files(all_files)
+  all_files.push(' ') while all_files.length % ROW_NUM != 0
+  column_num = all_files.length / ROW_NUM
+  transposed_files = all_files.each_slice(column_num).to_a.transpose
+  transposed_files.first(column_num).each do |column|
+    ROW_NUM.times do |index|
+      column[index] += ' ' * (ROW_MAX_WIDTH - column[index].length)
+    end
+  end
+end
+
+def display(files_in_columns)
+  files_in_columns.each do |column|
+    puts column.join
+  end
+end
+
+#-lオプションありの場合はここから
 
 # 絶対パスの取得
 def acquire_absolute_paths
