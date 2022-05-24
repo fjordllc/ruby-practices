@@ -6,8 +6,11 @@ SIX_MONTH = 15_552_000
 
 def main
   paths = get_path
-  total_blocks = get_blocks(paths)
-  permission = get_permission(paths)
+  permissions = get_permission(paths)
+
+  total_block = get_blocks(paths)
+
+  final_permission = distingish_permission(permissions)
   links = get_link(paths)
   names = get_name(paths)
   groups = get_group(paths)
@@ -18,8 +21,8 @@ def main
   files = get_file
 
 
-  total_blocks
- permission.zip(links, names,groups,sizes,months,days,times,files).each do |display|
+  total_block
+ final_permission.zip(links, names,groups,sizes,months,days,times,files).each do |display|
     puts display.join
   end
 end
@@ -54,52 +57,47 @@ def into_arrays(total,blank_size)
 end
 
 def get_permission(paths)
+  new_file_mode = []
   file_mode = paths.map do |path|
    modes = '0%o' % File.stat(path).mode
   end
-
-  new_file_mode = []
-  file_mode.each do |number|
+  file_mode.map do |number|
     number.insert(0, '0') if number.length < 7
-
-    case number[0, 3]
-    when '004'
-      parts1 = 'd'
-    when '010'
-      parts1 = '-'
-    end
-
-    case number[3, 2]
-    when '06'
-      parts2 = 'rw-'
-    when '07'
-      parts2 = 'rwx'
-    end
-
-    case number[5, 1]
-    when '0'
-      parts3 = '---'
-    when '4'
-      parts3 = 'r--'
-    when '5'
-      parts3 = 'r-x'
-    end
-
-    case number[6, 1]
-    when '0'
-      parts4 = '---'
-    when '4'
-      parts4 = 'r--'
-    when '5'
-      parts4 = 'r-x'
-    end
-
-    new_mode = "#{parts1}#{parts2}#{parts3}#{parts4} "
-    new_file_mode << new_mode
   end
-  new_file_mode
+  new_file_mode << file_mode
+new_file_mode
 end
 
+
+def distingish_permission(permission)
+  file_types = {"001" => "p", "002" => "c", "004" => "d", "006" => "b", "010" => "-", "012" => "l", "014" => "s"}
+  file_permissions = {"00" => "---", "01" => "--x", "02" => "-w-", "03" => "-wx", "04" => "r--", "05" => "r-x", "06" => "rw-", "07" => "rwx"}
+
+  parts1 = []
+  parts2 = []
+  parts3 = []
+  parts4 = []
+
+  permission.each do |numbers|
+    numbers.each do |num|
+    a = file_types.select {|key,value| key == num[0, 3]}
+    parts1 << a.values
+
+    b = file_permissions.select {|key,value| key == num[3, 2]}
+    parts2 << b.values
+
+    c = file_permissions.select {|key,value| key[1,1] == num[5, 1]}
+    parts3 << c.values
+
+    d = file_permissions.select {|key,value| key[1,1] == num[6, 1]}
+    parts4 << d.values
+    end
+  end
+
+  parts1.zip(parts2, parts3, parts4).each do |display|
+    display.join
+  end
+end
 
 def get_blocks(paths)
   blocks_total = paths.map do |path|
