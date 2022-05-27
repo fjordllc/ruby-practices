@@ -4,14 +4,14 @@ require 'optparse'
 params = ARGV.getopts("", "m:#{Date.today.month}", "y:#{Date.today.year}")
 month_and_year = params.transform_values(&:to_i)
 
-def is_month?(month)
+def validate_month(month)
   return true if (1..12).include?(month)
 
   puts "月は1から12月までを入力してください"
   false
 end
 
-def is_year?(year)
+def validate_year(year)
   return true if year >= 1970
 
   puts "年は1970年以降を入力してください"
@@ -19,8 +19,8 @@ def is_year?(year)
 end
 
 def validate_option_argument(month_and_year)
-  exit unless is_month?(month_and_year["m"]) &&
-              is_year?(month_and_year["y"])
+  exit if !validate_month(month_and_year["m"]) ||
+          !validate_year(month_and_year["y"])
 end
 
 def create_all_days_array(month, year)
