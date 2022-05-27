@@ -35,7 +35,7 @@ def create_all_days_array(month, year)
     all_days_array.push "\n" if day.wday == 6
   end
 
-  return all_days_array
+  all_days_array
 end
 
 def calender(month_and_year)
