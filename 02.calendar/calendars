@@ -3,23 +3,20 @@
 require "date"
 require "optparse"
 
-options = ARGV.getopts("","y:#{Date.today.year}", "m:#{Date.today.month}")
+options = ARGV.getopts("", "y:#{Date.today.year}", "m:#{Date.today.month}")
 
-first_day = Date.new(options["y"].to_i,options["m"].to_i,1) 
-last_day = Date.new(options["y"].to_i,options["m"].to_i,-1)
+first_day = Date.new(options["y"].to_i, options["m"].to_i, 1) 
+last_day = Date.new(options["y"].to_i, options["m"].to_i, -1)
 
-puts "       " + options["m"] + "月 " + options["y"]
-print "日 月 火 水 木 金 土"
-puts ""
+puts "      #{options["m"]}月 #{options["y"]} "
+puts "日 月 火 水 木 金 土"
 print " " * first_day.wday * 3 
 
-
-while first_day <= last_day
-  if first_day.wday == 6
-    puts first_day.strftime('%e') + " "
-    first_day += 1
+(first_day..last_day).each do |d|
+  day = d.strftime('%e') + " "
+  if d.wday == 6
+    puts day
   else
-    print first_day.strftime('%e') + " "
-    first_day += 1
+    print day
   end
 end
