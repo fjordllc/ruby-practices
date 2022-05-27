@@ -42,13 +42,6 @@ class WC
     @target_files << 'total'
   end
 
-  def calc_total_filesizes(files)
-    files.each do |file|
-      @filesizes << File.size(file)
-    end
-    @filesizes.sum
-  end
-
   def output_wc_results
     outputs = []
     outputs << @lines
