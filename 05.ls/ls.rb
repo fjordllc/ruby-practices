@@ -3,15 +3,6 @@
 
 require 'optparse'
 
-# ネットで見つけた崩れないljust
-class String
-  def mb_ljust(width, padding = ' ')
-    output_width = each_char.map { |c| c.bytesize == 1 ? 1 : 2 }.reduce(0, &:+)
-    padding_size = [0, width - output_width].max
-    self + padding * padding_size
-  end
-end
-
 # オプション
 option = []
 opt = OptionParser.new
@@ -33,7 +24,8 @@ def ls_cmd(dir_name, files, option)
     count.times do |i|
       3.times do |j|
         result = files_sort[i + j * count]
-        print result.mb_ljust(12).to_s if result
+        extra_count = result ? result.each_char.count { |c| c.bytesize > 1 } : 0
+        print result.ljust(15 - extra_count).to_s if result
       end
       puts ''
     end
