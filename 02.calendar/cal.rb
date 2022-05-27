@@ -2,11 +2,7 @@ require 'date'
 require 'optparse'
 
 params = ARGV.getopts("", "m:#{Date.today.month}", "y:#{Date.today.year}")
-month_and_year = {}
-
-def convert_to_integer(params, month_and_year)
-  params.each {|key, value| month_and_year[key] = value.to_i}
-end
+month_and_year = params.transform_values(&:to_i)
 
 def is_month?(month)
   return true if (1..12).include?(month)
@@ -52,6 +48,5 @@ def calender(month_and_year)
     all_days.each {|day| print day.rjust(3)}
 end
 
-convert_to_integer(params, month_and_year)
 validate_option_argument(month_and_year)
 calender(month_and_year)
