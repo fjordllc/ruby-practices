@@ -11,6 +11,13 @@ opt.on('-r') { option << 'r' }
 opt.parse!(ARGV)
 dir_name = ARGV[0] || '.'
 
+class String
+  def mb_ljust(width, padding = ' ')
+    extra_count = !nil? ? each_char.count { |c| c.bytesize > 1 } : 0
+    ljust(width - extra_count, padding).to_s
+  end
+end
+
 # ディレクトリ情報取得
 files = []
 
@@ -24,8 +31,7 @@ def ls_cmd(dir_name, files, option)
     count.times do |i|
       3.times do |j|
         result = files_sort[i + j * count]
-        extra_count = !result.nil? ? result.each_char.count { |c| c.bytesize > 1 } : 0
-        print result.ljust(15 - extra_count).to_s unless result.nil?
+        print result.mb_ljust(15) unless result.nil?
       end
       puts ''
     end
