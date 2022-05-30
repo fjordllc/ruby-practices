@@ -24,8 +24,8 @@ def ls_cmd(dir_name, files, option)
     count.times do |i|
       3.times do |j|
         result = files_sort[i + j * count]
-        extra_count = result ? result.each_char.count { |c| c.bytesize > 1 } : 0
-        print result.ljust(15 - extra_count).to_s if result
+        extra_count = !result.nil? ? result.each_char.count { |c| c.bytesize > 1 } : 0
+        print result.ljust(15 - extra_count).to_s unless result.nil?
       end
       puts ''
     end
