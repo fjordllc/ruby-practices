@@ -13,10 +13,10 @@ puts "日 月 火 水 木 金 土"
 print " " * first_day.wday * 3 
 
 (first_day..last_day).each do |d|
-  day = d.strftime('%e') + " "
+  day = d.strftime('%e') 
   if d.wday == 6
     puts day
   else
-    print day
+    print day + " "
   end
 end
