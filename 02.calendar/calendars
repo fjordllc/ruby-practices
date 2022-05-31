@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+
+require "date"
+require "optparse"
+
+options = ARGV.getopts("", "y:#{Date.today.year}", "m:#{Date.today.month}")
+
+first_day = Date.new(options["y"].to_i, options["m"].to_i, 1) 
+last_day = Date.new(options["y"].to_i, options["m"].to_i, -1)
+
+puts "      #{options["m"]}月 #{options["y"]} "
+puts "日 月 火 水 木 金 土"
+print " " * first_day.wday * 3 
+
+(first_day..last_day).each do |d|
+  day = d.strftime('%e') 
+  if d.wday == 6
+    puts day
+  else
+    print day + " "
+  end
+end
