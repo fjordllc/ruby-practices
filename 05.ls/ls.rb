@@ -13,7 +13,7 @@ dir_name = ARGV[0] || '.'
 
 class String
   def mb_ljust(width, padding = ' ')
-    extra_count = each_char.count { |c| c.bytesize > 1 } || 0
+    extra_count = !nil? ? each_char.count { |c| c.bytesize > 1 } : 0
     ljust(width - extra_count, padding).to_s
   end
 end
@@ -31,7 +31,9 @@ def ls_cmd(dir_name, files, option)
     count.times do |i|
       3.times do |j|
         result = files_sort[i + j * count]
-        print result.mb_ljust(15) unless result.nil?
+        next if result.nil?
+
+        print result.mb_ljust(15)
       end
       puts ''
     end
