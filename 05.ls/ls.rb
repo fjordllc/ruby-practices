@@ -6,20 +6,10 @@ stdin = ARGV[0]
 target_name = stdin || '.'
 
 def main(directory_contents)
-  print_filename(directory_contents)
-end
-
-def print_filename(directory_contents)
   display_width = calculate_display_width(directory_contents)
   array_for_display = create_array_for_display(directory_contents)
 
-  array_for_display.each do |row|
-    row.each do |file|
-      number_of_not_ascii_character = file.chars.count { |x| !x.ascii_only? }
-      print file.ljust(display_width - number_of_not_ascii_character)
-    end
-    puts "\n"
-  end
+  print_filename(array_for_display, display_width)
 end
 
 def calculate_display_width(directory_contents)
@@ -43,6 +33,16 @@ def create_array_for_display(directory_contents)
   end
   array_for_display.each do |row|
     row.map! { |filename| filename.nil? ? ' ' : filename }
+  end
+end
+
+def print_filename(array_for_display, display_width)
+  array_for_display.each do |row|
+    row.each do |file|
+      number_of_not_ascii_character = file.chars.count { |x| !x.ascii_only? }
+      print file.ljust(display_width - number_of_not_ascii_character)
+    end
+    puts "\n"
   end
 end
 
