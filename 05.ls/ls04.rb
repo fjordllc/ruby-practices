@@ -21,8 +21,7 @@ end
 
 def exec_l_option(all_files)
   files_info = acquire_file_info(all_files)
-
-  total_block = acquire_blocks(files_info)
+  total_block = acquire_total_block(files_info)
   file_modes = acquire_file_modes(files_info)
   links = acquire_links(files_info)
   names = acquire_names(files_info)
@@ -45,14 +44,13 @@ def exec_no_option(all_files)
   exit
 end
 
-# lオプションありの場合の細かいメソッド
 def acquire_file_info(all_files)
   all_files.map do |file|
     File.stat(file)
   end
 end
 
-def acquire_blocks(files_info)
+def acquire_total_block(files_info)
   blocks = files_info.map(&:blocks)
   blocks.sum
 end
@@ -65,11 +63,7 @@ end
 
 def adjust_file_mode_nums_length(mode_nums)
   mode_nums.map do |num|
-    if num.length < 7
-      num.insert(0, '0')
-    else
-      num
-    end
+    num.rjust(7, '0')
   end
 end
 
@@ -104,18 +98,11 @@ def convert_to_letter(file_types_nums, file_permissions_nums, adjusted_nums)
   group_permissions = []
   other_permissions = []
 
-  adjust_file_mode_nums_length(adjusted_nums).each do |num|
-    file_type = file_types_nums.select { |key, _value| key == num[0, 3] }
-    file_types << file_type.values
-
-    owner_permission = file_permissions_nums.select { |key, _value| key == num[3, 2] }
-    owner_permissions << owner_permission.values
-
-    group_permission = file_permissions_nums.select { |key, _value| key[1, 1] == num[5, 1] }
-    group_permissions << group_permission.values
-
-    other_permission = file_permissions_nums.select { |key, _value| key[1, 1] == num[6, 1] }
-    other_permissions << other_permission.values
+  adjusted_nums.each do |num|
+    file_types << file_types_nums[(num[0, 3]).to_s]
+    owner_permissions << file_permissions_nums[(num[3, 2]).to_s]
+    group_permissions << file_permissions_nums["0#{num[5, 1]}"]
+    other_permissions << file_permissions_nums["0#{num[6, 1]}"]
   end
   file_types.zip(owner_permissions, group_permissions, other_permissions).each(&:join)
 end
@@ -170,7 +157,6 @@ def acquire_times(files_info)
   end
 end
 
-# lオプションなしの場合の細かいメソッド
 def get_transposed_all_files(all_files)
   all_files.push(' ') while all_files.length % ROW_NUM != 0
   column_num = all_files.length / ROW_NUM
