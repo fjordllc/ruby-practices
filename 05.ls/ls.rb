@@ -1,6 +1,6 @@
 require 'minitest/autorun' 
 
-class Columns
+class Column
   attr_accessor :max_name_size, :files, :name
   def initialize
     @files = []
@@ -13,9 +13,9 @@ def ls
   number_of_files_in_a_column = files_directories.size / NUMBER_OF_COLUMNS
   number_of_files_in_a_column += 1 unless (files_directories.size % NUMBER_OF_COLUMNS).zero?
 
-  first  = Columns.new
-  second = Columns.new
-  third  = Columns.new
+  first  = Column.new
+  second = Column.new
+  third  = Column.new
 
   files_directories.each_with_index do |file, i|
     if i / number_of_files_in_a_column == 0
