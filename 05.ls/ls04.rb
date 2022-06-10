@@ -61,14 +61,7 @@ end
 
 def acquire_file_modes(file_info)
   mode_nums = file_info.map { |file| format('0%o', file.mode) }
-  adjusted_nums = adjust_file_mode_nums_length(mode_nums)
-  convert_to_letter(adjusted_nums)
-end
-
-def adjust_file_mode_nums_length(mode_nums)
-  mode_nums.map do |num|
-    num.rjust(7, '0')
-  end
+  convert_to_letter(mode_nums)
 end
 
 def file_types_nums
@@ -96,11 +89,13 @@ def file_permissions_nums
   }
 end
 
-def convert_to_letter(adjusted_nums)
-  file_types = adjusted_nums.map { |num| file_types_nums[(num[0, 3]).to_s] }
-  owner_permissions = adjusted_nums.map { |num| file_permissions_nums[num[3, 2].to_s] }
-  group_permissions = adjusted_nums.map { |num| file_permissions_nums["0#{num[5, 1]}"] }
-  other_permissions = adjusted_nums.map { |num| file_permissions_nums["0#{num[6, 1]}"] }
+def convert_to_letter(mode_nums)
+  formatted_nums = mode_nums.map { |num| num.rjust(7, '0') }
+
+  file_types = formatted_nums.map { |num| file_types_nums[(num[0, 3]).to_s] }
+  owner_permissions = formatted_nums.map { |num| file_permissions_nums[num[3, 2].to_s] }
+  group_permissions = formatted_nums.map { |num| file_permissions_nums["0#{num[5, 1]}"] }
+  other_permissions = formatted_nums.map { |num| file_permissions_nums["0#{num[6, 1]}"] }
 
   file_types.zip(owner_permissions, group_permissions, other_permissions).each(&:join)
 end
