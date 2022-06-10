@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Column
-  attr_accessor :max_name_size, :files
+  attr_reader :max_name_size, :files
 
   def initialize
     @files = []
