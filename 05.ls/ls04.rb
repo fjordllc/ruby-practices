@@ -22,25 +22,13 @@ end
 def exec_l_option(all_files)
   files_info = acquire_file_info(all_files)
   total_block = acquire_total_block(files_info)
-  file_modes = acquire_file_modes(files_info)
-  links = acquire_links(files_info)
-  names = acquire_names(files_info)
-  groups = acquire_groups(files_info)
-  sizes = acquire_sizes(files_info)
-  months = acquire_months(files_info)
-  days = acquire_days(files_info)
-  times = acquire_times(files_info)
-  files = all_files.map { |file| " #{file}" }
-
   puts "total #{total_block}"
-  file_modes.zip(links, names, groups, sizes, months, days, times, files).each do |row|
-    puts row.join
-  end
+  display_l(files_info, all_files)
 end
 
 def exec_no_option(all_files)
   files_in_columns = get_transposed_all_files(all_files)
-  display(files_in_columns)
+  display_n(files_in_columns)
   exit
 end
 
@@ -55,8 +43,24 @@ def acquire_total_block(files_info)
   blocks.sum
 end
 
-def acquire_file_modes(files_info)
-  mode_nums = files_info.map { |file| format('0%o', file.mode) }
+def display_l(files_info, all_files)
+  file_modes = acquire_file_modes(files_info)
+  links = acquire_links(files_info)
+  names = acquire_names(files_info)
+  groups = acquire_groups(files_info)
+  sizes = acquire_sizes(files_info)
+  months = acquire_months(files_info)
+  days = acquire_days(files_info)
+  times = acquire_times(files_info)
+  files = all_files.map { |file| " #{file}" }
+
+  file_modes.zip(links, names, groups, sizes, months, days, times, files).each do |row|
+    puts row.join
+  end
+end
+
+def acquire_file_modes(file_info)
+  mode_nums = file_info.map { |file| format('0%o', file.mode) }
   adjusted_nums = adjust_file_mode_nums_length(mode_nums)
   convert_to_letter(file_types_nums, file_permissions_nums, adjusted_nums)
 end
@@ -168,7 +172,7 @@ def get_transposed_all_files(all_files)
   end
 end
 
-def display(files_in_columns)
+def display_n(files_in_columns)
   files_in_columns.each do |column|
     puts column.join
   end
