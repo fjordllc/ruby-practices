@@ -29,7 +29,11 @@ def calendar(year, month)
     if day / 10 == 0
       print "\s"
     end
-    print day
+    if date == Date.today
+      print "\e[30;47m#{day}\e[0m"
+    else
+      print day
+    end
     print "\s"
     if date.saturday?
       print "\n"
