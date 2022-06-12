@@ -3,19 +3,15 @@ require 'date'
 
 options = ARGV.getopts('y:', 'm:')
 
-if options['y'].nil?
-  year = Date.today.year
-else
-  year = options['y'].to_i
-end
+year = options['y']
+year ||= Date.today.year
 
-if options['m'].nil?
-  month = Date.today.month
-else
-  month = options['m'].to_i
-end
+month = options['m']
+month ||= Date.today.month
 
 def calendar(year, month)
+  year = year.to_i
+  month = month.to_i
   puts "      #{month}月 #{year}"
   puts "日 月 火 水 木 金 土"
   last_day_of_the_month = Date.new(year, month, -1).day
