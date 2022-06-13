@@ -27,12 +27,11 @@ def create_array_for_display(directory_contents)
   directory_contents_divided_per_common_difference =
     directory_contents.each_slice(common_difference).to_a
 
-  # TODO: 変数名をtransposedに変更する 修正後このコメントは削除する
-  directory_contents_sorted_for_display = Array.new(common_difference) do
+  transposed_directory_contents = Array.new(common_difference) do
     directory_contents_divided_per_common_difference.map(&:shift)
   end
 
-  directory_contents_sorted_for_display.map do |row|
+  transposed_directory_contents.map do |row|
     row.map { |filename| filename.nil? ? ' ' : filename }
   end
 end
