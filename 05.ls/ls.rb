@@ -24,15 +24,16 @@ def create_array_for_display(directory_contents)
   # 等差数列で表示するための公差(common difference)を求める
   common_difference = (directory_contents.length / MAX_NUMBER_OF_COLUMNS.to_f).ceil
 
-  directory_contents_divided_per_common_difference = []
-  directory_contents.each_slice(common_difference) { |array| directory_contents_divided_per_common_difference << array }
+  directory_contents_divided_per_common_difference =
+    directory_contents.each_slice(common_difference).to_a
 
-  directory_contents_sorted_for_display = []
-  common_difference.times do |n|
-    directory_contents_sorted_for_display[n] = directory_contents_divided_per_common_difference.map(&:shift)
+  # TODO: 変数名をtransposedに変更する 修正後このコメントは削除する
+  directory_contents_sorted_for_display = Array.new(common_difference) do
+    directory_contents_divided_per_common_difference.map(&:shift)
   end
-  directory_contents_sorted_for_display.each do |row|
-    row.map! { |filename| filename.nil? ? ' ' : filename }
+
+  directory_contents_sorted_for_display.map do |row|
+    row.map { |filename| filename.nil? ? ' ' : filename }
   end
 end
 
