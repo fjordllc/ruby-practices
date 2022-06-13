@@ -19,11 +19,7 @@ def calendar(year, month)
     date = Date.new(year, month, day)
     date.cwday.times { print "\s" * 3 } if day == 1
     print "\s" if day / 10 == 0
-    if date == Date.today
-      print "\e[30;47m#{day}\e[0m"
-    else
-      print day
-    end
+    print "#{ date == Date.today ? "\e[30;47m#{day}\e[0m" : day }"
     print "\s"
     print "\n" if date.saturday?
   end
