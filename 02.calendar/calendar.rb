@@ -2,10 +2,8 @@ require 'optparse'
 require 'date'
 
 options = ARGV.getopts('y:', 'm:')
-
 year = options['y']
 year ||= Date.today.year
-
 month = options['m']
 month ||= Date.today.month
 
