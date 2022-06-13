@@ -17,23 +17,15 @@ def calendar(year, month)
   last_day_of_the_month = Date.new(year, month, -1).day
   (1..last_day_of_the_month).each do |day|
     date = Date.new(year, month, day)
-    if day == 1
-      date.cwday.times do
-        print "\s" * 3
-      end
-    end
-    if day / 10 == 0
-      print "\s"
-    end
+    date.cwday.times { print "\s" * 3 } if day == 1
+    print "\s" if day / 10 == 0
     if date == Date.today
       print "\e[30;47m#{day}\e[0m"
     else
       print day
     end
     print "\s"
-    if date.saturday?
-      print "\n"
-    end
+    print "\n" if date.saturday?
   end
 end
 
