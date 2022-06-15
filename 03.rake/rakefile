@@ -1,0 +1,20 @@
+# frozen_string_literal: true
+
+require 'rake/clean'
+
+CC   = 'gcc'
+SRCS = FileList['**/*.c']
+OBJS = SRCS.ext('o')
+
+CLEAN.include(OBJS)
+CLOBBER.include('calculate_square_area')
+
+task 'default' => 'calculate_square_area'
+
+file 'calculate_square_area' => OBJS do |t|
+  sh "#{CC} -o #{t.name} #{t.prerequisites.join(' ')}"
+end
+
+rule '.o' => '.c' do |t|
+  sh "#{CC} -c #{t.source}"
+end
