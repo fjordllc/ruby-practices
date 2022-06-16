@@ -23,27 +23,23 @@ def exec_l_option(all_files)
   files_info = acquire_file_info(all_files)
   total_block = acquire_total_block(files_info)
   puts "total #{total_block}"
-  display_l(files_info, all_files)
+  display_outcome_of_l_option(files_info, all_files)
 end
 
 def exec_no_option(all_files)
   files_in_columns = get_transposed_all_files(all_files)
-  display_n(files_in_columns)
-  exit
+  display_outcome_of_no_option(files_in_columns)
 end
 
 def acquire_file_info(all_files)
-  all_files.map do |file|
-    File.stat(file)
-  end
+  all_files.map { |file| File.stat(file) }
 end
 
 def acquire_total_block(files_info)
-  blocks = files_info.map(&:blocks)
-  blocks.sum
+  files_info.map(&:blocks).sum
 end
 
-def display_l(files_info, all_files)
+def display_outcome_of_l_option(files_info, all_files)
   file_modes = acquire_file_modes(files_info)
   links = acquire_links(files_info)
   names = acquire_names(files_info)
@@ -161,7 +157,7 @@ def get_transposed_all_files(all_files)
   end
 end
 
-def display_n(files_in_columns)
+def display_outcome_of_no_option(files_in_columns)
   files_in_columns.each do |column|
     puts column.join
   end
