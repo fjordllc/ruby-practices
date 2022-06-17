@@ -8,26 +8,33 @@ ROW_NUM = 3
 ROW_MAX_WIDTH = 24
 
 def main
-  all_files = Dir.glob('*').sort
   opt = OptionParser.new
-  opt.on('-a')
-  opt.on('-l')
-  opt.on('-r')
-
-  opt.parse(ARGV)
-  if ARGV == ['-a']
-    exec_a_option
-  elsif ARGV == ['-l']
+  options = ARGV.getopts('lar')
+  all_files = get_all_files(options)
+  if options ['a']
+    exec_a_option(all_files)
+  elsif options ['l']
     exec_l_option(all_files)
-  elsif ARGV == ['-r']
+  elsif options ['r']
     exec_r_option(all_files)
   else
     exec_no_option(all_files)
   end
 end
 
-def exec_a_option
-  all_files = Dir.glob('*', File::FNM_DOTMATCH).sort
+def get_all_files(options)
+  if options.include? 'a'
+    Dir.glob('*', File::FNM_DOTMATCH).sort
+  else
+    Dir.glob('*').sort
+  end
+end
+
+def exec_multiple_options
+  files_info = acquire_file_info(all_files)
+end
+
+def exec_a_option(all_files)
   files_info = acquire_file_info(all_files)
   files_in_columns = get_transposed_all_files(all_files)
   display_outcome_of_no_option(files_in_columns)
