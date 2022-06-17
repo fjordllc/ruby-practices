@@ -58,11 +58,15 @@ def get_target_contents(target_name, params)
     [File.basename(target_name)]
   when 'directory'
     if params[:a] == true
-      Dir.glob('*', File::FNM_DOTMATCH, base: target_name, sort: true)
+      get_directory_contents(target_name, flags: File::FNM_DOTMATCH)
     else
-      Dir.glob('*', base: target_name, sort: true)
+      get_directory_contents(target_name)
     end
   end
+end
+
+def get_directory_contents(target_name, flags: 0)
+  Dir.glob('*', flags: flags, base: target_name, sort: true)
 end
 
 directory_contents = get_target_contents(target_name, params)
