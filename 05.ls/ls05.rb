@@ -10,13 +10,27 @@ ROW_MAX_WIDTH = 24
 def main
   all_files = Dir.glob('*').sort
   opt = OptionParser.new
+  opt.on('-a')
   opt.on('-l')
+  opt.on('-r')
+
   opt.parse(ARGV)
-  if ARGV == ['-l']
+  if ARGV == ['-a']
+    exec_a_option
+  elsif ARGV == ['-l']
     exec_l_option(all_files)
+  elsif ARGV == ['-r']
+    exec_r_option(all_files)
   else
     exec_no_option(all_files)
   end
+end
+
+def exec_a_option
+  all_files = Dir.glob('*', File::FNM_DOTMATCH).sort
+  files_info = acquire_file_info(all_files)
+  files_in_columns = get_transposed_all_files(all_files)
+  display_outcome_of_no_option(files_in_columns)
 end
 
 def exec_l_option(all_files)
@@ -24,6 +38,12 @@ def exec_l_option(all_files)
   total_block = acquire_total_block(files_info)
   puts "total #{total_block}"
   display_outcome_of_l_option(files_info, all_files)
+end
+
+def exec_r_option(all_files)
+  files_info = acquire_file_info(all_files.reverse)
+  files_in_columns = get_transposed_all_files(all_files.reverse)
+  display_outcome_of_no_option(files_in_columns)
 end
 
 def exec_no_option(all_files)
