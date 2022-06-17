@@ -28,17 +28,9 @@ end
 def exec_option(params, all_files)
   if params['l']
     exec_l_option(all_files)
-  elsif params ['a'] || params ['r']
-    exec_a_or_r_option(all_files)
   else
-    exec_no_option(all_files)
+    exec_other_options(all_files)
   end
-end
-
-def exec_a_or_r_option(all_files)
-  acquire_file_info(all_files)
-  files_in_columns = get_transposed_all_files(all_files)
-  display_outcome_of_no_option(files_in_columns)
 end
 
 def exec_l_option(all_files)
@@ -48,7 +40,7 @@ def exec_l_option(all_files)
   display_outcome_of_l_option(files_info, all_files)
 end
 
-def exec_no_option(all_files)
+def exec_other_options(all_files)
   files_in_columns = get_transposed_all_files(all_files)
   display_outcome_of_no_option(files_in_columns)
 end
