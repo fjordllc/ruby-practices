@@ -8,34 +8,35 @@ ROW_NUM = 3
 ROW_MAX_WIDTH = 24
 
 def main
-  opt = OptionParser.new
-  options = ARGV.getopts('lar')
-  all_files = get_all_files(options)
-  if options ['a']
-    exec_a_option(all_files)
-  elsif options ['l']
-    exec_l_option(all_files)
-  elsif options ['r']
-    exec_r_option(all_files)
-  else
-    exec_no_option(all_files)
-  end
+  params = ARGV.getopts('alr')
+  all_files = get_all_files(params)
+  exec_option(params, all_files)
 end
 
-def get_all_files(options)
-  if options.include? 'a'
+def get_all_files(params)
+  if params ['a'] && params ['r']
+    Dir.glob('*', File::FNM_DOTMATCH).sort.reverse
+  elsif params ['a']
     Dir.glob('*', File::FNM_DOTMATCH).sort
+  elsif params ['r']
+    Dir.glob('*').sort.reverse
   else
     Dir.glob('*').sort
   end
 end
 
-def exec_multiple_options
-  files_info = acquire_file_info(all_files)
+def exec_option(params, all_files)
+  if params['l']
+    exec_l_option(all_files)
+  elsif params ['a'] || params ['r']
+    exec_a_or_r_option(all_files)
+  else
+    exec_no_option(all_files)
+  end
 end
 
-def exec_a_option(all_files)
-  files_info = acquire_file_info(all_files)
+def exec_a_or_r_option(all_files)
+  acquire_file_info(all_files)
   files_in_columns = get_transposed_all_files(all_files)
   display_outcome_of_no_option(files_in_columns)
 end
@@ -45,12 +46,6 @@ def exec_l_option(all_files)
   total_block = acquire_total_block(files_info)
   puts "total #{total_block}"
   display_outcome_of_l_option(files_info, all_files)
-end
-
-def exec_r_option(all_files)
-  files_info = acquire_file_info(all_files.reverse)
-  files_in_columns = get_transposed_all_files(all_files.reverse)
-  display_outcome_of_no_option(files_in_columns)
 end
 
 def exec_no_option(all_files)
