@@ -8,8 +8,6 @@ month = options['m']
 month ||= Date.today.month
 
 def calendar(year, month)
-  year = year.to_i
-  month = month.to_i
   puts "      #{month}月 #{year}"
   puts "日 月 火 水 木 金 土"
   (1..Date.new(year, month, -1).day).each do |day|
