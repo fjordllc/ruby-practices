@@ -1,9 +1,15 @@
 # frozen_string_literal: true
 
-MAX_NUMBER_OF_COLUMNS = 3
+require 'optparse'
+opt = OptionParser.new
+params = {}
 
-stdin = ARGV[0]
-target_name = stdin || '.'
+opt.on('-a') { |v| v }
+
+opt.parse!(ARGV, into: params)
+target_name = ARGV[0] || '.'
+
+MAX_NUMBER_OF_COLUMNS = 3
 
 def main(directory_contents)
   display_width = calculate_display_width(directory_contents)
@@ -46,18 +52,15 @@ def print_filename(array_for_display, display_width)
   end
 end
 
-def validate_file_or_directory(target_name)
-  filetype = File.ftype(target_name)
-  case filetype
-  when 'directory'
-    Dir.glob('*', base: target_name, sort: true)
+def get_target_contents(target_name, params)
+  case File.ftype(target_name)
   when 'file'
     [File.basename(target_name)]
+  when 'directory'
+    flags = params[:a] ? File::FNM_DOTMATCH : 0
+    Dir.glob('*', flags: flags, base: target_name, sort: true)
   end
-rescue SystemCallError
-  puts '存在するディレクトリ名もしくはファイル名を指定してください'
-  raise
 end
 
-directory_contents = validate_file_or_directory(target_name)
+directory_contents = get_target_contents(target_name, params)
 main(directory_contents)
