@@ -22,4 +22,4 @@ def calendar(year, month)
   end
 end
 
-calendar(year, month)
+calendar(year.to_i, month.to_i)
