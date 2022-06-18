@@ -1,12 +1,6 @@
 require 'optparse'
 require 'date'
 
-options = ARGV.getopts('y:', 'm:')
-year = options['y']
-year ||= Date.today.year
-month = options['m']
-month ||= Date.today.month
-
 def calendar(year, month)
   puts "      #{month}月 #{year}"
   puts "日 月 火 水 木 金 土"
@@ -19,5 +13,11 @@ def calendar(year, month)
     print "\n" if date.saturday?
   end
 end
+
+options = ARGV.getopts('y:', 'm:')
+year = options['y']
+year ||= Date.today.year
+month = options['m']
+month ||= Date.today.month
 
 calendar(year.to_i, month.to_i)
