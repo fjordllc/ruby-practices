@@ -7,8 +7,7 @@ def calendar(year, month)
   (Date.new(year, month, 1)..Date.new(year, month, -1)).each do |date|
     day = date.day
     date.cwday.times { print "\s" * 3 } if day == 1 && date.cwday < 7
-    print "\s" if day / 10 == 0
-    print date == Date.today ? "\e[30;47m#{day}\e[0m" : day
+    print date == Date.today ? "\e[30;47m#{day.to_s.rjust(2)}\e[0m" : day.to_s.rjust(2)
     print "\s"
     print "\n" if date.saturday?
   end
