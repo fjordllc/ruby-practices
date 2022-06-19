@@ -5,6 +5,7 @@ opt = OptionParser.new
 params = {}
 
 opt.on('-a') { |v| v }
+opt.on('-r') { |v| v }
 
 opt.parse!(ARGV, into: params)
 target_name = ARGV[0] || '.'
@@ -33,20 +34,16 @@ def create_array_for_display(directory_contents)
   directory_contents_divided_per_common_difference =
     directory_contents.each_slice(common_difference).to_a
 
-  transposed_directory_contents = Array.new(common_difference) do
+  Array.new(common_difference) do
     directory_contents_divided_per_common_difference.map(&:shift)
-  end
-
-  transposed_directory_contents.map do |row|
-    row.map { |filename| filename.nil? ? ' ' : filename }
   end
 end
 
 def print_filename(array_for_display, display_width)
   array_for_display.each do |row|
     row.each do |file|
-      number_of_not_ascii_character = file.chars.count { |x| !x.ascii_only? }
-      print file.ljust(display_width - number_of_not_ascii_character)
+      number_of_not_ascii_character = file&.chars&.count { |x| !x.ascii_only? }
+      print file&.ljust(display_width - number_of_not_ascii_character)
     end
     puts "\n"
   end
@@ -58,7 +55,9 @@ def get_target_contents(target_name, params)
     [File.basename(target_name)]
   when 'directory'
     flags = params[:a] ? File::FNM_DOTMATCH : 0
-    Dir.glob('*', flags: flags, base: target_name, sort: true)
+    Dir.glob('*', flags: flags, base: target_name).sort.then do |array|
+      params[:r] ? array.reverse : array
+    end
   end
 end
 
