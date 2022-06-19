@@ -6,8 +6,8 @@ def get_files(path)
   files.filter { |file| file&.chr != '.' }
 end
 
-def print_files(filename)
-  files = get_files(filename)
+def print_files(file_name)
+  files = get_files(file_name)
   # カラムを変更する変数
   columns = 3
   number_row = files.length % columns ? files.length / columns + 1 : files.length
