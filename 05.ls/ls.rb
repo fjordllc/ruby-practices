@@ -17,7 +17,7 @@ class LS
   end
 
   def print_files
-    files = read_files
+    files = exec
     # カラムを変更する変数
     columns = 3
     number_of_rows = (files.length % columns).zero? ? files.length / columns : files.length / columns + 1
