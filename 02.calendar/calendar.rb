@@ -14,9 +14,7 @@ def calendar(year, month)
 end
 
 options = ARGV.getopts('y:', 'm:')
-year = options['y']
-year ||= Date.today.year
-month = options['m']
-month ||= Date.today.month
+year = options['y'] || Date.today.year
+month = options['m'] || Date.today.month
 
 calendar(year.to_i, month.to_i)
