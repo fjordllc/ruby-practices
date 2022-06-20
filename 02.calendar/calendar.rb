@@ -8,7 +8,7 @@ def calendar(year, month)
     day = date.day.to_s.rjust(2)
     date.cwday.times { print "\s" * 3 } if day == 1 && !date.sunday?
     print date == Date.today ? "\e[30;47m#{day}\e[0m" : day
-    print "\s"
+    print "\s" unless date.saturday?
     print "\n" if date.saturday?
   end
 end
