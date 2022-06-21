@@ -7,17 +7,16 @@ class LS
     opt = OptionParser.new
     @option = {}
 
-    opt.on('-a path') { |v| @option[:a] = v }
+    opt.on('-a') { |v| @option[:a] = v }
     opt.parse!(ARGV)
   end
 
   def read_files
-    if @option.empty?
-      files = ARGV.any? ? Dir.entries(ARGV[0]) - %w[. ..] : Dir.entries('.') - %w[. ..]
-      files = files.filter { |file| file&.chr != '.' }
-    else
-      files = @option ? Dir.entries(@option[:a]) - %w[. ..] : Dir.entries('.') - %w[. ..]
-    end
+    files = if @option.empty?
+              Dir.glob('*')
+            else
+              Dir.glob('*', File::FNM_DOTMATCH)
+            end
     files.sort
   end
 
