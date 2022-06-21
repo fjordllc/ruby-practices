@@ -1,29 +1,33 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# 引数に入力したディレクトリの内容一覧を配列として取得
+require 'optparse'
+
 def load_dir(dir)
-  list = []
-  Dir.each_child(dir) do |f|
-    list << f
-  end
-  list
+  Dir.each_child(dir).to_a
 end
 
-# 引数に入力した列数でディレクトリの内容一覧を表示
 def sort_list(max_column)
-  max_low = load_dir('test').size / max_column + 1 # 表示する行数の最大を計算
+  ls_dir = ARGV[0]
+  ls_dir ||= '.'
 
-  splited_list = load_dir('test').sort.each_slice(max_low).to_a # 行と列を入れ替えるために多次元配列に分割
+  directory_list = load_dir(ls_dir)
 
-  sorted_list = splited_list.map do |a| # transposeメソッドを使うために各配列の要素数を揃える
-    a.values_at(0..max_low - 1)
+  max_word_count = directory_list.max_by(&:length).length
+  max_row = directory_list.size / max_column + 1
+
+  splited_list = directory_list.sort.each_slice(max_row).to_a
+
+  sorted_list = splited_list.map do |file_names|
+    file_names.values_at(0..max_row - 1).map do |file_name|
+      file_name ||= ''
+      file_name.ljust(5 + max_word_count)
+    end
   end
 
-  sorted_list.transpose.each do |files| # 行と列を入れ替え
-    print "#{files.join('      ')}\n"
+  sorted_list.transpose.each do |c1|
+    puts c1.join('')
   end
 end
 
-load_dir('test')
 sort_list(3)
