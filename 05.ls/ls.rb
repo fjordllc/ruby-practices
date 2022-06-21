@@ -8,6 +8,7 @@ class LS
     @option = {}
 
     opt.on('-a') { |v| @option[:a] = v }
+    opt.on('-r') { |v| @option[:r] = v }
     opt.parse!(ARGV)
   end
 
