@@ -11,9 +11,14 @@ class LS
     opt.parse!(ARGV)
   end
 
-  def read_files
-    files = Dir.glob('*', @option[:a] ? File::FNM_DOTMATCH : 0)
-    files.sort
+  def exec
+    if @option.empty?
+      Dir.glob('*')
+    elsif @option[:r]
+      Dir.glob('*').reverse
+    else
+      Dir.glob('*', File::FNM_DOTMATCH)
+    end
   end
 
   def print_files
