@@ -10,22 +10,20 @@ ROW_MAX_WIDTH = 24
 def main
   params = ARGV.getopts('alr')
   all_files = get_all_files(params)
-  exec_option(params, all_files)
+  get_result(params, all_files)
 end
 
 def get_all_files(params)
-  if params ['a'] && params ['r']
-    Dir.glob('*', File::FNM_DOTMATCH).sort.reverse
-  elsif params ['a']
-    Dir.glob('*', File::FNM_DOTMATCH).sort
-  elsif params ['r']
-    Dir.glob('*').sort.reverse
-  else
-    Dir.glob('*').sort
-  end
+  files = if params['a']
+            Dir.glob('*', File::FNM_DOTMATCH).sort
+          else
+            Dir.glob('*').sort
+          end
+  files = files.reverse if params['r']
+  files
 end
 
-def exec_option(params, all_files)
+def get_result(params, all_files)
   if params['l']
     exec_l_option(all_files)
   else
@@ -42,7 +40,7 @@ end
 
 def exec_other_options(all_files)
   files_in_columns = get_transposed_all_files(all_files)
-  display_outcome_of_no_option(files_in_columns)
+  display_outcome_of_other_options(files_in_columns)
 end
 
 def acquire_file_info(all_files)
@@ -171,7 +169,7 @@ def get_transposed_all_files(all_files)
   end
 end
 
-def display_outcome_of_no_option(files_in_columns)
+def display_outcome_of_other_options(files_in_columns)
   files_in_columns.each do |column|
     puts column.join
   end
