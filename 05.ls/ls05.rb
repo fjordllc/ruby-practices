@@ -10,7 +10,7 @@ ROW_MAX_WIDTH = 24
 def main
   params = ARGV.getopts('alr')
   all_files = get_all_files(params)
-  get_result(params, all_files)
+  display(params, all_files)
 end
 
 def get_all_files(params)
@@ -19,7 +19,7 @@ def get_all_files(params)
   files
 end
 
-def get_result(params, all_files)
+def display(params, all_files)
   if params['l']
     exec_l_option(all_files)
   else
