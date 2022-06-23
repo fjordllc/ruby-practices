@@ -26,7 +26,7 @@ class LS
     columns = 3
     number_of_rows = (files.length % columns).zero? ? files.length / columns : files.length / columns + 1
     tab_files = files.each_slice(number_of_rows).to_a
-    (0..(number_of_rows - 1)).each do |i|
+    number_of_rows.times do |i|
       lines = tab_files.map { |file| file[i]&.slice(0, 15)&.ljust(20) unless file[i].nil? }.compact
       puts lines.join('')
     end
