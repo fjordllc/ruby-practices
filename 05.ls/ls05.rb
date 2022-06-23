@@ -14,11 +14,7 @@ def main
 end
 
 def get_all_files(params)
-  files = if params['a']
-            Dir.glob('*', File::FNM_DOTMATCH).sort
-          else
-            Dir.glob('*').sort
-          end
+  files = params['a'] ? Dir.glob('*', File::FNM_DOTMATCH).sort : Dir.glob('*').sort
   files = files.reverse if params['r']
   files
 end
