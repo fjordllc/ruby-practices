@@ -114,12 +114,8 @@ def get_target_contents(target_name)
   end
 end
 
-def remove_filename(target_path)
-  target_path.gsub!(%r{/#{File.basename(target_path)}}, '')
-end
-
 directory_flag = File.ftype(target_path) == 'directory'
-remove_filename(target_path) unless directory_flag
+target_path.gsub!(%r{/#{File.basename(target_path)}}, '') unless directory_flag
 
 target_contents = get_target_contents(target_name)
 target_contents = convert_long_format(target_contents, target_path, directory_flag) if params[:l]
