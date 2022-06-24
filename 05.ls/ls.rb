@@ -30,7 +30,7 @@ def main(target_name, params)
   else
     display_width = calculate_display_width(target_contents)
     array_for_display = create_array_for_display(target_contents, params)
-    print_filename(array_for_display, display_width, params, directory_flag)
+    print_filename(array_for_display, display_width)
   end
 end
 
@@ -107,10 +107,7 @@ def create_array_for_display(target_contents, params)
   end
 end
 
-def print_filename(array_for_display, display_width, params, directory_flag)
-  # ブロック数を表示
-  puts "total #{array_for_display.shift[0]}" if params[:l] && directory_flag
-
+def print_filename(array_for_display, display_width)
   array_for_display.each do |row|
     row.each do |file|
       number_of_not_ascii_character = file&.chars&.count { |x| !x.ascii_only? }
