@@ -3,6 +3,7 @@
 require_relative 'filestat_constants'
 require 'etc'
 require 'optparse'
+
 opt = OptionParser.new
 params = {}
 
@@ -10,14 +11,78 @@ opt.on('-l') { |v| v }
 
 opt.parse!(ARGV, into: params)
 target_name = ARGV[0] || '.'
-target_path = File.expand_path(target_name)
 
 MAX_NUMBER_OF_COLUMNS = 3
 
-def main(target_contents, params, directory_flag)
-  display_width = calculate_display_width(target_contents)
-  array_for_display = create_array_for_display(target_contents, params)
-  print_filename(array_for_display, display_width, params, directory_flag)
+def main(target_name, params)
+  target_contents = get_contents(target_name)
+
+  if params[:l]
+    target_path = File.expand_path(target_name)
+    directory_flag = File.ftype(target_path) == 'directory'
+    target_path.gsub!(%r{/#{File.basename(target_path)}}, '') unless directory_flag
+
+    file_blocks = sum_file_blocks(target_contents, target_path)
+    longformat_contents = to_long_format(target_contents, target_path)
+
+    puts "total #{file_blocks}" if directory_flag
+    longformat_contents.each { |file| puts file }
+  else
+    display_width = calculate_display_width(target_contents)
+    array_for_display = create_array_for_display(target_contents, params)
+    print_filename(array_for_display, display_width, params, directory_flag)
+  end
+end
+
+def get_contents(target_name)
+  if File.ftype(target_name) == 'directory'
+    Dir.glob('*', base: target_name).sort
+  else
+    [File.basename(target_name)]
+  end
+end
+
+def sum_file_blocks(contents_array, target_path)
+  contents_array.map do |file|
+    File.lstat("#{target_path}/#{file}").blocks
+  end.sum
+end
+
+def to_long_format(target_contents, target_path)
+  target_contents.map do |file|
+    fs = File.lstat("#{target_path}/#{file}")
+
+    mode = fs.mode.to_s(8).rjust(6, '0')
+    filetype = FILETYPE[mode[0..1]]
+    special_permission = SPECIAL_PERMISSION[mode[2]]
+    permission = mode[3..5].chars
+                           .map { |modevalue| PERMISSION[modevalue] }
+                           .join
+    apply_special_permission(special_permission, permission)
+    mode = "#{filetype}#{permission}"
+
+    links = fs.nlink.to_s.rjust(2)
+    uname = Etc.getpwuid(fs.uid).name
+    gname = Etc.getgrgid(fs.gid).name
+    size = fs.size.to_s.rjust(5)
+    datetime = fs.mtime.strftime('%m %e %R')
+    symlink = "-> #{File.readlink("#{target_path}/#{file}")}" if filetype == 'l'
+
+    "#{mode}  #{links} #{uname}  #{gname} #{size} #{datetime} #{file} #{symlink}"
+  end
+end
+
+def apply_special_permission(special_permission, permission)
+  return if special_permission == 'none'
+
+  case special_permission
+  when 'stickybit'
+    permission[8] = permission[8] == 'x' ? 't' : 'T'
+  when 'sgid'
+    permission[5] = permission[5] == 'x' ? 's' : 'S'
+  when 'suid'
+    permission[2] = permission[2] == 'x' ? 's' : 'S'
+  end
 end
 
 def calculate_display_width(target_contents)
@@ -55,69 +120,4 @@ def print_filename(array_for_display, display_width, params, directory_flag)
   end
 end
 
-def convert_long_format(contents_array, target_path, directory_flag)
-  file_blocks = sum_file_blocks(contents_array, target_path)
-  contents_array = to_long_format(contents_array, target_path)
-  return contents_array unless directory_flag
-
-  contents_array.unshift(file_blocks)
-end
-
-def sum_file_blocks(contents_array, target_path)
-  contents_array.map do |file|
-    File.lstat("#{target_path}/#{file}").blocks
-  end.sum
-end
-
-def to_long_format(contents_array, target_path)
-  contents_array.map do |file|
-    fs = File.lstat("#{target_path}/#{file}")
-
-    mode = fs.mode.to_s(8).rjust(6, '0')
-    filetype = FILETYPE[mode[0..1]]
-    special_permission = SPECIAL_PERMISSION[mode[2]]
-    permission = mode[3..5].chars
-                           .map { |modevalue| PERMISSION[modevalue] }
-                           .join
-    apply_special_permission(special_permission, permission)
-    mode = "#{filetype}#{permission}"
-
-    links = fs.nlink.to_s.rjust(2)
-    uname = Etc.getpwuid(fs.uid).name
-    gname = Etc.getgrgid(fs.gid).name
-    size = fs.size.to_s.rjust(5)
-    datetime = fs.mtime.strftime('%m %e %R')
-    symlink = "-> #{File.readlink("#{target_path}/#{file}")}" if filetype == 'l'
-
-    "#{mode}  #{links} #{uname}  #{gname} #{size} #{datetime} #{file} #{symlink}"
-  end
-end
-
-def apply_special_permission(special_permission, permission)
-  return if special_permission == 'none'
-
-  case special_permission
-  when 'stickybit'
-    permission[8] = permission[8] == 'x' ? 't' : 'T'
-  when 'sgid'
-    permission[5] = permission[5] == 'x' ? 's' : 'S'
-  when 'suid'
-    permission[2] = permission[2] == 'x' ? 's' : 'S'
-  end
-end
-
-def get_target_contents(target_name)
-  if File.ftype(target_name) == 'directory'
-    Dir.glob('*', base: target_name).sort
-  else
-    [File.basename(target_name)]
-  end
-end
-
-directory_flag = File.ftype(target_path) == 'directory'
-target_path.gsub!(%r{/#{File.basename(target_path)}}, '') unless directory_flag
-
-target_contents = get_target_contents(target_name)
-target_contents = convert_long_format(target_contents, target_path, directory_flag) if params[:l]
-
-main(target_contents, params, directory_flag)
+main(target_name, params)
