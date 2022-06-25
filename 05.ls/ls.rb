@@ -1,10 +1,8 @@
 # frozen_string_literal: true
-require 'debug'
+
 require_relative 'filestat_constants'
 require 'etc'
 require 'optparse'
-
-opt = OptionParser.new
 
 params = ARGV.getopts('a', 'l')
 target_name = ARGV[0] || '.'
