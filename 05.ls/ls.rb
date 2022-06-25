@@ -1,23 +1,20 @@
 # frozen_string_literal: true
-
+require 'debug'
 require_relative 'filestat_constants'
 require 'etc'
 require 'optparse'
 
 opt = OptionParser.new
-params = {}
 
-opt.on('-l') { |v| v }
-
-opt.parse!(ARGV, into: params)
+params = ARGV.getopts('a', 'l')
 target_name = ARGV[0] || '.'
 
 MAX_NUMBER_OF_COLUMNS = 3
 
 def main(target_name, params)
-  target_contents = get_contents(target_name)
+  target_contents = get_contents(target_name, params)
 
-  if params[:l]
+  if params['l']
     target_path = File.expand_path(target_name)
     directory_flag = File.ftype(target_path) == 'directory'
     target_path.gsub!(%r{/#{File.basename(target_path)}}, '') unless directory_flag
@@ -34,9 +31,10 @@ def main(target_name, params)
   end
 end
 
-def get_contents(target_name)
+def get_contents(target_name, params)
   if File.ftype(target_name) == 'directory'
-    Dir.glob('*', base: target_name).sort
+    flags = params['a'] ? File::FNM_DOTMATCH : 0
+    Dir.glob('*', flags: flags, base: target_name).sort
   else
     [File.basename(target_name)]
   end
