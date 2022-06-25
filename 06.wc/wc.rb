@@ -41,6 +41,23 @@ def display(files)
   num_of_lines.zip(num_of_words, size_of_file, file_name).each do |row|
     puts row.join
   end
+  total(files) if files.length > 1
+end
+
+def total(files)
+  lines = files.map do |file|
+    content = File.open(file).read
+    content.count("\n")
+  end
+  words = files.map do |file|
+    content = File.open(file).read
+    content.split(/\s+/).size
+  end
+  sizes = words = files.map do |file|
+    File::Stat.new(file).size
+  end
+
+  puts "#{lines.sum.to_s.rjust(8)}#{words.sum.to_s.rjust(8)}#{sizes.sum.to_s.rjust(8)} total"
 end
 
 main
