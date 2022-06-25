@@ -8,14 +8,22 @@ ROW_NUM = 3
 ROW_MAX_WIDTH = 24
 
 def main
-  all_files = Dir.glob('*').sort
-  opt = OptionParser.new
-  opt.on('-l')
-  opt.parse(ARGV)
-  if ARGV == ['-l']
+  params = ARGV.getopts('alr')
+  all_files = get_all_files(params)
+  display(params, all_files)
+end
+
+def get_all_files(params)
+  files = params['a'] ? Dir.glob('*', File::FNM_DOTMATCH).sort : Dir.glob('*').sort
+  files = files.reverse if params['r']
+  files
+end
+
+def display(params, all_files)
+  if params['l']
     exec_l_option(all_files)
   else
-    exec_no_option(all_files)
+    exec_other_options(all_files)
   end
 end
 
@@ -26,9 +34,9 @@ def exec_l_option(all_files)
   display_outcome_of_l_option(files_info, all_files)
 end
 
-def exec_no_option(all_files)
+def exec_other_options(all_files)
   files_in_columns = get_transposed_all_files(all_files)
-  display_outcome_of_no_option(files_in_columns)
+  display_outcome_of_other_options(files_in_columns)
 end
 
 def acquire_file_info(all_files)
@@ -157,7 +165,7 @@ def get_transposed_all_files(all_files)
   end
 end
 
-def display_outcome_of_no_option(files_in_columns)
+def display_outcome_of_other_options(files_in_columns)
   files_in_columns.each do |column|
     puts column.join
   end
