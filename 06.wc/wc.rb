@@ -17,12 +17,14 @@ def display(params, files)
 end
 
 def exec_no_option(files)
-  num_of_lines = acquire_num_of_lines(files)
-  num_of_words = acquire_num_of_words(files)
-  size_of_file = acquire_size_of_file(files)
-  file_name = acquire_file_name(files)
-  num_of_lines.zip(num_of_words, size_of_file, file_name).each do |row|
-    puts row.join
+  stats = [
+    acquire_num_of_lines(files),
+    acquire_num_of_words(files),
+    acquire_size_of_file(files),
+    acquire_file_name(files)
+  ]
+  stats.transpose.each do |stat|
+    puts stat.join
   end
   no_option_total(files) if files.length > 1
 end
@@ -36,6 +38,7 @@ def exec_options(params, files)
   stats.transpose.each do |stat|
     puts stat.join
   end
+  options_total(files, params) if files.length > 1
 end
 
 def acquire_num_of_lines(files)
@@ -55,11 +58,22 @@ def acquire_file_name(files)
 end
 
 def no_option_total(files)
-  num_of_lines = files.map { |file| File.open(file).read.count("\n") }
-  num_of_words = files.map { |file| File.open(file).read.split(/\s+/).size }
-  num_of_sizes = files.map { |file| File::Stat.new(file).size }
+  total_num_of_lines = files.map { |file| File.open(file).read.count("\n") }.sum.to_s.rjust(MAX_WIDTH)
+  total_num_of_words = files.map { |file| File.open(file).read.split(/\s+/).size }.sum.to_s.rjust(MAX_WIDTH)
+  total_num_of_sizes = files.map { |file| File::Stat.new(file).size }.sum.to_s.rjust(MAX_WIDTH)
 
-  puts "#{num_of_lines.sum.to_s.rjust(MAX_WIDTH)}#{num_of_words.sum.to_s.rjust(MAX_WIDTH)}#{num_of_sizes.sum.to_s.rjust(MAX_WIDTH)} total"
+  totals = [total_num_of_lines, total_num_of_words, total_num_of_sizes]
+
+  puts "#{totals.join} total"
+end
+
+def options_total(files, params)
+  totals = []
+  totals = totals << files.map { |file| File.open(file).read.count("\n") }.sum.to_s.rjust(MAX_WIDTH) if params['l']
+  totals = totals << files.map { |file| File.open(file).read.split(/\s+/).size }.sum.to_s.rjust(MAX_WIDTH) if params['w']
+  totals = totals << files.map { |file| File::Stat.new(file).size }.sum.to_s.rjust(MAX_WIDTH) if params['c']
+
+  puts "#{totals.join} total"
 end
 
 main
