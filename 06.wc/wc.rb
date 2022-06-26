@@ -1,63 +1,54 @@
 require 'optparse'
 
+MAX_WIDTH = 8
+
 def main
-  files = ARGV
   params = ARGV.getopts('clw')
-  display(files)
+  files = ARGV
+  display(params, files)
+  total(files) if files.length > 1
 end
 
-def acquire_num_of_lines(files)
-  files.map do |file|
-    content = File.open(file).read
-    content.count("\n").to_s.rjust(8)
+def display(params, files)
+  if params['l']
+    exec_l_option(files)
+  else
+    exec_no_option(files)
   end
 end
 
-def acquire_num_of_words(files)
-  files.map do |file|
-    content = File.open(file).read
-    content.split(/\s+/).size.to_s.rjust(8)
-  end
+def exec_l_option(files)
+  files.map { |file| File.open(file).read.count("\n").to_s.rjust(MAX_WIDTH) }
 end
 
-def acquire_size_of_file(files)
-  files.map do |file|
-    content = File.open(file).read
-    File::Stat.new(file).size.to_s.rjust(8)
-  end
+def exec_w_option(files)
+  files.map { |file| File.open(file).read.split(/\s+/).size.to_s.rjust(MAX_WIDTH) }
+end
+
+def exec_c_option(files)
+  files.map { |file| File::Stat.new(file).size.to_s.rjust(MAX_WIDTH) }
 end
 
 def acquire_file_name(files)
-  files.map do |file|
-    " #{file}"
-  end
+  files.map { |file| " #{file}" }
 end
 
-def display(files)
-  num_of_lines = acquire_num_of_lines(files)
-  num_of_words = acquire_num_of_words(files)
-  size_of_file = acquire_size_of_file(files)
+def exec_no_option(files)
+  num_of_lines = exec_l_option(files)
+  num_of_words = exec_w_option(files)
+  size_of_file = exec_c_option(files)
   file_name = acquire_file_name(files)
   num_of_lines.zip(num_of_words, size_of_file, file_name).each do |row|
     puts row.join
   end
-  total(files) if files.length > 1
 end
 
 def total(files)
-  lines = files.map do |file|
-    content = File.open(file).read
-    content.count("\n")
-  end
-  words = files.map do |file|
-    content = File.open(file).read
-    content.split(/\s+/).size
-  end
-  sizes = words = files.map do |file|
-    File::Stat.new(file).size
-  end
+  num_of_lines = files.map { |file| File.open(file).read.count("\n") }
+  num_of_words = files.map { |file| File.open(file).read.split(/\s+/).size }
+  num_of_sizes = files.map { |file| File::Stat.new(file).size }
 
-  puts "#{lines.sum.to_s.rjust(8)}#{words.sum.to_s.rjust(8)}#{sizes.sum.to_s.rjust(8)} total"
+  puts "#{num_of_lines.sum.to_s.rjust(MAX_WIDTH)}#{num_of_words.sum.to_s.rjust(MAX_WIDTH)}#{num_of_sizes.sum.to_s.rjust(MAX_WIDTH)} total"
 end
 
 main
