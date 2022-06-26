@@ -5,11 +5,22 @@ MAX_WIDTH = 8
 def main
   params = ARGV.getopts('clw')
   files = ARGV
-  display(params, files)
+  info = acquire_info(files, params)
+  display(params, info, files)
   total(files) if files.length > 1
 end
 
-def display(params, files)
+def acquire_info(files, params)
+  files = files.map { |file| }
+
+  files = File.open(file).read.count("\n") if params['l']
+  files = File.open(file).read.split(/\s+/).size if params['w']
+  files = File::Stat.new(file).size if params['c']
+
+  files
+end
+
+def display(params, _info, files)
   if params['l']
     exec_l_option(files)
   else
@@ -31,6 +42,16 @@ end
 
 def acquire_file_name(files)
   files.map { |file| " #{file}" }
+end
+
+def exec_other_options(files)
+  num_of_lines = exec_l_option(files)
+  num_of_words = exec_w_option(files)
+  size_of_file = exec_c_option(files)
+  file_name = acquire_file_name(files)
+  num_of_lines.zip(num_of_words, size_of_file, file_name).each do |row|
+    puts row.join
+  end
 end
 
 def exec_no_option(files)
