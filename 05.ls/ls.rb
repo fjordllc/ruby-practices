@@ -42,13 +42,13 @@ end
 
 def sum_file_blocks(contents_array, target_path)
   contents_array.map do |file|
-    File.lstat("#{target_path}/#{file}").blocks
+    File.lstat(File.join(target_path, file)).blocks
   end.sum
 end
 
 def to_long_format(target_contents, target_path)
   target_contents.map do |file|
-    fs = File.lstat("#{target_path}/#{file}")
+    fs = File.lstat(File.join(target_path, file))
 
     mode = fs.mode.to_s(8).rjust(6, '0')
     filetype = FILETYPE[mode[0..1]]
