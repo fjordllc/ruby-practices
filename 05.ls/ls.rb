@@ -4,7 +4,7 @@ require_relative 'filestat_constants'
 require 'etc'
 require 'optparse'
 
-params = ARGV.getopts('a', 'l')
+params = ARGV.getopts('a', 'r', 'l')
 target_name = ARGV[0] || '.'
 
 MAX_NUMBER_OF_COLUMNS = 3
@@ -32,7 +32,9 @@ end
 def get_contents(target_name, params)
   if File.ftype(target_name) == 'directory'
     flags = params['a'] ? File::FNM_DOTMATCH : 0
-    Dir.glob('*', flags: flags, base: target_name).sort
+    Dir.glob('*', flags: flags, base: target_name).sort.then do |array|
+      params['r'] ? array.reverse : array
+    end
   else
     [File.basename(target_name)]
   end
