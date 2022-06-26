@@ -3,18 +3,15 @@
 
 require 'optparse'
 
-def load_dir(dir)
-  Dir.each_child(dir).to_a
-end
+MAX_COLUMN = 3
 
-def sort_list(max_column)
-  ls_dir = ARGV[0]
-  ls_dir ||= '.'
+def main
+  ls_dir = ARGV[0] || '.'
 
-  directory_list = load_dir(ls_dir)
+  directory_list = Dir.each_child(ls_dir).to_a
 
   max_word_count = directory_list.max_by(&:length).length
-  max_row = directory_list.size / max_column + 1
+  max_row = directory_list.size / MAX_COLUMN + 1
 
   splited_list = directory_list.sort.each_slice(max_row).to_a
 
@@ -25,9 +22,9 @@ def sort_list(max_column)
     end
   end
 
-  sorted_list.transpose.each do |c1|
-    puts c1.join('')
+  sorted_list.transpose.each do |file_name_line|
+    puts file_name_line.join
   end
 end
 
-sort_list(3)
+main
