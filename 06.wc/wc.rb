@@ -4,8 +4,16 @@ MAX_WIDTH = 8
 
 def main
   params = ARGV.getopts('clw')
-  files = ARGV
+  files = acquire_files
   display(params, files)
+end
+
+def acquire_files
+  if ARGV.empty?
+    nofile
+  else
+    ARGV
+  end
 end
 
 def display(params, files)
