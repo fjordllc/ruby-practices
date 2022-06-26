@@ -24,7 +24,7 @@ def main(target_name, params)
     longformat_contents.each { |file| puts file }
   else
     display_width = calculate_display_width(target_contents)
-    array_for_display = create_array_for_display(target_contents, params)
+    array_for_display = create_array_for_display(target_contents)
     print_filename(array_for_display, display_width)
   end
 end
@@ -91,11 +91,9 @@ def calculate_display_width(target_contents)
   filename_length_array.max + 5
 end
 
-def create_array_for_display(target_contents, params)
-  display_columns = params[:l] == true ? 1 : MAX_NUMBER_OF_COLUMNS
-
+def create_array_for_display(target_contents)
   # 等差数列で表示するための公差(common difference)を求める
-  common_difference = (target_contents.length / display_columns.to_f).ceil
+  common_difference = (target_contents.length / MAX_NUMBER_OF_COLUMNS.to_f).ceil
 
   target_contents_divided_per_common_difference =
     target_contents.each_slice(common_difference).to_a
