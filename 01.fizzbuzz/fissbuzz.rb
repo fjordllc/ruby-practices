@@ -17,6 +17,6 @@ def buzz?(num)
   num % 5 == 0
 end
 
-(1..20).to_a.each do |x|
+(1..20).each do |x|
   puts fizzbuss(x)
 end
