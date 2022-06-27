@@ -4,8 +4,8 @@ def fizzbuss(num = 0)
   return num unless fizz?(num) || buzz?(num)
 
   result = ''
-  result += 'FIZZ' if fizz?(num)
-  result += 'BUZZ' if buzz?(num)
+  result += 'Fizz' if fizz?(num)
+  result += 'Buzz' if buzz?(num)
   result
 end
 
