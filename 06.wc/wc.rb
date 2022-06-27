@@ -115,7 +115,7 @@ def options_total(files, params)
   totals = []
   totals = totals << num_of_lines(files).sum.to_s.rjust(MAX_WIDTH) if params['l']
   totals = totals << num_of_words(files).sum.to_s.rjust(MAX_WIDTH) if params['w']
-  totals = totals << size_of_file(files).sum.to_s.rjust(MAX_WIDTH) if params['c']
+  totals = totals << num_of_size_of_file(files).sum.to_s.rjust(MAX_WIDTH) if params['c']
 
   puts "#{totals.join} total"
 end
