@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 def fizzbuss(num = 0)
   return num unless fizz?(num) || buzz?(num)
 
