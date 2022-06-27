@@ -4,15 +4,19 @@ MAX_WIDTH = 8
 
 def main
   params = ARGV.getopts('clw')
-  files = acquire_files
-  display(params, files)
+  files = ARGV
+  if ARGV.empty?
+    display_standard_input(params)
+  else
+    display(params, files)
+  end
 end
 
-def acquire_files
-  if ARGV.empty?
-    nofile
+def display_standard_input(params)
+  if  params.values.any? == false
+    exec_standard_input_with_no_option
   else
-    ARGV
+    exec_standard_input_with_options(params)
   end
 end
 
@@ -22,6 +26,24 @@ def display(params, files)
   else
     exec_options(params, files)
   end
+end
+
+def exec_standard_input_with_options(params)
+  standard_input = $stdin.read
+  stats = []  
+  stats = stats << standard_input.count("\n").to_s.rjust(MAX_WIDTH) if params['l']
+  stats = stats << standard_input.split(/\s+/).size.to_s.rjust(MAX_WIDTH) if params['w']
+  stats = stats << standard_input.bytesize.to_s.rjust(MAX_WIDTH) if params['c']
+  puts stats.join
+end
+
+def exec_standard_input_with_no_option
+  standard_input = $stdin.read
+  puts [
+    standard_input.count("\n").to_s.rjust(MAX_WIDTH),
+    standard_input.split(/\s+/).size.to_s.rjust(MAX_WIDTH),
+    standard_input.bytesize.to_s.rjust(MAX_WIDTH)
+  ].join
 end
 
 def exec_no_option(files)
@@ -49,6 +71,7 @@ def exec_options(params, files)
   options_total(files, params) if files.length > 1
 end
 
+
 def acquire_num_of_lines(files)
   files.map { |file| File.open(file).read.count("\n") }
 end
@@ -58,7 +81,7 @@ def acquire_num_of_words(files)
 end
 
 def acquire_size_of_file(files)
-  files.map { |file| File::Stat.new(file).size }
+  files.map { |file| File.open(file).read.bytesize }
 end
 
 def acquire_file_name(files)
