@@ -6,48 +6,19 @@ require 'optparse'
 LINE_LENGTH = 20
 
 def cal
-  # 引数を受け付ける
   params = ARGV.getopts('y:m:')
 
-  # 年月の設定
-  # 引数のしていたなかったら、現在月
   if params['y'].nil? && params['m'].nil?
     date = Date.today
-  # -y -mどちらの引数もあったら、引数で指定された年月
-  elsif year?(params['y']) && month?(params['m'])
+  elsif params['y'].present? && params['m'].present?
     date = Date.new(params['y'].to_i, params['m'].to_i, 1)
   else
-    puts '引数が不正です'
-    puts '引数を設定する場合は、-yに年数（1970〜2100）、-mに月数（1〜12）を渡してください'
+    puts '引数が不正です。'
+    puts '引数を設定する場合は、-yに年数、-mに月数の両方を渡してください'
     return
   end
 
-  # 描画する
   print_cal(date)
-end
-
-def year?(param)
-  if param.nil?
-    puts '-y 年数の引数がありません'
-    return false
-  end
-  if param.to_i < 1970 || param.to_i > 2100
-    puts '-yには年数（1970〜2100）を指定してください'
-    return false
-  end
-  true
-end
-
-def month?(param)
-  if param.nil?
-    puts '-m 月の引数がありません'
-    return false
-  end
-  if param.to_i < 1 || param.to_i > 12
-    puts '-mには月（1〜12）を指定してください'
-    return false
-  end
-  true
 end
 
 def print_cal(date)
