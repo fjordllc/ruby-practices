@@ -4,20 +4,15 @@ require_relative 'filestat_constants'
 require 'etc'
 require 'optparse'
 
-opt = OptionParser.new
-params = {}
-
-opt.on('-l') { |v| v }
-
-opt.parse!(ARGV, into: params)
+params = ARGV.getopts('a', 'r', 'l')
 target_name = ARGV[0] || '.'
 
 MAX_NUMBER_OF_COLUMNS = 3
 
 def main(target_name, params)
-  target_contents = get_contents(target_name)
+  target_contents = get_contents(target_name, params)
 
-  if params[:l]
+  if params['l']
     target_path = File.expand_path(target_name)
     directory_flag = File.ftype(target_path) == 'directory'
     target_path.gsub!(%r{/#{File.basename(target_path)}}, '') unless directory_flag
@@ -29,14 +24,17 @@ def main(target_name, params)
     longformat_contents.each { |file| puts file }
   else
     display_width = calculate_display_width(target_contents)
-    array_for_display = create_array_for_display(target_contents, params)
+    array_for_display = create_array_for_display(target_contents)
     print_filename(array_for_display, display_width)
   end
 end
 
-def get_contents(target_name)
+def get_contents(target_name, params)
   if File.ftype(target_name) == 'directory'
-    Dir.glob('*', base: target_name).sort
+    flags = params['a'] ? File::FNM_DOTMATCH : 0
+    Dir.glob('*', flags: flags, base: target_name).sort.then do |array|
+      params['r'] ? array.reverse : array
+    end
   else
     [File.basename(target_name)]
   end
@@ -44,13 +42,13 @@ end
 
 def sum_file_blocks(contents_array, target_path)
   contents_array.map do |file|
-    File.lstat("#{target_path}/#{file}").blocks
+    File.lstat(File.join(target_path, file)).blocks
   end.sum
 end
 
 def to_long_format(target_contents, target_path)
   target_contents.map do |file|
-    fs = File.lstat("#{target_path}/#{file}")
+    fs = File.lstat(File.join(target_path, file))
 
     mode = fs.mode.to_s(8).rjust(6, '0')
     filetype = FILETYPE[mode[0..1]]
@@ -93,11 +91,9 @@ def calculate_display_width(target_contents)
   filename_length_array.max + 5
 end
 
-def create_array_for_display(target_contents, params)
-  display_columns = params[:l] == true ? 1 : MAX_NUMBER_OF_COLUMNS
-
+def create_array_for_display(target_contents)
   # 等差数列で表示するための公差(common difference)を求める
-  common_difference = (target_contents.length / display_columns.to_f).ceil
+  common_difference = (target_contents.length / MAX_NUMBER_OF_COLUMNS.to_f).ceil
 
   target_contents_divided_per_common_difference =
     target_contents.each_slice(common_difference).to_a
