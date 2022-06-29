@@ -13,17 +13,17 @@ def main
   max_word_count = directory_list.max_by(&:length).length
   max_row = directory_list.size / MAX_COLUMN + 1
 
-  splited_list = directory_list.sort.each_slice(max_row).to_a
+  separated_list = directory_list.sort.each_slice(max_row).to_a
 
-  sorted_list = splited_list.map do |file_names|
+  sorted_list = separated_list.map do |file_names|
     file_names.values_at(0..max_row - 1).map do |file_name|
       file_name ||= ''
       file_name.ljust(5 + max_word_count)
     end
   end
 
-  sorted_list.transpose.each do |file_name_line|
-    puts file_name_line.join
+  sorted_list.transpose.each do |file_names|
+    puts file_names.join
   end
 end
 
