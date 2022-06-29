@@ -12,7 +12,7 @@ def cal
 
   if params['y'].nil? && params['m'].nil?
     first_date = Date.new(Date.today.year, Date.today.month, 1)
-  elsif params['y'].present? && params['m'].present?
+  elsif !params['y'].nil? && !params['m'].nil?
     first_date = Date.new(params['y'].to_i, params['m'].to_i, 1)
   else
     puts '引数が不正です。'
@@ -25,10 +25,10 @@ end
 
 def print_cal(first_date)
   result_lines = []
-  result_lines.push "#{date.month}月 #{date.year}".center(LINE_LENGTH)
+  result_lines.push "#{first_date.month}月 #{first_date.year}".center(LINE_LENGTH)
   result_lines.push '日 月 火 水 木 金 土'
 
-  last_date = Date.new(date.year, date.month, -1)
+  last_date = Date.new(first_date.year, first_date.month, -1)
   week = []
 
   (first_date..last_date).each do |date|
