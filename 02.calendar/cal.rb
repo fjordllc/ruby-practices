@@ -14,9 +14,10 @@ def cal
     first_date = Date.new(Date.today.year, Date.today.month, 1)
   elsif !params['y'].nil? && !params['m'].nil?
     first_date = Date.new(params['y'].to_i, params['m'].to_i, 1)
+  elsif params['y'].nil? && !params['m'].nil?
+    first_date = Date.new(Date.today.year, params['m'].to_i, 1)
   else
-    puts '引数が不正です。'
-    puts '引数を設定する場合は、-yに年数、-mに月数の両方を渡してください'
+    puts '引数を設定する場合は、-yのみを指定することはできません。'
     return
   end
 
