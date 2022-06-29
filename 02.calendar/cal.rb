@@ -34,14 +34,13 @@ def print_cal(first_date)
   (first_date..last_date).each do |date|
     week.push(date.day.to_s.rjust(2))
 
-    if date.saturday?
-      result_lines.push week.join(' ').rjust(LINE_LENGTH)
+    if date.saturday? || date == last_date
+      result_lines.push date.day < 7 ? week.join(' ').rjust(LINE_LENGTH) : week.join(' ')
       week.clear
     end
   end
-  result_lines.push week.join(' ') unless week.empty?
 
-  print result_lines.join('\n')
+  puts result_lines
 end
 
 cal
