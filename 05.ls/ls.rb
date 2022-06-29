@@ -34,8 +34,7 @@ class LSCommand
     @file_date = {}
     @max_name_size = 0
     Dir.chdir(path) do
-      Dir.glob('*').each do |n|
-        filename = n.gsub(%r{.+/([^/]+$)}) { '\1' }
+      Dir.glob('*').each do |filename|
         @max_name_size = filename.size if @max_name_size < filename.size
         @file_date[:"#{filename}"] = File.stat(filename)
       end
@@ -57,7 +56,7 @@ class LSCommand
     line = @file_date.size / row
     line += 1 if (@file_date.size % row).positive?
     line.times do |time|
-      @file_date.select.with_index { |(_k, _v), i| i % line == time }.each_key { |k| print format("%-#{width}s", k) }
+      @file_date.select.with_index { |(_date), i| i % line == time }.each_key { |k| print format("%-#{width}s", k) }
       print "\n"
       time += 1
     end
