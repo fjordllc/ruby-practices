@@ -1,4 +1,3 @@
-# For plain Ruby scripts
 inherit_gem:
   rubocop-fjord:
     - "config/rubocop.yml"
