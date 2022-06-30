@@ -12,11 +12,7 @@ class LS
   end
 
   def read_files
-    files = if @option.empty?
-              Dir.glob('*')
-            else
-              Dir.glob('*', File::FNM_DOTMATCH)
-            end
+    files = Dir.glob('*', @option[:a] ? File::FNM_DOTMATCH : 0)
     files.sort
   end
 
