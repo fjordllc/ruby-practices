@@ -36,7 +36,7 @@ def print_cal(first_date)
     if date.saturday? || date == last_date
       line = date.day < 7 ? week.join(' ').rjust(LINE_LENGTH) : week.join(' ')
       result_lines.push line
-      week.clear
+      week = []
     end
   end
 
