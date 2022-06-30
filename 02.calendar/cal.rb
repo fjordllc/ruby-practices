@@ -10,16 +10,14 @@ LINE_LENGTH = 20
 def cal
   params = ARGV.getopts('y:m:')
 
-  if params['y'].nil? && params['m'].nil?
-    first_date = Date.new(Date.today.year, Date.today.month, 1)
-  elsif !params['y'].nil? && !params['m'].nil?
-    first_date = Date.new(params['y'].to_i, params['m'].to_i, 1)
-  elsif params['y'].nil? && !params['m'].nil?
-    first_date = Date.new(Date.today.year, params['m'].to_i, 1)
-  else
+  if !params['y'].nil? && params['m'].nil?
     puts '引数を設定する場合は、-yのみを指定することはできません。'
     return
   end
+
+  year = params['y'].nil? ? Date.today.year : params['y'].to_i
+  month = params['m'].nil? ? Date.today.month : params['m'].to_i
+  first_date = Date.new(year, month, 1)
 
   print_cal(first_date)
 end
