@@ -14,6 +14,7 @@ scores.each do |s|
   end
 end
 
+<<<<<<< HEAD
 frames = []
 shots.each_slice(2) do |s|
   frames << s
@@ -51,6 +52,28 @@ point += if frames[8][0] == 10 # 9フレーム目の計算,strike
            frames[8].sum
          end
 
+=======
+frames = shots.each_slice(2).to_a
+
+point = (0..8).sum do |frame| # 1~8フレーム目までの計算
+  next_frame = frame + 1
+  next_to_next_frame = next_frame + 1
+
+  if frames[frame][0] == 10 # strikeの場合
+    if frames[next_frame][0] == 10 # 次フレームもstrikeの場合
+      frames[next_to_next_frame][0] + 20
+    else
+      frames[next_frame].sum + 10
+    end
+  elsif frames[frame].sum == 10 # spare
+    # spare特殊処理
+    frames[next_frame][0] + 10
+  else
+    frames[frame].sum
+  end
+end
+
+>>>>>>> c3975f33e6c813800d4b91bbe01a6254bc6c4108
 last_frame = frames[9].to_a + frames[10].to_a + frames[11].to_a
 point += last_frame.sum # 最終フレームは便宜上、frames[9]~franes[11]と扱う
 
