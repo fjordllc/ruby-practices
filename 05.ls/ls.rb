@@ -6,9 +6,12 @@ require 'optparse'
 MAX_COLUMN = 3
 
 def main
+  options = ARGV.getopts('a')
   ls_dir = ARGV[0] || '.'
 
-  directory_list = Dir.each_child(ls_dir).to_a
+  directory_list = Dir.foreach(ls_dir).to_a
+
+  directory_list = directory_list.to_a.reject { |i| /^\./.match?(i) == true } if options['a']
 
   max_word_count = directory_list.max_by(&:length).length
   max_row = directory_list.size / MAX_COLUMN + 1
@@ -22,9 +25,7 @@ def main
     end
   end
 
-  sorted_list.transpose.each do |file_names|
-    puts file_names.join
-  end
+  puts sorted_list.transpose.map(&:join)
 end
 
 main
