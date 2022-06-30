@@ -5,13 +5,8 @@ require 'optparse'
 
 MAX_COLUMN = 3
 
-def main
-  options = ARGV.getopts('a')
-  ls_dir = ARGV[0] || '.'
-
-  directory_list = Dir.foreach(ls_dir).to_a
-
-  directory_list = directory_list.to_a.reject { |i| /^\./.match?(i) == true } if options['a']
+def print_dir_list
+  directory_list = set_dir
 
   max_word_count = directory_list.max_by(&:length).length
   max_row = directory_list.size / MAX_COLUMN + 1
@@ -28,4 +23,15 @@ def main
   puts sorted_list.transpose.map(&:join)
 end
 
-main
+def set_dir
+  options = ARGV.getopts('a')
+  ls_dir = ARGV[0] || '.'
+
+  if options['a']
+    Dir.foreach(ls_dir).to_a
+  else
+    Dir.foreach(ls_dir).to_a.reject { |i| /^\./.match?(i) == true }
+  end
+end
+
+print_dir_list
