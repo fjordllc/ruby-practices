@@ -21,10 +21,10 @@ end
 
 def display_files(files, column)
   files_per_column = files.length / column + 1
-  0.upto(files_per_column).each_with_index do |line_number, index|
+  0.upto(files_per_column).each_with_index do |line, index|
     files.each_slice(files_per_column) do |file|
       columns = file.to_a
-      print columns[line_number].ljust(17) if columns[line_number]
+      print columns[line].ljust(17) if columns[line]
     end
     print "\n" unless index == files_per_column - 1
   end
