@@ -15,7 +15,7 @@ def ls(dir, column)
       end
     end
   end
-  files_per_column = files.length / column
+  files_per_column = files.length / column + 1
   0.upto(files_per_column).each_with_index do |line_number, index|
     files.each_slice( files_per_column ) do |file|
       columns = file.to_a
