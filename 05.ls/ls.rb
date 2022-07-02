@@ -6,8 +6,7 @@ require 'optparse'
 MAX_COLUMN = 3
 
 def print_dir_list
-  directory_list = set_dir
-
+  directory_list = exclude_hidden_files
   max_word_count = directory_list.max_by(&:length).length
   max_row = directory_list.size / MAX_COLUMN + 1
 
@@ -23,14 +22,16 @@ def print_dir_list
   puts sorted_list.transpose.map(&:join)
 end
 
-def set_dir
+def exclude_hidden_files
   options = ARGV.getopts('a')
   ls_dir = ARGV[0] || '.'
 
+  file_list = Dir.foreach(ls_dir).to_a
+
   if options['a']
-    Dir.foreach(ls_dir).to_a
+    file_list
   else
-    Dir.foreach(ls_dir).to_a.reject { |i| /^\./.match?(i) == true }
+    file_list.reject { |i| i.start_with?('.') }
   end
 end
 
