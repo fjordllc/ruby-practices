@@ -8,71 +8,87 @@ MAX_WIDTH = 8
 def main
   params = ARGV.getopts('clw')
   files = ARGV
-  if ARGV.empty?
-    display_standard_input(params)
-  else
-    display(params, files)
-  end
-end
-
-def display_standard_input(params)
-    exec_standard_input(params)
-end
-
-def display(params, files)
-    exec_options(params, files)
-end
-
-def exec_standard_input(params)
-  params = {"c"=> true, "l"=> true, "w"=> true} if params.values.any? == false
-  standard_input = $stdin.read
-  stats = []
-  stats = stats << standard_input.count("\n").to_s.rjust(MAX_WIDTH) if params['l']
-  stats = stats << standard_input.split(/\s+/).size.to_s.rjust(MAX_WIDTH) if params['w']
-  stats = stats << standard_input.bytesize.to_s.rjust(MAX_WIDTH) if params['c']
-  puts stats.join
+  files_content = read_file(files)
+  exec_options(params, files, files_content)
 end
 
 
-def exec_options(params, files)
+def exec_options(params, files, files_content)
   params = {"c"=> true, "l"=> true, "w"=> true} if params.values.any? == false
   stats = []
-  stats = stats << string_of_num_of_lines(files) if params['l']
-  stats = stats << string_of_num_of_words(files) if params['w']
-  stats = stats << string_of_size_of_file(files) if params['c']
+  stats = stats << string_of_num_of_lines(files_content) if params['l']
+  stats = stats << string_of_num_of_words(files_content) if params['w']
+  stats = stats << string_of_size_of_file(files_content) if params['c']
   stats = stats << file_name(files)
-  stats.transpose.each do |stat|
-    puts stat.join
+
+  if ARGV.empty?
+    puts stats.join
+  else
+    stats.transpose.each do |stat|
+      puts stat.join
+    end
   end
   options_total(files, params) if files.length > 1
 end
 
-def num_of_lines(files)
-  files.map { |file| File.open(file).read.count("\n") }
+def read_file(files)
+  if ARGV.empty?
+    $stdin.read
+  else
+    files.map { |file| File.open(file).read }
+  end
 end
 
-def num_of_words(files)
-  files.map { |file| File.open(file).read.split(/\s+/).size }
+def num_of_lines(files_content)
+  if files_content.class == String
+    files_content.count("\n")
+  else
+    files_content.map { |content| content.count("\n") }
+  end
 end
 
-def num_of_size_of_file(files)
-  files.map { |file| File.open(file).read.bytesize }
+def num_of_words(files_content)
+  if files_content.class == String
+    files_content.split(/\s+/).size
+  else
+    files_content.map { |content| content.split(/\s+/).size }
+  end
+end
+
+def num_of_size_of_file(files_content)
+  if files_content.class == String
+    files_content.bytesize
+  else
+    files_content.map { |content| content.bytesize}
+  end
 end
 
 def file_name(files)
   files.map { |file| " #{file}" }
 end
 
-def string_of_num_of_lines(files)
-  num_of_lines(files).map { |file| file.to_s.rjust(MAX_WIDTH) }
+def string_of_num_of_lines(files_content)
+  if files_content.class == String
+    files_content.count("\n").to_s.rjust(MAX_WIDTH)
+  else
+    num_of_lines(files_content).map { |num| num.to_s.rjust(MAX_WIDTH)}
+  end
 end
 
-def string_of_num_of_words(files)
-  num_of_words(files).map { |file| file.to_s.rjust(MAX_WIDTH) }
+def string_of_num_of_words(files_content)
+  if files_content.class == String
+    num_of_words(files_content).to_s.rjust(MAX_WIDTH)
+  else
+    num_of_words(files_content).map { |num| num.to_s.rjust(MAX_WIDTH)}
+  end
 end
 
-def string_of_size_of_file(files)
-  num_of_size_of_file(files).map { |file| file.to_s.rjust(MAX_WIDTH) }
+def string_of_size_of_file(files_content)
+  if files_content.class == String
+    num_of_size_of_file(files_content).to_s.rjust(MAX_WIDTH)
+  else
+    num_of_size_of_file(files_content).map { |num| num.to_s.rjust(MAX_WIDTH)}
+  end 
 end
 
 
