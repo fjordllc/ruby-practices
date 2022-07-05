@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'optparse'
+require 'debug'
 
 MAX_WIDTH = 8
 
@@ -15,11 +16,7 @@ def main
 end
 
 def display_standard_input(params)
-  if params.values.any? == false
-    exec_standard_input_with_no_option
-  else
-    exec_standard_input_with_options(params)
-  end
+    exec_standard_input(params)
 end
 
 def display(params, files)
@@ -30,16 +27,8 @@ def display(params, files)
   end
 end
 
-def exec_standard_input_with_no_option
-  standard_input = $stdin.read
-  puts [
-    standard_input.count("\n").to_s.rjust(MAX_WIDTH),
-    standard_input.split(/\s+/).size.to_s.rjust(MAX_WIDTH),
-    standard_input.bytesize.to_s.rjust(MAX_WIDTH)
-  ].join
-end
-
-def exec_standard_input_with_options(params)
+def exec_standard_input(params)
+  params = {"c"=> true, "l"=> true, "w"=> true} if params.values.any? == false
   standard_input = $stdin.read
   stats = []
   stats = stats << standard_input.count("\n").to_s.rjust(MAX_WIDTH) if params['l']
