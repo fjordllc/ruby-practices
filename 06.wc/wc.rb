@@ -20,11 +20,7 @@ def display_standard_input(params)
 end
 
 def display(params, files)
-  if params.values.any? == false
-    exec_no_option(files)
-  else
     exec_options(params, files)
-  end
 end
 
 def exec_standard_input(params)
@@ -37,22 +33,9 @@ def exec_standard_input(params)
   puts stats.join
 end
 
-def exec_no_option(files)
-  stats = [
-    string_of_num_of_lines(files),
-    string_of_num_of_words(files),
-    string_of_size_of_file(files),
-    file_name(files)
-  ]
-
-  stats.transpose.each do |stat|
-    puts stat.join
-  end
-
-  no_option_total(files) if files.length > 1
-end
 
 def exec_options(params, files)
+  params = {"c"=> true, "l"=> true, "w"=> true} if params.values.any? == false
   stats = []
   stats = stats << string_of_num_of_lines(files) if params['l']
   stats = stats << string_of_num_of_words(files) if params['w']
@@ -92,13 +75,6 @@ def string_of_size_of_file(files)
   num_of_size_of_file(files).map { |file| file.to_s.rjust(MAX_WIDTH) }
 end
 
-def no_option_total(files)
-  puts "#{[
-    num_of_lines(files).sum.to_s.rjust(MAX_WIDTH),
-    num_of_words(files).sum.to_s.rjust(MAX_WIDTH),
-    num_of_size_of_file(files).sum.to_s.rjust(MAX_WIDTH)
-  ].join} total"
-end
 
 def options_total(files, params)
   totals = []
