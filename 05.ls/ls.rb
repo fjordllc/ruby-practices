@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'optparse'
+ROW = 3
 
 class LSCommand
   def initialize
@@ -11,9 +12,9 @@ class LSCommand
     opt.on('-l') { |v| params[:l] = v }
     opt.parse!(ARGV)
 
-    @path = Dir.pwd if ARGV #== []
     @path = ARGV if ARGV[1]
     @path = ARGV[0] if ARGV[0] && ARGV[1].nil?
+    @path ||= Dir.pwd
   end
 
   def output
@@ -42,23 +43,12 @@ class LSCommand
   end
 
   def output_without_options
-    case @max_name_size
-    when (35..)
-      row = 1
-    when (24..34)
-      row = 2
-      width = 36
-    else
-      row = 3
-      width = 23
-    end
-
-    line = @file_date.size / row
-    line += 1 if (@file_date.size % row).positive?
+    width = @max_name_size + 3
+    line = @file_date.size / ROW
+    line += 1 if (@file_date.size % ROW).positive?
     line.times do |time|
-      @file_date.select.with_index { |(_date), i| i % line == time }.each_key { |k| print format("%-#{width}s", k) }
+      @file_date.select.with_index { |_date, i| i % line == time }.each_key { |k| print format("%-#{width}s", k) }
       print "\n"
-      time += 1
     end
     print "\n"
   end
