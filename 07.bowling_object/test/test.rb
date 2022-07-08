@@ -3,7 +3,7 @@
 require 'minitest/autorun'
 require_relative '../lib/game'
 
-class GameTest < MiniTest::Unit::TestCase
+class GameTest < MiniTest::Test
   def test_calculate_score1
     game = Game.new('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,6,4,5')
     assert_equal(139, game.score)
