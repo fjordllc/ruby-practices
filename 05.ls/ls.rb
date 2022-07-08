@@ -6,11 +6,11 @@ require 'optparse'
 MAX_COLUMN = 3
 
 def print_dir_list
-  directory_list = specify_display_content
-  max_word_count = directory_list.max_by(&:length).length
-  max_row = directory_list.size / MAX_COLUMN + 1
+  file_list = fetch_file_list
+  max_word_count = file_list.max_by(&:length).length
+  max_row = file_list.size / MAX_COLUMN + 1
 
-  separated_list = directory_list.sort.each_slice(max_row).to_a
+  separated_list = file_list.sort.each_slice(max_row).to_a
 
   sorted_list = separated_list.map do |file_names|
     file_names.values_at(0..max_row - 1).map do |file_name|
@@ -22,7 +22,7 @@ def print_dir_list
   puts sorted_list.transpose.map(&:join)
 end
 
-def specify_display_content
+def fetch_file_list
   options = ARGV.getopts('a')
   ls_dir = ARGV[0] || '.'
 
