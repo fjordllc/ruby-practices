@@ -13,13 +13,9 @@ class LS
   end
 
   def exec
-    if @option.empty?
-      Dir.glob('*')
-    elsif @option[:r]
-      Dir.glob('*').reverse
-    else
-      Dir.glob('*', File::FNM_DOTMATCH)
-    end
+    files = Dir.glob('*', @option[:a] ? File::FNM_DOTMATCH : 0)
+    files.reverse! if @option[:r]
+    files
   end
 
   def print_files
