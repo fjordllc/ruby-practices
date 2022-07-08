@@ -1,0 +1,14 @@
+#! /usr/bin/ruby
+
+# frozen_string_literal: true
+
+require_relative '../lib/game'
+require 'optparse'
+
+opt = OptionParser.new
+input = opt.parse(ARGV)[0]
+
+game = Game.new(input)
+
+puts game.frames.map(&:print)
+puts game.score
