@@ -10,5 +10,4 @@ input = opt.parse(ARGV)[0]
 
 game = Game.new(input)
 
-puts game.frames.map(&:print)
 puts game.score
