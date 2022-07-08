@@ -2,6 +2,7 @@
 
 require 'optparse'
 ROW = 3
+SPACE = 3
 
 class LSCommand
   def initialize
@@ -43,7 +44,7 @@ class LSCommand
   end
 
   def output_without_options
-    width = @max_name_size + 3
+    width = @max_name_size + SPACE
     line = @file_date.size / ROW
     line += 1 if (@file_date.size % ROW).positive?
     line.times do |time|
