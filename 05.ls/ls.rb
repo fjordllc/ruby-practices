@@ -16,39 +16,42 @@ class LSCommand
     @path = ARGV if ARGV[1]
     @path = ARGV[0] if ARGV[0] && ARGV[1].nil?
     @path ||= Dir.pwd
+    @params = params
   end
 
   def output
     case @path
     when String
-      file_date_in(@path)
-      output_without_options
+      get_file_information(@path)
+      display
     when Array
       @path.each do |path|
         puts "#{path}:"
-        file_date_in(path)
-        output_without_options
+        get_file_information(path)
+        display
       end
     end
   end
 
-  def file_date_in(path)
-    @file_date = {}
+  def get_file_information(path)
+    @file_name = {}
     @max_name_size = 0
     Dir.chdir(path) do
-      Dir.glob('*').each do |filename|
+      file = Dir.glob('*', File::FNM_DOTMATCH) if @params[:a]
+      file ||= Dir.glob('*')
+      file.each do |filename|
         @max_name_size = filename.size if @max_name_size < filename.size
-        @file_date[:"#{filename}"] = File.stat(filename)
+        @file_name[:"#{filename}"] = nil
       end
     end
   end
 
-  def output_without_options
+  def display
     width = @max_name_size + SPACE
-    line = @file_date.size / ROW
-    line += 1 if (@file_date.size % ROW).positive?
+    line = @file_name.size / ROW
+    line += 1 if (@file_name.size % ROW).positive?
     line.times do |time|
-      @file_date.select.with_index { |_date, i| i % line == time }.each_key { |k| print format("%-#{width}s", k) }
+      @file_name.select.with_index { |_date, i| i % line == time }.each_key { |k| print format("%-#{width}s", k) }
       print "\n"
     end
     print "\n"
