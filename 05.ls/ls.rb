@@ -7,51 +7,45 @@ SPACE = 3
 class LSCommand
   def initialize
     opt = OptionParser.new
-    params = {}
-    opt.on('-a') { |v| params[:a] = v }
-    opt.on('-r') { |v| params[:r] = v }
-    opt.on('-l') { |v| params[:l] = v }
+    @options = {}
+    opt.on('-a') { |v| @options[:a] = v }
+    opt.on('-r') { |v| @options[:r] = v }
+    opt.on('-l') { |v| @options[:l] = v }
     opt.parse!(ARGV)
 
     @path = ARGV if ARGV[1]
     @path = ARGV[0] if ARGV[0] && ARGV[1].nil?
     @path ||= Dir.pwd
-    @params = params
   end
 
   def output
     case @path
     when String
-      get_file_information(@path)
-      display
+      display(file_information(@path))
     when Array
       @path.each do |path|
         puts "#{path}:"
-        get_file_information(path)
-        display
+        display(file_information(path))
       end
     end
   end
 
-  def get_file_information(path)
-    @file_name = {}
-    @max_name_size = 0
+  def file_information(path)
+    file_names = []
     Dir.chdir(path) do
-      file = Dir.glob('*', File::FNM_DOTMATCH) if @params[:a]
-      file ||= Dir.glob('*')
+      file = @options[:a] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
       file.each do |filename|
-        @max_name_size = filename.size if @max_name_size < filename.size
-        @file_name[:"#{filename}"] = nil
+        file_names << filename
       end
     end
   end
 
-  def display
-    width = @max_name_size + SPACE
-    line = @file_name.size / ROW
-    line += 1 if (@file_name.size % ROW).positive?
+  def display(file_names)
+    width = file_names.max_by(&:size).size + SPACE
+    line = file_names.size / ROW
+    line += 1 if (file_names.size % ROW).positive?
     line.times do |time|
-      @file_name.select.with_index { |_date, i| i % line == time }.each_key { |k| print format("%-#{width}s", k) }
+      file_names.select.with_index { |_name, i| i % line == time }.each { |name| print format("%-#{width}s", name) }
       print "\n"
     end
     print "\n"
