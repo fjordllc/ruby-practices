@@ -3,15 +3,13 @@
 require_relative 'frame'
 
 class Game
-  attr_reader :frames
-
   def initialize(input)
     @frames = parse_input(split(input))
   end
 
   def score
     @frames.map.with_index do |frame, index|
-      frame.score(frames[index + 1], frames[index + 2])
+      frame.score(@frames[index + 1], @frames[index + 2])
     end.sum
   end
 
