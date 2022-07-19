@@ -2,8 +2,8 @@
 
 def input()
   arr = []
-  Dir.glob('*').each do |d|
-    arr.push(d)
+  Dir.glob('*').to_a.each do |d|
+    arr
   end
 end
 
