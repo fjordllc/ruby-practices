@@ -23,10 +23,10 @@ class Game
         frames << Frame.new(pins[0])
         input.unshift(pins.last)
       else
-        frames << Frame.new(pins[0], pins[1])
+        frames << Frame.new(*pins)
       end
     end
-    frames << Frame.new(input[0], input[1], input[2])
+    frames << Frame.new(*input)
     frames
   end
 
