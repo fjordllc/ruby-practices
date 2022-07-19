@@ -4,29 +4,26 @@ require_relative 'shot'
 
 class Frame
   def initialize(one, two = nil, three = nil)
-    @one = Shot.new one
-    @two = two.nil? ? nil : Shot.new(two)
-    @three = three.nil? ? nil : Shot.new(three)
+    @shots = []
+    @shots[0] = Shot.new(one)
+    @shots[1] = two.nil? ? nil : Shot.new(two)
+    @shots[2] = three.nil? ? nil : Shot.new(three)
   end
 
   def one
-    @one.score
+    @shots[0].score
   end
 
   def two
-    @two.nil? ? nil : @two.score
+    @shots[1]&.score
   end
 
   def three
-    @three.nil? ? nil : @three.score
-  end
-
-  def print
-    "#{one} #{two} #{three}"
+    @shots[2]&.score
   end
 
   def strike?
-    @one.count == 'X'
+    @shots[0].count == 'X'
   end
 
   def spare?
@@ -36,13 +33,7 @@ class Frame
   end
 
   def total
-    if two.nil?
-      one
-    elsif three.nil?
-      one + two
-    else
-      one + two + three
-    end
+    @shots.compact.map(&:score).sum
   end
 
   def score(next_frame, after_next)
