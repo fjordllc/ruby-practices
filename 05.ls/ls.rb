@@ -33,10 +33,8 @@ class LSCommand
   def file_information(path)
     file_names = []
     Dir.chdir(path) do
-      file = @options[:a] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
-      file.each do |filename|
-        file_names << filename
-      end
+      # file_names = @options[:a] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
+      file_names = @options[:r] ? Dir.glob('*').reverse : Dir.glob('*')
     end
   end
 
