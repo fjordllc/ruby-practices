@@ -5,12 +5,12 @@ def input()
 end
 
 def output(arr)
-  arrsize = (arr.size + 1).to_f / 3
-  (1..arrsize.round).each do |row|
+  arrseparate = Float(arr.size + 1) / 3
+  arrseparate.round.times do |row|
     col = 0
     3.times do
-      print "#{arr[row+col-1]} ".ljust(25)
-      col += arrsize.round
+      print "#{arr[row+col]} ".ljust(25)
+      col += arrseparate.round
     end
   puts "\n"
   end
@@ -18,3 +18,4 @@ end
 
 arr = input
 output(arr)
+
