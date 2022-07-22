@@ -49,6 +49,6 @@ class Frame
   private
 
   def strike_score(next_frame, after_next)
-    total + next_frame.one + (next_frame.two.nil? ? after_next.one : next_frame.two)
+    total + next_frame.one + (next_frame.strike? && after_next ? after_next.one : next_frame.two)
   end
 end
