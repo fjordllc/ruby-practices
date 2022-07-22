@@ -18,10 +18,6 @@ class Frame
     @shots[1]&.score
   end
 
-  def three
-    @shots[2]&.score
-  end
-
   def strike?
     @shots[0].count == 'X'
   end
