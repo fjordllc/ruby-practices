@@ -1,27 +1,28 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-DEFAULT_PATH = ".."
+DEFAULT_PATH = '.'
 COLUMNS_SIZE = 3
 PADDING_SIZE = 1
 
-def execute(base_path: DEFAULT_PATH)
-  entries = find_entries(base_path)
-  display_entries(entries)
+def execute(path: DEFAULT_PATH)
+  entries = Dir.glob('*', base: path)
+  output(entries, column_size: COLUMNS_SIZE)
 end
 
-def find_entries(base_path)
-  Dir.glob('*', base: base_path)
-end
-
-def display_entries(entries = [], column_size: COLUMNS_SIZE)
-  sliced_entries = entries.each_slice(column_size)
-  max_size = sliced_entries.map(&:size).max
-  max_entry_name_size = entries.map(&:size).max
-  transposed = sliced_entries.map{|item| item.values_at(0...max_size)}.transpose
-  transposed.each do |row|
-    puts row.map{|item| (item || "").ljust(max_entry_name_size + PADDING_SIZE)}.join
+def output(entries = [], column_size: COLUMNS_SIZE)
+  column_width = entries.map(&:size).max + PADDING_SIZE
+  transposed_entries(entries, column_size: column_size).each do |row_entries|
+    puts row_entries.map { |item| (item || '').ljust(column_width) }.join
   end
 end
 
-execute
+# ファイルリストを列ごとに分解する
+def transposed_entries(entries = [], column_size: COLUMNS_SIZE)
+  slice_size = entries.size < COLUMNS_SIZE ? 1 : entries.size / column_size
+  sliced_entries = entries.each_slice(slice_size)
+  max_size = sliced_entries.map(&:size).max
+  sliced_entries.map { |item| item.values_at(0...max_size) }.transpose
+end
+
+execute(path: ARGV[0] || DEFAULT_PATH)
