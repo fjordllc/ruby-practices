@@ -1,6 +1,7 @@
 require 'optparse'
 require 'debug'
 
+# ls４ブランチを作成
 def main
   get_deta
   make_array
