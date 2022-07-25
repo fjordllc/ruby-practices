@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 require 'optparse'
-
 opt = OptionParser.new
 args = {}
 opt.on('-a') {|v| args[:a] = v}
