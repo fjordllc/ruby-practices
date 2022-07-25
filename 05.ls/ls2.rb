@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 require 'optparse'
-opt = OptionParser.new
 
+opt = OptionParser.new
 args = {}
-  opt.on('-a') {|v| args[:a] = v}
-  opt.parse!(ARGV)
+opt.on('-a') {|v| args[:a] = v}
+opt.parse!(ARGV)
 
 def input(args)
   if args[:a].nil?
