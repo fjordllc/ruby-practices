@@ -1,7 +1,16 @@
 # frozen_string_literal: true
+require 'optparse'
+opt = OptionParser.new
+args = {}
+opt.on('-a') {|v| args[:a] = v}
+opt.parse!(ARGV)
 
-def input()
-  Dir.glob('*')
+def input(args)
+  if args[:a].nil?
+    Dir.glob('*')
+  else
+    Dir.glob("*", File::FNM_DOTMATCH)
+  end
 end
 
 def output(arr)
@@ -16,5 +25,5 @@ def output(arr)
   end
 end
 
-arr = input
+arr = input(args)
 output(arr)
