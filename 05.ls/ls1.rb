@@ -6,11 +6,11 @@ opt.on('-a') {|v| args[:a] = v}
 opt.parse!(ARGV)
 
 def input(args)
-  if args[:a].nil?
-    Dir.glob('*')
-  else
-    Dir.glob("*", File::FNM_DOTMATCH)
-  end
+a = " ".to_i
+unless args[:a].nil?
+  a = File::FNM_DOTMATCH
+end
+Dir.glob("*",a)
 end
 
 def output(arr)
