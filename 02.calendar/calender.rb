@@ -28,11 +28,7 @@ end
 # 日付描画
 for i in 1..month_last do
     # write day
-    if i/10 == 0
-        print format("%02d ", i)
-    elsif
-        print "#{i} "
-    end
+    print format("%02d ", i)
 
     # 土曜日だったなら改行
     weekday = Date.new(year, month, i).wday
