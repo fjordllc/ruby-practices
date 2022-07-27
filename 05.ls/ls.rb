@@ -29,11 +29,9 @@ end
 
 def format(files, columns)
   column_width = files.max_by(&:length).length + COLUMN_MARGIN
-  formated_rows = []
-  columns.transpose.each do |row|
-    formated_rows << row.map { |f| f.ljust(column_width) }.join
+  columns.transpose.map do |column|
+    column.map { |f| f.ljust(column_width) }.join
   end
-  formated_rows
 end
 
 main
