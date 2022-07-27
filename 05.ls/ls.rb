@@ -22,12 +22,9 @@ end
 
 def slice_columns(files)
   row_count = (files.size / COLUMN_COUNT.to_f).ceil
-  columns = []
-  files.each_slice(row_count) do |f|
-    f.fill('', f.size, row_count - f.size) if f.size < row_count
-    columns << f
+  files.each_slice(row_count).map do |f| 
+    f.fill('', f.size, row_count - f.size)
   end
-  columns
 end
 
 def format(files, columns)
