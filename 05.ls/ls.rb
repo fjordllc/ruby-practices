@@ -17,7 +17,7 @@ def ls(path = '.')
 end
 
 def get_files(path)
-  Dir.glob('*', base: path)
+  Dir.glob('*', base: path).sort
 end
 
 def slice_columns(files)
