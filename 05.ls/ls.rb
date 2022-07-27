@@ -22,7 +22,7 @@ end
 
 def slice_columns(files)
   row_count = (files.size / COLUMN_COUNT.to_f).ceil
-  files.each_slice(row_count).map do |f| 
+  files.each_slice(row_count).map do |f|
     f.fill('', f.size, row_count - f.size)
   end
 end
