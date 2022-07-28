@@ -12,8 +12,6 @@ module Ls
   end
 
   class Ls
-    attr_reader :options
-
     def initialize(path, options, width = IO.console.winsize[1])
       @path = path
       @options = options
