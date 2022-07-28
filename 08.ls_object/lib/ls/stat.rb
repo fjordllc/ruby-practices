@@ -4,31 +4,31 @@ require 'etc'
 
 module Ls
   class Stat
-    attr_reader :blocks
+    attr_reader :blocks, :body
 
     def initialize(path)
       @stat = File.stat(path)
       @body = {
         type: format_type(@stat),
         permission: format_permission(@stat),
-        nlink: @stat.nlink,
+        nlink: @stat.nlink.to_s,
         user: Etc.getpwuid(@stat.uid).name,
         group: Etc.getgrgid(@stat.gid).name,
-        size: @stat.size,
+        size: @stat.size.to_s,
         mtime: @stat.mtime.strftime('%_m %_d %R'),
         basename: File.basename(path)
       }
       @blocks = @stat.blocks
     end
 
-    def body
+    def render(max_lengths = [2, 2, 2, 4])
       format([
         '%<type>s%<permission>s',
-        '%<nlink>2i',
-        '%<user>-2s',
-        '%<group>-2s',
-        '%<size>4s',
-        '%<mtime>4s',
+        "%<nlink>#{max_lengths[0] + 1}i",
+        "%<user>-#{max_lengths[1] + 1}s",
+        "%<group>-#{max_lengths[2] + 1}s",
+        "%<size>#{max_lengths[3]}s",
+        '%<mtime>s',
         "%<basename>s\n"
       ].join(' '), @body)
     end

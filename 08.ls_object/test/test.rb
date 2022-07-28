@@ -105,12 +105,12 @@ class LsTest < MiniTest::Test # rubocop:disable Metrics/ClassLength
                     }, 60)
     expected = <<~TEST.chomp
       total 32
-      -rw-r--r--  1 AntiSatori staff 1524  7 27 19:17 favicon.svg
-      -rw-r--r--  1 AntiSatori staff  356  7 27 19:17 index.html
-      -rw-r--r--  1 AntiSatori staff  267  7 27 19:17 package.json
-      drwxr-xr-x  3 AntiSatori staff   96  7 27 19:17 public
-      drwxr-xr-x  7 AntiSatori staff  224  7 27 19:17 src
-      -rw-r--r--  1 AntiSatori staff  468  7 27 19:17 tsconfig.json
+      -rw-r--r--  1 AntiSatori  staff  1524  7 27 19:17 favicon.svg
+      -rw-r--r--  1 AntiSatori  staff   356  7 27 19:17 index.html
+      -rw-r--r--  1 AntiSatori  staff   267  7 27 19:17 package.json
+      drwxr-xr-x  3 AntiSatori  staff    96  7 27 19:17 public
+      drwxr-xr-x  7 AntiSatori  staff   224  7 27 19:17 src
+      -rw-r--r--  1 AntiSatori  staff   468  7 27 19:17 tsconfig.json
     TEST
 
     assert_equal(expected, ls.run)
@@ -124,14 +124,14 @@ class LsTest < MiniTest::Test # rubocop:disable Metrics/ClassLength
                     }, 60)
     expected = <<~TEST.chomp
       total 40
-      drwxr-xr-x  9 AntiSatori staff  288  7 27 19:17 .
-      -rw-r--r--  1 AntiSatori staff  253  7 27 19:17 .gitignore
-      -rw-r--r--  1 AntiSatori staff 1524  7 27 19:17 favicon.svg
-      -rw-r--r--  1 AntiSatori staff  356  7 27 19:17 index.html
-      -rw-r--r--  1 AntiSatori staff  267  7 27 19:17 package.json
-      drwxr-xr-x  3 AntiSatori staff   96  7 27 19:17 public
-      drwxr-xr-x  7 AntiSatori staff  224  7 27 19:17 src
-      -rw-r--r--  1 AntiSatori staff  468  7 27 19:17 tsconfig.json
+      drwxr-xr-x  9 AntiSatori  staff   288  7 27 19:17 .
+      -rw-r--r--  1 AntiSatori  staff   253  7 27 19:17 .gitignore
+      -rw-r--r--  1 AntiSatori  staff  1524  7 27 19:17 favicon.svg
+      -rw-r--r--  1 AntiSatori  staff   356  7 27 19:17 index.html
+      -rw-r--r--  1 AntiSatori  staff   267  7 27 19:17 package.json
+      drwxr-xr-x  3 AntiSatori  staff    96  7 27 19:17 public
+      drwxr-xr-x  7 AntiSatori  staff   224  7 27 19:17 src
+      -rw-r--r--  1 AntiSatori  staff   468  7 27 19:17 tsconfig.json
     TEST
 
     assert_equal(expected, ls.run)
@@ -145,14 +145,14 @@ class LsTest < MiniTest::Test # rubocop:disable Metrics/ClassLength
                     }, 60)
     expected = <<~TEST.chomp
       total 40
-      -rw-r--r--  1 AntiSatori staff  468  7 27 19:17 tsconfig.json
-      drwxr-xr-x  7 AntiSatori staff  224  7 27 19:17 src
-      drwxr-xr-x  3 AntiSatori staff   96  7 27 19:17 public
-      -rw-r--r--  1 AntiSatori staff  267  7 27 19:17 package.json
-      -rw-r--r--  1 AntiSatori staff  356  7 27 19:17 index.html
-      -rw-r--r--  1 AntiSatori staff 1524  7 27 19:17 favicon.svg
-      -rw-r--r--  1 AntiSatori staff  253  7 27 19:17 .gitignore
-      drwxr-xr-x  9 AntiSatori staff  288  7 27 19:17 .
+      -rw-r--r--  1 AntiSatori  staff   468  7 27 19:17 tsconfig.json
+      drwxr-xr-x  7 AntiSatori  staff   224  7 27 19:17 src
+      drwxr-xr-x  3 AntiSatori  staff    96  7 27 19:17 public
+      -rw-r--r--  1 AntiSatori  staff   267  7 27 19:17 package.json
+      -rw-r--r--  1 AntiSatori  staff   356  7 27 19:17 index.html
+      -rw-r--r--  1 AntiSatori  staff  1524  7 27 19:17 favicon.svg
+      -rw-r--r--  1 AntiSatori  staff   253  7 27 19:17 .gitignore
+      drwxr-xr-x  9 AntiSatori  staff   288  7 27 19:17 .
     TEST
 
     assert_equal(expected, ls.run)

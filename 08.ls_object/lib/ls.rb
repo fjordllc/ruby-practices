@@ -29,7 +29,10 @@ module Ls
       stats = @file_paths.map { Stat.new(_1) }
       total_block = stats.map(&:blocks).sum
       total = "total #{total_block}\n"
-      body = stats.map(&:body)
+      max_lengths = %i[nlink user group size].map do |key|
+        stats.map { _1.body[key].size }.max
+      end
+      body = stats.map { _1.render(max_lengths) }
       [total, body].join.chomp
     end
 
