@@ -6,7 +6,7 @@ opt.on('-a') {|v| args[:a] = v}
 opt.parse!(ARGV)
 
 def input(args)
-a = " ".to_i
+a = args[:a].nil? ? 0 : File::FNM_DOTMATCH
 unless args[:a].nil?
   a = File::FNM_DOTMATCH
 end
