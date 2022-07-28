@@ -11,6 +11,8 @@ def execute(path: DEFAULT_PATH)
 end
 
 def output(entries, column_size: COLUMNS_SIZE)
+  return if entries.empty? # 空のディレクトリは出力なし
+
   column_width = entries.map(&:size).max + PADDING_SIZE
   transposed_entries(entries, column_size: column_size).each do |row_entries|
     puts row_entries.map { |item| (item || '').ljust(column_width) }.join
