@@ -19,7 +19,7 @@ end
 
 # ファイルリストを列ごとに分解する
 def transposed_entries(entries, column_size: COLUMNS_SIZE)
-  slice_size = entries.size < COLUMNS_SIZE ? 1 : entries.size / column_size
+  slice_size = (entries.size / column_size.to_f).ceil
   sliced_entries = entries.each_slice(slice_size)
   max_size = sliced_entries.map(&:size).max
   sliced_entries.map { |item| item.values_at(0...max_size) }.transpose
