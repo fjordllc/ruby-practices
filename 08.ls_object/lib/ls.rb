@@ -37,7 +37,7 @@ module Ls
     def short
       max_length = @file_paths.map { File.basename(_1).size }.max
       col_num = @width / (max_length + 2)
-      row_num = (@file_paths.size.to_f / col_num).ceil
+      row_num = col_num.zero? ? @file_paths.size : (@file_paths.size.to_f / col_num).ceil
       sliced = @file_paths.each_slice(row_num).to_a
       transposed = sliced[0].zip(*sliced[1..])
       output = ''

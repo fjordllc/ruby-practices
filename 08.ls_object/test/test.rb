@@ -6,6 +6,24 @@ require_relative '../lib/ls'
 class LsTest < MiniTest::Test # rubocop:disable Metrics/ClassLength
   TARGET_PATH = Pathname('test/sample-app')
 
+  def test_run_width1
+    ls = Ls::Ls.new(TARGET_PATH, {
+                      dot_match: false,
+                      long_format: false,
+                      reverse: false
+                    }, 1)
+    expected = <<~TEST.chomp
+      favicon.svg
+      index.html
+      package.json
+      public
+      src
+      tsconfig.json
+    TEST
+
+    assert_equal(expected, ls.run)
+  end
+
   def test_run_width29
     ls = Ls::Ls.new(TARGET_PATH, {
                       dot_match: false,
@@ -106,7 +124,7 @@ class LsTest < MiniTest::Test # rubocop:disable Metrics/ClassLength
     expected = <<~TEST.chomp
       total 32
       -rw-r--r--  1 AntiSatori  staff  1524  7 27 19:17 favicon.svg
-      -rw-r--r--  1 AntiSatori  staff   356  7 27 19:17 index.html
+      -rw-r--r--  1 AntiSatori  staff   356  7 28 23:10 index.html
       -rw-r--r--  1 AntiSatori  staff   267  7 27 19:17 package.json
       drwxr-xr-x  3 AntiSatori  staff    96  7 27 19:17 public
       drwxr-xr-x  7 AntiSatori  staff   224  7 27 19:17 src
@@ -127,7 +145,7 @@ class LsTest < MiniTest::Test # rubocop:disable Metrics/ClassLength
       drwxr-xr-x  9 AntiSatori  staff   288  7 27 19:17 .
       -rw-r--r--  1 AntiSatori  staff   253  7 27 19:17 .gitignore
       -rw-r--r--  1 AntiSatori  staff  1524  7 27 19:17 favicon.svg
-      -rw-r--r--  1 AntiSatori  staff   356  7 27 19:17 index.html
+      -rw-r--r--  1 AntiSatori  staff   356  7 28 23:10 index.html
       -rw-r--r--  1 AntiSatori  staff   267  7 27 19:17 package.json
       drwxr-xr-x  3 AntiSatori  staff    96  7 27 19:17 public
       drwxr-xr-x  7 AntiSatori  staff   224  7 27 19:17 src
@@ -149,7 +167,7 @@ class LsTest < MiniTest::Test # rubocop:disable Metrics/ClassLength
       drwxr-xr-x  7 AntiSatori  staff   224  7 27 19:17 src
       drwxr-xr-x  3 AntiSatori  staff    96  7 27 19:17 public
       -rw-r--r--  1 AntiSatori  staff   267  7 27 19:17 package.json
-      -rw-r--r--  1 AntiSatori  staff   356  7 27 19:17 index.html
+      -rw-r--r--  1 AntiSatori  staff   356  7 28 23:10 index.html
       -rw-r--r--  1 AntiSatori  staff  1524  7 27 19:17 favicon.svg
       -rw-r--r--  1 AntiSatori  staff   253  7 27 19:17 .gitignore
       drwxr-xr-x  9 AntiSatori  staff   288  7 27 19:17 .
