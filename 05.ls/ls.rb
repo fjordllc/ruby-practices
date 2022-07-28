@@ -10,7 +10,7 @@ def execute(path: DEFAULT_PATH)
   output(entries, column_size: COLUMNS_SIZE)
 end
 
-def output(entries = [], column_size: COLUMNS_SIZE)
+def output(entries, column_size: COLUMNS_SIZE)
   column_width = entries.map(&:size).max + PADDING_SIZE
   transposed_entries(entries, column_size: column_size).each do |row_entries|
     puts row_entries.map { |item| (item || '').ljust(column_width) }.join
@@ -18,7 +18,7 @@ def output(entries = [], column_size: COLUMNS_SIZE)
 end
 
 # ファイルリストを列ごとに分解する
-def transposed_entries(entries = [], column_size: COLUMNS_SIZE)
+def transposed_entries(entries, column_size: COLUMNS_SIZE)
   slice_size = entries.size < COLUMNS_SIZE ? 1 : entries.size / column_size
   sliced_entries = entries.each_slice(slice_size)
   max_size = sliced_entries.map(&:size).max
