@@ -1,22 +1,21 @@
 # frozen_string_literal: true
 
+SPARE = 1
+STRIKE = 2
+
 # xto10 method
 def xto10(pin)
-  if pin == 'X'
-    10.to_i
-  else
-    pin.to_i
-  end
+  pin == 'X' ? 10 : pin.to_i
 end
 
 # add_bonus method
 def add_bonus(bonus, pins, index)
   score = 0
   # add spare-strike bonus
-  score += xto10(pins[index]) if [1, 2].include?(bonus)
+  score += xto10(pins[index]) if [SPARE, STRIKE].include?(bonus)
   # add strike bonus
   score += xto10(pins[index + 1]) if bonus == 2
-  score.to_i
+  score
 end
 
 def update_bonus(pins, index)
@@ -27,10 +26,9 @@ end
 pins = ARGV[0].split(',')
 score = 0
 bonus = 0
-frame = 0
-flg = true
 i = 0
-while flg
+
+10.times do |frame|
   # 10th frame process
   if frame == 9
     # nomal point
@@ -67,7 +65,6 @@ while flg
       bonus = 2
       i += 1
     end
-    frame += 1
   end
 end
 puts score
