@@ -7,9 +7,6 @@ opt.parse!(ARGV)
 
 def input(args)
 a = args[:a].nil? ? 0 : File::FNM_DOTMATCH
-unless args[:a].nil?
-  a = File::FNM_DOTMATCH
-end
 Dir.glob("*",a)
 end
 
