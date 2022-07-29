@@ -12,6 +12,8 @@ end
 
 def ls(path = '.')
   files = get_files(path)
+  return '' if files.empty?
+
   columns = slice_columns(files)
   puts format(files, columns)
 end
