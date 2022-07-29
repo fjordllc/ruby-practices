@@ -6,8 +6,8 @@ opt.on('-a') {|v| args[:a] = v}
 opt.parse!(ARGV)
 
 def input(args)
-a = args[:a].nil? ? 0 : File::FNM_DOTMATCH
-Dir.glob("*",a)
+  a = args[:a].nil? ? 0 : File::FNM_DOTMATCH
+  Dir.glob("*",a)
 end
 
 def output(arr)
