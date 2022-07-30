@@ -7,7 +7,7 @@ COLUMN_MARGIN = 4
 
 def main
   path = ARGV[0]
-  ls(path)
+  puts ls(path)
 end
 
 def ls(path = '.')
@@ -15,7 +15,7 @@ def ls(path = '.')
   return '' if files.empty?
 
   columns = slice_columns(files)
-  puts format(files, columns)
+  format(files, columns)
 end
 
 def get_files(path)
