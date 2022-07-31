@@ -1,23 +1,26 @@
 # frozen_string_literal: true
+require 'optparse'
+opt = OptionParser.new
+args = {}
+opt.on('-a') {|v| args[:a] = v}
+opt.parse!(ARGV)
 
-class List
-  @@arr = []
+def input(args)
+  a = args[:a].nil? ? 0 : File::FNM_DOTMATCH
+  Dir.glob("*",a)
+end
 
-  def self.input
-    Dir.glob('*').each do |d|
-      @@arr.push(d)
+def output(arr)
+  files = ((arr.size + 1).to_f / 3).ceil
+  files.times do |row|
+    col = 0
+    3.times do
+      print "#{arr[row+col]} ".ljust(25)
+      col += files
     end
-  end
-
-  def self.output
-    arrsize = @@arr.size / 3
-    a = 0
-    for i in 1..arrsize
-      puts "#{@@arr[i + a]} ".ljust(25) + "#{@@arr[i + arrsize + a]} ".ljust(25) + "#{@@arr[i + arrsize + arrsize + a]} ".ljust(25)
-      a += 1
-    end
+  puts "\n"
   end
 end
 
-List.input
-List.output
+arr = input(args)
+output(arr)
