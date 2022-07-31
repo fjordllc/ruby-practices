@@ -2,15 +2,15 @@
 require 'optparse'
 opt = OptionParser.new
 args = {}
-opt.on('-a') {|v| args[:a] = v}
+opt.on('-r') {|v| args[:r] = v}
 opt.parse!(ARGV)
 
 def input(args)
-  a = args[:a].nil? ? 0 : File::FNM_DOTMATCH
-  Dir.glob("*",a)
+  Dir.glob("*")
 end
 
-def output(arr)
+def output(arr,args)
+  r = args[:r].nil? ? 0 : arr.reverse!
   files = ((arr.size + 1).to_f / 3).ceil
   files.times do |row|
     col = 0
@@ -23,4 +23,4 @@ def output(arr)
 end
 
 arr = input(args)
-output(arr)
+output(arr,args)
