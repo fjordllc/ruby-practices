@@ -2,24 +2,34 @@
 
 # frozen_string_literal: true
 
+require 'optparse'
+
 COLUMN_COUNT = 3
 COLUMN_MARGIN = 4
 
 def main
-  path = ARGV[0]
-  puts ls(path)
+  options = {}
+  opt = OptionParser.new
+  opt.on('-a') { |v| options[:a] = v }
+  path = opt.parse(ARGV)[0]
+
+  puts ls(options, path)
 end
 
-def ls(path = '.')
-  files = get_files(path)
+def ls(options, path = '.')
+  files = get_files(options, path)
   return '' if files.empty?
 
   columns = slice_columns(files)
   format(files, columns)
 end
 
-def get_files(path)
-  Dir.glob('*', base: path).sort
+def get_files(options, path)
+  if options[:a]
+    Dir.glob('*', File::FNM_DOTMATCH, base: path).sort
+  else
+    Dir.glob('*', base: path).sort
+  end
 end
 
 def slice_columns(files)

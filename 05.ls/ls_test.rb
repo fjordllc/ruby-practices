@@ -14,65 +14,68 @@ PATH_7 = 'ls-test-dir/ls7'
 PATH_8 = 'ls-test-dir/ls8'
 PATH_9 = 'ls-test-dir/ls9'
 PATH_10 = 'ls-test-dir/ls10'
+PATH_DOT = 'ls-test-dir/ls-dot'
+OPTIONS_EMPTY = {}.freeze
+OPTIONS_A = { a: true }.freeze
 
 class LsTest < Minitest::Test
   def test_ls_nothing
     expected = ''
-    assert_equal expected, ls(PATH_0)
+    assert_equal expected, ls(OPTIONS_EMPTY, PATH_0)
   end
 
   def test_ls_file1
     expected = ['a.txt    ']
-    assert_equal expected, ls(PATH_1)
+    assert_equal expected, ls(OPTIONS_EMPTY, PATH_1)
   end
 
   def test_ls_file2
     expected = ['aaaaa.txt    bbbbb.txt    ']
-    assert_equal expected, ls(PATH_2)
+    assert_equal expected, ls(OPTIONS_EMPTY, PATH_2)
   end
 
   def test_ls_file3
     expected = ['aaaaa.txt    bbbbb.txt    ccccc.txt    ']
-    assert_equal expected, ls(PATH_3)
+    assert_equal expected, ls(OPTIONS_EMPTY, PATH_3)
   end
 
   def test_ls_file4
     expected = ['aaaaa.txt    ccccc.txt    ',
                 'bbbbb.txt    ddddd.txt    ']
-    assert_equal expected, ls(PATH_4)
+    assert_equal expected, ls(OPTIONS_EMPTY, PATH_4)
   end
 
   def test_ls_file5
     expected = ['aaaaa.txt    ccccc.txt    eeeee.txt    ',
                 'bbbbb.txt    ddddd.txt                 ']
-    assert_equal expected, ls(PATH_5)
+    assert_equal expected, ls(OPTIONS_EMPTY, PATH_5)
   end
 
   def test_ls_file6
     expected = ['aaaaa.txt    ccccc.txt    eeeee.txt    ',
                 'bbbbb.txt    ddddd.txt    fffff.txt    ']
-    assert_equal expected, ls(PATH_6)
+    assert_equal expected, ls(OPTIONS_EMPTY, PATH_6)
   end
 
   def test_ls_file7
     expected = ['aaaaa.txt    ddddd.txt    ggggg.txt    ',
                 'bbbbb.txt    eeeee.txt                 ',
                 'ccccc.txt    fffff.txt                 ']
-    assert_equal expected, ls(PATH_7)
+    assert_equal expected, ls(OPTIONS_EMPTY, PATH_7)
   end
 
   def test_ls_file8
     expected = ['aaaaa.txt    ddddd.txt    ggggg.txt    ',
                 'bbbbb.txt    eeeee.txt    hhhhh.txt    ',
                 'ccccc.txt    fffff.txt                 ']
-    assert_equal expected, ls(PATH_8)
+    assert_equal expected, ls(OPTIONS_EMPTY, PATH_8)
   end
 
   def test_ls_file9
     expected = ['aaaaa.txt    ddddd.txt    ggggg.txt    ',
                 'bbbbb.txt    eeeee.txt    hhhhh.txt    ',
                 'ccccc.txt    fffff.txt    iiiii.txt    ']
-    assert_equal expected, ls(PATH_9)
+    assert_equal expected, ls(OPTIONS_EMPTY, PATH_9)
   end
 
   def test_ls_file10
@@ -80,6 +83,15 @@ class LsTest < Minitest::Test
                 'bbbbb.txt    fffff.txt    jjjjj.txt    ',
                 'ccccc.txt    ggggg.txt                 ',
                 'ddddd.txt    hhhhh.txt                 ']
-    assert_equal expected, ls(PATH_10)
+    assert_equal expected, ls(OPTIONS_EMPTY, PATH_10)
+  end
+
+  def test_ls_file_dot
+    expected = ['.            ccccc.txt    hhhhh.txt    ',
+                '.aaaaa       ddddd.txt    iiiii.txt    ',
+                '.bbbbb       eeeee.txt    jjjjj.txt    ',
+                'aaaaa.txt    fffff.txt                 ',
+                'bbbbb.txt    ggggg.txt                 ']
+    assert_equal expected, ls(OPTIONS_A, PATH_DOT)
   end
 end
