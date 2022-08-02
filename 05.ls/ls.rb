@@ -25,11 +25,8 @@ def ls(options, path = '.')
 end
 
 def get_files(options, path)
-  if options[:a]
-    Dir.glob('*', File::FNM_DOTMATCH, base: path).sort
-  else
-    Dir.glob('*', base: path).sort
-  end
+  glob_flag = options[:a] ? File::FNM_DOTMATCH : 0
+  Dir.glob('*', glob_flag, base: path).sort
 end
 
 def slice_columns(files)
