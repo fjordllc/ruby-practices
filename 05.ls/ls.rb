@@ -11,6 +11,7 @@ def main
   options = {}
   opt = OptionParser.new
   opt.on('-a') { |v| options[:a] = v }
+  opt.on('-r') { |v| options[:r] = v }
   path = opt.parse(ARGV)[0]
 
   puts ls(options, path)
@@ -26,7 +27,9 @@ end
 
 def get_files(options, path)
   glob_flag = options[:a] ? File::FNM_DOTMATCH : 0
-  Dir.glob('*', glob_flag, base: path).sort
+  files = Dir.glob('*', glob_flag, base: path).sort
+  files = files.reverse if options[:r]
+  files
 end
 
 def slice_columns(files)
