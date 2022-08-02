@@ -29,13 +29,13 @@ def print_option_l
 
   filetype_long = stat_file.map(&:ftype)
   filetype_convert_name = {'fifo' => 'p', 'characterSpecial' => 'c', 'directory' => 'd', 'blockSpecial' => 'b', 'file' => '-', 'link' => 'l', 'socket' => 's'}.freeze
-  filetype_short = filetype_long.map!{|n| filetype_convert_name[n]  }
+  filetype_short = filetype_long.map!{|short| filetype_convert_name[short]  }
 
   permission_num = stat_file.map(&:mode)
-  octal_permission = permission_num.map.each do |n|
-    n.to_s(8).to_i % 1000
+  octal_permission = permission_num.map.each do |num|
+    num.to_s(8).to_i % 1000
   end
-  octal_permission.map!{|i| i.to_s}
+  octal_permission.map!{|oct| oct.to_s}
   permission = octal_permission.map{ |a| a.gsub(/[0-7]/, '0' => '---', '1' => '--x', '2' => '-w-', '3' => '-wx', '4' => 'r--', '5' => 'r-x', '6' => 'rw-', '7' => 'rwx') }
   max_permission_width = permission.compact.max_by(&:size).size  + 1
   permission.map! {|space| space.to_s.ljust(max_permission_width)}
@@ -57,7 +57,6 @@ def print_option_l
   time_stamp = get_time.map{|time| time.strftime('%_m %_d %_R').to_s.ljust(12)} 
   time_stamp.map! {|space| space.to_s.ljust(10)}
 
-  symbolic_link = stat_file.map(&:symlink?)
   name = Dir.glob("*")
   max_name_width = name.compact.max_by(&:size).size  + 1
   name.map! {|space| space.to_s.ljust(max_name_width)}
