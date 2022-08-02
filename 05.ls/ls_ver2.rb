@@ -9,7 +9,7 @@ end
 def judje_options
   options = {}
   OptionParser.new do |opt|
-    opt.on('-l', '--long', 'long display'){ |v| options[:l] = v }
+    opt.on('-l', '--long', 'long list'){ |v| options[:l] = v }
     opt.parse!(ARGV)
   end
 
