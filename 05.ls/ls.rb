@@ -27,54 +27,41 @@ class LSCommand
   def output
     case @path
     when String
-      select_display(file_information(@path))
+      file_information_output(@path)
     when Array
       @path.each do |path|
         puts "#{path}:"
-        select_display(file_information(path))
+        file_information_output(path)
       end
     end
   end
 
-  def file_information(path)
-    file_informations = []
+  def file_information_output(path)
     Dir.chdir(path) do
-      # file_names = @options[:a] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
-      # file_names = @options[:r] ? Dir.glob('*').reverse : Dir.glob('*')
-      file_informations = if @options[:l]
-                            l_opsion_file_information(path)
-                          else
-                            Dir.glob('*')
-                          end
+      file_names = @options[:a] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
+      file_names = @options[:r] ? file_names.reverse : file_names
+      @options[:l] ? l_option_display(l_option_file_information(path, file_names)) : default_display(file_names)
     end
   end
 
-  def l_opsion_file_information(path)
-    file_informations = []
-    Dir.glob('*').each do |filename|
+  def l_option_file_information(path, file_names)
+    file_names.map do |filename|
       file_info = File.lstat(filename)
-      user_permission = file_info.mode.to_s(8)[-4] == '4' ? SGID_SUID_PERMISSION[file_info.mode.to_s(8)[-3]] : PERMISSION[file_info.mode.to_s(8)[-3]]
-      group_permission = file_info.mode.to_s(8)[-4] == '2' ? SGID_SUID_PERMISSION[file_info.mode.to_s(8)[-2]] : PERMISSION[file_info.mode.to_s(8)[-2]]
-      other_permission = file_info.mode.to_s(8)[-4] == '1' ? STICKY_PERMISSION[file_info.mode.to_s(8)[-1]] : PERMISSION[file_info.mode.to_s(8)[-1]]
       link_to_file = " -> #{File.readlink("#{path}#{filename}")}" if file_info.symlink?
-      file_informations << {
-        blocks: file_info.blocks, file_type: FILE_TYPE[file_info.ftype],
-        user_permission: user_permission, group_permission: group_permission,
-        other_permission: other_permission, nlink: file_info.nlink,
-        user_name: Etc.getpwuid(file_info.uid).name, group_name: Etc.getgrgid(file_info.gid).name,
-        size: file_info.size, date: file_info.mtime.strftime('%_m %e %H:%M'),
-        file_name: filename, link: link_to_file
+      {
+        blocks: file_info.blocks,
+        file_type: FILE_TYPE[file_info.ftype],
+        user_permission: file_info.mode.to_s(8)[-4] == '4' ? SGID_SUID_PERMISSION[file_info.mode.to_s(8)[-3]] : PERMISSION[file_info.mode.to_s(8)[-3]],
+        group_permission: file_info.mode.to_s(8)[-4] == '2' ? SGID_SUID_PERMISSION[file_info.mode.to_s(8)[-2]] : PERMISSION[file_info.mode.to_s(8)[-2]],
+        other_permission: file_info.mode.to_s(8)[-4] == '1' ? STICKY_PERMISSION[file_info.mode.to_s(8)[-1]] : PERMISSION[file_info.mode.to_s(8)[-1]],
+        nlink: file_info.nlink,
+        user_name: Etc.getpwuid(file_info.uid).name,
+        group_name: Etc.getgrgid(file_info.gid).name,
+        size: file_info.size,
+        date: file_info.mtime.strftime('%_m %e %H:%M'),
+        file_name: filename,
+        link: link_to_file
       }
-    end
-    file_informations
-  end
-
-  def select_display(file_informations)
-    case file_informations[1]
-    when String
-      default_display(file_informations)
-    when Hash
-      l_option_display(file_informations)
     end
   end
 
@@ -90,8 +77,8 @@ class LSCommand
   end
 
   def l_option_display(file_informations)
-    max_username_size = file_informations.max_by { |x| x[:user_name].size }[:user_name].size + 1
-    max_groupname_size = file_informations.max_by { |x| x[:group_name].size }[:group_name].size + 2
+    max_username_size = file_informations.map { |x| x[:user_name].size }.max + 1
+    max_groupname_size = file_informations.map { |x| x[:group_name].size }.max + 2
     puts "total #{file_informations.sum { |x| x[:blocks] }}"
     file_informations.each do |x|
       print x[:file_type]
