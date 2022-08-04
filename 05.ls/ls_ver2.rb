@@ -34,10 +34,10 @@ def print_option_l
   filetype_short = filetype_long.map! { |short| filetype_convert_name[short] }
 
   permission_num = stat_file.map(&:mode)
-  octal_permission = permission_num.map.each do |num|
+  octal_permission = permission_num.map do |num|
     num.to_s(8).to_i % 1000
   end
-  octal_permission.map(&:to_s)
+  octal_permission.map!(&:to_s)
   permission = octal_permission.map do |a|
     a.gsub(/[0-7]/, '0' => '---', '1' => '--x', '2' => '-w-', '3' => '-wx', '4' => 'r--', '5' => 'r-x', '6' => 'rw-', '7' => 'rwx')
   end
