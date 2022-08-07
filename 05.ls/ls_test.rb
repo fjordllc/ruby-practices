@@ -17,6 +17,8 @@ PATH_10 = 'ls-test-dir/ls10'
 PATH_DOT = 'ls-test-dir/ls-dot'
 OPTIONS_EMPTY = {}.freeze
 OPTIONS_A = { a: true }.freeze
+OPTIONS_R = { r: true }.freeze
+OPTIONS_AR = { a: true, r: true }.freeze
 
 class LsTest < Minitest::Test
   def test_ls_nothing
@@ -93,5 +95,22 @@ class LsTest < Minitest::Test
                 'aaaaa.txt    fffff.txt                 ',
                 'bbbbb.txt    ggggg.txt                 ']
     assert_equal expected, ls(OPTIONS_A, PATH_DOT)
+  end
+
+  def test_ls_file10_r
+    expected = ['jjjjj.txt    fffff.txt    bbbbb.txt    ',
+                'iiiii.txt    eeeee.txt    aaaaa.txt    ',
+                'hhhhh.txt    ddddd.txt                 ',
+                'ggggg.txt    ccccc.txt                 ']
+    assert_equal expected, ls(OPTIONS_R, PATH_10)
+  end
+
+  def test_ls_option_ar
+    expected = ['jjjjj.txt    eeeee.txt    .bbbbb       ',
+                'iiiii.txt    ddddd.txt    .aaaaa       ',
+                'hhhhh.txt    ccccc.txt    .            ',
+                'ggggg.txt    bbbbb.txt                 ',
+                'fffff.txt    aaaaa.txt                 ']
+    assert_equal expected, ls(OPTIONS_AR, PATH_DOT)
   end
 end
