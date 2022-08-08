@@ -1,12 +1,16 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'optparse'
+
 DEFAULT_PATH = '.'
 COLUMNS_SIZE = 3
 PADDING_SIZE = 1
 
-def execute(path: DEFAULT_PATH)
-  entries = Dir.glob('*', base: path)
+def execute(path, options:)
+  flags = File::FNM_PATHNAME
+  flags = File::FNM_DOTMATCH if options['a']
+  entries = Dir.glob('*', flags, base: path)
   output(entries, column_size: COLUMNS_SIZE)
 end
 
@@ -27,4 +31,7 @@ def transposed_entries(entries, column_size: COLUMNS_SIZE)
   sliced_entries.map { |item| item.values_at(0...max_size) }.transpose
 end
 
-execute(path: ARGV[0] || DEFAULT_PATH)
+options = ARGV.getopts('a')
+path = ARGV[0] || DEFAULT_PATH
+
+execute(path, options: options)
