@@ -1,11 +1,11 @@
 x = 1
 while x <= 20
     if x % 15 == 0
-        puts "fizz buzz"
+        puts "Fizz Buzz"
     elsif x % 3 == 0
-        puts "fizz"
+        puts "Fizz"
     elsif x % 5 == 0
-        puts "buzz"
+        puts "Buzz"
     else
         puts x
     end
