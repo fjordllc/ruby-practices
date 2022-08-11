@@ -15,9 +15,11 @@ PATH_8 = 'ls-test-dir/ls8'
 PATH_9 = 'ls-test-dir/ls9'
 PATH_10 = 'ls-test-dir/ls10'
 PATH_DOT = 'ls-test-dir/ls-dot'
+PATH_FILETYPE = 'ls-test-dir/ls-filetype'
 OPTIONS_EMPTY = {}.freeze
 OPTIONS_A = { a: true }.freeze
 OPTIONS_R = { r: true }.freeze
+OPTIONS_L = { l: true }.freeze
 OPTIONS_AR = { a: true, r: true }.freeze
 
 class LsTest < Minitest::Test
@@ -112,5 +114,13 @@ class LsTest < Minitest::Test
                 'ggggg.txt    bbbbb.txt                 ',
                 'fffff.txt    aaaaa.txt                 ']
     assert_equal expected, ls(OPTIONS_AR, PATH_DOT)
+  end
+
+  def test_ls_option_l
+    expected = ['total 8',
+                '-rw-r--r--  1 kanoko staff  1667  8 10 22:36 aaaaa.txt',
+                'drwxr-xr-x  2 kanoko staff    64  8  3 23:23 bbbbb-dir',
+                'lrwxr-xr-x  1 kanoko staff    54  8  7 21:28 ls0 -> /Users/kanoko/Dev/ruby-practices/05.ls/ls-test-dir/ls0']
+    assert_equal expected, ls(OPTIONS_L, PATH_FILETYPE)
   end
 end
