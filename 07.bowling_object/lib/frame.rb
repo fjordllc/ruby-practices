@@ -10,6 +10,8 @@ class Frame
   end
 
   def sum_shots
-    [first_shot.show_shot_score, second_shot.show_shot_score, third_shot.show_shot_score].sum
+    [first_shot.score, second_shot.score, third_shot.score].sum
   end
 end
+
+# メソッドについて何回か立ち返って考え直す
