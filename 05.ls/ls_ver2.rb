@@ -5,10 +5,6 @@ require 'debug'
 require 'date'
 
 def main
-  judje_options
-end
-
-def judje_options
   options = {}
   OptionParser.new do |opt|
     opt.on('-l', '--long', 'long list') { |v| options[:l] = v }
@@ -21,6 +17,7 @@ def judje_options
     print_without_option_l
   end
 end
+
 
 def print_option_l
   stat_file = Dir.glob('*').map { |s| File::Stat.new(s) }
