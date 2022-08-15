@@ -1,15 +1,12 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require_relative 'game'
-
 class Shot
-  attr_accessor :score_number
+  attr_accessor :mark
 
-  def initialize(score_number)
-    @score_number = score_number
+  def initialize(mark)
+    @mark = mark
   end
-
 end
 
 

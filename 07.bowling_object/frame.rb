@@ -1,23 +1,27 @@
 # frozen_string_literal: true
 
-require_relative 'game'
 require_relative 'shot'
 
 class Frame
-  attr_accessor :frame, :first_shot, :second_shot
+  attr_accessor :first_shot, :second_shot
 
-  def initialize(frame)
-    @frame = frame
-    @first_shot = frame[0]
-    @second_shot = frame[1]
+  def initialize(first_shot, second_shot)
+    @first_shot = Shot.new(first_shot)
+    @second_shot = Shot.new(second_shot)
   end
 
-  def frame_score(frame)
-    frame.sum
+  # 10フレーム以降もこれにあてはまる
+  def calc_normal_frame
+    @first_shot.mark + @second_shot.mark
+  end
+
+  def calc_strike_frame
+
+  end
+
+  def calc_spare_frame
+
   end
 end
 
-# frame = [1,2]
-# frame1 = Frame.new(frame)
-# p frame1.frame_score(frame)
 
