@@ -18,7 +18,6 @@ def main
   end
 end
 
-
 def print_option_l
   stat_file = Dir.glob('*').map { |s| File::Stat.new(s) }
 
