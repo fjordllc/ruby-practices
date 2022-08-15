@@ -3,5 +3,7 @@
 
 require_relative 'game'
 
-game = Game.new(ARGV[0])
-puts game.calc_scores
+if __FILE__ == $PROGRAM_NAME
+  game = Game.new(ARGV[0])
+  puts game.calc_scores
+end
