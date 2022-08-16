@@ -3,7 +3,7 @@
 num = 20
 
 # 3の倍数でFizz、5の倍数でBuzz、両方でFizzBuzzを表示
-num.times{|i| 
+num.times do |i| 
     if (i+1)%15 === 0
         result = 'FizzBuzz'
     elsif (i+1)%5 === 0
@@ -14,4 +14,4 @@ num.times{|i|
         result = i+1
     end
     puts result
-}
+end
