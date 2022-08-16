@@ -1,5 +1,4 @@
 require_relative 'frame'
-require 'debug'
 
 class Game
   attr_reader :scores
