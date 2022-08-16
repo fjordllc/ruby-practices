@@ -15,10 +15,18 @@ def score_numbers_for_frame(score_texts)
       score_numbers << score.to_i
     end
   end
+  #   if score == 'X'
+  #     0
+  #   else
+  #     score
+  #   end << score_numbers
+  # end
   score_numbers
 end
 
 score_numbers = score_numbers_for_frame(score_texts)
 game = Game.new(score_numbers)
-p game.total_score
+# game.calc_total_score
+p game.calc_point
+p game.sum_up
 
