@@ -28,15 +28,13 @@ class Game
   def calc_scores
     frames = game_scores.scores
     frames.each_with_index.sum do |frame, index|
-      if frame.first_shot.score == 10
-        if index < 8 && frames[index + 1].first_shot.score == 10
+      if frame.strike? && index <= 8
+        if frames[index + 1].strike? && index < 8
           frame.sum_shots + frames[index + 1].first_shot.score + frames[index + 2].first_shot.score
-        elsif index == 9
-          frame.sum_shots
         else
           frame.sum_shots + frames[index + 1].first_shot.score + frames[index + 1].second_shot.score
         end
-      elsif frame.sum_shots == 10 && index < 9
+      elsif frame.spare? && index < 9
         frame.sum_shots + frames[index + 1].first_shot.score
       else
         frame.sum_shots
