@@ -12,6 +12,13 @@ class Frame
   def sum_shots
     [first_shot.score, second_shot.score, third_shot.score].sum
   end
-end
 
-# メソッドについて何回か立ち返って考え直す
+  def strike?
+    @first_shot.score == 10
+  end
+
+  def spare?
+    [@first_shot.score, @second_shot.score].sum == 10
+  end
+
+end
