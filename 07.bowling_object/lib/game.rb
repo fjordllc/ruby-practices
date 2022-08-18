@@ -7,13 +7,12 @@ class Game
   end
 
   def split_scores
-    scores = []
-    split_score = @scores.split(',')
-    split_score.each do |score|
-      scores << score
-      scores << '0' if scores.size < 18 && score == 'X'
+    split_scores = []
+    @scores.split(',').each do |score|
+      split_scores << score
+      split_scores << '0' if split_scores.size < 18 && score == 'X'
     end
-    scores
+    split_scores
   end
 
   def frames
