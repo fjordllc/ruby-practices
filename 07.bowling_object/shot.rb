@@ -1,4 +1,3 @@
-#!/usr/bin/env ruby
 # frozen_string_literal: true
 
 class Shot
@@ -8,10 +7,7 @@ class Shot
     @mark = mark
   end
 
-  def score
-    @mark == 'X' ? 10 : @mark.to_i
-  end
-
+  # def score
+  #   @mark == 'X' ? 10 : @mark.to_i
+  # end
 end
-
-

@@ -10,13 +10,12 @@ class Game
     frame_marks.each_index do |index|
       @frames << Frame.new(frame_marks[index][0], frame_marks[index][1], frame_marks, index)
     end
-    pp @frames
+    # pp @frames
   end
 
   def sum_up
     sum_up = []
-    sum_up << calc_total_score
-    sum_up << calc_point
+    sum_up << calc_total_score << calc_point
     sum_up.flatten.sum
   end
 
@@ -33,17 +32,18 @@ class Game
     @frames.each_with_index do |frame, index|
       break if index == 9
 
-      if frame.first_shot.mark == 10 && frame.frame_marks[index + 1][0] == 10
-        total_point << frame.frame_marks[index + 1][0]
-        total_point << frame.frame_marks[index + 2][0]
-      elsif frame.first_shot.mark == 10
-        total_point << frame.frame_marks[index + 1][0]
-        total_point << frame.frame_marks[index + 1][1]
-      elsif frame.first_shot.mark != 10 && frame.calc_normal_frame == 10
-        total_point << frame.frame_marks[index + 1][0]
-      else
-        total_point << 0
-      end
+      total_point << if frame.consecutive_strike?
+                       # total_point << frame.frame_marks[index + 1][0] << frame.frame_marks[index + 2][0]
+                       frame.calc_consecutive_strike
+                     elsif frame.strike?
+                       # total_point << frame.frame_marks[index + 1][0] << frame.frame_marks[index + 1][1]
+                       frame.calc_strike
+                     elsif frame.spare?
+                       # total_point << frame.frame_marks[index + 1][0]
+                       frame.calc_spare
+                     else
+                       0
+                     end
     end
     total_point
   end

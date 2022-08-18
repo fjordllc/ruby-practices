@@ -2,8 +2,6 @@
 
 require_relative 'game'
 
-score_texts = ARGV[0]
-# 引数の加工をここでやってしまった。
 def score_numbers_for_frame(score_texts)
   scores = score_texts.split(',')
   score_numbers = []
@@ -15,18 +13,12 @@ def score_numbers_for_frame(score_texts)
       score_numbers << score.to_i
     end
   end
-  #   if score == 'X'
-  #     0
-  #   else
-  #     score
-  #   end << score_numbers
-  # end
   score_numbers
 end
 
-score_numbers = score_numbers_for_frame(score_texts)
-game = Game.new(score_numbers)
-# game.calc_total_score
-p game.calc_point
-p game.sum_up
-
+if __FILE__ == $PROGRAM_NAME
+  score_texts = ARGV[0]
+  score_numbers = score_numbers_for_frame(score_texts)
+  game = Game.new(score_numbers)
+  p game.sum_up
+end
