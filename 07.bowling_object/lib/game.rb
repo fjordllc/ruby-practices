@@ -55,5 +55,4 @@ class Game
   def next_next_frame(frames, index)
     frames[index + 2]
   end
-
 end
