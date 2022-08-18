@@ -5,12 +5,12 @@ require_relative 'game'
 def score_numbers_for_frame(score_texts)
   scores = score_texts.split(',')
   score_numbers = []
-  scores.each do |score|
-    if score == 'X'
+  scores.each do |score_text|
+    if score_text == 'X'
       score_numbers << 10
       score_numbers << 0
     else
-      score_numbers << score.to_i
+      score_numbers << score_text.to_i
     end
   end
   score_numbers

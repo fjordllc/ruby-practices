@@ -19,7 +19,6 @@ class Frame
 
   def spare?
     @first_shot.mark != 10 && @first_shot.mark + @second_shot.mark == 10
-    # @frame_marks[index + 1][0]
   end
 
   def calc_spare
@@ -46,13 +45,3 @@ class Frame
     @frame_marks[after_frame + 1][0] + @frame_marks[after_frame + 2][0]
   end
 end
-
-# frame1 = Frame.new(6, 3,  [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], [10, 0], [9, 1], [8, 0], [10, 0], [6, 4], [5]], 1)
-# p frame1
-# p frame1.index
-# after_frame = frame1.index
-# p after_frame
-# p frame1.frame_marks[0]
-# p frame1.frame_marks[1]
-# p frame1.frame_marks[after_frame]
-

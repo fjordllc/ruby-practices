@@ -7,6 +7,7 @@ class Shot
     @mark = mark
   end
 
+  # 活用できていない
   # def score
   #   @mark == 'X' ? 10 : @mark.to_i
   # end
