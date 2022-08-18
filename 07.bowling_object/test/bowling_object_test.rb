@@ -3,16 +3,20 @@
 require 'minitest/autorun'
 require_relative '../lib/bowling_object'
 
-
 class BowlingObjectTest < Minitest::Test
   def test_calc_scores_no_strike_spare
     game = Game.new("6,3,9,0,0,3,8,1,7,2,5,2,9,0,8,0,3,6,3")
     assert_equal 75, game.calc_scores
   end
 
-  def test_calc_scores_strike_spare
-    game = Game.new('6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,6,4,5')
-    assert_equal 139, game.calc_scores
+  def test_calc_scores_strike
+    game = Game.new("6,3,9,0,0,3,8,0,7,2,X,9,0,8,0,X,6,3")
+    assert_equal 102, game.calc_scores
+  end
+
+  def test_calc_scores_spare
+    game = Game.new("6,3,9,0,0,3,8,1,7,3,1,0,9,0,8,0,1,9,6,3")
+    assert_equal 84, game.calc_scores
   end
 
   def test_calc_scores_consecutive_strikes
