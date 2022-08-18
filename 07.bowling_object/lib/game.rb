@@ -38,14 +38,14 @@ class Game
 
   def strike_bonus(frames, index)
     if next_frame(frames, index).strike? && index < 8
-      next_frame(frames, index).first_shot.score + next_next_frame(frames, index).first_shot.score
+      next_frame(frames, index).first_shot + next_next_frame(frames, index).first_shot
     else
-      next_frame(frames, index).first_shot.score + next_frame(frames, index).second_shot.score
+      next_frame(frames, index).first_shot + next_frame(frames, index).second_shot
     end
   end
 
   def spare_bonus(frames, index)
-    next_frame(frames, index).first_shot.score
+    next_frame(frames, index).first_shot
   end
 
   def next_frame(frames, index)
