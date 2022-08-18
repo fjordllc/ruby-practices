@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+# frozen_string_literal: true
 
 class Shot
   def initialize(mark)
@@ -6,6 +6,6 @@ class Shot
   end
 
   def score
-    @mark == 'X' ?  10 : @mark.to_i 
+    @mark == 'X' ? 10 : @mark.to_i
   end
 end
