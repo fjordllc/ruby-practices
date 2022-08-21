@@ -10,22 +10,13 @@ scores.each do |s|
   end
 end
 
-frames = []
-shots.each_slice(2) do |s|
-  frames << s
-end
+frames = shots.each_slice(2).to_a
  
 point = 0
 frames.each_index do |index|
   if index == 9
-    if frames[index][0] == 10 && frames[index + 1][0] == 10 # 10th frame(strike:1st, 2nd)
-      point += frames[index + 2][0] + 20
-    elsif frames[index].sum != 10 # 10th frame (no-strike, no-spare)
-      point += frames[index].sum
-    else # 10th frame
-      point += frames[index].sum + frames[index + 1].sum
-    end
-    break if index == 9
+    point += frames[index..].sum { |frame| frame.sum }
+    break
   end
   if frames[index][0] == 10 && frames[index + 1][0] == 10 # strike * 2
     point += frames[index + 2][0] + 20
