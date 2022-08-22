@@ -28,15 +28,14 @@ puts "日 月 火 水 木 金 土"
 # 日付の表示
 first_date = Date.new(@y.to_i, @m.to_i, 1)
 last_date = Date.new(@y.to_i, @m.to_i, -1)
-(first_date.cwday.to_i % 7).times { |n| print "   "} # 先月分の空白
-(first_date - 1..last_date - 1).each do |date|
-  date += 1
+first_date.wday.times { print "   " } # 先月分の空白
+(first_date..last_date).each do |date|
   if date == Date.today # 今日の日付の部分の色を反転させる
     print "\e[7m#{date.day}\e[0m".rjust(2) + " "
   else
     print date.day.to_s.rjust(2) + " "
   end
-  if date.day.to_i % 7 == (first_date.cwday.to_i - 7).abs # 土曜日で改行する
+  if date.wday == 6 # 土曜日で改行する
     print "\n"
   end
 end
