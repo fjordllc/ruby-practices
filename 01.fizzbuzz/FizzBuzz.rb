@@ -1,12 +1,14 @@
 #!/usr/bin/env ruby
+fizz = 3
+buzz = 5
 numbers = (1..20)
 numbers.each do |number|
   case 
-  when number%3 == 0 && number%5 == 0
+  when number%fizz == 0 && number%buzz == 0
     puts "FizzBuzz"
-  when number%3 == 0
+  when number%fizz == 0
     puts "Fizz"
-  when number%5 == 0
+  when number%buzz == 0
     puts "Buzz" 
   else
   puts number
