@@ -8,8 +8,7 @@ COLUMNS_SIZE = 3
 PADDING_SIZE = 1
 
 def execute(path, options:)
-  flags = File::FNM_PATHNAME
-  flags = File::FNM_DOTMATCH if options['a']
+  flags = options['a'] ? File::FNM_DOTMATCH : File::FNM_SYSCASE
   entries = Dir.glob('*', flags, base: path)
   output(entries, column_size: COLUMNS_SIZE)
 end
