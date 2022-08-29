@@ -3,63 +3,49 @@
 require 'date'
 require 'optparse'
 
-# list for day of week
-wList = ['日','月','火','水','木','金','土']
+w_list = ['日','月','火','水','木','金','土']
 
 options = ARGV.getopts('y:', 'm:')
-# year
 if options['y'] != nil and options['y'] =~ /^[0-9]+$/
-    y = options['y'].to_i
+  y = options['y'].to_i
 else
-    y = Date.today.year.to_i
+  y = Date.today.year.to_i
 end
-# month
-if options['m'] != nil and options['y'] =~ /^[0-9]+$/
-    m = options['m'].to_i
+if options['m'] != nil and options['m'] =~ /^[0-9]+$/
+  m = options['m'].to_i
 else
-    m = Date.today.month.to_i
+  m = Date.today.month.to_i
 end
-# day of week
-# w = nil
 
-# Check calender contains today
-todayFlg = false
+today_flg = false
 today = Date.today
-if today.year == y and today.month == m
-    todayFlg = true
+if today.year == y and today.month == m 
+  today_flg = true
 end
 
-# Get number of First day of week
-numFirstDayWeek = Date.new(y, m, 1).strftime('%u').to_i
-# Get List day of specified month
-lastDay = Date.new(y, m, -1).day
+num_first_day_week = Date.new(y, m, 1).strftime('%u').to_i
+last_day = Date.new(y, m, -1).day
 
-# Output HEADER to Console
-puts ' '*5 + y.to_s + '年' + m.to_s + '月'
-wList.each do |val|
-    print val + ' '
+puts ' '*5 + "#{y}年#{m}月"
+w_list.each do |val|
+  print val + ' '
 end
 puts
-# Date Initial Setting
-if numFirstDayWeek == 7
-    cont = 7
-elsif
-    cont = 7-numFirstDayWeek.to_i
-    init = '   '*numFirstDayWeek
-end
-# Output DATE to Console
-print init
-lastDay.times do |i|
-    if cont == 0
-        puts
-        cont = 7
-    end
-    if i+1 < 10
-        print (i+1).to_s + '  '
-    else
-        print (i+1).to_s + ' '
-    end
 
-    cont -= 1
+if num_first_day_week == 7
+  week_count = 7
+elsif
+  week_count = 7 - num_first_day_week
+  init = '   ' * num_first_day_week
+end
+
+print init
+last_day.times do |i|
+  if week_count == 0
+    puts
+    week_count = 7
+  end
+  print sprintf("%-3d", i+1)
+  week_count -= 1
 end
 puts
