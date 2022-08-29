@@ -10,6 +10,7 @@ PADDING_SIZE = 1
 def execute(path, options:)
   flags = options['a'] ? File::FNM_DOTMATCH : File::FNM_SYSCASE
   entries = Dir.glob('*', flags, base: path)
+  entries = entries.reverse if options['r']
   output(entries, column_size: COLUMNS_SIZE)
 end
 
@@ -30,7 +31,7 @@ def transposed_entries(entries, column_size: COLUMNS_SIZE)
   sliced_entries.map { |item| item.values_at(0...max_size) }.transpose
 end
 
-options = ARGV.getopts('a')
+options = ARGV.getopts('a', 'r')
 path = ARGV[0] || DEFAULT_PATH
 
 execute(path, options: options)
