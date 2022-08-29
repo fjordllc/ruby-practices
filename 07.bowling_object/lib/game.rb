@@ -4,12 +4,12 @@ require_relative 'frame'
 
 class Game
   def initialize(scores)
-    @frames = []
     @scores = scores
+    @frames = initialize_frames
   end
 
   def calc_scores
-    frames.each_with_index.sum do |frame, index|
+    @frames.each_with_index.sum do |frame, index|
       if frame.strike? && index < 9
         frame.sum_shots + strike_bonus(@frames, index)
       elsif frame.spare? && index < 9
@@ -22,6 +22,12 @@ class Game
 
   private
 
+  def initialize_frames
+    frames = []
+    split_scores.each_slice(2) { |score| frames.size == 10 ? frames[9] << score[-1] : frames << score }
+    frames.map { |frame| Frame.new(frame[0], frame[1], frame[2]) }
+  end
+
   def split_scores
     split_scores = []
     @scores.split(',').each do |score|
@@ -29,11 +35,6 @@ class Game
       split_scores << '0' if split_scores.size < 18 && score == 'X'
     end
     split_scores
-  end
-
-  def frames
-    split_scores.each_slice(2) { |score| @frames.size == 10 ? @frames[9] << score[-1] : @frames << score }
-    @frames = @frames.map { |frame| Frame.new(frame[0], frame[1], frame[2]) }
   end
 
   def strike_bonus(frames, index)
