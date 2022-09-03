@@ -4,8 +4,7 @@ require_relative 'frame'
 
 class Game
   def initialize(scores)
-    @scores = scores
-    @frames = initialize_frames
+    @frames = Frame.generate_frames(scores)
   end
 
   def calc_scores
@@ -21,12 +20,6 @@ class Game
   end
 
   private
-
-  def initialize_frames
-    frames = []
-    split_scores.each_slice(2) { |score| frames.size == 10 ? frames[9] << score[-1] : frames << score }
-    frames.map { |frame| Frame.new(frame[0], frame[1], frame[2]) }
-  end
 
   def split_scores
     split_scores = []
