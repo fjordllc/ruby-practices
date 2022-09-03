@@ -21,15 +21,6 @@ class Game
 
   private
 
-  def split_scores
-    split_scores = []
-    @scores.split(',').each do |score|
-      split_scores << score
-      split_scores << '0' if split_scores.size < 18 && score == 'X'
-    end
-    split_scores
-  end
-
   def strike_bonus(frames, index)
     if next_frame(frames, index).strike? && index < 8
       next_frame(frames, index).first_shot.score + next_next_frame(frames, index).first_shot.score
