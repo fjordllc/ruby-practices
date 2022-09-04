@@ -23,6 +23,18 @@ class Frame
     frames.map.with_index { |frame, index| Frame.new(index, frame[0], frame[1], frame[2]) }
   end
 
+  def strike?
+    @first_shot.score == 10
+  end
+
+  def spare?
+    [@first_shot.score, @second_shot.score].sum == 10
+  end
+
+  def sum_shots
+    [@first_shot.score, @second_shot.score, @third_shot.score].sum
+  end
+
   def strike_bonus(frame, index)
     if next_frame(frame, index).strike? && index < 8
       next_frame(frame, index).first_shot.score + next_next_frame(frame, index).first_shot.score
@@ -35,23 +47,13 @@ class Frame
     next_frame(frames, index).first_shot.score
   end
 
+  private
+
   def next_frame(frame, index)
     frame[index + 1]
   end
 
   def next_next_frame(frame, index)
     frame[index + 2]
-  end
-
-  def strike?
-    @first_shot.score == 10
-  end
-
-  def spare?
-    [@first_shot.score, @second_shot.score].sum == 10
-  end
-  
-  def sum_shots
-    [@first_shot.score, @second_shot.score, @third_shot.score].sum
   end
 end
