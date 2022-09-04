@@ -35,25 +35,25 @@ class Frame
     [@first_shot.score, @second_shot.score, @third_shot.score].sum
   end
 
-  def strike_bonus(frame, index)
-    if next_frame(frame, index).strike? && index < 8
-      next_frame(frame, index).first_shot.score + next_next_frame(frame, index).first_shot.score
+  def strike_bonus(frame)
+    if next_frame(frame, @index).strike? && index < 8
+      next_frame(frame, @index).first_shot.score + next_next_frame(frame, @index).first_shot.score
     else
-      next_frame(frame, index).first_shot.score + next_frame(frame, index).second_shot.score
+      next_frame(frame, @index).first_shot.score + next_frame(frame, @index).second_shot.score
     end
   end
 
-  def spare_bonus(frames, index)
-    next_frame(frames, index).first_shot.score
+  def spare_bonus(frame)
+    next_frame(frame, @index).first_shot.score
   end
 
   private
 
   def next_frame(frame, index)
-    frame[index + 1]
+    frame[@index + 1]
   end
 
   def next_next_frame(frame, index)
-    frame[index + 2]
+    frame[@index + 2]
   end
 end
