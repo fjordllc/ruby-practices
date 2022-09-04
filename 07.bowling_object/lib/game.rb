@@ -8,36 +8,14 @@ class Game
   end
 
   def calc_scores
-    @frames.each_with_index.sum do |frame, index|
-      if frame.strike? && index < 9
-        frame.sum_shots + strike_bonus(@frames, index)
-      elsif frame.spare? && index < 9
-        frame.sum_shots + spare_bonus(@frames, index)
+    @frames.each.sum do |frame|
+      if frame.strike? && frame.index < 9
+        frame.sum_shots + frame.strike_bonus(@frames, frame.index)
+      elsif frame.spare? && frame.index < 9
+        frame.sum_shots + frame.spare_bonus(@frames, frame.index)
       else
         frame.sum_shots
       end
     end
-  end
-
-  private
-
-  def strike_bonus(frames, index)
-    if next_frame(frames, index).strike? && index < 8
-      next_frame(frames, index).first_shot.score + next_next_frame(frames, index).first_shot.score
-    else
-      next_frame(frames, index).first_shot.score + next_frame(frames, index).second_shot.score
-    end
-  end
-
-  def spare_bonus(frames, index)
-    next_frame(frames, index).first_shot.score
-  end
-
-  def next_frame(frames, index)
-    frames[index + 1]
-  end
-
-  def next_next_frame(frames, index)
-    frames[index + 2]
   end
 end

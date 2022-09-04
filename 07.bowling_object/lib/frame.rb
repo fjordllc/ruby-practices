@@ -3,7 +3,7 @@
 require_relative 'shot'
 
 class Frame
-  attr_reader :first_shot, :second_shot
+  attr_reader :index, :first_shot, :second_shot
 
   def initialize(index, first_mark, second_mark = nil, third_mark = nil)
     @index = index
@@ -23,8 +23,24 @@ class Frame
     frames.map.with_index { |frame, index| Frame.new(index, frame[0], frame[1], frame[2]) }
   end
 
-  def sum_shots
-    [@first_shot.score, @second_shot.score, @third_shot.score].sum
+  def strike_bonus(frame, index)
+    if next_frame(frame, index).strike? && index < 8
+      next_frame(frame, index).first_shot.score + next_next_frame(frame, index).first_shot.score
+    else
+      next_frame(frame, index).first_shot.score + next_frame(frame, index).second_shot.score
+    end
+  end
+
+  def spare_bonus(frames, index)
+    next_frame(frames, index).first_shot.score
+  end
+
+  def next_frame(frame, index)
+    frame[index + 1]
+  end
+
+  def next_next_frame(frame, index)
+    frame[index + 2]
   end
 
   def strike?
@@ -33,5 +49,9 @@ class Frame
 
   def spare?
     [@first_shot.score, @second_shot.score].sum == 10
+  end
+  
+  def sum_shots
+    [@first_shot.score, @second_shot.score, @third_shot.score].sum
   end
 end
