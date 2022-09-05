@@ -36,7 +36,7 @@ class Frame
   end
 
   def strike_bonus(frame)
-    if next_frame(frame, @index).strike? && index < 8
+    if next_frame(frame, @index).strike? && @index < 8
       next_frame(frame, @index).first_shot.score + next_next_frame(frame, @index).first_shot.score
     else
       next_frame(frame, @index).first_shot.score + next_frame(frame, @index).second_shot.score
