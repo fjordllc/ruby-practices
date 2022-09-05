@@ -24,6 +24,8 @@ frames.each_with_index do |item, i| # item=frame配列の値 i=要素の番号
     point += frames[i + 2][0] if frames[i + 1][0] == 10 # strike2連続
   elsif item.sum == 10 && i < 9  # spare
     point = point + 10 + frames[i + 1][0]
+  else
+    point += item.sum
   end
 end
 
