@@ -22,10 +22,10 @@ frames.each_with_index do |item,i|      #item=frame配列の値 i=要素の番�
     if frames[i + 1][0] == 10           #strike2連続
       point = point + frames[i + 2][0]
     end
-  elsif item[0] + item[1] == 10 && i < 9  #spare
+  elsif item.sum == 10 && i < 9  #spare
     point = point + 10 + frames[i + 1][0]
   elsif
-    point = point + item[0] + item[1]
+    point = point + item.sum
   end
 end
 
