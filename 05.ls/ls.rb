@@ -1,15 +1,15 @@
-filepath = '.'
-@fnames = Dir.glob("#{filepath}/*").map { |path| path.split('/')[-1] }
+# frozen_string_literal: true
 
-flength = @fnames.map(&:size).max
-rows = 3
-group_size = @fnames.size / rows + 1
+ROWS = 3
+file_names = Dir.glob('*')
+file_length_max = file_names.map(&:size).max
+group_size = file_names.size / ROWS + 1
 
-fgroups = @fnames.map { |fname| fname.ljust(flength) }.each_slice(group_size).to_a
+file_groups = file_names.map { |fname| fname.ljust(file_length_max) }.each_slice(group_size).to_a
 
 (0..group_size).each do |gs|
-  (0..rows - 1).each do |row|
-    print "#{fgroups[row][gs]} "
+  (0..file_groups.size - 1).each do |row|
+    print "#{file_groups[row][gs]} "
   end
   puts ''
 end
