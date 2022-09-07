@@ -4,83 +4,102 @@ require 'optparse'
 require 'debug'
 require 'date'
 
-def main
-  options = {}
-  OptionParser.new do |opt|
-    opt.on('-l', '--long', 'long list') { |v| options[:l] = v }
-    opt.parse!(ARGV)
-  end
-
-  if options.key?(:l)
-    print_option_l
-  else
-    print_without_option_l
-  end
-end
-
-def print_option_l
-  stat_file = Dir.glob('*').map { |s| File::Stat.new(s) }
-
-  total_blocks = stat_file.map(&:blocks)
-  puts "total #{total_blocks.sum}"
-
-  filetype_long = stat_file.map(&:ftype)
-  filetype_convert_name = { 'fifo' => 'p', 'characterSpecial' => 'c', 'directory' => 'd', 'blockSpecial' => 'b', 'file' => '-', 'link' => 'l',
-                            'socket' => 's' }.freeze
-  filetype_short = filetype_long.map! { |short| filetype_convert_name[short] }
-
-  permission_num = stat_file.map(&:mode)
-  octal_permission = permission_num.map do |num|
-    num.to_s(8).to_i % 1000
-  end
-  octal_permission.map!(&:to_s)
-  permission = octal_permission.map do |a|
-    a.gsub(/[0-7]/, '0' => '---', '1' => '--x', '2' => '-w-', '3' => '-wx', '4' => 'r--', '5' => 'r-x', '6' => 'rw-', '7' => 'rwx')
-  end
-  max_permission_width = permission.compact.max_by(&:size).size + 1
-  permission.map! { |space| space.to_s.ljust(max_permission_width) }
-
-  hardlink = stat_file.map(&:nlink)
-  hardlink.map! { |space| space.to_s.ljust(3) }
-
-  user_id = stat_file.map(&:uid)
-  owner_name = user_id.map { |u| Etc.getpwuid(u).name }
-  owner_name.map! { |space| space.to_s.ljust(7) }
-  group_id = stat_file.map(&:gid)
-  group_name = group_id.map { |u| Etc.getgrgid(u).name }
-  group_name.map! { |space| space.to_s.ljust(7) }
-
-  file_byte_size = stat_file.map(&:size)
-  file_byte_size.map! { |space| space.to_s.ljust(5) }
-
-  get_time = stat_file.map(&:mtime)
-  time_stamp = get_time.map { |time| time.strftime('%_m %_d %_R').to_s.ljust(12) }
-  time_stamp.map! { |space| space.to_s.ljust(10) }
-
-  name = Dir.glob('*')
-  max_name_width = name.compact.max_by(&:size).size + 1
-  name.map! { |space| space.to_s.ljust(max_name_width) }
-
-  filetype_short.zip(permission, hardlink, owner_name, group_name, file_byte_size, time_stamp, name) { |ary| puts ary.join }
-end
-
 COLUMN_NUMBER = 3
 SPACE = 5
 
-def print_without_option_l
-  all_files = Dir.glob('*').sort
-  display_row_number = (all_files.size.to_f / COLUMN_NUMBER).ceil
+def main(options = {})
+  stat_file = file_info
+  options.key?(:l) ? print_long_filename(stat_file) : print_short_filename
+end
 
-  rest_of_row = all_files.size % COLUMN_NUMBER
+def option_parse
+  options = {}
+  OptionParser.new do |opt|
+    opt.on('-l', '--long', 'long list') do |v|
+      options[:l] = v
+    end
+    opt.parse!(ARGV)
+  end
+  options
+end
 
-  max_column_width = all_files.compact.max_by(&:size).size + SPACE
-  formatted_content_names = all_files.map { |space| space.to_s.ljust(max_column_width) }
-  (display_row_number * COLUMN_NUMBER - all_files.size).times { formatted_content_names.push(nil) } if rest_of_row != 0
-  set_of_files_arrays = formatted_content_names.each_slice(display_row_number).to_a
+def file_info
+  Dir.glob('*').map { |s| File::Stat.new(s) }
+end
 
-  set_of_files_arrays.transpose.each do |index|
+def print_long_filename(stat_file)
+  print_total_blocks(stat_file) if stat_file.size > 1
+  stat_file.each_with_index do |convert, num|
+    filetype(convert)
+    permission(convert)
+    hardlink(convert)
+    user(convert)
+    group(convert)
+    filesize(convert)
+    time_stamp(convert)
+    filename(num)
+    puts "#{filetype(convert)}#{permission(convert)} #{hardlink(convert)}\
+    #{user(convert)} #{group(convert)}  #{filesize(convert)} #{time_stamp(convert)} #{filename(num)} "
+  end
+end
+
+def print_total_blocks(stat_file)
+  total_blocks = stat_file.map(&:blocks)
+  puts "total #{total_blocks.sum}"
+end
+
+def filetype(convert)
+  filetype_name = convert.ftype
+  filetype_convert_name = { 'fifo' => 'p', 'characterSpecial' => 'c', 'directory' => 'd', 'blockSpecial' => 'b', 'file' => '-', 'link' => 'l',
+                            'socket' => 's' }.freeze
+  filetype_convert_name[filetype_name]
+end
+
+def permission(convert)
+  octal_permission = convert.mode.to_s(8).to_i % 1000
+  octal_permission.to_s.gsub(/[0-7]/, '0' => '---', '1' => '--x', '2' => '-w-', '3' => '-wx', '4' => 'r--', '5' => 'r-x', '6' => 'rw-', '7' => 'rwx')
+end
+
+def hardlink(convert)
+  convert.nlink.to_s.rjust(2)
+end
+
+def user(convert)
+  user_id = convert.uid
+  Etc.getpwuid(user_id).name.rjust(2)
+end
+
+def group(convert)
+  group_id = convert.gid
+  Etc.getgrgid(group_id).name.rjust(4)
+end
+
+def filesize(convert)
+  convert.size.to_s.rjust(4)
+end
+
+def time_stamp(convert)
+  time_info = convert.mtime
+  time_info.strftime('%_m %_d %_R')
+end
+
+def filename(num)
+  files = Dir.glob('*')
+  files[num]
+end
+
+def print_short_filename
+  files = Dir.glob('*').sort
+  row_number = (files.size.to_f / COLUMN_NUMBER).ceil
+  rest_of_row = files.size % COLUMN_NUMBER
+  max_column_width = files.compact.max_by(&:size).size + SPACE
+  filename_with_space = files.map { |space| space.to_s.ljust(max_column_width) }
+  (row_number * COLUMN_NUMBER - files.size).times { filename_with_space.push(nil) } if rest_of_row != 0
+  files_arrays = filename_with_space.each_slice(row_number).to_a
+
+  files_arrays.transpose.each do |index|
     puts index.join
   end
 end
 
-main
+main(**option_parse)
