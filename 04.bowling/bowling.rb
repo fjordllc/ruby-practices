@@ -1,61 +1,56 @@
 #!/usr/bin/env ruby
 
-score = ARGV[0]
-score_list = score.split(',')
+score_list = ARGV[0].split(',')
 shots = []
 score_list.each do |i|
-  if i=='X'
+  if i == 'X'
     shots << 10
     shots << 0
   else
     shots << i.to_i
   end
 end
-flame_list = []
+frame_list = []
 shots.each_slice(2) do |shot|
-  flame_list << shot
+  frame_list << if shot[0] == 10
+                  [shot[0]]
+                else
+                  shot
+                end
 end
-flame_list_modified = []
-if flame_list.count > 10
-  flame_sep_after_list = flame_list.slice(9..)
-  flame_sep_after_list.flatten!.delete(0)
-  flame_list_modified = flame_list.slice(0..8)
-  flame_list_modified << flame_sep_after_list
+frame_list_modified = []
+if frame_list.count > 10
+  frame_sep_after_list = frame_list.slice(9..)
+  frame_sep_after_list.flatten!
+  frame_list_modified = frame_list.slice(0..8)
+  frame_list_modified << frame_sep_after_list
 else
-  flame_list_modified = flame_list
+  frame_list_modified = frame_list
 end
-flame_count = 0
+frame_count = 0
 strike_cont = 0 # 0 (ストライクなし) or 1 (単独ストライク) or 2 (連続ストライク)
-spare_cont = 0 # 0 (スペアなし) or 1 (スペアあり)
+spare_count = 0 # 0 (スペアなし) or 1 (スペアあり)
 score = 0
-flame_list_modified.each do |flame| 
-  flame_count += 1
-  if flame_count == 10 # Last Frame
-    if strike_cont == 0
-        score += flame.sum + flame[0] * spare_cont
-    else
-        score += flame.sum + flame[0] * strike_cont + flame[1]
-    end
-  elsif flame[0] == 10 # Strike
-    score += 10 + 10 * strike_cont + 10 * spare_cont
-    if strike_cont == 0
-        strike_cont = 1
-    else
-        strike_cont = 2
-    end
-    spare_cont = 0
+frame_list_modified.each do |frame|
+  frame_count += 1
+  if frame_count == 10 # Last Frame
+    score += if strike_cont.zero?
+               frame.sum + frame[0] * spare_count
+             else
+               frame.sum + frame[0] * strike_cont + frame[1]
+             end
+  elsif frame[0] == 10 # Strike
+    score += 10 + 10 * strike_cont + 10 * spare_count
+    strike_cont = strike_cont.zero? ? 1 : 2
+    spare_count = 0
   else
-    if strike_cont == 0
-        score += flame.sum + flame[0] * spare_cont
-    else
-        score += flame.sum + flame[0] * strike_cont + flame[1] 
-    end
+    score += if strike_cont.zero?
+               frame.sum + frame[0] * spare_count
+             else
+               frame.sum + frame[0] * strike_cont + frame[1]
+             end
     strike_cont = 0
-    if flame.sum == 10 # spare
-      spare_cont = 1
-    else
-      spare_cont = 0
-    end
+    spare_count = frame.sum == 10 ? 1 : 0
   end
 end
 
