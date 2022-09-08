@@ -55,3 +55,4 @@ frame_list_modified.each do |frame|
 end
 
 p score
+
