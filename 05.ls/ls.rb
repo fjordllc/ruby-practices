@@ -47,9 +47,7 @@ begin
   else
     raise StandardError, "ls: #{ls_target_path}: No such file or directory"
   end
-  
 rescue StandardError => e
   print e.message
   puts
 end
-
