@@ -7,7 +7,11 @@ options = ARGV.getopts('a',
 'a(all) -- list all files including hidden files.')
 
 COLUMN = 3
-file_names = Dir.glob('*')
+if options['a'] # option a
+  file_names = Dir.glob('.*') + Dir.glob('*')
+else
+  file_names = Dir.glob('*')
+end
 file_length_max = file_names.map(&:size).max
 group_size = file_names.size / COLUMN + 1
 
