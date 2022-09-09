@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+require 'optparse'
+
+# options and description of them
+options = ARGV.getopts('a')
+
 COLUMN = 3
 file_names = Dir.glob('*')
 file_length_max = file_names.map(&:size).max
@@ -13,3 +18,4 @@ file_groups = file_names.map { |fname| fname.ljust(file_length_max) }.each_slice
   end
   puts ''
 end
+
