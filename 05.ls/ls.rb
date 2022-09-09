@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-ROWS = 3
+COLUMN = 3
 file_names = Dir.glob('*')
 file_length_max = file_names.map(&:size).max
-group_size = file_names.size / ROWS + 1
+group_size = file_names.size / COLUMN + 1
 
 file_groups = file_names.map { |fname| fname.ljust(file_length_max) }.each_slice(group_size).to_a
 
