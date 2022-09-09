@@ -3,7 +3,8 @@
 require 'optparse'
 
 # options and description of them
-options = ARGV.getopts('a')
+options = ARGV.getopts('a',
+'a(all) -- list all files including hidden files.')
 
 COLUMN = 3
 file_names = Dir.glob('*')
