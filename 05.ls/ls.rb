@@ -4,7 +4,7 @@ require 'optparse'
 
 # options and description of them
 options = ARGV.getopts('a',
-'a(all) -- list all files including hidden files.')
+'all(-a)    list all files including hidden files.')
 
 COLUMN = 3
 if options['a'] # option a
