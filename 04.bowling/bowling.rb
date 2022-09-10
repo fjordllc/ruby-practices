@@ -27,32 +27,29 @@ if frame_list.count > 10
 else
   frame_list_modified = frame_list
 end
-frame_count = 0
-strike_cont = 0 # 0 (ストライクなし) or 1 (単独ストライク) or 2 (連続ストライク)
+strike_count = 0 # 0 (ストライクなし) or 1 (単独ストライク) or 2 (連続ストライク)
 spare_count = 0 # 0 (スペアなし) or 1 (スペアあり)
 score = 0
-frame_list_modified.each do |frame|
-  frame_count += 1
-  if frame_count == 10 # Last Frame
-    score += if strike_cont.zero?
+frame_list_modified.each_with_index do |frame, index|
+  if index + 1 == 10 # Last Frame
+    score += if strike_count.zero?
                frame.sum + frame[0] * spare_count
              else
-               frame.sum + frame[0] * strike_cont + frame[1]
+               frame.sum + frame[0] * strike_count + frame[1]
              end
   elsif frame[0] == 10 # Strike
-    score += 10 + 10 * strike_cont + 10 * spare_count
-    strike_cont = strike_cont.zero? ? 1 : 2
+    score += 10 + 10 * strike_count + 10 * spare_count
+    strike_count = strike_count.zero? ? 1 : 2
     spare_count = 0
   else
-    score += if strike_cont.zero?
+    score += if strike_count.zero?
                frame.sum + frame[0] * spare_count
              else
-               frame.sum + frame[0] * strike_cont + frame[1]
+               frame.sum + frame[0] * strike_count + frame[1]
              end
-    strike_cont = 0
+    strike_count = 0
     spare_count = frame.sum == 10 ? 1 : 0
   end
 end
 
-p score
-
+puts score
