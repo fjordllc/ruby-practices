@@ -3,7 +3,7 @@
 require_relative 'shot'
 
 class Frame
-  attr_reader :index, :first_shot, :second_shot
+  attr_reader :first_shot, :second_shot
 
   def initialize(index, first_mark, second_mark = nil, third_mark = nil)
     @index = index
