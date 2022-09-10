@@ -23,6 +23,16 @@ class Frame
     frames.map.with_index { |frame, index| Frame.new(index, frame[0], frame[1], frame[2]) }
   end
 
+  def score(frames, frame)
+    if frame.strike? && @index < 9
+      frame.sum_shots + frame.strike_bonus(frames)
+    elsif frame.spare? && @index < 9
+      frame.sum_shots + frame.spare_bonus(frames)
+    else
+      frame.sum_shots
+    end
+  end
+
   def strike?
     @first_shot.score == 10
   end

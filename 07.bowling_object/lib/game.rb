@@ -9,13 +9,7 @@ class Game
 
   def calc_scores
     @frames.each.sum do |frame|
-      if frame.strike? && frame.index < 9
-        frame.sum_shots + frame.strike_bonus(@frames)
-      elsif frame.spare? && frame.index < 9
-        frame.sum_shots + frame.spare_bonus(@frames)
-      else
-        frame.sum_shots
-      end
+      frame.score(@frames, frame)
     end
   end
 end
