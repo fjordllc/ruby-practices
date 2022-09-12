@@ -7,23 +7,20 @@ require 'date'
 COLUMN_NUMBER = 3
 SPACE = 5
 
-def main(options = {})
-  stat_file = file_info
+def main(**options)
   options.key?(:l) ? print_long_filename(stat_file) : print_short_filename
 end
 
 def option_parse
   options = {}
   OptionParser.new do |opt|
-    opt.on('-l', '--long', 'long list') do |v|
-      options[:l] = v
-    end
+    opt.on('-l', '--long', 'long list') { |v|options[:l] = v}
     opt.parse!(ARGV)
   end
   options
 end
 
-def file_info
+def stat_file
   Dir.glob('*').map { |s| File::Stat.new(s) }
 end
 
@@ -32,20 +29,19 @@ def print_long_filename(stat_file)
   stat_file.each_with_index do |convert, num|
     filetype(convert)
     permission(convert)
-    hardlink(convert)
+    hardlink(stat_file,convert)
     user(convert)
     group(convert)
-    filesize(convert)
-    time_stamp(convert)
+    filesize(stat_file,convert)
+    timestamp(convert)
     filename(num)
-    puts "#{filetype(convert)}#{permission(convert)} #{hardlink(convert)}\
-    #{user(convert)} #{group(convert)}  #{filesize(convert)} #{time_stamp(convert)} #{filename(num)} "
+    puts "#{filetype(convert)}#{permission(convert)} #{hardlink(stat_file,convert)}\
+    #{user(convert)} #{group(convert)}  #{filesize(stat_file,convert)} #{timestamp(convert)} #{filename(num)} "
   end
 end
 
 def print_total_blocks(stat_file)
-  total_blocks = stat_file.map(&:blocks)
-  puts "total #{total_blocks.sum}"
+  puts "total #{stat_file.map(&:blocks).sum}"
 end
 
 def filetype(convert)
@@ -60,25 +56,27 @@ def permission(convert)
   octal_permission.to_s.gsub(/[0-7]/, '0' => '---', '1' => '--x', '2' => '-w-', '3' => '-wx', '4' => 'r--', '5' => 'r-x', '6' => 'rw-', '7' => 'rwx')
 end
 
-def hardlink(convert)
-  convert.nlink.to_s.rjust(2)
+def hardlink(stat_file,convert)
+  max_lenth = stat_file.map(&:nlink).max.to_s.bytesize
+  convert.nlink.to_s.rjust(max_lenth)
 end
 
 def user(convert)
   user_id = convert.uid
-  Etc.getpwuid(user_id).name.rjust(2)
+  Etc.getpwuid(user_id).name
 end
 
 def group(convert)
   group_id = convert.gid
-  Etc.getgrgid(group_id).name.rjust(4)
+  Etc.getgrgid(group_id).name
 end
 
-def filesize(convert)
-  convert.size.to_s.rjust(4)
+def filesize(stat_file,convert)
+  max_lenth = stat_file.map(&:size).max.to_s.bytesize
+  convert.size.to_s.rjust(max_lenth)
 end
 
-def time_stamp(convert)
+def timestamp(convert)
   time_info = convert.mtime
   time_info.strftime('%_m %_d %_R')
 end
