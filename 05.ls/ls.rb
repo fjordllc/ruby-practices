@@ -7,7 +7,7 @@ ls_target_path = ARGV[-1].nil? ? '.' : ARGV[-1]
 dir_items_list = []
 output_item_width = 10
 
-HORIZONTAL_ITEMS_COUNT = 3
+horizontal_items_count = 3
 ITEMS_INTERVAL = 5
 
 def ls_sort(target_list, horizontal_num, sort_reverse: false)
@@ -49,9 +49,9 @@ begin
       dir_items_list << item_in_dir
       output_item_width = item_in_dir.size + ITEMS_INTERVAL > output_item_width ? item_in_dir.size + ITEMS_INTERVAL : output_item_width
     end
-    sorted_dir_items_list = ls_sort(dir_items_list, HORIZONTAL_ITEMS_COUNT)
+    sorted_dir_items_list = ls_sort(dir_items_list, horizontal_items_count)
 
-    ls_print(sorted_dir_items_list, output_item_width, HORIZONTAL_ITEMS_COUNT)
+    ls_print(sorted_dir_items_list, output_item_width, horizontal_items_count)
 
   elsif FileTest.file?(ls_target_path)
     ls_print(ls_target_path, output_item_width, 1)
