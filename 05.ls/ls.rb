@@ -6,6 +6,7 @@ require 'optparse'
 @options = ARGV.getopts('a',
 'all(-a)    list all files including hidden files.')
 
+# columns to display on the screen
 COLUMN = 3
 
 def file_names
