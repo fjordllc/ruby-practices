@@ -4,7 +4,7 @@ require 'optparse'
 
 # options and description of them
 @options = ARGV.getopts('a',
-'all(-a)    list all files including hidden files.')
+                        'all(-a)    list all files including hidden files.')
 
 # columns to display on the screen
 COLUMN = 3
@@ -27,10 +27,10 @@ end
 
 def file_groups
   file_names
-  .sort
-  .map { |fname| fname.ljust(file_length_max) }
-  .each_slice(group_size)
-  .to_a
+    .sort
+    .map { |fname| fname.ljust(file_length_max) }
+    .each_slice(group_size)
+    .to_a
 end
 
 (0..group_size).each do |gs|
@@ -39,4 +39,3 @@ end
   end
   puts '' unless gs == group_size
 end
-
