@@ -8,10 +8,12 @@ options = ARGV.getopts('a',
 
 COLUMN = 3
 
-if options['a'] # option a
-  file_names = Dir.glob('.*') + Dir.glob('*')
-else
-  file_names = Dir.glob('*')
+def file_names
+  if options['a'] # option a
+    Dir.glob('.*') + Dir.glob('*')
+  else
+    Dir.glob('*')
+  end
 end
 
 def file_length_max
