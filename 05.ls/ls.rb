@@ -3,13 +3,13 @@
 require 'optparse'
 
 # options and description of them
-options = ARGV.getopts('a',
+@options = ARGV.getopts('a',
 'all(-a)    list all files including hidden files.')
 
 COLUMN = 3
 
 def file_names
-  if options['a'] # option a
+  if @options['a'] # option a
     Dir.glob('.*') + Dir.glob('*')
   else
     Dir.glob('*')
