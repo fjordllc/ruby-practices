@@ -8,8 +8,6 @@ class Game
   end
 
   def calc_scores
-    @frames.each.sum do |frame|
-      frame.score(@frames, frame)
-    end
+    @frames.each.sum { |frame| frame.score(@frames) }
   end
 end
