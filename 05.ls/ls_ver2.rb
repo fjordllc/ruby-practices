@@ -14,7 +14,7 @@ end
 def option_parse
   options = {}
   OptionParser.new do |opt|
-    opt.on('-l', '--long', 'long list') { |v|options[:l] = v}
+    opt.on('-l', '--long', 'long list') { |v| options[:l] = v }
     opt.parse!(ARGV)
   end
   options
@@ -29,14 +29,14 @@ def print_long_filename(stat_file)
   stat_file.each_with_index do |convert, num|
     filetype(convert)
     permission(convert)
-    hardlink(stat_file,convert)
+    hardlink(stat_file, convert)
     user(convert)
     group(convert)
-    filesize(stat_file,convert)
+    filesize(stat_file, convert)
     timestamp(convert)
     filename(num)
-    puts "#{filetype(convert)}#{permission(convert)} #{hardlink(stat_file,convert)}\
-    #{user(convert)} #{group(convert)}  #{filesize(stat_file,convert)} #{timestamp(convert)} #{filename(num)} "
+    puts "#{filetype(convert)}#{permission(convert)} #{hardlink(stat_file, convert)}\
+    #{user(convert)} #{group(convert)}  #{filesize(stat_file, convert)} #{timestamp(convert)} #{filename(num)} "
   end
 end
 
@@ -56,7 +56,7 @@ def permission(convert)
   octal_permission.to_s.gsub(/[0-7]/, '0' => '---', '1' => '--x', '2' => '-w-', '3' => '-wx', '4' => 'r--', '5' => 'r-x', '6' => 'rw-', '7' => 'rwx')
 end
 
-def hardlink(stat_file,convert)
+def hardlink(stat_file, convert)
   max_lenth = stat_file.map(&:nlink).max.to_s.bytesize
   convert.nlink.to_s.rjust(max_lenth)
 end
@@ -71,7 +71,7 @@ def group(convert)
   Etc.getgrgid(group_id).name
 end
 
-def filesize(stat_file,convert)
+def filesize(stat_file, convert)
   max_lenth = stat_file.map(&:size).max.to_s.bytesize
   convert.size.to_s.rjust(max_lenth)
 end
