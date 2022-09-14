@@ -9,18 +9,6 @@ options = ARGV.getopts('a',
 # columns to display on the screen
 COLUMN_MAX = 3
 
-def group_file_names(option)
-  if option == a
-    Dir.glob('*', File::FNM_DOTMATCH)
-  else
-    Dir.glob('*')
-  end
-end
-
-def length_max(array)
-  array.map(&:size).max
-end
-
 def count_group_size(array, groups)
   array.size / groups + 1
 end
@@ -28,8 +16,8 @@ end
 def divide_into_groups(array)
   array
     .sort
-    .map { |a| a.ljust(file_length_max(array)) }
-    .each_slice(count_group_size(array))
+    .map { |a| a.ljust(array.map(&:size).max) }
+    .each_slice(count_group_size(a))
     .to_a
 end
 
@@ -46,7 +34,7 @@ def list_files(file_names, lines = COLUMN_MAX)
 end
 
 if options['a']
-  list_files(group_file_names(a))
+  list_files(Dir.glob('*', File::FNM_DOTMATCH))
 else
-  list_files(group_file_names)
+  list_files(Dir.glob('*'))
 end
