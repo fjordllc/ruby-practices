@@ -3,30 +3,30 @@
 require 'optparse'
 
 # options and description of them
-@options = ARGV.getopts('a',
-                        'all(-a)    list all files including hidden files.')
+options = ARGV.getopts('a',
+                       'all(-a)    list all files including hidden files.')
 
 # columns to display on the screen
 COLUMN = 3
 
-def file_names
-  if @options['a'] # option a
+def file_names(option)
+  if option # option a
     Dir.glob('*', File::FNM_DOTMATCH)
   else
     Dir.glob('*')
   end
 end
 
-def file_length_max
-  file_names.map(&:size).max
+def file_length_max(file_name)
+  file_name.map(&:size).max
 end
 
-def group_size
-  file_names.size / COLUMN + 1
+def group_size(file_name)
+  file_name.size / COLUMN + 1
 end
 
-def file_groups
-  file_names
+def file_groups(file_name)
+  file_name
     .sort
     .map { |fname| fname.ljust(file_length_max) }
     .each_slice(group_size)
