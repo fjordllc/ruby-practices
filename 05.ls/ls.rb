@@ -17,26 +17,26 @@ def file_names(option)
   end
 end
 
-def file_length_max(file_name)
-  file_name.map(&:size).max
+def length_max(array)
+  array.map(&:size).max
 end
 
-def group_size(file_name)
-  file_name.size / COLUMN_MAX + 1
+def count_group_size(array)
+  array.size / COLUMN_MAX + 1
 end
 
-def divide_into_groups(file_name)
-  file_name
+def divide_into_groups(array)
+  array
     .sort
-    .map { |fname| fname.ljust(file_length_max(file_name)) }
-    .each_slice(group_size(file_name))
+    .map { |a| a.ljust(file_length_max(array)) }
+    .each_slice(count_group_size(array))
     .to_a
 end
 
 def list_files(file_names)
   group_in_groups = divide_into_groups(file_names)
   column = group_in_groups.size - 1
-  row = group_size(file_names)
+  row = count_group_size(file_names)
   (0..row).each do |r|
     (0..column).each do |c|
       print "#{group_in_groups[c][r]} "
