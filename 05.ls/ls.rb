@@ -28,8 +28,8 @@ end
 def file_groups(file_name)
   file_name
     .sort
-    .map { |fname| fname.ljust(file_length_max) }
-    .each_slice(group_size)
+    .map { |fname| fname.ljust(file_length_max(file_name)) }
+    .each_slice(group_size(file_name))
     .to_a
 end
 
