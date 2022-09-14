@@ -45,7 +45,7 @@ def list_files(file_names, lines = COLUMN_MAX)
   end
 end
 
-if option['a']
+if options['a']
   list_files(group_file_names(a))
 else
   list_files(group_file_names)
