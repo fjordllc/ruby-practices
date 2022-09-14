@@ -7,7 +7,7 @@ options = ARGV.getopts('a',
                        'all(-a)    list all files including hidden files.')
 
 # columns to display on the screen
-COLUMN = 3
+COLUMN_MAX = 3
 
 def file_names(option)
   if option # option a
@@ -22,7 +22,7 @@ def file_length_max(file_name)
 end
 
 def group_size(file_name)
-  file_name.size / COLUMN + 1
+  file_name.size / COLUMN_MAX + 1
 end
 
 def file_groups(file_name)
