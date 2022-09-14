@@ -25,7 +25,7 @@ def group_size(file_name)
   file_name.size / COLUMN_MAX + 1
 end
 
-def file_groups(file_name)
+def divide_into_groups(file_name)
   file_name
     .sort
     .map { |fname| fname.ljust(file_length_max(file_name)) }
@@ -33,10 +33,13 @@ def file_groups(file_name)
     .to_a
 end
 
-def list_files(column, row)
+def list_files(file_names)
+  group_in_groups = divide_into_groups(file_names)
+  column = group_in_groups.size - 1
+  row = group_size(file_names)
   (0..row).each do |r|
-    (0..column.size - 1).each do |c|
-      print "#{file_groups[c][r]} "
+    (0..column).each do |c|
+      print "#{group_in_groups[c][r]} "
     end
     puts '' unless r == row
   end
