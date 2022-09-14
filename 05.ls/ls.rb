@@ -33,9 +33,11 @@ def file_groups(file_name)
     .to_a
 end
 
-(0..group_size).each do |gs|
-  (0..file_groups.size - 1).each do |row|
-    print "#{file_groups[row][gs]} "
+def list_files(column, row)
+  (0..row).each do |r|
+    (0..column.size - 1).each do |c|
+      print "#{file_groups[c][r]} "
+    end
+    puts '' unless r == row
   end
-  puts '' unless gs == group_size
 end
