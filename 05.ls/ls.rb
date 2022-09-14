@@ -11,7 +11,7 @@ COLUMN = 3
 
 def file_names
   if @options['a'] # option a
-    Dir.glob(['.*', '*'])
+    Dir.glob('*', File::FNM_DOTMATCH)
   else
     Dir.glob('*')
   end
