@@ -9,8 +9,8 @@ options = ARGV.getopts('a',
 # columns to display on the screen
 COLUMN_MAX = 3
 
-def file_names(option)
-  if option == option['a'] # option a
+def group_file_names(option)
+  if option == a
     Dir.glob('*', File::FNM_DOTMATCH)
   else
     Dir.glob('*')
