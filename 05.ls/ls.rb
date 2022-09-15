@@ -21,12 +21,12 @@ def divide_into_groups(array)
 end
 
 def list_files(file_names)
-  group_in_groups = divide_into_groups(file_names)
-  column = group_in_groups.size - 1
+  file_names_in_groups = divide_into_groups(file_names)
+  column = file_names_in_groups.size - 1
   row = count_group_size(file_names)
   (0..row).each do |r|
     (0..column).each do |c|
-      print "#{group_in_groups[c][r]} "
+      print "#{file_names_in_groups[c][r]} "
     end
     puts '' unless r == row
   end
