@@ -17,7 +17,6 @@ end
 
 def divide_into_groups(file_names)
   file_names
-    .sort
     .map { |fname| fname.ljust(file_names.map(&:size).max) }
     .each_slice(count_group_size(file_names))
     .to_a
@@ -40,3 +39,5 @@ end
 #else
 #  list_files(Dir.glob('*'))
 #end
+
+list_files(Dir.glob('*'))
