@@ -2,11 +2,8 @@
 
 require 'optparse'
 
-#options = ARGV.getopts('a',
-#                       'all(-a)    list all files including hidden files.')
 options = ARGV.getopts('r',
                        'reverse(-r)  reverse the order of displayed files.')
-  
 
 # columns to display on the screen
 COLUMN_MAX = 3
@@ -33,12 +30,6 @@ def list_files(file_names)
     puts '' unless r == row
   end
 end
-
-#if options['a']
-#  list_files(Dir.glob('*', File::FNM_DOTMATCH))
-#else
-#  list_files(Dir.glob('*'))
-#end
 
 if options['r']
   list_files(Dir.glob('*').reverse)
