@@ -2,7 +2,6 @@
 
 require 'optparse'
 
-# options and description of them
 options = ARGV.getopts('a',
                        'all(-a)    list all files including hidden files.')
 
