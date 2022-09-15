@@ -40,4 +40,8 @@ end
 #  list_files(Dir.glob('*'))
 #end
 
-list_files(Dir.glob('*'))
+if options['r']
+  list_files(Dir.glob('*').reverse)
+else
+  list_files(Dir.glob('*').sort)
+end
