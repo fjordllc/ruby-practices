@@ -8,15 +8,15 @@ options = ARGV.getopts('a',
 # columns to display on the screen
 COLUMN_MAX = 3
 
-def count_group_size(array)
-  array.size / COLUMN_MAX + 1
+def count_group_size(file_names)
+  file_names.size / COLUMN_MAX + 1
 end
 
-def divide_into_groups(array)
-  array
+def divide_into_groups(file_names)
+  file_names
     .sort
-    .map { |a| a.ljust(array.map(&:size).max) }
-    .each_slice(count_group_size(array))
+    .map { |fname| fname.ljust(file_names.map(&:size).max) }
+    .each_slice(count_group_size(file_names))
     .to_a
 end
 
