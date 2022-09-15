@@ -2,8 +2,8 @@
 
 require 'optparse'
 
-options = ARGV.getopts('a',
-                       'all(-a)    list all files including hidden files.')
+#options = ARGV.getopts('a',
+#                       'all(-a)    list all files including hidden files.')
 
 # columns to display on the screen
 COLUMN_MAX = 3
@@ -32,8 +32,8 @@ def list_files(file_names)
   end
 end
 
-if options['a']
-  list_files(Dir.glob('*', File::FNM_DOTMATCH))
-else
-  list_files(Dir.glob('*'))
-end
+#if options['a']
+#  list_files(Dir.glob('*', File::FNM_DOTMATCH))
+#else
+#  list_files(Dir.glob('*'))
+#end
