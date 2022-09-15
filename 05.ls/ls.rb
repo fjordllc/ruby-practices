@@ -4,6 +4,9 @@ require 'optparse'
 
 #options = ARGV.getopts('a',
 #                       'all(-a)    list all files including hidden files.')
+options = ARGV.getopts('r',
+                       'reverse(-r)  reverse the order of displayed files.')
+  
 
 # columns to display on the screen
 COLUMN_MAX = 3
