@@ -65,6 +65,33 @@ end
 #    -
 #  end
 #end
+def list_file_permissions(file_mode)
+  file_permissions = Array.new
+  file_mode_r = file_mode
+  (3..5).map do |fp|
+    if file_mode_r[fp].to_i >= 4
+      file_mode_w = file_mode_r[fp].to_i - 4
+      file_permissions.push('r')
+    else
+      file_mode_w = file_mode_r[fp].to_i
+      file_permissions.push('-')
+    end
+    if file_mode_w >= 2
+      file_mode_x = file_mode_w - 2
+      file_permissions.push('w')
+    else
+      file_mode_x = file_mode_w
+      file_permissions.push('-')
+    end
+    if file_mode_x >= 1
+      file_permissions.push('x')
+    else
+      file_permissions.push('-')
+    end
+  end
+  p file_permissions.join
+end
+
 #def special_permissions
 #  case file_mode_8[2]
 #  when 1
@@ -86,6 +113,7 @@ def list_files_in_long_format(file_names)
     fs = File::Stat.new(file_names[nf])
     file_mode_8 = fs.mode.to_s(8).split(//)
     file_mode_8.unshift("0") if file_mode_8.size == 5
+    list_file_permissions(file_mode_8)
     number_of_hard_links = fs.nlink
     user_name = Etc.getpwuid(fs.uid).name
     group_name = Etc.getgrgid(fs.gid).name
