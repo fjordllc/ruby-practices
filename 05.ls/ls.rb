@@ -41,6 +41,43 @@ def count_blocks(file_names)
   end.sum
 end
 
+#def file_type
+#  case file_mode_8[0] + file_mode_8[1]
+#  when 04
+#    d
+#  when 10
+#    -
+#  when 12
+#    l
+#  else
+#    " "
+#  end 
+#end
+#def file_permissions
+#  case file_mode_8[3..5]
+#  when 4
+#   r
+#  when 2
+#    w
+#  when 1
+#    x
+# else
+#    -
+#  end
+#end
+#def special_permissions
+#  case file_mode_8[2]
+#  when 1
+#    file_mode_8[5] = --t
+#  when 2
+#    file_mode_8[4] = --s
+#  when 4
+#    file_mode_8[3] = --s
+#  else
+#    ""
+#  end
+#end
+
 def list_files_in_long_format(file_names)
   number_of_files = file_names.size - 1
   print 'total '
@@ -49,60 +86,17 @@ def list_files_in_long_format(file_names)
     fs = File::Stat.new(file_names[nf])
     file_mode_8 = fs.mode.to_s(8).split(//)
     file_mode_8.unshift("0") if file_mode_8.size == 5
-    def file_type
-      case file_mode_8[0] + file_mode_8[1]
-      when 04
-        d
-      when 10
-        -
-      when 12
-        l
-      else
-        " "
-      end 
-    end
-    def file_permissions
-      case file_mode_8[3..5]
-      when 4
-        r
-      when 2
-        w
-      when 1
-        x
-      else
-        -
-      end
-    end
-    def special_permissions
-    case file_mode_8[2]
-    when 1
-      file_mode_8[5] = --t
-    when 2
-      file_mode_8[4] = --s
-    when 4
-      file_mode_8[3] = --s
-    else
-      ""
-    end
-    print file_mode_8
-    print " "
-    print fs.nlink
-    print " "
-    print Etc.getpwuid(fs.uid).name
-    print " "
-    print Etc.getgrgid(fs.gid).name
-    print " "
-    print fs.size
-    print " "
-    print Date.new(fs.mtime.to_a[5], fs.mtime.to_a[4], fs.mtime.to_a[3]).strftime('%b')
-    print " "
-    print fs.mtime.to_a[3]
-    print " "
-    print fs.mtime.to_a[2]
-    print ":"
-    print fs.mtime.to_a[1]
-    print " "
-    puts file_names[nf]
+    number_of_hard_links = fs.nlink
+    user_name = Etc.getpwuid(fs.uid).name
+    group_name = Etc.getgrgid(fs.gid).name
+    file_size = fs.size
+    time_stamp = fs.mtime.to_a
+    date = Date.new(time_stamp[5], time_stamp[4], time_stamp[3])
+    month = date.strftime('%b')
+    day = time_stamp[3]
+    hour = time_stamp[2]
+    minutes = time_stamp[1]
+    puts "#{file_mode_8} #{number_of_hard_links} #{user_name} #{group_name} #{file_size} #{month} #{day} #{hour}:#{minutes} #{file_names[nf]}"
   end
 end
 
