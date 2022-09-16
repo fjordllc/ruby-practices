@@ -33,10 +33,24 @@ end
 
 list_files(Dir.glob('*'))
 
-fs = File::Stat.new($0)
-printf "%o\n", fs.mode
-p fs.nlink
-p fs.uid
-p fs.gid
-p fs.size
-p fs.mtime
+def list_files_in_long_format
+  number_of_files = Dir.glob('*').size - 1
+  (0..number_of_files).each do |nf|
+    fs = File::Stat.new(Dir.glob('*')[nf])
+    print fs.mode.to_s(8)
+    print " "
+    print fs.nlink
+    print " "
+    print fs.uid
+    print " "
+    print fs.gid
+    print " "
+    print fs.size
+    print " "
+    print fs.mtime
+    print " "
+    puts Dir.glob('*')[nf]
+  end
+end
+
+list_files_in_long_format
