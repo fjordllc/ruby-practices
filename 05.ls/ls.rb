@@ -31,12 +31,12 @@ def list_files(file_names)
   end
 end
 
-list_files(Dir.glob('*'))
-
 def list_files_in_long_format(file_names)
   number_of_files = file_names.size - 1
   (0..number_of_files).each do |nf|
     fs = File::Stat.new(file_names[nf])
+    print fs.blocks
+    print " "
     print fs.mode.to_s(8)
     print " "
     print fs.nlink
@@ -53,4 +53,8 @@ def list_files_in_long_format(file_names)
   end
 end
 
-list_files_in_long_format(Dir.glob('*'))
+if options['l']
+  list_files_in_long_format(Dir.glob('*'))
+else
+  list_files(Dir.glob('*'))
+end
