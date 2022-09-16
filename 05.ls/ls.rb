@@ -36,3 +36,11 @@ if options['r']
 else
   list_files(Dir.glob('*').sort)
 end
+
+fs = File::Stat.new($0)
+printf "%o\n", fs.mode
+p fs.nlink
+p fs.uid
+p fs.gid
+p fs.size
+p fs.mtime
