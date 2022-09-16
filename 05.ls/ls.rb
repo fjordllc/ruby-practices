@@ -47,7 +47,44 @@ def list_files_in_long_format(file_names)
   puts count_blocks(file_names)
   (0..number_of_files).each do |nf|
     fs = File::Stat.new(file_names[nf])
-    print fs.mode.to_s(8)
+    file_mode_8 = fs.mode.to_s(8).split(//)
+    file_mode_8.unshift("0") if file_mode_8.size == 5
+    def file_type
+      case file_mode_8[0] + file_mode_8[1]
+      when 04
+        d
+      when 10
+        -
+      when 12
+        l
+      else
+        " "
+      end 
+    end
+    def file_permissions
+      case file_mode_8[3..5]
+      when 4
+        r
+      when 2
+        w
+      when 1
+        x
+      else
+        -
+      end
+    end
+    def special_permissions
+    case file_mode_8[2]
+    when 1
+      file_mode_8[5] = --t
+    when 2
+      file_mode_8[4] = --s
+    when 4
+      file_mode_8[3] = --s
+    else
+      ""
+    end
+    print file_mode_8
     print " "
     print fs.nlink
     print " "
