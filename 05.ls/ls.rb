@@ -2,8 +2,8 @@
 
 require 'optparse'
 
-options = ARGV.getopts('r',
-                       'reverse(-r)  reverse the order of displayed files.')
+options = ARGV.getopts('l',
+                       'list(-l)     use a long listing format.')
 
 # columns to display on the screen
 COLUMN_MAX = 3
