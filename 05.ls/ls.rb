@@ -2,6 +2,7 @@
 
 require 'optparse'
 require 'etc'
+require 'date'
 
 options = ARGV.getopts('l',
                        'long format(-l)  use a long listing format.')
@@ -56,7 +57,13 @@ def list_files_in_long_format(file_names)
     print " "
     print fs.size
     print " "
-    print fs.mtime
+    print Date.new(fs.mtime.to_a[5], fs.mtime.to_a[4], fs.mtime.to_a[3]).strftime('%b')
+    print " "
+    print fs.mtime.to_a[3]
+    print " "
+    print fs.mtime.to_a[2]
+    print ":"
+    print fs.mtime.to_a[1]
     print " "
     puts file_names[nf]
   end
