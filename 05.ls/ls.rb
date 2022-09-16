@@ -31,11 +31,7 @@ def list_files(file_names)
   end
 end
 
-if options['r']
-  list_files(Dir.glob('*').reverse)
-else
-  list_files(Dir.glob('*').sort)
-end
+list_files(Dir.glob('*'))
 
 fs = File::Stat.new($0)
 printf "%o\n", fs.mode
