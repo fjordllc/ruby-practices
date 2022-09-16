@@ -2,8 +2,8 @@
 
 require 'optparse'
 
-options = ARGV.getopts('a',
-                       'all(-a)    list all files including hidden files.')
+options = ARGV.getopts('r',
+                       'reverse(-r)  reverse the order of displayed files.')
 
 # columns to display on the screen
 COLUMN_MAX = 3
@@ -14,7 +14,6 @@ end
 
 def divide_into_groups(file_names)
   file_names
-    .sort
     .map { |fname| fname.ljust(file_names.map(&:size).max) }
     .each_slice(count_group_size(file_names))
     .to_a
@@ -32,8 +31,8 @@ def list_files(file_names)
   end
 end
 
-if options['a']
-  list_files(Dir.glob('*', File::FNM_DOTMATCH))
+if options['r']
+  list_files(Dir.glob('*').reverse)
 else
-  list_files(Dir.glob('*'))
+  list_files(Dir.glob('*').sort)
 end
