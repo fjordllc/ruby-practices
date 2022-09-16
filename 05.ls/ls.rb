@@ -3,7 +3,7 @@
 require 'optparse'
 
 options = ARGV.getopts('l',
-                       'list(-l)     use a long listing format.')
+                       'long format(-l)  use a long listing format.')
 
 # columns to display on the screen
 COLUMN_MAX = 3
