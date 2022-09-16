@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'optparse'
+require 'etc'
 
 options = ARGV.getopts('l',
                        'long format(-l)  use a long listing format.')
@@ -49,9 +50,9 @@ def list_files_in_long_format(file_names)
     print " "
     print fs.nlink
     print " "
-    print fs.uid
+    print Etc.getpwuid(fs.uid).name
     print " "
-    print fs.gid
+    print Etc.getgrgid(fs.gid).name
     print " "
     print fs.size
     print " "
