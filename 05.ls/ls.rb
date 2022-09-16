@@ -31,12 +31,20 @@ def list_files(file_names)
   end
 end
 
+def count_blocks(file_names)
+  number_of_files = file_names.size - 1
+  (0..number_of_files).map do |nf|
+    fs = File::Stat.new(file_names[nf])
+    fs.blocks / 2
+  end.sum
+end
+
 def list_files_in_long_format(file_names)
   number_of_files = file_names.size - 1
+  print 'total '
+  puts count_blocks(file_names)
   (0..number_of_files).each do |nf|
     fs = File::Stat.new(file_names[nf])
-    print fs.blocks
-    print " "
     print fs.mode.to_s(8)
     print " "
     print fs.nlink
