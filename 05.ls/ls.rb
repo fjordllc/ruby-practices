@@ -52,6 +52,24 @@ def list_file_type(file_mode)
   end
 end
 
+def list_special_permissions(file_mode)
+  if file_mode[2] == 4 && file_permissions[2] = 'x'
+    file_permissions[2] = 'S'
+  elsif file_mode[2] == 4
+    file_permissions[2] = 's'
+  end
+  if file_mode[2] == 2 && file_permissions[5] = 'x'
+    file_permissions[5] = 'S'
+  elsif file_mode[2] == 2
+    file_permissions[5] = 's'
+  end
+  if file_mode[2] == 1 && file_permissions[8] = 'x'
+    file_permissions[8] = 'T'
+  elsif file_mode[2] == 1
+    file_permissions[8] = 't'
+  end
+end
+
 def list_file_permissions(file_mode)
   file_permissions = Array.new
   file_mode_r = file_mode
@@ -76,21 +94,9 @@ def list_file_permissions(file_mode)
       file_permissions.push('-')
     end
   end
+  list_special_permissions(file_mode)
   file_permissions.join
 end
-
-#def list_special_permissions
-#  case file_mode_8[2]
-#  when 1
-#    file_mode_8[5] = --t
-#  when 2
-#    file_mode_8[4] = --s
-#  when 4
-#    file_mode_8[3] = --s
-#  else
-#    ""
-#  end
-#end
 
 def list_files_in_long_format(file_names)
   number_of_files = file_names.size - 1
