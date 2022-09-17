@@ -42,15 +42,13 @@ def count_blocks(file_names)
 end
 
 def list_file_type(file_mode)
-  file_type = file_mode[0] + file_mode[1]
-  case file_type
-  when '04'
-    'd'
-  when '10'
-    '-'
-  when '12'
-    'l'
-  end
+  file_type = {
+    '04' => 'd',
+    '10' => '-',
+    '12' => 'l'
+  }
+  type = file_mode[0] + file_mode[1]
+  file_type[type]
 end
 
 def list_special_perm_suid(file_mode, file_permissions)
