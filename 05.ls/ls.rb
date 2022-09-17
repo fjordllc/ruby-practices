@@ -53,17 +53,23 @@ def list_file_type(file_mode)
   end
 end
 
-def list_special_perm(file_mode)
+def list_special_perm_suid(file_mode, file_permissions)
   if file_mode[2] == 4 && file_permissions[2] == 'x'
     file_permissions[2] = 'S'
   elsif file_mode[2] == 4
     file_permissions[2] = 's'
   end
+end
+
+def list_special_perm_sgid(file_mode, file_permissions)
   if file_mode[2] == 2 && file_permissions[5] == 'x'
     file_permissions[5] = 'S'
   elsif file_mode[2] == 2
     file_permissions[5] = 's'
   end
+end
+
+def list_special_perm_sticky(file_mode, file_permissions)
   if file_mode[2] == 1 && file_permissions[8] == 'x'
     file_permissions[8] = 'T'
   elsif file_mode[2] == 1
@@ -95,7 +101,9 @@ def list_file_perm(file_mode)
       file_permissions.push('-')
     end
   end
-  list_special_perm(file_mode)
+  list_special_perm_suid(file_mode, file_permissions)
+  list_special_perm_sgid(file_mode, file_permissions)
+  list_special_perm_sticky(file_mode, file_permissions)
   file_permissions.join
 end
 
