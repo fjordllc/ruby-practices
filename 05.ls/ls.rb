@@ -43,35 +43,36 @@ end
 
 def list_file_type(file_mode)
   file_type = file_mode[0] + file_mode[1]
-  if file_type == '04'
+  case file_type
+  when '04'
     'd'
-  elsif file_type == '10'
+  when '10'
     '-'
-  elsif file_type == '12'
+  when '12'
     'l'
   end
 end
 
-def list_special_permissions(file_mode)
-  if file_mode[2] == 4 && file_permissions[2] = 'x'
+def list_special_perm(file_mode)
+  if file_mode[2] == 4 && file_permissions[2] == 'x'
     file_permissions[2] = 'S'
   elsif file_mode[2] == 4
     file_permissions[2] = 's'
   end
-  if file_mode[2] == 2 && file_permissions[5] = 'x'
+  if file_mode[2] == 2 && file_permissions[5] == 'x'
     file_permissions[5] = 'S'
   elsif file_mode[2] == 2
     file_permissions[5] = 's'
   end
-  if file_mode[2] == 1 && file_permissions[8] = 'x'
+  if file_mode[2] == 1 && file_permissions[8] == 'x'
     file_permissions[8] = 'T'
   elsif file_mode[2] == 1
     file_permissions[8] = 't'
   end
 end
 
-def list_file_permissions(file_mode)
-  file_permissions = Array.new
+def list_file_perm(file_mode)
+  file_permissions = []
   file_mode_r = file_mode
   (3..5).map do |fp|
     if file_mode_r[fp].to_i >= 4
@@ -94,7 +95,7 @@ def list_file_permissions(file_mode)
       file_permissions.push('-')
     end
   end
-  list_special_permissions(file_mode)
+  list_special_perm(file_mode)
   file_permissions.join
 end
 
@@ -104,8 +105,8 @@ def list_files_in_long_format(file_names)
   puts count_blocks(file_names)
   (0..number_of_files).each do |nf|
     fs = File::Stat.new(file_names[nf])
-    file_mode_8 = fs.mode.to_s(8).split(//)
-    file_mode_8.unshift("0") if file_mode_8.size == 5
+    file_mode_octal = fs.mode.to_s(8).split(//)
+    file_mode_octal.unshift('0') if file_mode_octal.size == 5
     number_of_hard_links = fs.nlink
     user_name = Etc.getpwuid(fs.uid).name
     group_name = Etc.getgrgid(fs.gid).name
@@ -116,7 +117,8 @@ def list_files_in_long_format(file_names)
     day = time_stamp[3]
     hour = time_stamp[2]
     minutes = time_stamp[1]
-    puts "#{list_file_type(file_mode_8)}#{list_file_permissions(file_mode_8)} #{number_of_hard_links} #{user_name} #{group_name} #{file_size} #{month} #{day} #{hour}:#{minutes} #{file_names[nf]}"
+    print "#{list_file_type(file_mode_octal)}#{list_file_perm(file_mode_octal)}"
+    puts " #{number_of_hard_links} #{user_name} #{group_name} #{file_size} #{month} #{day} #{hour}:#{minutes} #{file_names[nf]}"
   end
 end
 
