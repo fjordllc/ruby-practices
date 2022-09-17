@@ -78,29 +78,16 @@ def list_special_perm_sticky(file_mode, file_permissions)
 end
 
 def list_file_perm(file_mode)
-  file_permissions = []
-  file_mode_r = file_mode
-  (3..5).map do |fp|
-    if file_mode_r[fp].to_i >= 4
-      file_mode_w = file_mode_r[fp].to_i - 4
-      file_permissions.push('r')
-    else
-      file_mode_w = file_mode_r[fp].to_i
-      file_permissions.push('-')
+  file_permissions =
+    (3..5).map do |fp|
+      fm = file_mode[fp].to_i
+      fm_r = fm >= 4 ? 'r' : '-'
+      fm -= 4 if fm >= 4
+      fm_w = fm >= 2 ? 'w' : '-'
+      fm -= 2 if fm >= 2
+      fm_x = fm >= 1 ? 'x' : '-'
+      [fm_r, fm_w, fm_x]
     end
-    if file_mode_w >= 2
-      file_mode_x = file_mode_w - 2
-      file_permissions.push('w')
-    else
-      file_mode_x = file_mode_w
-      file_permissions.push('-')
-    end
-    if file_mode_x >= 1
-      file_permissions.push('x')
-    else
-      file_permissions.push('-')
-    end
-  end
   list_special_perm_suid(file_mode, file_permissions)
   list_special_perm_sgid(file_mode, file_permissions)
   list_special_perm_sticky(file_mode, file_permissions)
