@@ -23,8 +23,9 @@ end
 frame_with_number = {}
 frames.each.with_index(1) { |fp, i| frame_with_number.store(i, fp) }
 
-total +=
-  frame_with_number.each do |frame, point|
+total = 0
+frame_with_number.each do |frame, point|
+  total +=
     if frame <= 9 && point[0] == 10 && frame_with_number[frame + 1][0] == 10
       10 + frame_with_number[frame + 1][0] + frame_with_number[frame + 2][0]
     elsif frame <= 9 && point[0] == 10
@@ -34,5 +35,5 @@ total +=
     else
       point.sum
     end
-  end
+end
 puts total
