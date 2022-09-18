@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 score = ARGV[0]
 
@@ -19,19 +20,19 @@ scores.each_slice(2) do |f|
   frames << f
 end
 
-frame_with_number = Hash.new; frames.each.with_index(1){|fp, i|frame_with_number.store(i, fp)}
+frame_with_number = {}
+frames.each.with_index(1) { |fp, i| frame_with_number.store(i, fp) }
 
-total = 0
-frame_with_number.each do |frame, point|
-  case
-  when frame <= 9 && point[0] == 10 && frame_with_number[frame+1][0] == 10# strike
-    total += 10 + frame_with_number[frame+1][0] + frame_with_number[frame+2][0] 
-  when frame <= 9 && point[0] == 10
-    total += 10 + frame_with_number[frame+1].sum
-  when frame <= 9 && point.sum == 10
-    total += 10 + frame_with_number[frame+1][0]
-  else
-    total += point.sum
+total +=
+  frame_with_number.each do |frame, point|
+    if frame <= 9 && point[0] == 10 && frame_with_number[frame + 1][0] == 10
+      10 + frame_with_number[frame + 1][0] + frame_with_number[frame + 2][0]
+    elsif frame <= 9 && point[0] == 10
+      10 + frame_with_number[frame + 1].sum
+    elsif frame <= 9 && point.sum == 10
+      10 + frame_with_number[frame + 1][0]
+    else
+      point.sum
+    end
   end
-end
 puts total
