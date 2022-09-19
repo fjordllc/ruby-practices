@@ -10,6 +10,9 @@ output_item_width = 10
 
 ITEMS_INTERVAL = 5
 
+# TODO: -aオプション指定ではFile::FNM_DOTMATCHを指定
+a_option_flag = 0
+
 def ls_sort(target_list, horizontal_num, sort_reverse: false)
   # 行方向に昇順（-r では降順）表示にするために行方向の最大行数を取得
   max_vertical_items_count = (target_list.size.to_f / horizontal_num).ceil
@@ -28,7 +31,7 @@ def ls_sort(target_list, horizontal_num, sort_reverse: false)
   sorted_list
 end
 
-def ls_print(target, item_width, horizontal_num)
+def ls_print(target, item_width)
   # TODO: -l オプション時に詳細を取得する処理を書く
   target.each do |line_items|
     line_items.each do |line_item|
@@ -40,22 +43,19 @@ end
 
 begin
   if FileTest.directory?(ls_target_path)
-    Dir.foreach(ls_target_path) do |item_in_dir|
-      # TODO: -aオプションによる切り替えを行う
-      next unless /^\..*/.match(item_in_dir).nil?
-
-      dir_items_list << item_in_dir.encode("utf-8")
+    Dir.glob('*', flags: a_option_flag, base: ls_target_path) do |item_in_dir|
+      dir_items_list << item_in_dir
       # NOTE: 表示アイテムの最大文字列とアイテム間のスペースがoutput_item_widthを超えていたらoutput_item_widthを更新する
       # NOTE: （補足）output_item_widthとは一つのアイテムが横幅でとってよい幅のこと
       output_item_width = item_in_dir.size + ITEMS_INTERVAL > output_item_width ? item_in_dir.size + ITEMS_INTERVAL : output_item_width
     end
     sorted_dir_items_list = ls_sort(dir_items_list, horizontal_items_count)
     # TODO: -rオプションの際にASC処理ではなくDESC処理をする
-    ls_print(sorted_dir_items_list, output_item_width, horizontal_items_count)
+    ls_print(sorted_dir_items_list, output_item_width)
 
   elsif FileTest.file?(ls_target_path)
     dir_items_list << ls_target_path
-    ls_print(dir_items_list, output_item_width, 1)
+    ls_print(dir_items_list, output_item_width)
   else
     raise StandardError, "ls: #{ls_target_path}: No such file or directory"
   end
