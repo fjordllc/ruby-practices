@@ -114,7 +114,8 @@ def convert_files_in_long_format(files_in_long_format)
     date = Date.new(time_stamp[5], time_stamp[4], time_stamp[3])
     month = date.strftime('%b')
     day = time_stamp[3].to_s
-    time = [time_stamp[2], time_stamp[1]].join(':')
+    minute = time_stamp[1].to_s.size == 1 ? ['0', time_stamp[1]].join : time_stamp[1]
+    time = [time_stamp[2], minute].join(':')
     [type_and_permissions, number_of_hard_links, user_name, group_name, file_size, month, day, time]
   end
 end
