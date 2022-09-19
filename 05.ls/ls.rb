@@ -106,16 +106,31 @@ def convert_files_in_long_format(files_in_long_format)
     file_mode_octal = files_in_long_format[nf][0].to_s(8).split(//)
     file_mode_octal.unshift('0') if file_mode_octal.size == 5
     type_and_permissions = [list_file_type(file_mode_octal), list_file_perm(file_mode_octal)].join
-    number_of_hard_links = files_in_long_format[nf][1]
+    number_of_hard_links = files_in_long_format[nf][1].to_s
     user_name = Etc.getpwuid(files_in_long_format[nf][2]).name
     group_name = Etc.getgrgid(files_in_long_format[nf][3]).name
-    file_size = files_in_long_format[nf][4]
+    file_size = files_in_long_format[nf][4].to_s
     time_stamp = files_in_long_format[nf][5].to_a
     date = Date.new(time_stamp[5], time_stamp[4], time_stamp[3])
     month = date.strftime('%b')
-    day = time_stamp[3]
+    day = time_stamp[3].to_s
     time = [time_stamp[2], time_stamp[1]].join(':')
     [type_and_permissions, number_of_hard_links, user_name, group_name, file_size, month, day, time]
+  end
+end
+
+def line_up_long_format(files_in_long_format)
+  number_of_files = files_in_long_format.size - 1
+  max_number_of_chars =
+  (0..7).map do |n|
+    (0..number_of_files).map do |nf|
+      files_in_long_format[nf][n].size
+    end.max
+  end
+  (0..number_of_files).map do |nf|
+    (0..7).map do |n|
+      files_in_long_format[nf][n].rjust(max_number_of_chars[n])
+    end
   end
 end
 
@@ -124,10 +139,11 @@ def list_files_in_long_format(file_names)
   puts count_blocks(file_names)
   file_before_conversion = get_files_in_long_format(file_names)
   file_after_conversion = convert_files_in_long_format(file_before_conversion)
+  sorted_file = line_up_long_format(file_after_conversion)
   number_of_files = file_names.size - 1
   (0..number_of_files).each do |nf|
     (0..7).each do |n|
-      print "#{file_after_conversion[nf][n]} "
+      print "#{sorted_file[nf][n]} "
     end
     puts file_names[nf]
   end
