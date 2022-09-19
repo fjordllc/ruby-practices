@@ -92,7 +92,7 @@ def list_file_perm(file_mode)
   file_permissions.join
 end
 
-def get_file_in_long_format(file_names)
+def get_files_in_long_format(file_names)
   number_of_files = file_names.size - 1
   (0..number_of_files).map do |nf|
     fs = File::Stat.new(file_names[nf])
@@ -100,7 +100,7 @@ def get_file_in_long_format(file_names)
   end
 end
 
-def convert_file_in_long_format(files_in_long_format)
+def convert_files_in_long_format(files_in_long_format)
   number_of_files = files_in_long_format.size - 1
   (0..number_of_files).map do |nf|
     file_mode_octal = files_in_long_format[nf][0].to_s(8).split(//)
