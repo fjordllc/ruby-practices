@@ -14,11 +14,11 @@ ITEMS_INTERVAL = 5
 a_option_flag = 0
 
 def ls_sort(target_list, horizontal_num, sort_reverse: false)
-  # 行方向に昇順（-r では降順）表示にするために行方向の最大行数を取得
+  # NOTE: 行方向に昇順（-r では降順）表示にするために行方向の最大行数を取得
   max_vertical_items_count = (target_list.size.to_f / horizontal_num).ceil
   target_list = sort_reverse == true ? target_list.sort.reverse : target_list.sort
   sorted_list = []
-  # 一行ごとの隣り合うアイテムが最大行数ごとに並ぶように昇順（-r では降順）済みリストインデックスを並び替える
+  # NOTE: 一行ごとの隣り合うアイテムが最大行数ごとに並ぶように昇順（-r では降順）済みリストインデックスを並び替える
   max_vertical_items_count.times do |count|
     tmp_list_for_vertival_output = []
     target_list.each_with_index do |v, i|
