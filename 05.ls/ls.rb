@@ -92,26 +92,44 @@ def list_file_perm(file_mode)
   file_permissions.join
 end
 
-def list_files_in_long_format(file_names)
+def get_file_in_long_format(file_names)
   number_of_files = file_names.size - 1
-  print 'total '
-  puts count_blocks(file_names)
-  (0..number_of_files).each do |nf|
+  (0..number_of_files).map do |nf|
     fs = File::Stat.new(file_names[nf])
-    file_mode_octal = fs.mode.to_s(8).split(//)
+    [fs.mode, fs.nlink, fs.uid, fs.gid, fs.size, fs.mtime]
+  end
+end
+
+def convert_file_in_long_format(files_in_long_format)
+  number_of_files = files_in_long_format.size - 1
+  (0..number_of_files).map do |nf|
+    file_mode_octal = files_in_long_format[nf][0].to_s(8).split(//)
     file_mode_octal.unshift('0') if file_mode_octal.size == 5
-    number_of_hard_links = fs.nlink
-    user_name = Etc.getpwuid(fs.uid).name
-    group_name = Etc.getgrgid(fs.gid).name
-    file_size = fs.size
-    time_stamp = fs.mtime.to_a
+    type_and_permissions = [list_file_type(file_mode_octal), list_file_perm(file_mode_octal)].join
+    number_of_hard_links = files_in_long_format[nf][1]
+    user_name = Etc.getpwuid(files_in_long_format[nf][2]).name
+    group_name = Etc.getgrgid(files_in_long_format[nf][3]).name
+    file_size = files_in_long_format[nf][4]
+    time_stamp = files_in_long_format[nf][5].to_a
     date = Date.new(time_stamp[5], time_stamp[4], time_stamp[3])
     month = date.strftime('%b')
     day = time_stamp[3]
-    hour = time_stamp[2]
-    minutes = time_stamp[1]
-    print "#{list_file_type(file_mode_octal)}#{list_file_perm(file_mode_octal)}"
-    puts " #{number_of_hard_links} #{user_name} #{group_name} #{file_size} #{month} #{day} #{hour}:#{minutes} #{file_names[nf]}"
+    time = [time_stamp[2], time_stamp[1]].join(':')
+    [type_and_permissions, number_of_hard_links, user_name, group_name, file_size, month, day, time]
+  end
+end
+
+def list_files_in_long_format(file_names)
+  print 'total '
+  puts count_blocks(file_names)
+  file_before_conversion = get_file_in_long_format(file_names)
+  file_after_conversion = convert_file_in_long_format(file_before_conversion)
+  number_of_files = file_names.size - 1
+  (0..number_of_files).each do |nf|
+    (0..7).each do |n|
+      print "#{file_after_conversion[nf][n]} "
+    end
+    puts file_names[nf]
   end
 end
 
