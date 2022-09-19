@@ -17,18 +17,20 @@ def ls_sort(target_list, horizontal_num, sort_reverse: false)
   sorted_list = []
   # 一行ごとの隣り合うアイテムが最大行数ごとに並ぶように昇順（-r では降順）済みリストインデックスを並び替える
   max_vertical_items_count.times do |count|
+    tmp_list_for_vertival_output = []
     target_list.each_with_index do |v, i|
       next if i % max_vertical_items_count != count
 
-      sorted_list << v
+      tmp_list_for_vertival_output << v
     end
+    sorted_list << tmp_list_for_vertival_output
   end
   sorted_list
 end
 
 def ls_print(target, item_width, horizontal_num)
   # TODO: -l オプション時に詳細を取得する処理を書く
-  target.each_slice(horizontal_num) do |line_items|
+  target.each do |line_items|
     line_items.each do |line_item|
       print format("%-#{item_width}.*s", item_width, line_item)
     end
@@ -42,7 +44,7 @@ begin
       # TODO: -aオプションによる切り替えを行う
       next unless /^\..*/.match(item_in_dir).nil?
 
-      dir_items_list << item_in_dir
+      dir_items_list << item_in_dir.encode("utf-8")
       # NOTE: 表示アイテムの最大文字列とアイテム間のスペースがoutput_item_widthを超えていたらoutput_item_widthを更新する
       # NOTE: （補足）output_item_widthとは一つのアイテムが横幅でとってよい幅のこと
       output_item_width = item_in_dir.size + ITEMS_INTERVAL > output_item_width ? item_in_dir.size + ITEMS_INTERVAL : output_item_width
