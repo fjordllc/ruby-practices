@@ -123,11 +123,11 @@ end
 def line_up_long_format(files_in_long_format)
   number_of_files = files_in_long_format.size - 1
   max_number_of_chars =
-  (0..7).map do |n|
-    (0..number_of_files).map do |nf|
-      files_in_long_format[nf][n].size
-    end.max
-  end
+    (0..7).map do |n|
+      (0..number_of_files).map do |nf|
+        files_in_long_format[nf][n].size
+      end.max
+    end
   (0..number_of_files).map do |nf|
     (0..7).map do |n|
       files_in_long_format[nf][n].rjust(max_number_of_chars[n])
