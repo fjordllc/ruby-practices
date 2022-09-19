@@ -122,8 +122,8 @@ end
 def list_files_in_long_format(file_names)
   print 'total '
   puts count_blocks(file_names)
-  file_before_conversion = get_file_in_long_format(file_names)
-  file_after_conversion = convert_file_in_long_format(file_before_conversion)
+  file_before_conversion = get_files_in_long_format(file_names)
+  file_after_conversion = convert_files_in_long_format(file_before_conversion)
   number_of_files = file_names.size - 1
   (0..number_of_files).each do |nf|
     (0..7).each do |n|
