@@ -94,7 +94,7 @@ end
 def get_files_in_long_format(file_names)
   file_names.map do |fname|
     fs = File::Stat.new(fname)
-    file_elements = {
+    {
       file_mode: fs.mode,
       hard_link: fs.nlink,
       user_id: fs.uid,
@@ -113,7 +113,7 @@ def convert_files_in_long_format(files_in_long_format)
     time_stamp = longformat[:last_update_time].to_a
     date = Date.new(time_stamp[5], time_stamp[4], time_stamp[3])
     minute = time_stamp[1].to_s.size == 1 ? ['0', time_stamp[1]].join : time_stamp[1]
-    converted_file_elements = {
+    {
       type_and_permissions: [list_file_type(file_mode_octal), list_file_perm(file_mode_octal)].join,
       number_of_hard_links: longformat[:hard_link].to_s,
       user_name: Etc.getpwuid(longformat[:user_id]).name,
@@ -128,7 +128,7 @@ def convert_files_in_long_format(files_in_long_format)
 end
 
 def line_up_long_format(files_in_long_format)
-  key_of_file_elements = files_in_long_format[0].map{ |k, _v| k }
+  key_of_file_elements = files_in_long_format[0].map { |k, _v| k }
   max_number_of_chars =
     key_of_file_elements.map do |kfe|
       max =
@@ -136,7 +136,7 @@ def line_up_long_format(files_in_long_format)
           longformat[kfe].size
         end.max
       [kfe, max]
-      end.to_h
+    end.to_h
   files_in_long_format.map do |longformat|
     key_of_file_elements.map do |kfe|
       if kfe == :file_name
