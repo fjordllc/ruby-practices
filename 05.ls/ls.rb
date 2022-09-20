@@ -91,24 +91,57 @@ def list_file_perm(file_mode)
   file_permissions.join
 end
 
+#def get_files_in_long_format(file_names)
+#  file_names.map do |fname|
+#    fs = File::Stat.new(fname)
+#    [fs.mode, fs.nlink, fs.uid, fs.gid, fs.size, fs.mtime]
+#  end
+#end
+
 def get_files_in_long_format(file_names)
   file_names.map do |fname|
     fs = File::Stat.new(fname)
-    [fs.mode, fs.nlink, fs.uid, fs.gid, fs.size, fs.mtime]
+    file_elements = {
+      file_mode: fs.mode,
+      hard_link: fs.nlink,
+      user_id: fs.uid,
+      group_id: fs.gid,
+      file_size: fs.size,
+      last_update_time: fs.mtime
+    }
   end
 end
 
+#def convert_files_in_long_format(files_in_long_format)
+#  number_of_files = files_in_long_format.size - 1
+#  (0..number_of_files).map do |nf|
+#    file_mode_octal = files_in_long_format[nf][0].to_s(8).split(//)
+#    file_mode_octal.unshift('0') if file_mode_octal.size == 5
+#    type_and_permissions = [list_file_type(file_mode_octal), list_file_perm(file_mode_octal)].join
+#    number_of_hard_links = files_in_long_format[nf][1].to_s
+#    user_name = Etc.getpwuid(files_in_long_format[nf][2]).name
+#    group_name = Etc.getgrgid(files_in_long_format[nf][3]).name
+#    file_size = files_in_long_format[nf][4].to_s
+#    time_stamp = files_in_long_format[nf][5].to_a
+#    date = Date.new(time_stamp[5], time_stamp[4], time_stamp[3])
+#    month = date.strftime('%b')
+#    day = time_stamp[3].to_s
+#    minute = time_stamp[1].to_s.size == 1 ? ['0', time_stamp[1]].join : time_stamp[1]
+#    time = [time_stamp[2], minute].join(':')
+#    [type_and_permissions, number_of_hard_links, user_name, group_name, file_size, month, day, time]
+#  end
+#end
+
 def convert_files_in_long_format(files_in_long_format)
-  number_of_files = files_in_long_format.size - 1
-  (0..number_of_files).map do |nf|
-    file_mode_octal = files_in_long_format[nf][0].to_s(8).split(//)
+  files_in_long_format.map do |longformat|
+    file_mode_octal = longformat[:file_mode].to_s(8).split(//)
     file_mode_octal.unshift('0') if file_mode_octal.size == 5
     type_and_permissions = [list_file_type(file_mode_octal), list_file_perm(file_mode_octal)].join
-    number_of_hard_links = files_in_long_format[nf][1].to_s
-    user_name = Etc.getpwuid(files_in_long_format[nf][2]).name
-    group_name = Etc.getgrgid(files_in_long_format[nf][3]).name
-    file_size = files_in_long_format[nf][4].to_s
-    time_stamp = files_in_long_format[nf][5].to_a
+    number_of_hard_links = longformat[:hard_link].to_s
+    user_name = Etc.getpwuid(longformat[:user_id]).name
+    group_name = Etc.getgrgid(longformat[:group_id]).name
+    file_size = longformat[:file_size].to_s
+    time_stamp = longformat[:last_update_time].to_a
     date = Date.new(time_stamp[5], time_stamp[4], time_stamp[3])
     month = date.strftime('%b')
     day = time_stamp[3].to_s
