@@ -134,8 +134,7 @@ def line_up_long_format(files_in_long_format)
 end
 
 def list_files_in_long_format(file_names)
-  print 'total '
-  puts count_blocks(file_names)
+  puts "total #{count_blocks(file_names)}"
   file_before_conversion = get_files_in_long_format(file_names)
   file_after_conversion = convert_files_in_long_format(file_before_conversion)
   sorted_file = line_up_long_format(file_after_conversion)
