@@ -34,9 +34,8 @@ def list_files(file_names)
 end
 
 def count_blocks(file_names)
-  number_of_files = file_names.size - 1
-  (0..number_of_files).map do |nf|
-    fs = File::Stat.new(file_names[nf])
+  file_names.map do |fname|
+    fs = File::Stat.new(fname)
     fs.blocks / 2
   end.sum
 end
@@ -93,9 +92,8 @@ def list_file_perm(file_mode)
 end
 
 def get_files_in_long_format(file_names)
-  number_of_files = file_names.size - 1
-  (0..number_of_files).map do |nf|
-    fs = File::Stat.new(file_names[nf])
+  file_names.map do |fname|
+    fs = File::Stat.new(fname)
     [fs.mode, fs.nlink, fs.uid, fs.gid, fs.size, fs.mtime]
   end
 end
