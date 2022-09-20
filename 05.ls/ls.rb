@@ -147,12 +147,8 @@ def list_files_in_long_format(file_names)
   file_before_conversion = get_files_in_long_format(file_names)
   file_after_conversion = convert_files_in_long_format(file_before_conversion)
   sorted_file = line_up_long_format(file_after_conversion)
-  number_of_files = file_names.size - 1
-  (0..number_of_files).each do |nf|
-    (0..7).each do |n|
-      print "#{sorted_file[nf][n]} "
-    end
-    puts file_names[nf]
+  sorted_file.each do |file|
+    puts file.join(' ')
   end
 end
 
