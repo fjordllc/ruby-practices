@@ -100,7 +100,8 @@ def get_files_in_long_format(file_names)
       user_id: fs.uid,
       group_id: fs.gid,
       file_size: fs.size,
-      last_update_time: fs.mtime
+      last_update_time: fs.mtime,
+      file_name: fname
     }
   end
 end
@@ -120,7 +121,8 @@ def convert_files_in_long_format(files_in_long_format)
       file_size: longformat[:file_size].to_s,
       month: date.strftime('%b'),
       day: time_stamp[3].to_s,
-      time: [time_stamp[2], minute].join(':')
+      time: [time_stamp[2], minute].join(':'),
+      file_name: longformat[:file_name]
     }
   end
 end
@@ -137,7 +139,11 @@ def line_up_long_format(files_in_long_format)
       end.to_h
   files_in_long_format.map do |longformat|
     key_of_file_elements.map do |kfe|
-      longformat[kfe].rjust(max_number_of_chars[kfe])
+      if kfe == :file_name
+        longformat[kfe].ljust(max_number_of_chars[kfe])
+      else
+        longformat[kfe].rjust(max_number_of_chars[kfe])
+      end
     end
   end
 end
