@@ -105,25 +105,6 @@ def get_files_in_long_format(file_names)
   end
 end
 
-#def convert_files_in_long_format(files_in_long_format)
-#  files_in_long_format.map do |longformat|
-#    file_mode_octal = longformat[:file_mode].to_s(8).split(//)
-#    file_mode_octal.unshift('0') if file_mode_octal.size == 5
-#    type_and_permissions = [list_file_type(file_mode_octal), list_file_perm(file_mode_octal)].join
-#    number_of_hard_links = longformat[:hard_link].to_s
-#    user_name = Etc.getpwuid(longformat[:user_id]).name
-#    group_name = Etc.getgrgid(longformat[:group_id]).name
-#    file_size = longformat[:file_size].to_s
-#    time_stamp = longformat[:last_update_time].to_a
-#    date = Date.new(time_stamp[5], time_stamp[4], time_stamp[3])
-#    month = date.strftime('%b')
-#    day = time_stamp[3].to_s
-#    minute = time_stamp[1].to_s.size == 1 ? ['0', time_stamp[1]].join : time_stamp[1]
-#    time = [time_stamp[2], minute].join(':')
-#    [type_and_permissions, number_of_hard_links, user_name, group_name, file_size, month, day, time]
-#  end
-#end
-
 def convert_files_in_long_format(files_in_long_format)
   files_in_long_format.map do |longformat|
     file_mode_octal = longformat[:file_mode].to_s(8).split(//)
@@ -145,16 +126,18 @@ def convert_files_in_long_format(files_in_long_format)
 end
 
 def line_up_long_format(files_in_long_format)
-  number_of_files = files_in_long_format.size - 1
+  key_of_file_elements = files_in_long_format[0].map{ |k, _v| k }
   max_number_of_chars =
-    (0..7).map do |n|
-      (0..number_of_files).map do |nf|
-        files_in_long_format[nf][n].size
-      end.max
-    end
-  (0..number_of_files).map do |nf|
-    (0..7).map do |n|
-      files_in_long_format[nf][n].rjust(max_number_of_chars[n])
+    key_of_file_elements.map do |kfe|
+      max =
+        files_in_long_format.map do |longformat|
+          longformat[kfe].size
+        end.max
+      [kfe, max]
+      end.to_h
+  files_in_long_format.map do |longformat|
+    key_of_file_elements.map do |kfe|
+      longformat[kfe].rjust(max_number_of_chars[kfe])
     end
   end
 end
@@ -162,7 +145,7 @@ end
 def list_files_in_long_format(file_names)
   puts "total #{count_blocks(file_names)}"
   file_before_conversion = get_files_in_long_format(file_names)
-  p file_after_conversion = convert_files_in_long_format(file_before_conversion)
+  file_after_conversion = convert_files_in_long_format(file_before_conversion)
   sorted_file = line_up_long_format(file_after_conversion)
   number_of_files = file_names.size - 1
   (0..number_of_files).each do |nf|
