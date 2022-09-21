@@ -106,7 +106,7 @@ def get_files_in_long_format(file_names)
   end
 end
 
-def convert_files_in_long_format(files_in_long_format)
+def convert_to_display_format(files_in_long_format)
   files_in_long_format.map do |longformat|
     file_mode_octal = longformat[:file_mode].to_s(8).split(//)
     file_mode_octal.unshift('0') if file_mode_octal.size == 5
@@ -151,7 +151,7 @@ end
 def list_files_in_long_format(file_names)
   puts "total #{count_blocks(file_names)}"
   file_before_conversion = get_files_in_long_format(file_names)
-  file_after_conversion = convert_files_in_long_format(file_before_conversion)
+  file_after_conversion = convert_to_display_format(file_before_conversion)
   sorted_file = line_up_long_format(file_after_conversion)
   sorted_file.each do |file|
     puts file.join(' ')
