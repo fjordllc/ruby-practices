@@ -1,53 +1,42 @@
 # frozen_string_literal: true
-SPARE = 1
-STRIKE = 2
 
 # add_bonus method
-def add_bonus(pins, i, frame = -1)
-  # what kind of bonus?
-  bonus_flag = 0
-  if pins[i] == 10
-    bonus_flag = STRIKE
-  elsif pins[i..i+1].sum == 10
-    bonus_flag = SPARE
-  end
-
+def add_bonus(pins, index, frame = -1)
   bonus = 0
   # spare bonus
-  bonus += pins[i + 2] if bonus_flag == SPARE
+  bonus += pins[index + 2] if pins[index..index + 1].sum == 10
   # strike bonus
-  bonus += pins[(i + 1)..(i + 2)].sum if bonus_flag == STRIKE
+  bonus += pins[(index + 1)..(index + 2)].sum if pins[index] == 10
   bonus
 end
 
 # get input
 pins = ARGV[0].split(',')
-# convert X to 10
-pins.size.times {|n| pins[n] = 10 if pins[n] == "X"} 
-pins.map!{|x| x.to_i}
+# convert X to 10s
+pins.map!{|pin| pin == "X" ? 10 : pin} 
+pins.map!(&:to_i)
 
 score = 0
-i = 0
-10.times do |frame|
+index = 0
+10.times.sum do |frame|
   # 10th frame
   if frame == 9
-    score += pins[i..i+2].sum
+    score += pins[index..].sum
   # 1-9th frame
   else
     # get frame-th frame  
     frame_pins = []
-    frame_pins[0] = pins[i]
-    frame_pins[1] = pins[i + 1] if pins[i] != 10
+    frame_pins[0] = pins[index]
+    frame_pins[1] = pins[index + 1] if pins[index] != 10
     
     # nomal point
     score += frame_pins.sum
     # add bonus
-    score += add_bonus(pins, i, frame)
+    score += add_bonus(pins, index, frame)
 
     # increment   
-    i += 1 if pins[i] != 10
-    i += 1
+    index += 1 if pins[index] != 10
+    index += 1
   end
 end
-
 puts score
