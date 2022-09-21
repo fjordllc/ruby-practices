@@ -107,22 +107,22 @@ def get_files_in_long_format(file_names)
 end
 
 def convert_to_display_format(files_in_long_format)
-  files_in_long_format.map do |longformat|
-    file_mode_octal = longformat[:file_mode].to_s(8).split(//)
+  files_in_long_format.map do |file|
+    file_mode_octal = file[:file_mode].to_s(8).split(//)
     file_mode_octal.unshift('0') if file_mode_octal.size == 5
-    time_stamp = longformat[:last_update_time].to_a
+    time_stamp = file[:last_update_time].to_a
     date = Date.new(time_stamp[5], time_stamp[4], time_stamp[3])
     minute = time_stamp[1].to_s.size == 1 ? ['0', time_stamp[1]].join : time_stamp[1]
     {
       type_and_permissions: [list_file_type(file_mode_octal), list_file_perm(file_mode_octal)].join,
-      number_of_hard_links: longformat[:hard_link].to_s,
-      user_name: Etc.getpwuid(longformat[:user_id]).name,
-      group_name: Etc.getgrgid(longformat[:group_id]).name,
-      file_size: longformat[:file_size].to_s,
+      number_of_hard_links: file[:hard_link].to_s,
+      user_name: Etc.getpwuid(file[:user_id]).name,
+      group_name: Etc.getgrgid(file[:group_id]).name,
+      file_size: file[:file_size].to_s,
       month: date.strftime('%b'),
       day: time_stamp[3].to_s,
       time: [time_stamp[2], minute].join(':'),
-      file_name: longformat[:file_name]
+      file_name: file[:file_name]
     }
   end
 end
@@ -130,19 +130,19 @@ end
 def line_up_long_format(files_in_long_format)
   key_of_file_elements = files_in_long_format[0].map { |k, _v| k }
   max_number_of_chars =
-    key_of_file_elements.map do |kfe|
+    key_of_file_elements.map do |key|
       max =
-        files_in_long_format.map do |longformat|
-          longformat[kfe].size
+        files_in_long_format.map do |file|
+          file[key].size
         end.max
-      [kfe, max]
+      [key, max]
     end.to_h
-  files_in_long_format.map do |longformat|
-    key_of_file_elements.map do |kfe|
-      if kfe == :file_name
-        longformat[kfe].ljust(max_number_of_chars[kfe])
+  files_in_long_format.map do |file|
+    key_of_file_elements.map do |key|
+      if key == :file_name
+        file[key].ljust(max_number_of_chars[key])
       else
-        longformat[kfe].rjust(max_number_of_chars[kfe])
+        file[key].rjust(max_number_of_chars[key])
       end
     end
   end
