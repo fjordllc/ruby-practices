@@ -128,7 +128,7 @@ def convert_to_display_format(files_in_long_format)
 end
 
 def line_up_long_format(files_in_long_format)
-  keys_of_file_elements = files_in_long_format[0].map { |k, _v| k }
+  keys_of_file_elements = files_in_long_format[0].keys
   max_number_of_chars = keys_of_file_elements.map do |key|
     max = files_in_long_format.map do |file|
       file[key].size
