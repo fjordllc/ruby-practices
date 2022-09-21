@@ -138,7 +138,7 @@ def line_up_long_format(files_in_long_format)
   files_in_long_format.map do |file|
     keys_of_file_elements.map do |key|
       if key == :file_name
-        file[key].ljust(max_number_of_chars[key])
+        file[key]
       else
         file[key].rjust(max_number_of_chars[key])
       end
