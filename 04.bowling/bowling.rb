@@ -10,7 +10,7 @@ def add_bonus(pins, index, frame = -1)
   bonus
 end
 
-# get input
+# get  input
 pins = ARGV[0].split(',')
 # convert X to 10s
 pins.map!{|pin| pin == "X" ? 10 : pin} 
