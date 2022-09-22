@@ -8,8 +8,9 @@ end
 
 # ファイル一覧をlsのルールに従い表示
 def display(files, scale)
-  scale.times do |y|
-    ROW.times {|x| printf "#{files[x * scale + y]}" + " "*10}
+  scale.times do |y| 
+    ROW.times { |x| printf("#{files[x * scale + y]}".ljust(files.map(&:size).max + 3)) }
+    
     printf "\n"
   end
 end
