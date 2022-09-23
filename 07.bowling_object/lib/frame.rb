@@ -9,4 +9,8 @@ class Frame
     shots << 0 while shots.length < 3
     @first_shot, @second_shot, @third_shot = shots.map { |shot| Shot.new(shot) }
   end
+
+  def number_of_pins
+    @first_shot.pins + @second_shot.pins + @third_shot.pins
+  end
 end
