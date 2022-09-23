@@ -148,10 +148,10 @@ end
 
 def list_files_in_long_format(file_names)
   puts "total #{count_blocks(file_names)}"
-  file_before_conversion = get_files_in_long_format(file_names)
-  file_after_conversion = convert_to_display_format(file_before_conversion)
-  sorted_file = line_up_long_format(file_after_conversion)
-  sorted_file.each do |file|
+  files_before_conversion = get_files_in_long_format(file_names)
+  files_after_conversion = convert_to_display_format(files_before_conversion)
+  sorted_files = line_up_long_format(files_after_conversion)
+  sorted_files.each do |file|
     puts file.join(' ')
   end
 end
