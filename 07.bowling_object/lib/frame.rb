@@ -13,4 +13,12 @@ class Frame
   def number_of_pins
     @first_shot.pins + @second_shot.pins + @third_shot.pins
   end
+
+  def strike?
+    @first_shot.pins == 10
+  end
+
+  def spare?
+    @first_shot.pins + @second_shot.pins == 10
+  end
 end
