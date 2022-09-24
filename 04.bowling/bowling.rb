@@ -15,10 +15,7 @@ score_strings.each do |n|
   end
 end
 
-frames = []
-scores.each_slice(2) do |f|
-  frames << f
-end
+frames = scores.each_slice(2).to_a
 
 frame_with_number = {}
 frames.each.with_index(1) { |fp, i| frame_with_number.store(i, fp) }
