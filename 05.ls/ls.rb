@@ -16,7 +16,7 @@ a_option_flag = 0
 def ls_sort(target_list, horizontal_num, sort_reverse: false)
   # NOTE: 行方向に昇順（-r では降順）表示にするために行方向の最大行数を取得
   max_vertical_items_count = (target_list.size.to_f / horizontal_num).ceil
-  target_list = sort_reverse == true ? target_list.sort.reverse : target_list.sort
+  target_list = sort_reverse ? target_list.sort.reverse : target_list.sort
   sorted_list = []
   # NOTE: 一行ごとの隣り合うアイテムが最大行数ごとに並ぶように昇順（-r では降順）済みリストインデックスを並び替える
   max_vertical_items_count.times do |count|
@@ -47,7 +47,7 @@ begin
       dir_items_list << item_in_dir
       # NOTE: 表示アイテムの最大文字列とアイテム間のスペースがoutput_item_widthを超えていたらoutput_item_widthを更新する
       # NOTE: （補足）output_item_widthとは一つのアイテムが横幅でとってよい幅のこと
-      output_item_width = item_in_dir.size + ITEMS_INTERVAL > output_item_width ? item_in_dir.size + ITEMS_INTERVAL : output_item_width
+      output_item_width = [item_in_dir.size + ITEMS_INTERVAL, output_item_width].max
     end
     sorted_dir_items_list = ls_sort(dir_items_list, horizontal_items_count)
     # TODO: -rオプションの際にASC処理ではなくDESC処理をする
@@ -59,7 +59,9 @@ begin
   else
     raise StandardError, "ls: #{ls_target_path}: No such file or directory"
   end
+  exit
 rescue StandardError => e
   print e.message
   puts
+  exit(1)
 end
