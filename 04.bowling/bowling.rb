@@ -20,7 +20,7 @@ total =
     not_last_frame = frame_number <= 9
     strike = not_last_frame && points[0] == 10
     double = strike && frames[frame_number][0] == 10
-    spare = not_last_frame && points.sum == 10
+    spare = not_last_frame && !strike && points.sum == 10
 
     if double
       10 + next_points[0] + after_next_points[0]
