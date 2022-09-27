@@ -5,7 +5,7 @@
 # TODO: オプション処理時追加 opt = OptionParser.new
 ls_target_path = ARGV[-1].nil? ? '.' : ARGV[-1]
 dir_items_list = []
-# NOTE: 定数
+# NOTE: デフォルト値として定数定義
 DEFAULT_HORIZONAL_ITEMS_COUNT = 3
 DEFAULT_OUTPUT_ITEM_WIDTH = 10
 DEFAULT_ITEMS_INTERVAL = 5
