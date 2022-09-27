@@ -1,12 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-score = ARGV[0]
-
-score_strings = score.split(',')
-
 scores = []
-score_strings.each do |n|
+ARGV[0].split(',').each do |n|
   if n == 'X'
     scores << 10
     scores << 0
