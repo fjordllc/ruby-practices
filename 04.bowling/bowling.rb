@@ -17,9 +17,10 @@ total =
   frames.each.with_index(1).sum do |points, frame_number|
     next_points = frames[frame_number]
     after_next_points = frames[frame_number + 1]
-    double = frame_number <= 9 && points[0] == 10 && frames[frame_number][0] == 10
-    strike = frame_number <= 9 && points[0] == 10
-    spare = frame_number <= 9 && points.sum == 10
+    not_last_frame = frame_number <= 9
+    strike = not_last_frame && points[0] == 10
+    double = strike && frames[frame_number][0] == 10
+    spare = not_last_frame && points.sum == 10
 
     if double
       10 + next_points[0] + after_next_points[0]
