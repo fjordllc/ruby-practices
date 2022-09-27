@@ -5,10 +5,15 @@
 # TODO: オプション処理時追加 opt = OptionParser.new
 ls_target_path = ARGV[-1].nil? ? '.' : ARGV[-1]
 dir_items_list = []
-horizontal_items_count = 3
-output_item_width = 10
+# NOTE: 定数
+DEFAULT_HORIZONAL_ITEMS_COUNT = 3
+DEFAULT_OUTPUT_ITEM_WIDTH = 10
+DEFAULT_ITEMS_INTERVAL = 5
 
-ITEMS_INTERVAL = 5
+horizontal_items_count = DEFAULT_HORIZONAL_ITEMS_COUNT
+output_item_width = DEFAULT_OUTPUT_ITEM_WIDTH
+items_interval = DEFAULT_ITEMS_INTERVAL
+
 
 # TODO: -aオプション指定ではFile::FNM_DOTMATCHを指定
 a_option_flag = 0
@@ -47,7 +52,7 @@ begin
       dir_items_list << item_in_dir
       # NOTE: 表示アイテムの最大文字列とアイテム間のスペースがoutput_item_widthを超えていたらoutput_item_widthを更新する
       # NOTE: （補足）output_item_widthとは一つのアイテムが横幅でとってよい幅のこと
-      output_item_width = [item_in_dir.size + ITEMS_INTERVAL, output_item_width].max
+      output_item_width = [item_in_dir.size + items_interval, output_item_width].max
     end
     sorted_dir_items_list = ls_sort(dir_items_list, horizontal_items_count)
     # TODO: -rオプションの際にASC処理ではなくDESC処理をする
