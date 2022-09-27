@@ -32,7 +32,7 @@ total =
     elsif spare
       10 + next_frame_points[0]
     else
-       points.sum
+      points.sum
     end
   end
 
