@@ -38,4 +38,14 @@ class GameTest < Minitest::Test
   def test_bonus_score
     assert_equal 45, @game.bonus_score(@frames)
   end
+
+  def test_score
+    assert_equal 139, @game.score
+
+    game_with_two_shots_in_tenth_frame = Game.new('0,10,1,5,0,0,0,0,X,X,X,5,1,8,1,0,4')
+    assert_equal 107, game_with_two_shots_in_tenth_frame.score
+
+    prefect_game = Game.new('X,X,X,X,X,X,X,X,X,X,X,X')
+    assert_equal 300, prefect_game.score
+  end
 end

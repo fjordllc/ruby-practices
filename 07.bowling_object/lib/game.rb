@@ -5,6 +5,11 @@ class Game
     @score_text = score_text
   end
 
+  def score
+    frames = to_frame
+    total_pins(frames) + bonus_score(frames)
+  end
+
   def to_frame
     scores = @score_text.split(',').map { |score| score == 'X' ? 10 : score.to_i }
     frames = []
