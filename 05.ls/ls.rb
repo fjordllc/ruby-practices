@@ -1,11 +1,12 @@
 #!/usr/bin/env ruby
 
-# TODO: オプション処理時追加 require 'optparse'
+require 'optparse'
 
-# TODO: オプション処理時追加 opt = OptionParser.new
-ls_target_path = ARGV[-1].nil? ? '.' : ARGV[-1]
+# NOTE: -aオプション指定ではFile::FNM_DOTMATCHを指定するがオプションなしの初期値として0指定
+a_option_flag = 0
+
 dir_items_list = []
-# NOTE: デフォルト値として定数定義
+# NOTE: デフォルト値として定数定義をし定数を初期値として利用するために追加
 DEFAULT_HORIZONAL_ITEMS_COUNT = 3
 DEFAULT_OUTPUT_ITEM_WIDTH = 10
 DEFAULT_ITEMS_INTERVAL = 5
@@ -13,10 +14,6 @@ DEFAULT_ITEMS_INTERVAL = 5
 horizontal_items_count = DEFAULT_HORIZONAL_ITEMS_COUNT
 output_item_width = DEFAULT_OUTPUT_ITEM_WIDTH
 items_interval = DEFAULT_ITEMS_INTERVAL
-
-
-# TODO: -aオプション指定ではFile::FNM_DOTMATCHを指定
-a_option_flag = 0
 
 def ls_sort(target_list, horizontal_num, sort_reverse: false)
   # NOTE: 行方向に昇順（-r では降順）表示にするために行方向の最大行数を取得
@@ -47,6 +44,26 @@ def ls_print(target, item_width)
 end
 
 begin
+  opt = OptionParser.new
+  opt.on('-a', '--all', 'show all items') do
+    a_option_flag = File::FNM_DOTMATCH
+    # NOTE: Dir.globでは'..'の取得ができないため追加
+    dir_items_list << '..'
+  end
+  opt.on('-h', '--help', 'show this help') do
+    puts opt
+    exit
+  end
+  opt.parse(ARGV)
+
+  # NOTE: 通常のlsは複数のパス指定に対応するため ./ls.rb <path> -a などでくると
+  # NOTE: <path>分は検索をかけて表示し-aは不正なパス指定としてエラーを出すが今回は複数対応していないため割愛
+  ls_target_path = if ARGV[-1].nil? || ARGV[-1].start_with?('-')
+                     '.'
+                   else
+                     ARGV[-1]
+                   end
+
   if FileTest.directory?(ls_target_path)
     Dir.glob('*', flags: a_option_flag, base: ls_target_path) do |item_in_dir|
       dir_items_list << item_in_dir
@@ -65,6 +82,9 @@ begin
     raise StandardError, "ls: #{ls_target_path}: No such file or directory"
   end
   exit
+rescue OptionParser::InvalidOption => e
+  puts "ls: unrecognized option `#{e.args[0]}'"
+  exit(1)
 rescue StandardError => e
   print e.message
   puts
