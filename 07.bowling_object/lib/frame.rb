@@ -14,6 +14,10 @@ class Frame
     @first_shot.pins + @second_shot.pins + @third_shot.pins
   end
 
+  def bonus_score?
+    strike? || spare?
+  end
+
   def strike?
     @first_shot.pins == 10
   end

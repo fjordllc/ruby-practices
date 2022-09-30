@@ -27,6 +27,30 @@ class Game
     frames.map(&:number_of_pins).sum
   end
 
+  def bonus_score(frames)
+    bonus_scores = []
+    bonus_frames = frames[0..8].select(&:bonus_score?)
+
+    bonus_frames.each do |frame|
+      target_frame = find_frame(frames, frame.frame_number + 1)
+
+      if frame.strike? && target_frame.strike? && target_frame.frame_number < 10
+        # ストライク → ストライク → 次のフレームの場合
+        # 第9フレームがストライク → 第10フレームの1投目がストライク の場合はこの分岐に入れたくないので
+        # target_frame.frame_number < 10 の条件を入れています
+        after_target_frame = find_frame(frames, target_frame.frame_number + 1)
+        bonus_scores << target_frame.first_shot.pins + after_target_frame.first_shot.pins
+      elsif frame.strike?
+        # ストライク → 次のフレームで2投投げる場合
+        bonus_scores << target_frame.first_shot.pins + target_frame.second_shot.pins
+      else
+        # スペアの場合
+        bonus_scores << target_frame.first_shot.pins
+      end
+    end
+    bonus_scores.sum
+  end
+
   def find_frame(frames, frame_number)
     frames.find { |frame| frame.frame_number == frame_number }
   end

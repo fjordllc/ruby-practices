@@ -34,4 +34,8 @@ class GameTest < Minitest::Test
   def test_total_pins
     assert_equal 94, @game.total_pins(@frames)
   end
+
+  def test_bonus_score
+    assert_equal 45, @game.bonus_score(@frames)
+  end
 end
