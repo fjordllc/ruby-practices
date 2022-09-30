@@ -23,6 +23,10 @@ class Game
     frames
   end
 
+  def total_pins(frames)
+    frames.map(&:number_of_pins).sum
+  end
+
   def find_frame(frames, frame_number)
     frames.find { |frame| frame.frame_number == frame_number }
   end
