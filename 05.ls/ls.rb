@@ -18,6 +18,7 @@ output_item_width = DEFAULT_OUTPUT_ITEM_WIDTH
 items_interval = DEFAULT_ITEMS_INTERVAL
 
 class String
+  # NOTE: Stringクラスにマルチバイトに対応したljustメソッドが存在しなかったため追加
   def mb_ljust(width, padding = ' ')
     char_size = each_char.map { |s| s.bytesize == 1 ? 1 : 2 }.inject(:+)
     padding_size = [0, width - char_size].max
