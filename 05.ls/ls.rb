@@ -4,6 +4,8 @@ require 'optparse'
 
 # NOTE: -aオプション指定ではFile::FNM_DOTMATCHを指定するがオプションなしの初期値として0指定
 a_option_flag = 0
+# NOTE: -rオプション指定ではtrueを代入
+r_option_flag = false
 
 dir_items_list = []
 # NOTE: デフォルト値として定数定義をし定数を初期値として利用するために追加
@@ -15,7 +17,15 @@ horizontal_items_count = DEFAULT_HORIZONAL_ITEMS_COUNT
 output_item_width = DEFAULT_OUTPUT_ITEM_WIDTH
 items_interval = DEFAULT_ITEMS_INTERVAL
 
-def ls_sort(target_list, horizontal_num, sort_reverse: false)
+class String
+  def mb_ljust(width, padding=' ')
+    char_size = each_char.map{|s| s.bytesize == 1 ? 1 : 2}.inject(:+)
+    padding_size = [0, width - char_size].max
+    self + padding * padding_size
+  end
+end
+
+def ls_sort(target_list, horizontal_num, sort_reverse)
   # NOTE: 行方向に昇順（-r では降順）表示にするために行方向の最大行数を取得
   max_vertical_items_count = (target_list.size.to_f / horizontal_num).ceil
   target_list = sort_reverse ? target_list.sort.reverse : target_list.sort
@@ -37,7 +47,7 @@ def ls_print(target, item_width)
   # TODO: -l オプション時に詳細を取得する処理を書く
   target.each do |line_items|
     line_items.each do |line_item|
-      print format("%-#{item_width}.*s", item_width, line_item)
+      print line_item.mb_ljust(item_width)
     end
     puts
   end
@@ -49,6 +59,9 @@ begin
     a_option_flag = File::FNM_DOTMATCH
     # NOTE: Dir.globでは'..'の取得ができないため追加
     dir_items_list << '..'
+  end
+  opt.on('-r', '--reverse', 'show items in reverse order') do
+    r_option_flag = true
   end
   opt.on('-h', '--help', 'show this help') do
     puts opt
@@ -69,9 +82,9 @@ begin
       dir_items_list << item_in_dir
       # NOTE: 表示アイテムの最大文字列とアイテム間のスペースがoutput_item_widthを超えていたらoutput_item_widthを更新する
       # NOTE: （補足）output_item_widthとは一つのアイテムが横幅でとってよい幅のこと
-      output_item_width = [item_in_dir.size + items_interval, output_item_width].max
+      output_item_width = [item_in_dir.bytesize + items_interval, output_item_width].max
     end
-    sorted_dir_items_list = ls_sort(dir_items_list, horizontal_items_count)
+    sorted_dir_items_list = ls_sort(dir_items_list, horizontal_items_count, r_option_flag)
     # TODO: -rオプションの際にASC処理ではなくDESC処理をする
     ls_print(sorted_dir_items_list, output_item_width)
 
