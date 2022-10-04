@@ -86,7 +86,6 @@ begin
       output_item_width = [item_in_dir.bytesize + items_interval, output_item_width].max
     end
     sorted_dir_items_list = ls_sort(dir_items_list, horizontal_items_count, r_option_flag)
-    # TODO: -rオプションの際にASC処理ではなくDESC処理をする
     ls_print(sorted_dir_items_list, output_item_width)
 
   elsif FileTest.file?(ls_target_path)
