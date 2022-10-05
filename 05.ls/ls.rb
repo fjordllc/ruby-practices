@@ -12,6 +12,7 @@ l_option_flag = false
 
 dir_items_list = []
 details_of_dir_items = {}
+tmp_items_list = []
 # NOTE: デフォルト値として定数定義をし定数を初期値として利用するために追加
 DEFAULT_HORIZONAL_ITEMS_COUNT = 3
 DEFAULT_OUTPUT_ITEM_WIDTH = 10
@@ -50,7 +51,7 @@ end
 
 def ls_print(target, item_width, ls_opt, target_details)
   block_total = 0
-  target_details.each do |path, detail|
+  target_details.each do |_path, detail|
     block_total += detail[:block]
   end
   puts "total #{block_total}" if ls_opt
@@ -105,7 +106,7 @@ begin
   opt.on('-a', '--all', 'show all items') do
     a_option_flag = File::FNM_DOTMATCH
     # NOTE: Dir.globでは'..'の取得ができないため追加
-    dir_items_list << '..'
+    tmp_items_list << '..'
   end
   opt.on('-r', '--reverse', 'show items in reverse order') do
     r_option_flag = true
@@ -129,7 +130,9 @@ begin
                    end
 
   if FileTest.directory?(ls_target_path)
-    Dir.glob('*', flags: a_option_flag, base: ls_target_path) do |item_in_dir|
+    # NOTE: aオプションの際に'..'を付け加えるためにあえてtmpリストを利用している
+    tmp_items_list += Dir.glob('*', flags: a_option_flag, base: ls_target_path)
+    tmp_items_list.each do |item_in_dir|
       stat = File.stat(item_in_dir)
       details_of_dir_items[item_in_dir] =
         { mode: change_mode_2_perm(item_in_dir, stat.mode.to_s(8)), link_num: stat.nlink, owner: Etc.getpwuid(stat.uid).name,
