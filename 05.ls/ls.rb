@@ -1,13 +1,17 @@
 #!/usr/bin/env ruby
 
 require 'optparse'
+require 'etc'
 
 # NOTE: -aオプション指定ではFile::FNM_DOTMATCHを指定するがオプションなしの初期値として0指定
 a_option_flag = 0
 # NOTE: -rオプション指定ではtrueを代入
 r_option_flag = false
+# NOTE: -lオプション指定ではtrueを代入
+l_option_flag = false
 
 dir_items_list = []
+details_of_dir_items = {}
 # NOTE: デフォルト値として定数定義をし定数を初期値として利用するために追加
 DEFAULT_HORIZONAL_ITEMS_COUNT = 3
 DEFAULT_OUTPUT_ITEM_WIDTH = 10
@@ -44,14 +48,53 @@ def ls_sort(target_list, horizontal_num, sort_reverse)
   sorted_list
 end
 
-def ls_print(target, item_width)
+def ls_print(target, item_width, ls_opt, target_details)
   # TODO: -l オプション時に詳細を取得する処理を書く
+  puts "total #{(target_details[:block_total] / 1024).to_i}" if ls_opt
   target.each do |line_items|
     line_items.each do |line_item|
+      if ls_opt
+        # HACK: 所有者やグループ、ダイルサイズは文字列の最大から余白を取りたいが今回は本質ではないと思い余白固定で割愛
+        print target_details[line_item][:mode]
+        print target_details[line_item][:link_num].to_s.rjust(3)
+        print target_details[line_item][:owner].rjust(10)
+        print target_details[line_item][:own_grp].rjust(10)
+        print target_details[line_item][:size].to_s.rjust(8)
+        print target_details[line_item][:updated_m].to_s.rjust(3)
+        print target_details[line_item][:updated_d].to_s.rjust(3)
+        print "#{target_details[line_item][:updated_t].to_s.rjust(6)} "
+      end
       print line_item.mb_ljust(item_width)
     end
     puts
   end
+end
+
+def change_mode_2_perm(path, mode_num)
+  perm_num = mode_num.slice(-3..-1)
+  permission = File.directory?(path) ? 'd' : '-'
+  perm_num.each_char do |char|
+    # HACK: 8進数のmodeをパーミッション型に変換する良い方法を別途考える必要あり
+    permission << case char
+                  when '7'
+                    'rwx'
+                  when '6'
+                    'rw-'
+                  when '5'
+                    'r-x'
+                  when '4'
+                    'r--'
+                  when '3'
+                    '-wx'
+                  when '2'
+                    '-w-'
+                  when '1'
+                    '--x'
+                  else
+                    '---'
+                  end
+  end
+  permission
 end
 
 begin
@@ -64,11 +107,15 @@ begin
   opt.on('-r', '--reverse', 'show items in reverse order') do
     r_option_flag = true
   end
+  opt.on('-l', '--list', 'show items details') do
+    l_option_flag = true
+    horizontal_items_count = 1
+  end
   opt.on('-h', '--help', 'show this help') do
     puts opt
     exit
   end
-  opt.parse(ARGV)
+  opt.parse!(ARGV)
 
   # NOTE: 通常のlsは複数のパス指定に対応するため ./ls.rb <path> -a などでくると
   # NOTE: <path>分は検索をかけて表示し-aは不正なパス指定としてエラーを出すが今回は複数対応していないため割愛
@@ -80,13 +127,20 @@ begin
 
   if FileTest.directory?(ls_target_path)
     Dir.glob('*', flags: a_option_flag, base: ls_target_path) do |item_in_dir|
+      stat = File.stat(item_in_dir)
+      details_of_dir_items[item_in_dir] =
+        { mode: change_mode_2_perm(item_in_dir, stat.mode.to_s(8)), link_num: stat.nlink, owner: Etc.getpwuid(stat.uid).name,
+          own_grp: Etc.getgrgid(stat.gid).name, size: stat.size, updated_m: stat.mtime.month, updated_d: stat.mtime.day,
+          updated_t: stat.mtime.strftime('%I:%M') }
       dir_items_list << item_in_dir
+      block_total = FileTest.file?(item_in_dir) ? stat.size : 0
       # NOTE: 表示アイテムの最大文字列とアイテム間のスペースがoutput_item_widthを超えていたらoutput_item_widthを更新する
       # NOTE: （補足）output_item_widthとは一つのアイテムが横幅でとってよい幅のこと
       output_item_width = [item_in_dir.bytesize + items_interval, output_item_width].max
+      details_of_dir_items[:block_total] = details_of_dir_items[:block_total].nil? ? 0 : details_of_dir_items[:block_total] + block_total
     end
     sorted_dir_items_list = ls_sort(dir_items_list, horizontal_items_count, r_option_flag)
-    ls_print(sorted_dir_items_list, output_item_width)
+    ls_print(sorted_dir_items_list, output_item_width, l_option_flag, details_of_dir_items)
 
   elsif FileTest.file?(ls_target_path)
     dir_items_list << ls_target_path
@@ -96,7 +150,7 @@ begin
   end
   exit
 rescue OptionParser::InvalidOption => e
-  puts "ls: unrecognized option `#{e.args[0]}'"
+  puts "ls: unrecognized option #{e.args[0]}"
   exit(1)
 rescue StandardError => e
   print e.message
