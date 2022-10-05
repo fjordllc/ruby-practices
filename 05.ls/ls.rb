@@ -49,8 +49,11 @@ def ls_sort(target_list, horizontal_num, sort_reverse)
 end
 
 def ls_print(target, item_width, ls_opt, target_details)
-  # TODO: -l オプション時に詳細を取得する処理を書く
-  puts "total #{(target_details[:block_total] / 1024).to_i}" if ls_opt
+  block_total = 0
+  target_details.each do |path, detail|
+    block_total += detail[:block]
+  end
+  puts "total #{block_total}" if ls_opt
   target.each do |line_items|
     line_items.each do |line_item|
       if ls_opt
@@ -131,13 +134,11 @@ begin
       details_of_dir_items[item_in_dir] =
         { mode: change_mode_2_perm(item_in_dir, stat.mode.to_s(8)), link_num: stat.nlink, owner: Etc.getpwuid(stat.uid).name,
           own_grp: Etc.getgrgid(stat.gid).name, size: stat.size, updated_m: stat.mtime.month, updated_d: stat.mtime.day,
-          updated_t: stat.mtime.strftime('%I:%M') }
+          updated_t: stat.mtime.strftime('%I:%M'), block: stat.blocks }
       dir_items_list << item_in_dir
-      block_total = FileTest.file?(item_in_dir) ? stat.size : 0
       # NOTE: 表示アイテムの最大文字列とアイテム間のスペースがoutput_item_widthを超えていたらoutput_item_widthを更新する
       # NOTE: （補足）output_item_widthとは一つのアイテムが横幅でとってよい幅のこと
       output_item_width = [item_in_dir.bytesize + items_interval, output_item_width].max
-      details_of_dir_items[:block_total] = details_of_dir_items[:block_total].nil? ? 0 : details_of_dir_items[:block_total] + block_total
     end
     sorted_dir_items_list = ls_sort(dir_items_list, horizontal_items_count, r_option_flag)
     ls_print(sorted_dir_items_list, output_item_width, l_option_flag, details_of_dir_items)
