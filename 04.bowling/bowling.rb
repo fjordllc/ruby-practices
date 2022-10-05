@@ -16,12 +16,12 @@ pins = ARGV[0].split(',')
 pins.map!{|pin| pin == "X" ? 10 : pin} 
 pins.map!(&:to_i)
 
-score = 0
 index = 0
-10.times.sum do |frame|
+score = 10.times.sum do |frame|
   # 10th frame
   if frame == 9
-    score += pins[index..].sum
+    # add score
+    pins[index..].sum
   # 1-9th frame
   else
     # get frame-th frame  
@@ -29,14 +29,13 @@ index = 0
     frame_pins[0] = pins[index]
     frame_pins[1] = pins[index + 1] if pins[index] != 10
     
-    # nomal point
-    score += frame_pins.sum
-    # add bonus
-    score += add_bonus(pins, index, frame)
+    # nomal point + bonus
+    frame_score = frame_pins.sum + add_bonus(pins, index, frame)
 
     # increment   
     index += 1 if pins[index] != 10
     index += 1
+    frame_score
   end
 end
 puts score
