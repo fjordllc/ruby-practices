@@ -16,7 +16,7 @@ end
 # get  input
 pins = ARGV[0].split(',')
 # convert X to [10,0]
-pins.map! { |pin| pin == 'X' ? [10, 0] : pin.to_i }
+pins.map! { |pin| pin == 'X' ? [10, 0] : pin.to_i }.flatten!
 p pins
 
 index = 0
