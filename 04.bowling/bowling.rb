@@ -16,8 +16,8 @@ end
 # get  input
 pins = ARGV[0].split(',')
 # convert X to [10,0]
-pins.map! { |pin| pin == 'X' ? [10, 0] : pin }.flatten!
-pins.map!(&:to_i)
+pins.map! { |pin| pin == 'X' ? [10, 0] : pin.to_i }
+p pins
 
 index = 0
 score = 10.times.sum do |frame|
