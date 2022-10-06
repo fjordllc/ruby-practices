@@ -1,41 +1,38 @@
 # frozen_string_literal: true
 
 # add_bonus method
-def add_bonus(pins, index)
+def add_bonus(pins, frame)
   bonus = 0
-  # spare,strike bonus
-  bonus += pins[index + 2] if pins[index..index + 1].sum == 10
-  # strike bonus
-  if pins[index] == 10
-    bonus += pins[index + 3]
-    bonus += pins[index + 4] if pins[(index + 2)..(index + 3)] == [10, 0]
+
+  # NEXT ball bonus (spare, strike)
+  bonus += pins[frame + 1][0] if pins[frame].sum == 10
+
+  # NEXT-NEXT bonus (strike)
+  if pins[frame] == [10, 0]
+    bonus += pins[frame + 1][1]
+    bonus += pins[frame + 2][0] if pins[frame + 1] == [10, 0]
   end
   bonus
 end
 
 # get  input
-pins = ARGV[0].split(',')
+pins_data = ARGV[0].split(',')
 # convert X to [10,0]
-pins.map! { |pin| pin == 'X' ? [10, 0] : pin.to_i }.flatten!
-p pins
+pins_data.map! { |pin| pin == 'X' ? [10, 0] : pin.to_i }.flatten!
+# frameでデータをパーケージする
+pins = []
+(pins_data.size / 2).times { |i| pins << [pins_data[i * 2], pins_data[i * 2 + 1]] }
+pins << pins_data.last(1) if pins_data.size.odd?
 
-index = 0
 score = 10.times.sum do |frame|
   # 10th frame
   if frame == 9
-    # add score
-    pins[index..].sum
+    pins[frame..].flatten.sum
+
   # 1-9th frame
   else
-    # get frame-th frame
-    frame_pins = pins[index..index + 1]
-
     # nomal point + bonus
-    frame_score = frame_pins.sum + add_bonus(pins, index)
-
-    # increment
-    index += 2
-    frame_score
+    pins[frame].sum + add_bonus(pins, frame)
   end
 end
 puts score
