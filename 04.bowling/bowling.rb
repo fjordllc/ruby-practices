@@ -20,9 +20,7 @@ pins_data = ARGV[0].split(',')
 # convert X to [10,0]
 pins_data.map! { |pin| pin == 'X' ? [10, 0] : pin.to_i }.flatten!
 # frameでデータをパーケージする
-pins = []
-(pins_data.size / 2).times { |i| pins << [pins_data[i * 2], pins_data[i * 2 + 1]] }
-pins << pins_data.last(1) if pins_data.size.odd?
+pins = (pins_data).each_slice(2).to_a
 
 score = 10.times.sum do |frame|
   # 10th frame
