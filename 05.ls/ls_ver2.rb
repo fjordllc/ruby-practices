@@ -8,23 +8,24 @@ COLUMN_NUMBER = 3
 SPACE = 5
 
 def main(**options)
-  options.key?(:l) ? print_long_filename(stat_file) : print_short_filename
+  files = options[:a] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
+  files = options[:r] ? files.reverse! : files
+  options.key?(:l) ? print_long_filename(files) : print_short_filename(files)
 end
 
 def option_parse
   options = {}
   OptionParser.new do |opt|
     opt.on('-l', '--long', 'long list') { |v| options[:l] = v }
+    opt.on('-a', '--all', 'do not ignore entries starting with .') { |v| options[:a] = v }
+    opt.on('-r', 'reverse', 'reverse the sort order') { |v| options[:r] = v }
     opt.parse!(ARGV)
   end
   options
 end
 
-def stat_file
-  Dir.glob('*').map { |s| File::Stat.new(s) }
-end
-
-def print_long_filename(stat_file)
+def print_long_filename(files)
+  stat_file = files.map { |s| File::Stat.new(s) }
   print_total_blocks(stat_file) if stat_file.size > 1
   stat_file.each_with_index do |convert, num|
     filetype(convert)
@@ -34,9 +35,9 @@ def print_long_filename(stat_file)
     group(convert)
     filesize(stat_file, convert)
     timestamp(convert)
-    filename(num)
+    filename(files, num)
     puts "#{filetype(convert)}#{permission(convert)} #{hardlink(stat_file, convert)}\
-    #{user(convert)} #{group(convert)}  #{filesize(stat_file, convert)} #{timestamp(convert)} #{filename(num)} "
+    #{user(convert)} #{group(convert)}  #{filesize(stat_file, convert)} #{timestamp(convert)} #{filename(files, num)} "
   end
 end
 
@@ -81,13 +82,11 @@ def timestamp(convert)
   time_info.strftime('%_m %_d %_R')
 end
 
-def filename(num)
-  files = Dir.glob('*')
+def filename(files, num)
   files[num]
 end
 
-def print_short_filename
-  files = Dir.glob('*').sort
+def print_short_filename(files)
   row_number = (files.size.to_f / COLUMN_NUMBER).ceil
   rest_of_row = files.size % COLUMN_NUMBER
   max_column_width = files.compact.max_by(&:size).size + SPACE
