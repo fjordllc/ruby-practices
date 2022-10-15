@@ -1,15 +1,11 @@
-def fizzbuzz(x)
-  if x % 3 == 0 && x % 5 == 0
+(1..20).each do |number|
+  if number % 3 == 0 && number % 5 == 0
     puts "FizzBuzz"
-  elsif x % 3 == 0
+  elsif number % 3 == 0
     puts "Fizz"
-  elsif x % 5 == 0
+  elsif number % 5 == 0
     puts "Buzz"
   else 
-    puts x
+    puts number
   end
-end
-
-(1..20).each do |x|
-  fizzbuzz(x)
 end
