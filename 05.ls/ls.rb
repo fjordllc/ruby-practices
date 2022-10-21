@@ -16,6 +16,8 @@ def display(files, row)
   end
 end
 
-files = Dir.glob('*')
-sorted_files = files.sort
-display(sorted_files, calc_row(files.size))
+normal_files = Dir.glob(".*")
+all_files = normal_files.push(Dir.glob("*")).flatten
+
+sorted_files = all_files.sort
+display(sorted_files, calc_row(all_files.size))
