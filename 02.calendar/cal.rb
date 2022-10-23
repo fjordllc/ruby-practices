@@ -24,22 +24,11 @@ def days
   (firstday..lastday).each do |day|
     wday = Date.new(year, month, day).wday
     if day == 1
-      if wday == 0
-        print " #{day}"
-      else
-        print '   ' * wday + " #{day}"
-      end
-    else
-      if wday == 0 && day < 10
-        print " #{day}"
-      elsif wday == 0 && day >= 10
-        print "#{day}"
-      elsif wday != 0 && day < 10
-        print "  #{day}"
-      elsif wday != 0 && day >= 10
-        print " #{day}"
-      end
+      print "   " * wday
+    elsif wday != 0 && day != 1
+      print " "
     end
+    printf "%2d", day
     puts "\n" if wday == 6
   end
 end
