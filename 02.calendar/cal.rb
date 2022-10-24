@@ -25,7 +25,7 @@ def days
     wday = Date.new(year, month, day).wday
     if day == 1
       print "   " * wday
-    elsif wday != 0 && day != 1
+    elsif wday != 0
       print " "
     end
     printf "%2d", day
