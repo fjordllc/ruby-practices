@@ -16,10 +16,6 @@ end
 
 frames = shots.each_slice(2).to_a
 
-frames.each do |array|
-  array.pop if array[0] == 10
-end
-
 index = []
 frames.each_with_index do |s, f|
   index << [s, f]
