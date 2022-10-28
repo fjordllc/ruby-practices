@@ -21,23 +21,21 @@ frames.each_with_index do |s, f|
   index << [s, f]
 end
 
-sum_score = 0
-
-(0..index.size - 1).each do |i|
-  sum_score +=
-    if index[i][1] + 1 >= 10
-      index[i][0].sum
-    elsif index[i][0][0] == 10
-      if index[i + 1][0][0] == 10
-        10 * 2 + index[i + 2][0][0]
+sum_score =
+  index.sum do |s, f|
+    if f + 1 >= 10
+      s.sum
+    elsif s[0] == 10
+      if index[f + 1][0][0] == 10
+        20 + index[f + 2][0][0]
       else
-        10 + index[i + 1][0].sum
+        10 + index[f + 1][0].sum
       end
-    elsif index[i][0].sum == 10
-      10 + index[i + 1][0][0]
+    elsif s.sum == 10
+      10 + index[f + 1][0][0]
     else
-      index[i][0].sum
+      s.sum
     end
-end
+  end
 
 p sum_score
