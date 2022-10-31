@@ -28,12 +28,7 @@ end
 
 def vertical
   n = make_list.size
-  calc_vertical = n / columns_number
-  if (n % columns_number).zero?
-    calc_vertical
-  else
-    calc_vertical + 1
-  end
+  (n / columns_number.to_f).ceil
 end
 
 def display_result
