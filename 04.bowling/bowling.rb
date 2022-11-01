@@ -16,23 +16,18 @@ end
 
 frames = shots.each_slice(2).to_a
 
-index = []
-frames.each_with_index do |s, f|
-  index << [s, f]
-end
-
 sum_score =
-  index.sum do |s, f|
+  frames.each_with_index.sum do |s, f|
     if f + 1 >= 10
       s.sum
     elsif s[0] == 10
-      if index[f + 1][0][0] == 10
-        20 + index[f + 2][0][0]
+      if frames[f + 1][0] == 10
+        20 + frames[f + 2][0]
       else
-        10 + index[f + 1][0].sum
+        10 + frames[f + 1].sum
       end
     elsif s.sum == 10
-      10 + index[f + 1][0][0]
+      10 + frames[f + 1][0]
     else
       s.sum
     end
