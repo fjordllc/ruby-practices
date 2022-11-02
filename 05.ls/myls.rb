@@ -14,11 +14,7 @@ def columns_number
 
   longest_name_size = make_list.max_by(&:size).size
 
-  minus_columns = 0
-  while longest_name_size > display_width.to_i / (max_columns - minus_columns)
-    minus_columns += 1
-    break if minus_columns == max_columns - 1
-  end
+  minus_columns = (0...max_columns).find { longest_name_size < display_width.to_i / (max_columns - _1) } || max_columns - 1
   max_columns - minus_columns
 end
 
