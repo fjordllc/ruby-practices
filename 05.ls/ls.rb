@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'optparse'
+
 # 表示列の最大数をココで変更
 COLUMN = 3
 
@@ -16,6 +18,14 @@ def display(files, row)
   end
 end
 
-files = Dir.glob('*')
-sorted_files = files.sort
-display(sorted_files, calc_row(files.size))
+opt = OptionParser.new
+all_files = Dir.glob('*')
+
+sorted_files = all_files.sort
+
+# apply options
+opt.on('-r') { sorted_files = all_files.sort.reverse }
+opt.parse!(ARGV)
+
+# display files
+display(sorted_files, calc_row(all_files.size))
