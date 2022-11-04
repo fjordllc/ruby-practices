@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'optparse'
+
 # 表示列の最大数をココで変更
 COLUMN = 3
 
@@ -16,8 +18,13 @@ def display(files, row)
   end
 end
 
-normal_files = Dir.glob('.*')
-all_files = normal_files.push(Dir.glob('*')).flatten
+opt = OptionParser.new
+all_files = Dir.glob('*')
 
+# apply options
+opt.on('-a') { all_files.push(Dir.glob('.*')).flatten! }
+opt.parse!(ARGV)
+
+# display files
 sorted_files = all_files.sort
 display(sorted_files, calc_row(all_files.size))
