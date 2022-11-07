@@ -12,10 +12,11 @@ end
 
 def make_list
   options = ARGV.getopts('a')
+  all_list = Dir.glob('*', File::FNM_DOTMATCH).sort
   if options['a']
-    Dir.entries('.').sort
+    all_list
   else
-    Dir.glob('*').sort
+    all_list.reject { |x| x =~ /^\./ }
   end
 end
 
