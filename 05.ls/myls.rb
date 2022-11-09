@@ -12,7 +12,7 @@ end
 
 def make_list
   options = ARGV.getopts('a')
-  options['a'] ? Dir.glob('*', File::FNM_DOTMATCH).sort : Dir.glob('*').sort
+  Dir.glob('*', options['a'] ? File::FNM_DOTMATCH : 0).sort
 end
 
 def display(file_list)
