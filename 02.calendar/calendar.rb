@@ -9,7 +9,7 @@ Zero_position = 0
 Sunday = 7
 Weeks_first_youbi = Sunday
 Saturday = 6
-Day_Nine = 9
+MAX_2DIGIT_DAY = 9
 
 # 一週目の1日までの間にスペースを置く
 def print_space(first_youbi)
@@ -67,12 +67,28 @@ def option_parse
   return result['m'] ,result['y']
 end
 
+def print_calendar(year,month,first_youbi,last_day)
+  puts "#{year}年#{month}月"
+  puts ["日", "月", "火", "水", "木", "金", "土"].join(" ")
+  print_space(first_youbi)
+  youbi_index = first_youbi
+  (First..last_day).each do |day|
+    print " " if day <= MAX_2DIGIT_DAY  ## 1~9日はスペースを追加
+    print_day(year, month, day)
+    print " "
+    # 週の切り替わり計算
+    print "\n" if saturday?(youbi_index)
+    youbi_index += 1
+  end
+  puts "" #zshがつける不要な%を消す
+end
+
 #コマンドラインから引数を取得
 month,year = option_parse
 
 # 引数がなければ現在の年、月を取得
-year = Date.today.year.to_i if year == nil
-month = Date.today.month.to_i if month == nil
+year = Date.today.year if year == nil
+month = Date.today.month if month == nil
 
 #対象の月の1日を取得
 first_day = Date::parse("#{year}-#{month}-#{First}")
@@ -80,19 +96,6 @@ first_day = Date::parse("#{year}-#{month}-#{First}")
 first_youbi = first_day.cwday
 
 #対象の月の末日を取得
-last_day = Date.new(year, month, Last).day
-
+last_day = Date.new(year.to_i, month.to_i, Last).day
 #カレンダー表示
-puts "#{year}年#{month}月"
-puts ["日", "月", "火", "水", "木", "金", "土"].join(" ")
-print_space(first_youbi)
-youbi_index = first_youbi
-(First..last_day).each do |day|
-  print " " if day <= Day_Nine  ## 1~9日はスペースを追加
-  print_day(year, month, day)
-  print " "
-  # 週の切り替わり計算
-  print "\n" if saturday?(youbi_index)
-  youbi_index += 1
-end
-puts "" #zshがつける不要な%を消す
+print_calendar(year,month,first_youbi,last_day)
