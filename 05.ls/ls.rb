@@ -21,11 +21,10 @@ end
 opt = OptionParser.new
 all_files = Dir.glob('*')
 
-sorted_files = all_files.sort
-
 # apply options
 opt.on('-r') { sorted_files = all_files.sort.reverse }
 opt.parse!(ARGV)
 
 # display files
+sorted_files = all_files.sort
 display(sorted_files, calc_row(all_files.size))
