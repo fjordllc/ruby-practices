@@ -1,37 +1,35 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'optparse'
+
+def main
+  file_list = make_list
+  return if file_list.size.zero?
+
+  display(file_list)
+end
+
 def make_list
-  Dir.glob('*').sort
+  options = ARGV.getopts('a')
+  Dir.glob('*', options['a'] ? File::FNM_DOTMATCH : 0).sort
 end
 
-def display_width
-  `tput cols`
-end
+def display(file_list)
+  display_width = `tput cols`.to_i
 
-def columns_number
   max_columns = 3
+  longest_name_size = file_list.max_by(&:size).size
+  minus_columns = (0...max_columns).find { longest_name_size < display_width / (max_columns - _1) } || max_columns - 1
+  columns_number = max_columns - minus_columns
 
-  longest_name_size = make_list.max_by(&:size).size
+  columns_width = display_width / columns_number
 
-  minus_columns = (0...max_columns).find { longest_name_size < display_width.to_i / (max_columns - _1) } || max_columns - 1
-  max_columns - minus_columns
+  vertical = (file_list.size / columns_number.to_f).ceil
+
+  slice = file_list.map { |d| d.ljust(columns_width) }.each_slice(vertical).to_a
+
+  slice.map { |element| element.values_at(0...vertical) }.transpose.each { |display| puts display.join('') }
 end
 
-def columns_width
-  display_width.to_i / columns_number
-end
-
-def vertical
-  n = make_list.size
-  (n / columns_number.to_f).ceil
-end
-
-def display_result
-  left_alignment = make_list.map { |d| d.ljust(columns_width) }
-  slice = left_alignment.each_slice(vertical).to_a
-  add_nil = slice.map { |element| element.values_at(0...vertical) }
-  add_nil.transpose.each { |display| puts display.join('') }
-end
-
-display_result
+main
