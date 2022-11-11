@@ -19,16 +19,12 @@ def display(files, row)
 end
 
 opt = OptionParser.new
-all_files = Dir.glob('*', File::FNM_DOTMATCH)
-
 params = {}
 opt.on('-a') { |v| params[:a] = v }
 opt.parse!(ARGV)
 
-disp_files = all_files if params[:a]
-if params == {}
-  disp_files = all_files.map { |file| file if file.slice(0, 1) != '.' }.compact
-end
+disp_files = Dir.glob('*', File::FNM_DOTMATCH) if params[:a]
+disp_files = Dir.glob('*') if params == {}
 
 # display files
 sorted_files = disp_files.sort
