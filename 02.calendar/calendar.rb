@@ -40,47 +40,39 @@ def saturday?(youbi_index)
   youbi_index % Weeks_first_youbi == Saturday ? true : false
 end
 
-def option_perse
+def get_option(argv)
+  result = {}
+  option_count = 0
+  now_option = ""
+  argv.each do |option|
+    if  option == "-y" or option == "-m"
+      now_option = option[1]
+    else
+      option_count += 1
+      raise "#{now_option}オプションに指定できる引数は１つです" if option_count >= 2
+      result[now_option] = option
+      option_count = 0
+    end
+  end
+  result
+end
+
+def option_parse
   opt = OptionParser.new
   opt.on("-m month","取得する月を指定します。指定しない場合は現在の月を表示します。")
   opt.on("-y year","取得する年を指定します。指定しない場合は現在の年を表示します。")
   opt.banner = "Usage: calendar [-m][-y]"
   opt.parse(ARGV)
-
-  m_option_count = 0
-  y_option_count = 0
-  now_option = ""
-  month = ""
-  year = ""
-
-  ARGV.each do |option|
-    if option == "-m" or option == "-y"
-      now_option = option
-      next
-    elsif now_option == "-m"
-      m_option_count += 1
-      raise "mオプションに指定できる引数は１つです" if m_option_count >= 2
-      month = option
-    elsif now_option == "-y"
-      y_option_count += 1
-      raise "yオプションに指定できる引数は１つです" if y_option_count >= 2
-      year = option
-    else
-      raise "不明なオプションです"
-    end
-  end
-  return month ,year
+  result = get_option(ARGV)
+  return result['m'] ,result['y']
 end
 
 #コマンドラインから引数を取得
-month,year = option_perse
+month,year = option_parse
 
 # 引数がなければ現在の年、月を取得
-year = Date.today.year if year == ""
-month = Date.today.month if month == ""
-
-year = year.to_i
-month =month.to_i
+year = Date.today.year.to_i if year == nil
+month = Date.today.month.to_i if month == nil
 
 #対象の月の1日を取得
 first_day = Date::parse("#{year}-#{month}-#{First}")
