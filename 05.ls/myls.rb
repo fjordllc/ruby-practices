@@ -11,8 +11,9 @@ def main
 end
 
 def make_list
-  options = ARGV.getopts('a')
-  Dir.glob('*', options['a'] ? File::FNM_DOTMATCH : 0).sort
+  options = ARGV.getopts('a', 'r')
+  lists = Dir.glob('*', options['a'] ? File::FNM_DOTMATCH : 0)
+  options['r'] ? lists.reverse : lists.sort
 end
 
 def display(file_list)
