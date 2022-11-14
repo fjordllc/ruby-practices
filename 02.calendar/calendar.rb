@@ -23,10 +23,11 @@ def print_today(day)
 end
 
 def print_day(year, month, day)
+  str_day = day.to_s.rjust(2)
   if Date.parse("#{year}-#{month}-#{day}") == Date.today
-    print_today(day)
+    print_today(str_day)
   else
-    print day
+    print str_day
   end
 end
 
@@ -61,13 +62,18 @@ def parse_option
   get_option(ARGV)
 end
 
-def print_calendar(year, month, first_youbi, last_day)
+def print_calendar(year, month)
+  # 対象の月の1日を取得
+  first_day = Date.parse("#{year}-#{month}-1")
+  # 対象の月の1日の曜日を計算
+  first_youbi = first_day.cwday
+  # 対象の月の末日を取得
+  last_day = Date.new(year.to_i, month.to_i, -1).day
   puts "#{year}年#{month}月"
   puts %w[日 月 火 水 木 金 土].join(' ')
   print_space_to_first(first_youbi)
   youbi_index = first_youbi
   (1..last_day).each do |day|
-    print ' ' if day <= 9 # 1~9日はスペースを追加
     print_day(year, month, day)
     print ' '
     # 週の切り替わり計算
@@ -85,11 +91,5 @@ month   = options['m']
 year = Date.today.year if year.nil?
 month = Date.today.month if month.nil?
 
-# 対象の月の1日を取得
-first_day = Date.parse("#{year}-#{month}-1")
-# 対象の月の1日の曜日を計算
-first_youbi = first_day.cwday
-# 対象の月の末日を取得
-last_day = Date.new(year.to_i, month.to_i, -1).day
 # カレンダー表示
-print_calendar(year, month, first_youbi, last_day)
+print_calendar(year, month)
