@@ -4,18 +4,14 @@
 require 'date'
 require 'optparse'
 
-FIRST = 1
-LAST = -1
 SPACE_NUM = 3
-ZERO_POSITION = 0
 SUNDAY = 7
 WEEKS_FIRST_YOUBI = 7
 SATURDAY = 6
-MAX_1DIGIT_DAY = 9
 
 def position_calc(youbi)
   if youbi == SUNDAY
-    ZERO_POSITION
+    0
   else
     youbi * SPACE_NUM
   end
@@ -78,8 +74,8 @@ def print_calendar(year, month, first_youbi, last_day)
   puts %w[日 月 火 水 木 金 土].join(' ')
   print_space(first_youbi)
   youbi_index = first_youbi
-  (FIRST..last_day).each do |day|
-    print ' ' if day <= MAX_1DIGIT_DAY # 1~9日はスペースを追加
+  (1..last_day).each do |day|
+    print ' ' if day <= 9 # 1~9日はスペースを追加
     print_day(year, month, day)
     print ' '
     # 週の切り替わり計算
@@ -98,10 +94,10 @@ year = Date.today.year if year.nil?
 month = Date.today.month if month.nil?
 
 # 対象の月の1日を取得
-first_day = Date.parse("#{year}-#{month}-#{FIRST}")
+first_day = Date.parse("#{year}-#{month}-1")
 # 対象の月の1日の曜日を計算
 first_youbi = first_day.cwday
 # 対象の月の末日を取得
-last_day = Date.new(year.to_i, month.to_i, LAST).day
+last_day = Date.new(year.to_i, month.to_i, -1).day
 # カレンダー表示
 print_calendar(year, month, first_youbi, last_day)
