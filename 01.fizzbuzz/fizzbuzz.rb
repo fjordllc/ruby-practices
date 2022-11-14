@@ -1,14 +1,12 @@
 #!/usr/bin/env ruby
 
-ReminderZero = 0
-
-def fizzbuzz(start_num = 1 ,end_num = 20,fizz_num = 3,buzz_num = 5)
-  (start_num..end_num).each do |x|
-    if x % fizz_num == ReminderZero && x % buzz_num == ReminderZero
+def fizzbuzz
+  (1..20).each do |x|
+    if x % 3 == 0 && x % 5 == 0
       puts "FizzBuzz"
-    elsif x % fizz_num == ReminderZero
+    elsif x % 3 == 0
       puts "Fizz"
-    elsif x % buzz_num == ReminderZero
+    elsif x % 5 == 0
       puts "Buzz"
     else
       puts x
