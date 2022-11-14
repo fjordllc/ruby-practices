@@ -4,27 +4,27 @@
 require 'date'
 require 'optparse'
 
-SPACE_NUM = 3
+SPACE_NUM_FOR_DAY = 3
 SUNDAY = 7
-WEEKS_FIRST_YOUBI = 7
+LEFT_EDGE_YOUBI_INDEX = 7
 SATURDAY = 6
 
-def position_calc(youbi)
+def calc_youbi_position(youbi)
   if youbi == SUNDAY
     0
   else
-    youbi * SPACE_NUM
+    youbi * SPACE_NUM_FOR_DAY
   end
 end
 
 # 一週目の1日までの間にスペースを置く
-def print_space(first_youbi)
-  youbi_position = position_calc(first_youbi)
+def print_space_to_first(first_youbi)
+  youbi_position = calc_youbi_position(first_youbi)
   space = ' ' * youbi_position
   print space
 end
 
-def print_colored_day(day)
+def print_today(day)
   print "\e[7m"
   print day
   print "\e[0m"
@@ -32,14 +32,14 @@ end
 
 def print_day(year, month, day)
   if Date.parse("#{year}-#{month}-#{day}") == Date.today
-    print_colored_day(day)
+    print_today(day)
   else
     print day
   end
 end
 
 def saturday?(youbi_index)
-  youbi_index % WEEKS_FIRST_YOUBI == SATURDAY
+  youbi_index % LEFT_EDGE_YOUBI_INDEX == SATURDAY
 end
 
 def get_option(argv)
@@ -60,7 +60,7 @@ def get_option(argv)
   result
 end
 
-def option_parse
+def parse_option
   opt = OptionParser.new
   opt.on('-m month', '取得する月を指定します。指定しない場合は現在の月を表示します。')
   opt.on('-y year', '取得する年を指定します。指定しない場合は現在の年を表示します。')
@@ -72,7 +72,7 @@ end
 def print_calendar(year, month, first_youbi, last_day)
   puts "#{year}年#{month}月"
   puts %w[日 月 火 水 木 金 土].join(' ')
-  print_space(first_youbi)
+  print_space_to_first(first_youbi)
   youbi_index = first_youbi
   (1..last_day).each do |day|
     print ' ' if day <= 9 # 1~9日はスペースを追加
@@ -86,7 +86,7 @@ def print_calendar(year, month, first_youbi, last_day)
 end
 
 # コマンドラインから引数を取得
-options = option_parse
+options = parse_option
 year    = options['y']
 month   = options['m']
 # 引数がなければ現在の年、月を取得
