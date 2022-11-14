@@ -9,17 +9,9 @@ SUNDAY = 7
 LEFT_EDGE_YOUBI_INDEX = 7
 SATURDAY = 6
 
-def calc_youbi_position(youbi)
-  if youbi == SUNDAY
-    0
-  else
-    youbi * SPACE_NUM_FOR_DAY
-  end
-end
-
 # 一週目の1日までの間にスペースを置く
 def print_space_to_first(first_youbi)
-  youbi_position = calc_youbi_position(first_youbi)
+  youbi_position = first_youbi == SUNDAY ? 0 : first_youbi * SPACE_NUM_FOR_DAY
   space = ' ' * youbi_position
   print space
 end
