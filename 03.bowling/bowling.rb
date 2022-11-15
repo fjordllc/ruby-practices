@@ -15,7 +15,7 @@ def option_perse
   ARGV
 end
 
-def array_to_i(scores)
+def to_integer_scores(scores)
   result = scores.gsub('X', '10').split(',')
   result.map(&:to_i)
 end
@@ -42,5 +42,5 @@ def score_calc(int_scores)
 end
 
 input_scores = option_perse[0]
-int_scores = array_to_i(input_scores)
+int_scores = to_integer_scores(input_scores)
 puts score_calc(int_scores)
