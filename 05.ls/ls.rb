@@ -23,8 +23,7 @@ params = {}
 opt.on('-a') { |v| params[:a] = v }
 opt.parse!(ARGV)
 
-disp_files = Dir.glob('*', File::FNM_DOTMATCH) if params[:a]
-disp_files = Dir.glob('*') if params == {}
+disp_files = params[:a] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
 
 # display files
 sorted_files = disp_files.sort
