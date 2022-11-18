@@ -19,12 +19,10 @@ def display(files, row)
 end
 
 opt = OptionParser.new
-all_files = Dir.glob('*')
-
-# apply options
-opt.on('-r') { sorted_files = all_files.sort.reverse }
+params = {}
+opt.on('-r') { |v| params[:r] = v }
 opt.parse!(ARGV)
 
 # display files
-sorted_files = all_files.sort
-display(sorted_files, calc_row(all_files.size))
+sorted_files = params[:r] ? Dir.glob('*').sort.reverse : Dir.glob('*').sort
+display(sorted_files, calc_row(sorted_files.size))
