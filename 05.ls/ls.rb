@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'optparse'
+
 # 表示列の最大数をココで変更
 COLUMN = 3
 
@@ -16,6 +18,13 @@ def display(files, row)
   end
 end
 
-files = Dir.glob('*')
-sorted_files = files.sort
-display(sorted_files, calc_row(files.size))
+opt = OptionParser.new
+params = {}
+opt.on('-a') { |v| params[:a] = v }
+opt.parse!(ARGV)
+
+disp_files = params[:a] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
+
+# display files
+sorted_files = disp_files.sort
+display(sorted_files, calc_row(sorted_files.size))
