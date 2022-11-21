@@ -62,7 +62,7 @@ end
 
 def hardlink
   link_numbers = file_stats.map { |file_element| file_element.nlink.to_s }
-  max_digit = link_numbers.max_by(&:size).size
+  max_digit = link_numbers.map(&:size).max
   link_numbers.map { |h| " #{h.rjust(max_digit)}" }
 end
 
@@ -76,7 +76,7 @@ end
 
 def filesize
   file_size = file_stats.map { |file_element| file_element.size.to_s }
-  longest_filesize = file_size.max_by(&:size).size
+  longest_filesize = file_size.map(&:size).max
   file_size.map { |f| " #{f.rjust(longest_filesize)}" }
 end
 
@@ -98,7 +98,7 @@ def display(file_list)
   display_width = `tput cols`.to_i
 
   max_columns = 3
-  longest_name_size = file_list.max_by(&:size).size
+  longest_name_size = file_list.map(&:size).max
   minus_columns = (0...max_columns).find { longest_name_size < display_width / (max_columns - _1) } || max_columns - 1
   columns_number = max_columns - minus_columns
 
