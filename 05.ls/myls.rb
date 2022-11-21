@@ -47,17 +47,9 @@ def total
 end
 
 def ftype_permission
-  filetype = file_stats.map { |file_element| FILETYPES_LIST[file_element.ftype] }
-
-  permission = file_stats.map { |file_element| file_element.mode.to_s(8).slice(-3..-1).chars }.map { |array| array.map { |char| PERMISSION_LIST[char] } }
-
-  count = 0
-  ftper = []
-  while count < filetype.size
-    ftper << [filetype[count], permission[count]].join
-    count += 1
+  file_stats.map do |f|
+    [FILETYPES_LIST[f.ftype], f.mode.to_s(8).slice(-3..-1).chars.map { |char| PERMISSION_LIST[char] }].join
   end
-  ftper
 end
 
 def hardlink
