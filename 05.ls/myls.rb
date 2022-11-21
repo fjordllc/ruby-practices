@@ -34,22 +34,22 @@ def make_list
   OPTIONS['r'] ? list.reverse : list
 end
 
-def file
+def file_stats
   make_list.map { |list| File.lstat(list) }
 end
 
 def total
   total_number = 0
-  file.each do |file_element|
+  file_stats.each do |file_element|
     total_number += file_element.blocks
   end
   puts "total #{total_number}"
 end
 
 def ftype_permission
-  filetype = file.map { |file_element| FILETYPES_LIST[file_element.ftype] }
+  filetype = file_stats.map { |file_element| FILETYPES_LIST[file_element.ftype] }
 
-  permission = file.map { |file_element| file_element.mode.to_s(8).slice(-3..-1).chars }.map { |array| array.map { |char| PERMISSION_LIST[char] } }
+  permission = file_stats.map { |file_element| file_element.mode.to_s(8).slice(-3..-1).chars }.map { |array| array.map { |char| PERMISSION_LIST[char] } }
 
   count = 0
   ftper = []
@@ -61,27 +61,27 @@ def ftype_permission
 end
 
 def hardlink
-  link_number = file.map { |file_element| file_element.nlink.to_s }
-  max_digit = link_number.max_by(&:size).size
-  link_number.map { |h| " #{h.rjust(max_digit)}" }
+  link_numbers = file_stats.map { |file_element| file_element.nlink.to_s }
+  max_digit = link_numbers.max_by(&:size).size
+  link_numbers.map { |h| " #{h.rjust(max_digit)}" }
 end
 
 def orner_name
-  file.map { |file_element| Etc.getpwuid(file_element.uid).name }
+  file_stats.map { |file_element| Etc.getpwuid(file_element.uid).name }
 end
 
 def group_name
-  file.map { |file_element| " #{Etc.getgrgid(file_element.gid).name}" }
+  file_stats.map { |file_element| " #{Etc.getgrgid(file_element.gid).name}" }
 end
 
 def filesize
-  file_size = file.map { |file_element| file_element.size.to_s }
+  file_size = file_stats.map { |file_element| file_element.size.to_s }
   longest_filesize = file_size.max_by(&:size).size
   file_size.map { |f| " #{f.rjust(longest_filesize)}" }
 end
 
 def time_stamp
-  file.map { |file_element| file_element.mtime.strftime('%_m %_d %R') }
+  file_stats.map { |file_element| file_element.mtime.strftime('%_m %_d %R') }
 end
 
 def symlink_name
