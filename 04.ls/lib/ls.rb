@@ -7,7 +7,7 @@ require 'optparse'
 COLUMNS = 3
 SPACE_FOR_COLUMNS = 2
 def make_file_list(path)
-  Dir.glob("*", base: path)
+  Dir.glob('*', base: path)
 end
 
 def make_disp_lines(path)
@@ -43,18 +43,18 @@ def split_option_or_path(argv)
   options = {}
   paths = []
   argv.each do |str|
-    if ['-a','-r','-l'].include?(str)
+    if ['-a', '-r', '-l'].include?(str)
       options[str] = true
     else
       paths << str
     end
   end
-  [options,paths]
+  [options, paths]
 end
 
 def parse_option
   opt = OptionParser.new
-  #TODO オプションの説明追加
+  # TODO: オプションの説明追加
   opt.on('-a', '今後対応予定')
   opt.on('-r', '今後対応予定')
   opt.on('-l', '今後対応予定')
@@ -67,14 +67,12 @@ def make_disp_str(argv)
   result = []
   if argv == []
     make_disp_lines(Dir.pwd).each do |line|
-      result << line 
+      result << line
     end
   else
-    options, paths = split_option_or_path(argv)
-    paths.each_with_index do |path, i|
-      if paths.size > 1
-        result << "#{path}:"
-      end
+    _options, paths = split_option_or_path(argv)
+    paths.each do |path|
+      result << "#{path}:" if paths.size > 1
       make_disp_lines(path).each { |line| result << line }
     end
     result
