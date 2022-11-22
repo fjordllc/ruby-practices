@@ -1,8 +1,12 @@
 require 'minitest/autorun'
 require_relative '../lib/ls'
 
-class ListenTest < Minitest::Test
-  def test_get_file_list
-    assert_equal 26, get_file_list.size
+class ListTest < Minitest::Test
+  def test_make_file_list
+    assert_equal 26, make_file_list.size
+  end
+
+  def test_make_disp_lines
+    assert_equal '00_file  04dir    13_file            ' ,make_disp_lines[0]
   end
 end
