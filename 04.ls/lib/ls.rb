@@ -22,21 +22,32 @@ def make_disp_lines(path)
     max_file_names[now_column] ||= 0
 
     lines[now_row] << file_name
-    max_file_names[now_column] = file_name.size if max_file_names[now_column] < file_name.size
+    file_name_size = calc_file_name_size(file_name)
+    if max_file_names[now_column] < file_name_size
+      max_file_names[now_column] = file_name_size 
+    end
   end
   add_space_for_line(lines, max_file_names)
 end
 
 def add_space_for_line(lines, max_file_names)
   result = []
-  lines.each do |filenames|
+  lines.each do |file_names|
     disp_line = ''
-    filenames.each_with_index do |filename, i|
-      disp_line += filename.ljust(max_file_names[i] + SPACE_FOR_COLUMNS)
+    file_names.each_with_index do |file_name, i|
+      disp_line += file_name + ' ' * (max_file_names[i] - calc_file_name_size(file_name) + SPACE_FOR_COLUMNS)
     end
     result << disp_line
   end
   result
+end
+
+def calc_file_name_size(file_name)
+  count = 0
+  file_name.each_char do |char|
+    count += char.ascii_only? ? 1 : 2
+  end
+  count
 end
 
 def split_option_or_path(argv)
