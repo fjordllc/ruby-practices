@@ -22,10 +22,10 @@ def make_disp_lines
     lines[now_row] << file_name
     max_file_names[now_column] = file_name.size if max_file_names[now_column] < file_name.size
   end
-  add_space_for_line(lines,max_file_names)
+  add_space_for_line(lines, max_file_names)
 end
 
-def add_space_for_line(lines,max_file_names)
+def add_space_for_line(lines, max_file_names)
   result = []
   lines.each do |filenames|
     disp_line = ''
@@ -37,4 +37,4 @@ def add_space_for_line(lines,max_file_names)
   result
 end
 
-make_disp_lines.each{|line| puts line}
+make_disp_lines.each { |line| puts line }
