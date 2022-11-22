@@ -12,7 +12,7 @@ end
 
 def make_disp_lines(path)
   files = make_file_list(path).sort
-  rows = files.size / COLUMNS + 1
+  rows = (files.size.to_f / COLUMNS).ceil
   lines = []
   max_file_names = []
   files.each_with_index do |file_name, i|
@@ -63,14 +63,22 @@ def parse_option
   ARGV
 end
 
-argv = parse_option
-if argv == []
-  make_disp_lines(Dir.pwd).each { |line| puts line }
-else
-  options, paths = split_option_or_path(argv)
-  paths.each_with_index do |path, i|
-    puts "#{path}:" if paths.size > 1
-    make_disp_lines(path).each { |line| puts line }
-    print "\n" if i != paths.size - 1
+def make_disp_str(argv)
+  result = []
+  if argv == []
+    make_disp_lines(Dir.pwd).each do |line|
+      result << line 
+    end
+  else
+    options, paths = split_option_or_path(argv)
+    paths.each_with_index do |path, i|
+      if paths.size > 1
+        result << "#{path}:"
+      end
+      make_disp_lines(path).each { |line| result << line }
+    end
+    result
   end
 end
+
+puts make_disp_str(parse_option)
