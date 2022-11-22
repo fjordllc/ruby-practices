@@ -2,14 +2,16 @@
 # frozen_string_literal: true
 
 require 'debug'
+require 'optparse'
+
 COLUMNS = 3
 SPACE_FOR_COLUMNS = 2
-def make_file_list
-  Dir.glob('*')
+def make_file_list(path)
+  Dir.glob("*", base: path)
 end
 
-def make_disp_lines
-  files = make_file_list.sort
+def make_disp_lines(path)
+  files = make_file_list(path).sort
   rows = files.size / COLUMNS + 1
   lines = []
   max_file_names = []
@@ -37,4 +39,38 @@ def add_space_for_line(lines, max_file_names)
   result
 end
 
-make_disp_lines.each { |line| puts line }
+def split_option_or_path(argv)
+  options = {}
+  paths = []
+  argv.each do |str|
+    if ['-a','-r','-l'].include?(str)
+      options[str] = true
+    else
+      paths << str
+    end
+  end
+  [options,paths]
+end
+
+def parse_option
+  opt = OptionParser.new
+  #TODO オプションの説明追加
+  opt.on('-a', '今後対応予定')
+  opt.on('-r', '今後対応予定')
+  opt.on('-l', '今後対応予定')
+  opt.banner = 'Usage: ls [-a][-r][-l]'
+  opt.parse(ARGV)
+  ARGV
+end
+
+argv = parse_option
+if argv == []
+  make_disp_lines(Dir.pwd).each { |line| puts line }
+else
+  options, paths = split_option_or_path(argv)
+  paths.each_with_index do |path, i|
+    puts "#{path}:" if paths.size > 1
+    make_disp_lines(path).each { |line| puts line }
+    print "\n" if i != paths.size - 1
+  end
+end
