@@ -23,9 +23,7 @@ def make_disp_lines(path)
 
     lines[now_row] << file_name
     file_name_size = calc_file_name_size(file_name)
-    if max_file_names[now_column] < file_name_size
-      max_file_names[now_column] = file_name_size 
-    end
+    max_file_names[now_column] = file_name_size if max_file_names[now_column] < file_name_size
   end
   add_space_for_line(lines, max_file_names)
 end
@@ -77,9 +75,7 @@ end
 def make_disp_str(argv)
   result = []
   if argv == []
-    make_disp_lines(Dir.pwd).each do |line|
-      result << line
-    end
+    make_disp_lines(Dir.pwd).each { |line| result << line }
   else
     _options, paths = split_option_or_path(argv)
     paths.each do |path|

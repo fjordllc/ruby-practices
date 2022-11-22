@@ -20,7 +20,7 @@ class ListTest < Minitest::Test
 
   def test_make_file_list_with_path
     result = `ruby #{__dir__}/ls_option_test.rb 00dir`
-    assert result.include?('1 runs, 1 assertions, 0 failures, 0 errors, 0 skips')
+    assert result.include?('0 failures, 0 errors, 0 skips')
   end
 
   def test_make_disp_lines_when_there_are_3_files
@@ -33,6 +33,6 @@ class ListTest < Minitest::Test
 
   def test_make_disp_lines_with_multiple_paths
     result = `ruby #{__dir__}/ls_multiple_options_test.rb #{__dir__}/test_data/00dir #{__dir__}/test_data/01dir`
-    assert result.include?('1 runs, 6 assertions, 0 failures, 0 errors, 0 skips')
+    assert result.include?('0 failures, 0 errors, 0 skips')
   end
 end
