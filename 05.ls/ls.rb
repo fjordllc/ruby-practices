@@ -20,11 +20,10 @@ end
 
 opt = OptionParser.new
 params = {}
-opt.on('-a') { |v| params[:a] = v }
+
+opt.on('-r') { |v| params[:r] = v }
 opt.parse!(ARGV)
 
-disp_files = params[:a] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
-
 # display files
-sorted_files = disp_files.sort
+sorted_files = params[:r] ? Dir.glob('*').sort.reverse : Dir.glob('*').sort
 display(sorted_files, calc_row(sorted_files.size))
