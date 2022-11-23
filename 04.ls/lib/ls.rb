@@ -6,11 +6,11 @@ require 'optparse'
 
 COLUMNS = 3
 SPACE_FOR_COLUMNS = 2
-def make_file_list(path)
+def glob_file_list(path)
   Dir.glob('*', base: path)
 end
 
-def make_disp_lines(files)
+def adjust_list_to_disp(files)
   rows = (files.size.to_f / COLUMNS).ceil
   lines = []
   max_file_names = []
@@ -71,19 +71,19 @@ def parse_option
   ARGV
 end
 
-def make_disp_str(argv)
+def make_disp_list(argv)
   result = []
   if argv == []
-    files = make_file_list(Dir.pwd).sort
-    make_disp_lines(files).each { |line| result << line }
+    file_list = glob_file_list(Dir.pwd).sort
+    adjust_list_to_disp(file_list).each { |line| result << line }
   else
     _options, paths = split_option_or_path(argv)
-    files = analys_file_paths(paths)
-    disp_lines = make_disp_lines(files.sort)
+    file_list = analys_file_paths(paths)
+    disp_lines = adjust_list_to_disp(file_list.sort)
     disp_lines.each { |line| result << line }
-    result << "\n" unless files == []
-    result2 = analys_directory_paths(paths)
-    result.push(*result2)
+    result << "\n" unless file_list == []
+    directorys = analys_directory_paths(paths)
+    result.push(*directorys)
     result
   end
 end
@@ -95,17 +95,17 @@ def analys_directory_paths(paths)
 
     result << "\n" unless result == []
     result << "#{path}:" if paths.size > 1
-    files = make_file_list(path).sort
-    disp_lines = make_disp_lines(files)
+    file_list = glob_file_list(path).sort
+    disp_lines = adjust_list_to_disp(file_list)
     disp_lines.each { |line| result << line }
   end
   result
 end
 
 def analys_file_paths(paths)
-  files = []
-  paths.each { |path| files << path if File::Stat.new(path).file? }
-  files
+  file_list = []
+  paths.each { |path| file_list << path if File::Stat.new(path).file? }
+  file_list
 end
 
-puts make_disp_str(parse_option)
+puts make_disp_list(parse_option)
