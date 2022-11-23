@@ -10,8 +10,7 @@ def make_file_list(path)
   Dir.glob('*', base: path)
 end
 
-def make_disp_lines(path)
-  files = make_file_list(path).sort
+def make_disp_lines(files)
   rows = (files.size.to_f / COLUMNS).ceil
   lines = []
   max_file_names = []
@@ -74,13 +73,24 @@ end
 
 def make_disp_str(argv)
   result = []
+  files = []
   if argv == []
-    make_disp_lines(Dir.pwd).each { |line| result << line }
+    files = make_file_list(Dir.pwd).sort
+    make_disp_lines(files).each { |line| result << line }
   else
     _options, paths = split_option_or_path(argv)
     paths.each do |path|
-      result << "#{path}:" if paths.size > 1
-      make_disp_lines(path).each { |line| result << line }
+      if File::Stat.new(path).file?
+        files << path
+        make_disp_lines(files.sort).each { |line| result << line }
+      end
+    end
+    paths.each do |path|
+      if File::Stat.new(path).directory?
+        result << "#{path}:" if paths.size > 1
+        files = make_file_list(path).sort
+        make_disp_lines(files).each { |line| result << line }
+      end
     end
     result
   end

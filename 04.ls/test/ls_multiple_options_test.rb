@@ -3,7 +3,7 @@
 require 'minitest/autorun'
 require_relative '../lib/ls'
 
-class ListOptionTest2 < Minitest::Test
+class ListMultipleOptionTest < Minitest::Test
   def test_make_disp_lines_when_2_options_gived
     assert_equal "#{__dir__}/test_data/00dir:", make_disp_str(parse_option)[0]
     assert_equal '20_file  22_file  24_file  ', make_disp_str(parse_option)[1]
