@@ -73,28 +73,39 @@ end
 
 def make_disp_str(argv)
   result = []
-  files = []
   if argv == []
     files = make_file_list(Dir.pwd).sort
     make_disp_lines(files).each { |line| result << line }
   else
     _options, paths = split_option_or_path(argv)
-    paths.each do |path|
-      if File::Stat.new(path).file?
-        files << path
-      end
-    end
-    make_disp_lines(files.sort).each { |line| result << line }
-    paths.each do |path|
-      if File::Stat.new(path).directory?
-        result << "\n" if result != []
-        result << "#{path}:" if paths.size > 1
-        files = make_file_list(path).sort
-        make_disp_lines(files).each { |line| result << line }
-      end
-    end
+    files = analys_file_paths(paths)
+    disp_lines = make_disp_lines(files.sort)
+    disp_lines.each { |line| result << line }
+    result << "\n" unless files == []
+    result2 = analys_directory_paths(paths)
+    result.push(*result2)
     result
   end
+end
+
+def analys_directory_paths(paths)
+  result = []
+  paths.each do |path|
+    next unless File::Stat.new(path).directory?
+
+    result << "\n" unless result == []
+    result << "#{path}:" if paths.size > 1
+    files = make_file_list(path).sort
+    disp_lines = make_disp_lines(files)
+    disp_lines.each { |line| result << line }
+  end
+  result
+end
+
+def analys_file_paths(paths)
+  files = []
+  paths.each { |path| files << path if File::Stat.new(path).file? }
+  files
 end
 
 puts make_disp_str(parse_option)

@@ -47,8 +47,9 @@ class ListTest < Minitest::Test
 
   # ファイルとパスが複数指定された場合
   def test_make_disp_lines_with_file_name_and_paths
-    result = `ruby #{__dir__}/ls_args_file_name_and_paths_test.rb #{__dir__}/test_data/01_file #{__dir__}/test_data/02dir #{__dir__}/test_data/03_file #{__dir__}/test_data/04dir`
+    result = `ruby #{__dir__}/ls_args_file_name_and_paths_test.rb \
+    #{__dir__}/test_data/01_file #{__dir__}/test_data/02dir \
+    #{__dir__}/test_data/03_file #{__dir__}/test_data/04dir`
     assert result.include?('0 failures, 0 errors, 0 skips')
   end
-
 end
