@@ -59,11 +59,15 @@ def hardlink
 end
 
 def orner_name
-  file_stats.map { |file_element| Etc.getpwuid(file_element.uid).name }
+  orner = file_stats.map { |file_element| Etc.getpwuid(file_element.uid).name }
+  longest_orner = orner.map(&:size).max
+  orner.map { |o| "#{o.ljust(longest_orner)}" }
 end
 
 def group_name
-  file_stats.map { |file_element| " #{Etc.getgrgid(file_element.gid).name}" }
+  group = file_stats.map { |file_element| " #{Etc.getgrgid(file_element.gid).name}" }
+  longest_group = group.map(&:size).max
+  group.map { |g| "#{g.ljust(longest_group)}" }
 end
 
 def filesize
