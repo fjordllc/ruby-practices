@@ -82,11 +82,12 @@ def make_disp_str(argv)
     paths.each do |path|
       if File::Stat.new(path).file?
         files << path
-        make_disp_lines(files.sort).each { |line| result << line }
       end
     end
+    make_disp_lines(files.sort).each { |line| result << line }
     paths.each do |path|
       if File::Stat.new(path).directory?
+        result << "\n" if result != []
         result << "#{path}:" if paths.size > 1
         files = make_file_list(path).sort
         make_disp_lines(files).each { |line| result << line }
