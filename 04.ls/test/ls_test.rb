@@ -10,12 +10,8 @@ class ListTest < Minitest::Test
     @test_data_dir = "#{__dir__}/test_data"
   end
 
-  def test_glob_file_list
-    assert_equal 27, glob_file_list(test_data_dir).size
-  end
-
   def test_adjust_list_to_disp
-    files = glob_file_list(test_data_dir)
+    files = Dir.glob('*', base: test_data_dir)
     assert_equal '00_file  04dir    13_file            ', adjust_list_to_disp(files)[0]
   end
 
@@ -25,12 +21,12 @@ class ListTest < Minitest::Test
   end
 
   def test_adjust_list_to_disp_when_there_are_3_files
-    files = glob_file_list("#{test_data_dir}/03dir")
+    files =  Dir.glob('*', base: "#{test_data_dir}/03dir")
     assert_equal '20_file  21_file  22_file  ', adjust_list_to_disp(files)[0]
   end
 
   def test_adjust_list_to_disp_when_there_is_0_file
-    files = glob_file_list("#{test_data_dir}/04dir/05dir")
+    files = Dir.glob('*', base: "#{test_data_dir}/04dir/05dir")
     assert_nil adjust_list_to_disp(files)[0]
   end
 

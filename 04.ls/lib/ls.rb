@@ -6,9 +6,6 @@ require 'optparse'
 
 COLUMNS = 3
 SPACE_FOR_COLUMNS = 2
-def glob_file_list(path)
-  Dir.glob('*', base: path)
-end
 
 def adjust_list_to_disp(files)
   rows = (files.size.to_f / COLUMNS).ceil
@@ -74,7 +71,7 @@ end
 def make_disp_list(argv)
   result = []
   if argv == []
-    file_list = glob_file_list(Dir.pwd).sort
+    file_list = Dir.glob('*', base: Dir.pwd).sort
     adjust_list_to_disp(file_list).each { |line| result << line }
   else
     _options, paths = split_option_or_path(argv)
@@ -95,7 +92,7 @@ def analys_directory_paths(paths)
 
     result << "\n" unless result == []
     result << "#{path}:" if paths.size > 1
-    file_list = glob_file_list(path).sort
+    file_list = Dir.glob('*', base: path).sort
     disp_lines = adjust_list_to_disp(file_list)
     disp_lines.each { |line| result << line }
   end
