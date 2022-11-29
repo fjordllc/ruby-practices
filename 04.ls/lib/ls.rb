@@ -37,11 +37,9 @@ def add_space_for_line(lines, max_file_names)
 end
 
 def calc_file_name_size(file_name)
-  count = 0
-  file_name.each_char do |char|
-    count += char.ascii_only? ? 1 : 2
+  file_name.each_char.sum do |char|
+  char.ascii_only? ? 1 : 2
   end
-  count
 end
 
 def split_option_or_path(argv)
@@ -100,9 +98,7 @@ def analyse_directory_paths(paths)
 end
 
 def analyse_file_paths(paths)
-  file_list = []
-  paths.each { |path| file_list << path if File::Stat.new(path).file? }
-  file_list
+  paths.select { |path| File::Stat.new(path).file? }
 end
 
 puts make_display_list(parse_option)
