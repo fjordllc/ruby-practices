@@ -29,7 +29,7 @@ def add_space_for_line(lines, max_file_names)
   lines.each do |file_names|
     display_line = ''
     file_names.each_with_index do |file_name, i|
-      display_line = "#{display_line}#{file_name}#{' ' * (max_file_names[i] - calc_file_name_size(file_name) + SPACE_FOR_COLUMNS) }"
+      display_line = "#{display_line}#{file_name}#{' ' * (max_file_names[i] - calc_file_name_size(file_name) + SPACE_FOR_COLUMNS)}"
     end
     result << display_line
   end
@@ -38,7 +38,7 @@ end
 
 def calc_file_name_size(file_name)
   file_name.each_char.sum do |char|
-  char.ascii_only? ? 1 : 2
+    char.ascii_only? ? 1 : 2
   end
 end
 

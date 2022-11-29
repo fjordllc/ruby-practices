@@ -21,7 +21,7 @@ class ListTest < Minitest::Test
   end
 
   def test_adjust_list_to_display_when_there_are_3_files
-    files =  Dir.glob('*', base: "#{test_data_dir}/03dir")
+    files = Dir.glob('*', base: "#{test_data_dir}/03dir")
     assert_equal '20_file  21_file  22_file  ', adjust_list_to_display(files)[0]
   end
 
