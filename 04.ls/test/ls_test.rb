@@ -20,7 +20,7 @@ class ListTest < Minitest::Test
   end
 
   def test_glob_file_list_with_path
-    result = `ruby #{__dir__}/ls_option_test.rb 00dir`
+    result = `ruby #{__dir__}/ls_option_test.rb #{test_data_dir}/00dir`
     assert result.include?('0 failures, 0 errors, 0 skips')
   end
 
