@@ -42,19 +42,6 @@ def calc_file_name_size(file_name)
   end
 end
 
-def split_option_or_path(argv)
-  options = {}
-  paths = []
-  argv.each do |str|
-    if ['-a', '-r', '-l'].include?(str)
-      options[str] = true
-    else
-      paths << str
-    end
-  end
-  [options, paths]
-end
-
 def parse_option
   opt = OptionParser.new
   # TODO: オプションの説明追加
@@ -62,17 +49,19 @@ def parse_option
   opt.on('-r', '今後対応予定')
   opt.on('-l', '今後対応予定')
   opt.banner = 'Usage: ls [-a][-r][-l]'
-  opt.parse(ARGV)
-  ARGV
+  _options = {}
+  opt.parse!(ARGV, into: _options)
+  return [ARGV,_options]
 end
 
-def make_display_list(argv)
+def make_display_list(parse_result)
   result = []
-  if argv == []
+  if parse_result == [[], {}]
     file_list = Dir.glob('*', base: Dir.pwd).sort
     adjust_list_to_display(file_list).each { |line| result << line }
   else
-    _options, paths = split_option_or_path(argv)
+    paths = parse_result[0]
+    _options = parse_result[1]
     file_list = analyse_file_paths(paths)
     display_lines = adjust_list_to_display(file_list.sort)
     display_lines.each { |line| result << line }
