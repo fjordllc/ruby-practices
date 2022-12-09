@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'optparse'
-require "etc"
+require 'etc'
 
 # 表示列の最大数をココで変更
 COLUMN = 3
@@ -20,7 +20,6 @@ def display(files, row)
 end
 
 def display_l(files, row)
-  puts "l option"
   row.times do |y|
     COLUMN.times { |x| printf(files[x * row + y].to_s.ljust(files.map(&:size).max + 3)) }
     puts
@@ -35,7 +34,7 @@ opt.parse!(ARGV)
 # display files
 sorted_files = Dir.glob('*').sort
 
-cmod_table = { 
+cmod_table = {
   '01' => 'p',
   '02' => 'c',
   '04' => 'd',
@@ -51,10 +50,10 @@ cmod_table = {
   '4' => 'r--',
   '5' => 'r-x',
   '6' => 'rw-',
-  '7' => 'rwx',
+  '7' => 'rwx'
 }
 
-month_table = { 
+month_table = {
   '1' => 'Jan',
   '2' => 'Feb',
   '3' => 'Mar',
@@ -66,34 +65,31 @@ month_table = {
   '9' => 'Sep',
   '10' => 'Oct',
   '11' => 'Nov',
-  '12' => 'Dec',
+  '12' => 'Dec'
 }
 
-result_l_opt = []
-
 total = 0
-total += 10.times.with_index do |i|
-  puts File::Stat.new(sorted_files[i]).blocks.to_i
+sorted_files.size.times do |i|
+  total += File::Stat.new(sorted_files[i]).blocks.to_i
 end
-puts total
+puts "total #{total}"
 
-sorted_files.size.times.with_index do |i|
+sorted_files.size.times do |i|
   fs = File::Stat.new(sorted_files[i])
-  permittion_num = format("%06d", fs.mode.to_s(8)).split("")
-  permittion_num = [permittion_num[0..1].join,permittion_num[2..5]].flatten
+  permittion_num = format('%06d', fs.mode.to_s(8)).split('')
+  permittion_num = [permittion_num[0..1].join, permittion_num[2..5]].flatten
 
-  permittion_num.size.times.with_index do |j|
+  permittion_num.size.times do |j|
     print cmod_table[permittion_num[j]]
   end
 
   print "  #{fs.nlink}"
   print " #{Etc.getpwuid(fs.uid).name}"
   print "  #{Etc.getgrgid(fs.gid).name}"
-  print " % 5d"% fs.size
+  print format(' %5d', fs.size)
   print " #{month_table[fs.mtime.to_a.slice(4).to_s]}"
-  print "#{"% 3d"% fs.mtime.to_a.slice(3)}"
- 
-  print Time.now - fs.mtime < 15552000 ? " #{fs.mtime.to_s.slice(11,5)}" : " #{"% 2d"% fs.mtime.to_a.slice(5)}"
+  print format('% 3d', fs.mtime.to_a.slice(3))
+  print Time.now - fs.mtime < 15_552_000 ? " #{fs.mtime.to_s.slice(11, 5)}" : " #{format(' %2d', fs.mtime.to_a.slice(5))}"
   print " #{sorted_files[i]}"
   puts
 end
