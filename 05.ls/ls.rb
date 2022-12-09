@@ -28,6 +28,7 @@ end
 
 opt = OptionParser.new
 params = {}
+<<<<<<< HEAD
 opt.on('-l') { |v| params[:l] = v }
 opt.parse!(ARGV)
 
