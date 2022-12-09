@@ -3,13 +3,13 @@ while number < 20
   number += 1
   case 
   when number %3 == 0 && number %5 == 0
-      puts "FizzBuzz"
+    puts "FizzBuzz"
   when number %3 == 0
-      puts "Fizz"
+    puts "Fizz"
   when number %5 == 0
-      puts "Buzz"
+    puts "Buzz"
   else
-      puts number
+    puts number
   end
 end
 
