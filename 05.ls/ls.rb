@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'optparse'
+require "etc"
 
 # 表示列の最大数をココで変更
 COLUMN = 3
@@ -28,10 +29,8 @@ end
 
 opt = OptionParser.new
 params = {}
-
 opt.on('-l') { |v| params[:l] = v }
 opt.parse!(ARGV)
-
 
 # display files
 sorted_files = Dir.glob('*').sort
@@ -53,44 +52,48 @@ cmod_table = {
   '5' => 'r-x',
   '6' => 'rw-',
   '7' => 'rwx',
-  }
+}
+
+month_table = { 
+  '1' => 'Jan',
+  '2' => 'Feb',
+  '3' => 'Mar',
+  '4' => 'Apr',
+  '5' => 'May',
+  '6' => 'Jun',
+  '7' => 'Jul',
+  '8' => 'Aug',
+  '9' => 'Sep',
+  '10' => 'Oct',
+  '11' => 'Nov',
+  '12' => 'Dec',
+}
 
 result_l_opt = []
 
+total = 0
+total += 10.times.with_index do |i|
+  puts File::Stat.new(sorted_files[i]).blocks.to_i
+end
+puts total
+
 sorted_files.size.times.with_index do |i|
   fs = File::Stat.new(sorted_files[i])
-  puts fs.mode.to_s(8)
-  # 0 4 0 7 5 5 
   permittion_num = format("%06d", fs.mode.to_s(8)).split("")
-  # 04 0 7 5 5 
   permittion_num = [permittion_num[0..1].join,permittion_num[2..5]].flatten
-  # d rwx r-x r-x
-  # display
+
   permittion_num.size.times.with_index do |j|
     print cmod_table[permittion_num[j]]
   end
 
-  print " #{fs.nlink}"
-  print " #{fs.uid}"
-  print " #{fs.gid}"
-  print " #{fs.size}"
-  print " #{fs.mtime}"
+  print "  #{fs.nlink}"
+  print " #{Etc.getpwuid(fs.uid).name}"
+  print "  #{Etc.getgrgid(fs.gid).name}"
+  print " % 5d"% fs.size
+  print " #{month_table[fs.mtime.to_a.slice(4).to_s]}"
+  print "#{"% 3d"% fs.mtime.to_a.slice(3)}"
+ 
+  print Time.now - fs.mtime < 15552000 ? " #{fs.mtime.to_s.slice(11,5)}" : " #{"% 2d"% fs.mtime.to_a.slice(5)}"
   print " #{sorted_files[i]}"
-
-
-
-
-  # drwxr-xr-x  4 taku.fujisaki  staff   128 Nov 18 09:35 01.fizzbuzz
   puts
-
-  
-
 end
-
-
-
-
-
-
-
-# params[:l] ? display_l(sorted_files, calc_row(sorted_files.size)) : display(sorted_files, calc_row(sorted_files.size))
