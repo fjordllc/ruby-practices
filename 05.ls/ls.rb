@@ -28,7 +28,6 @@ end
 
 opt = OptionParser.new
 params = {}
-<<<<<<< HEAD
 opt.on('-l') { |v| params[:l] = v }
 opt.parse!(ARGV)
 
@@ -69,9 +68,8 @@ month_table = {
   '12' => 'Dec'
 }
 
-total = 0
-sorted_files.size.times do |i|
-  total += File::Stat.new(sorted_files[i]).blocks.to_i
+total = sorted_files.size.times.sum do |i|
+  File::Stat.new(sorted_files[i]).blocks.to_i
 end
 puts "total #{total}"
 
