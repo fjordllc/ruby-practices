@@ -25,15 +25,13 @@ def adjust_list_to_display(files)
 end
 
 def add_space_for_line(lines, max_file_names)
-  result = []
-  lines.each do |file_names|
+  lines.map do |file_names|
     display_line = ''.dup
     file_names.each_with_index do |file_name, i|
       display_line << "#{file_name}#{' ' * (max_file_names[i] - calc_file_name_size(file_name) + SPACE_FOR_COLUMNS)}"
     end
-    result << display_line
+    display_line
   end
-  result
 end
 
 def calc_file_name_size(file_name)
