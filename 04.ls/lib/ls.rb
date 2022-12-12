@@ -27,9 +27,9 @@ end
 def add_space_for_line(lines, max_file_names)
   result = []
   lines.each do |file_names|
-    display_line = ''
+    display_line = ''.dup
     file_names.each_with_index do |file_name, i|
-      display_line = "#{display_line}#{file_name}#{' ' * (max_file_names[i] - calc_file_name_size(file_name) + SPACE_FOR_COLUMNS)}"
+      display_line << "#{file_name}#{' ' * (max_file_names[i] - calc_file_name_size(file_name) + SPACE_FOR_COLUMNS)}"
     end
     result << display_line
   end
