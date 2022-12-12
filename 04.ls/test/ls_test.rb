@@ -13,18 +13,18 @@ class ListTest < Minitest::Test
   def test_current_dir_list_diplay
     current_dir = Dir.pwd
     Dir.chdir(test_data_dir)
-    ls_path = "#{__dir__.sub!(%r(/test$), '')}/lib/ls.rb"
+    ls_path = "#{__dir__.sub!(%r{/test$}, '')}/lib/ls.rb"
     output = `ruby #{ls_path}`
-    true_str = 
-    "00_file  04dir    13_file            \n"\
-    "00dir    05_file  14_file            \n"\
-    "01_file  06_file  15_file            \n"\
-    "01dir    07_file  16_file            \n"\
-    "02_file  08_file  17_file            \n"\
-    "02dir    09_file  18_file            \n"\
-    "03_file  10_file  19_file            \n"\
-    "03dir    11_file  attr_file          \n"\
-    "04_file  12_file  make_test_file.rb  \n"
+    true_str =
+      "00_file  04dir    13_file            \n"\
+      "00dir    05_file  14_file            \n"\
+      "01_file  06_file  15_file            \n"\
+      "01dir    07_file  16_file            \n"\
+      "02_file  08_file  17_file            \n"\
+      "02dir    09_file  18_file            \n"\
+      "03_file  10_file  19_file            \n"\
+      "03dir    11_file  attr_file          \n"\
+      "04_file  12_file  make_test_file.rb  \n"
     assert_equal true_str, output
     Dir.chdir(current_dir)
   end

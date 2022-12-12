@@ -26,7 +26,7 @@ end
 
 def add_space_for_line(lines, max_file_names)
   lines.map do |file_names|
-    display_line = ''.dup
+    display_line = +''
     file_names.each_with_index do |file_name, i|
       display_line << "#{file_name}#{' ' * (max_file_names[i] - calc_file_name_size(file_name) + SPACE_FOR_COLUMNS)}"
     end
@@ -47,9 +47,9 @@ def parse_option
   opt.on('-r', '今後対応予定')
   opt.on('-l', '今後対応予定')
   opt.banner = 'Usage: ls [-a][-r][-l]'
-  _options = {}
-  opt.parse!(ARGV, into: _options)
-  return [ARGV,_options]
+  options = {}
+  opt.parse!(ARGV, into: options)
+  [ARGV, options]
 end
 
 def make_display_list(parse_result)
