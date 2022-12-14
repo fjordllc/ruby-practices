@@ -1,30 +1,20 @@
 # frozen_string_literal: true
 
-score = ARGV[0]
-scores = score.split(',')
+scores = ARGV[0].split(',')
+scores.map! { |s| s == 'X' ? '10' : s }.map!(&:to_i)
 
-frames = []
-current_frame = []
-last_frame = []
-
-scores.each do |s|
-  if s == 'X' && frames.size >= 9
-    last_frame << 10
-  elsif frames.size >= 9
-    last_frame << s.to_i
-  elsif s == 'X'
-    current_frame << 10
+frames = Array.new(10) { [] }
+frames.each_with_index do |frame, i|
+  if i == 9
+    frame.concat(scores)
+  elsif scores[0] == 10
+    frame << 10
+    scores.delete_at(0)
   else
-    current_frame << s.to_i
+    frame.concat(scores[0, 2])
+    2.times { scores.delete_at(0) }
   end
-  next if current_frame.size == 1 && current_frame != [10]
-
-  frames << current_frame
-  current_frame = []
 end
-
-frames.delete([])
-frames.push(last_frame)
 
 point = 0
 frames.each_with_index do |frame, i|
