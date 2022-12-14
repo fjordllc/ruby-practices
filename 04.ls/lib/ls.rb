@@ -78,7 +78,7 @@ def analyse_directory_paths(paths, option_a)
     result << "\n" unless result == []
     result << "#{path}:" if paths.size > 1
     flag = option_a ? File::FNM_DOTMATCH : 0
-    file_list = Dir.glob('*', base: path, flags: flag).sort      
+    file_list = Dir.glob('*', base: path, flags: flag).sort
     display_lines = adjust_list_to_display(file_list)
     display_lines.each { |line| result << line }
   end
