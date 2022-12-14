@@ -29,7 +29,7 @@ class ListTest < Minitest::Test
     Dir.chdir(current_dir)
   end
 
-  def test_current_dir_list_diplay_with_option_a
+  def test_dir_list_diplay_with_option_a
     current_dir = Dir.pwd
     Dir.chdir(test_data_dir)
     ls_path = "#{__dir__.sub!(%r{/test$}, '')}/lib/ls.rb"
