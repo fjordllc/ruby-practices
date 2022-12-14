@@ -43,7 +43,7 @@ end
 def parse_option
   opt = OptionParser.new
   # TODO: オプションの説明追加
-  opt.on('-a', '今後対応予定')
+  opt.on('-a', '.で始まる要素も表示します')
   opt.on('-r', '今後対応予定')
   opt.on('-l', '今後対応予定')
   opt.banner = 'Usage: ls [-a][-r][-l]'
@@ -59,25 +59,26 @@ def make_display_list(parse_result)
     adjust_list_to_display(file_list).each { |line| result << line }
   else
     paths = parse_result[0]
-    _options = parse_result[1]
+    options = parse_result[1]
     file_list = analyse_file_paths(paths)
     display_lines = adjust_list_to_display(file_list.sort)
     display_lines.each { |line| result << line }
     result << "\n" unless file_list == []
-    directorys = analyse_directory_paths(paths)
+    directorys = analyse_directory_paths(paths, options[:a])
     result.push(*directorys)
     result
   end
 end
 
-def analyse_directory_paths(paths)
+def analyse_directory_paths(paths, option_a)
   result = []
   paths.each do |path|
     next unless File::Stat.new(path).directory?
 
     result << "\n" unless result == []
     result << "#{path}:" if paths.size > 1
-    file_list = Dir.glob('*', base: path).sort
+    flag = option_a ? File::FNM_DOTMATCH : 0
+    file_list = Dir.glob('*', base: path, flags: flag).sort      
     display_lines = adjust_list_to_display(file_list)
     display_lines.each { |line| result << line }
   end
