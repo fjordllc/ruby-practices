@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 scores = ARGV[0].split(',')
-scores.map! { |s| s == 'X' ? '10' : s }.map!(&:to_i)
+scores.map! { |s| s == 'X' ? '10' : s.to_i }
 
 frames = Array.new(10) { [] }
 frames.each_with_index do |frame, i|
