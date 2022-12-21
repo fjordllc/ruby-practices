@@ -98,5 +98,3 @@ if params[:l]
 else
   display(sorted_files, calc_row(sorted_files.size))
 end
-
-
