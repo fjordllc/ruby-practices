@@ -6,7 +6,7 @@ require 'etc'
 # 表示列の最大数をココで変更
 COLUMN = 3
 
-cmod_table = {
+CMOD_TABLE = {
   '01' => 'p',
   '02' => 'c',
   '04' => 'd',
@@ -23,9 +23,9 @@ cmod_table = {
   '5' => 'r-x',
   '6' => 'rw-',
   '7' => 'rwx'
-}
+}.freeze
 
-month_table = {
+MONTH_TABLE = {
   '1' => 'Jan',
   '2' => 'Feb',
   '3' => 'Mar',
@@ -38,7 +38,7 @@ month_table = {
   '10' => 'Oct',
   '11' => 'Nov',
   '12' => 'Dec'
-}
+}.freeze
 
 # 表示時に必要な行数rowを求める
 def calc_row(num)
@@ -47,13 +47,6 @@ end
 
 # ファイル一覧をlsのルールに従い表示
 def display(files, row)
-  row.times do |y|
-    COLUMN.times { |x| printf(files[x * row + y].to_s.ljust(files.map(&:size).max + 3)) }
-    puts
-  end
-end
-
-def display_l(files, row)
   row.times do |y|
     COLUMN.times { |x| printf(files[x * row + y].to_s.ljust(files.map(&:size).max + 3)) }
     puts
@@ -80,10 +73,10 @@ if params[:l]
     fs = File::Stat.new(sorted_files[i])
     # 権限
     cmod = ''
-    permittion_num = format('%06d', fs.mode.to_s(8)).split('')
-    permittion_num = [permittion_num[0..1].join, permittion_num[2..5]].flatten
-    permittion_num.size.times do |j|
-      cmod += cmod_table[permittion_num[j]]
+    permission_num = format('%06d', fs.mode.to_s(8)).split('')
+    permission_num = [permission_num[0..1].join, permission_num[2..5]].flatten
+    permission_num.size.times do |j|
+      cmod += CMOD_TABLE[permission_num[j]]
     end
     print format('%-10s', cmod)
 
@@ -91,7 +84,7 @@ if params[:l]
     print " #{Etc.getpwuid(fs.uid).name}"
     print " #{Etc.getgrgid(fs.gid).name}"
     print format(' %6d', fs.size)
-    print " #{month_table[fs.mtime.to_a.slice(4).to_s]}"
+    print " #{MONTH_TABLE[fs.mtime.to_a.slice(4).to_s]}"
     print format('% 3d', fs.mtime.to_a.slice(3))
     print Time.now - fs.mtime < 15_552_000 ? " #{fs.mtime.to_s.slice(11, 5)}" : " #{format(' %2d', fs.mtime.to_a.slice(5))}"
     print " #{sorted_files[i]}"
