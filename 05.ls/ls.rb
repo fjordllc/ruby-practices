@@ -79,16 +79,18 @@ if params[:l]
   sorted_files.size.times do |i|
     fs = File::Stat.new(sorted_files[i])
     # 権限
+    cmod = ''
     permittion_num = format('%06d', fs.mode.to_s(8)).split('')
     permittion_num = [permittion_num[0..1].join, permittion_num[2..5]].flatten
     permittion_num.size.times do |j|
-      print cmod_table[permittion_num[j]]
+      cmod += cmod_table[permittion_num[j]]
     end
+    print format('%-10s', cmod)
 
-    print "  #{fs.nlink}"
+    print format(' %3d', fs.nlink)
     print " #{Etc.getpwuid(fs.uid).name}"
-    print "  #{Etc.getgrgid(fs.gid).name}"
-    print format(' %5d', fs.size)
+    print " #{Etc.getgrgid(fs.gid).name}"
+    print format(' %6d', fs.size)
     print " #{month_table[fs.mtime.to_a.slice(4).to_s]}"
     print format('% 3d', fs.mtime.to_a.slice(3))
     print Time.now - fs.mtime < 15_552_000 ? " #{fs.mtime.to_s.slice(11, 5)}" : " #{format(' %2d', fs.mtime.to_a.slice(5))}"
