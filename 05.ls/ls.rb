@@ -82,7 +82,6 @@ if params[:l]
     gid_str_size << Etc.getgrgid(fs.gid).name.to_s.size
     filesize_str_size << fs.size.to_s.size
   end
-  print uid_str_size
 
   # 表示
   sorted_files.size.times do |i|
@@ -98,9 +97,9 @@ if params[:l]
     print cmod.ljust(12)
     print fs.nlink.to_s.rjust(nlink_str_size.max)
     print ' '
-    print Etc.getpwuid(fs.uid).name.ljust(uid_str_size.max + 1)
+    print Etc.getpwuid(fs.uid).name.ljust(uid_str_size.max + 2)
     print Etc.getgrgid(fs.gid).name.ljust(gid_str_size.max + 1)
-    print fs.size.to_s.rjust(filesize_str_size.max)
+    print fs.size.to_s.rjust(filesize_str_size.max + 1)
     print MONTH_TABLE[fs.mtime.to_a.slice(4).to_s].rjust(4)
     print fs.mtime.to_a.slice(3).to_s.rjust(3)
     print Time.now - fs.mtime < 15_552_000 ? fs.mtime.to_s.slice(11, 5).to_s.rjust(6) : fs.mtime.to_a.slice(5).to_s.rjust(6)
