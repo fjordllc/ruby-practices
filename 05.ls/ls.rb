@@ -78,16 +78,17 @@ if params[:l]
     permission_num.size.times do |j|
       cmod += CMOD_TABLE[permission_num[j]]
     end
-    print format('%-10s', cmod)
+    print cmod.ljust(12)
 
-    print format(' %3d', fs.nlink)
-    print " #{Etc.getpwuid(fs.uid).name}"
-    print " #{Etc.getgrgid(fs.gid).name}"
-    print format(' %6d', fs.size)
-    print " #{MONTH_TABLE[fs.mtime.to_a.slice(4).to_s]}"
-    print format('% 3d', fs.mtime.to_a.slice(3))
-    print Time.now - fs.mtime < 15_552_000 ? " #{fs.mtime.to_s.slice(11, 5)}" : " #{format(' %2d', fs.mtime.to_a.slice(5))}"
-    print " #{sorted_files[i]}"
+    print fs.nlink.to_s.rjust(2)
+    print Etc.getpwuid(fs.uid).name.rjust(15)
+    print Etc.getgrgid(fs.gid).name.rjust(6)
+    print fs.size.to_s.rjust(6)
+    print MONTH_TABLE[fs.mtime.to_a.slice(4).to_s].rjust(4)
+    print fs.mtime.to_a.slice(3).to_s.rjust(4)
+    print Time.now - fs.mtime < 15_552_000 ? fs.mtime.to_s.slice(11, 5).to_s.rjust(6) : fs.mtime.to_a.slice(5).to_s.rjust(6)
+    print " "
+    print sorted_files[i]
     puts
   end
 else
