@@ -1,11 +1,11 @@
-1.upto(20) do |sum|
-    if sum % 15 == 0
+1.upto(20) do |index|
+    if index % 15 == 0
         puts "FizzBuzz"
-    elsif sum % 5 == 0
+    elsif index % 5 == 0
         puts "Buzz"
-    elsif sum % 3 == 0
+    elsif index % 3 == 0
         puts "Fizz"
     else
-        puts sum
+        puts index
     end
 end
