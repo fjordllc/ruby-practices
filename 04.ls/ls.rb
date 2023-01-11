@@ -2,34 +2,26 @@
 
 require 'optparse'
 
-def flags
-  params = ARGV.getopts('a')
-  if params['a']
-    File::FNM_DOTMATCH
-  else
-    0
-  end
-end
+params = ARGV.getopts('a')
+flags = params['a'] ? File::FNM_DOTMATCH : 0
+files = Dir.glob('*', flags).sort
 
-@files = Dir.glob('*', flags).sort
-
-def file_column
-  filename_sizes = @files.map(&:size)
+def file_column(files)
+  filename_sizes = files.map(&:size)
   (filename_sizes.max / 8 + 1) * 8
 end
 
 MAX_COLUMN = 3
-def current_column
+def current_column(files)
   terminal_column = `tput cols`.chomp.to_i
-  file_column * MAX_COLUMN > terminal_column ? terminal_column / file_column : MAX_COLUMN
+  file_column(files) * MAX_COLUMN > terminal_column ? terminal_column / file_column(files) : MAX_COLUMN
 end
 
-files_size = @files.size
-d = (files_size % current_column).zero? ? files_size / current_column : files_size / current_column + 1
-
+files_size = files.size
+d = (files_size % current_column(files)).zero? ? files_size / current_column(files) : files_size / current_column(files) + 1
 arrays = (1..d).map { |n| n.step(by: d, to: files_size).to_a }
 
 arrays.each do |array|
-  array.each { |i| print @files[i - 1].ljust(file_column, ' ') }
+  array.each { |i| print files[i - 1].ljust(file_column(files), ' ') }
   puts
 end
