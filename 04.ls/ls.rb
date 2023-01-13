@@ -2,9 +2,10 @@
 
 require 'optparse'
 
-params = ARGV.getopts('a')
+params = ARGV.getopts('ar')
 flags = params['a'] ? File::FNM_DOTMATCH : 0
 files = Dir.glob('*', flags).sort
+files.reverse! if params['r']
 
 def file_column(files)
   filename_sizes = files.map(&:size)
