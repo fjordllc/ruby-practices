@@ -20,13 +20,13 @@ def files_block(files_stat)
   "total #{files_blocks.sum}"
 end
 
+FILE_TYPE = { 'file' => '-', 'directory' => 'd', 'link' => 'l', 'fifo' => 'p', 'characterSpecial' => 'c', 'blockSpecial' => 'b', 'socket' => 's' }.freeze
+PERMISSION = ['---', '--x', '-w-', '-wx', 'r--', 'r-x', 'rw-', 'rwx'].freeze
 def file_mode(file_stat)
-  file_type = { 'file' => '-', 'directory' => 'd', 'link' => 'l', 'fifo' => 'p', 'characterSpecial' => 'c', 'blockSpecial' => 'b', 'socket' => 's' }
-  permission = ['---', '--x', '-w-', '-wx', 'r--', 'r-x', 'rw-', 'rwx']
   file_permission = file_stat.mode.to_s(8).chars
-  owner_permission = permission[file_permission[-3].to_i].chars
-  group_permission = permission[file_permission[-2].to_i].chars
-  other_permission = permission[file_permission[-1].to_i].chars
+  owner_permission = PERMISSION[file_permission[-3].to_i].chars
+  group_permission = PERMISSION[file_permission[-2].to_i].chars
+  other_permission = PERMISSION[file_permission[-1].to_i].chars
   case file_permission[-4].to_i
   when 4
     owner_permission.delete_at(-1)
@@ -38,7 +38,7 @@ def file_mode(file_stat)
     other_permission.delete_at(-1)
     other_permission.push('t')
   end
-  file_type[file_stat.ftype] + [owner_permission + group_permission + other_permission].join
+  FILE_TYPE[file_stat.ftype] + [owner_permission + group_permission + other_permission].join
 end
 
 def files_link_max(files_stat)
