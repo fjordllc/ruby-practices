@@ -46,10 +46,24 @@ def files_link_max(files_stat)
   files_link.max.to_s.length
 end
 
-def file_user_and_group_name(file_stat)
+def file_user_name(file_stat)
   file_user_id = file_stat.uid
-  group_id = file_stat.gid
-  "#{Etc.getpwuid(file_user_id).name}  #{Etc.getgrgid(group_id).name}"
+  Etc.getpwuid(file_user_id).name
+end
+
+def files_user_name_max(files_stat)
+  files_user_name_length = files_stat.map { |f_s| file_user_name(f_s).length }
+  files_user_name_length.max
+end
+
+def file_group_name(file_stat)
+  file_group_id = file_stat.gid
+  Etc.getgrgid(file_group_id).name
+end
+
+def files_group_name_max(files_stat)
+  files_group_name_length = files_stat.map { |f_s| file_group_name(f_s).length }
+  files_group_name_length.max
 end
 
 def files_size_max(files_stat)
@@ -67,8 +81,7 @@ def file_update_time(file_stat)
 end
 
 params = ARGV.getopts('arl')
-flags = params['a'] ? File::FNM_DOTMATCH : 0
-files = Dir.glob('*', flags).sort
+files = params['a'] ? Dir.foreach('.').to_a.sort : Dir.glob('*').sort
 files.reverse! if params['r']
 blank = ' '
 
@@ -79,7 +92,8 @@ if params['l']
   files_name_and_stat.each do |file_name, file_stat|
     print file_mode(file_stat) + blank * 2
     print file_stat.nlink.to_s.rjust(files_link_max(files_stat)) + blank
-    print file_user_and_group_name(file_stat) + blank * 2
+    print file_user_name(file_stat).rjust(files_user_name_max(files_stat)) + blank
+    print file_group_name(file_stat).rjust(files_group_name_max(files_stat)) + blank * 2
     print file_stat.size.to_s.rjust(files_size_max(files_stat)) + blank
     print file_update_time(file_stat) + blank
     print file_name
