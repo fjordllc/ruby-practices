@@ -92,7 +92,7 @@ if params['l']
   files_name_and_stat.each do |file_name, file_stat|
     print file_mode(file_stat) + blank * 2
     print file_stat.nlink.to_s.rjust(files_link_max(files_stat)) + blank
-    print file_user_name(file_stat).rjust(files_user_name_max(files_stat)) + blank
+    print file_user_name(file_stat).rjust(files_user_name_max(files_stat)) + blank * 2
     print file_group_name(file_stat).rjust(files_group_name_max(files_stat)) + blank * 2
     print file_stat.size.to_s.rjust(files_size_max(files_stat)) + blank
     print file_update_time(file_stat) + blank
