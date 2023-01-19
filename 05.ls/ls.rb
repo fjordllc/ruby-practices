@@ -75,8 +75,8 @@ if params[:l]
   gid_str_size = []
   filesize_str_size = []
 
-  sorted_files.size.times do |i|
-    fs = File::Stat.new(sorted_files[i])
+  sorted_files.each do |sorted_file|
+    fs = File::Stat.new(sorted_file)
     nlink_str_size << fs.nlink.to_s.size
     uid_str_size << Etc.getpwuid(fs.uid).name.to_s.size
     gid_str_size << Etc.getgrgid(fs.gid).name.to_s.size
@@ -89,14 +89,14 @@ if params[:l]
   filesize_brank = filesize_str_size.max + 1
 
   # 表示
-  sorted_files.size.times do |i|
-    fs = File::Stat.new(sorted_files[i])
+  sorted_files.each do |sorted_file|
+    fs = File::Stat.new(sorted_file)
     # 権限
     cmod = ''
     permission_num = format('%06d', fs.mode.to_s(8)).split('')
     permission_num = [permission_num[0..1].join, permission_num[2..5]].flatten
-    permission_num.size.times do |j|
-      cmod += CMOD_TABLE[permission_num[j]]
+    permission_num.each do |permission_part|
+      cmod += CMOD_TABLE[permission_part]
     end
 
     print cmod.ljust(12)
@@ -109,7 +109,7 @@ if params[:l]
     print fs.mtime.to_a.slice(3).to_s.rjust(3)
     print Time.now - fs.mtime < 15_552_000 ? fs.mtime.to_s.slice(11, 5).to_s.rjust(6) : fs.mtime.to_a.slice(5).to_s.rjust(6)
     print ' '
-    print sorted_files[i]
+    print sorted_file
     puts
   end
 else
