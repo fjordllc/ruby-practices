@@ -11,43 +11,28 @@ def main
   opt.parse!(ARGV)
   options = %i[l w c]
   options.map! { |o| o if params[o] }.compact! unless params.empty?
-  if ARGV.empty?
-    input_files = []
-    input_files.push($stdin.read)
-    input_files_output(input_files, options)
-  else
-    files = ARGV
-    files_output(files, options)
-  end
-end
-
-def input_files_output(input_files, options)
-  p_s = options.size - 1
-  input_files_data(input_files, options).each do |input_file_data|
-    (0..p_s).each { |n| print input_file_data[n].to_s.rjust(8) }
-    puts
-  end
-end
-
-def input_files_data(input_files, options)
-  input_items = options.map { |key| count_items(input_files, input_files, key) }
-  input_items.transpose
+  files = ARGV.empty? ? [$stdin.read] : ARGV
+  files_output(files, options)
 end
 
 def files_output(files, options)
-  files_name = files.map { |file| File.basename(file) }
-  files_name.push('total') unless files.size == 1
-  files_result = [files_name, files_data(files, options)].transpose.to_h
-  p_s = options.size - 1
+  files_result = [files_name(files), files_data(files, options)].transpose.to_h
   files_result.each do |file_name, file_data|
-    (0..p_s).each { |n| print file_data[n].to_s.rjust(8) }
+    options.each_with_index { |_, n| print file_data[n].to_s.rjust(8) }
     print " #{file_name}"
     puts
   end
 end
 
+def files_name(files)
+  files_name = ARGV.empty? ? [' '] : files.map { |file| File.basename(file) }
+  files_name.push('total') unless files.size == 1
+  files_name
+end
+
 def files_data(files, options)
-  items = options.map { |key| files_items(files, key) }
+  fs = ARGV.empty? ? files : files_read(files)
+  items = options.map { |key| count_items(fs, key) }
   data = items.transpose
   unless files.size == 1
     total_item = items.map(&:sum)
@@ -56,20 +41,19 @@ def files_data(files, options)
   data
 end
 
-def files_items(files, key)
+def files_read(files)
   files_open = files.map { |file| File.open(file) }
-  files_read = files_open.map(&:read)
-  count_items(files_open, files_read, key)
+  files_open.map(&:read)
 end
 
-def count_items(files_open, files_read, key)
+def count_items(files, key)
   case key
   when :l
-    count_lines(files_read)
+    count_lines(files)
   when :w
-    count_words(files_read)
+    count_words(files)
   when :c
-    count_size(files_open)
+    count_size(files)
   end
 end
 
