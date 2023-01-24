@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+def main
+  files = file_information
+  files = horizontal_spacing(files)
+  files = arrange_vertical(files)
+  ls(files)
+end
+
+# 指定ディレクトリ内のファイル情報を配列として格納
+def file_information
+  Dir.glob('*')
+end
+
+# 各ファイル名文字列長を最大値に合わせる
+def horizontal_spacing(array)
+  horizontal_spacing = array.map(&:length).max + 1 # 最低1文字分空ける
+  array.map { |n| n.ljust(horizontal_spacing) }
+end
+
+# ファイル名配列を転置（縦並び出力用）
+def arrange_vertical(array, slice_count = 3)
+  array_display = []
+  row_count = array.length.quo(slice_count).ceil
+  array.each_slice(row_count) { |s| array_display << s }
+  (row_count - array_display[-1].length).times { array_display[-1] << '' }
+  array_display.transpose
+end
+
+# ファイル名情報を標準出力する
+def ls(arrays)
+  arrays.each do |array|
+    array.each do |a|
+      print a
+    end
+    print "\n"
+  end
+end
+
+main
