@@ -42,8 +42,9 @@ def files_data(files, options)
 end
 
 def files_read(files)
-  files_open = files.map { |file| File.open(file) }
-  files_open.map(&:read)
+  files.map do |file|
+    File.open(file, &:read)
+  end
 end
 
 def count_items(files, key)
