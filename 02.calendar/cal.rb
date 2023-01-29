@@ -10,11 +10,11 @@ start_day = Date.new(year,month,1) # カレンダーで最初に表示する日
 end_day = Date.new(year,month,-1) # カレンダーで最後に表示する日
 
 # カレンダーのスタートは日曜日から始まり、最初に改行なしの空白を差し込めば、その曜日から出力を行える
-blank_first_calendar = "   " * start_day.wday
+calendar_of_first_weeks_spaces = "   " * start_day.wday
 
 puts "#{month}月 #{year}".center(20)
 puts " 日 月 火 水 木 金 土"
-print blank_first_calendar
+print calendar_of_first_weeks_spaces
 # 月の最初の日から、最後の日までループを回す
 (start_day..end_day).each{ |day|
   # 土曜日でなければ、改行無しで出力
