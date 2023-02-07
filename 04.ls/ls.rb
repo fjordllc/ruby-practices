@@ -12,15 +12,11 @@ def translate_display_char_length(char)
 end
 
 def display_length(text)
-  text.each_char.map do |char|
-    translate_display_char_length(char)
-  end.sum
+  text.each_char.map { |char| translate_display_char_length(char) }.sum
 end
 
 def max_file_name_length(file_names)
-  file_names.each.map do |file_name|
-    display_length(file_name)
-  end.max
+  file_names.each.map { |file_name| display_length(file_name) }.max
 end
 
 def print_format_file_name(file_names_hash)
