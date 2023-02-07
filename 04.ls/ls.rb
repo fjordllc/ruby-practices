@@ -24,9 +24,24 @@ def print_format_file_name(file_names_hash)
   print "#{file_names_hash[:name]}#{spaces}#{OFFSET_SPACES}"
 end
 
+def search_files
+  argv = ARGV[0]
+  if argv
+    if FileTest.directory?(argv)
+      Dir.glob('*', base: argv)
+    else
+      argv_array = argv.split('/')
+      file_name = argv_array.pop
+      folder_name = argv_array.join('/')
+      Dir.glob(file_name, base: folder_name)
+    end
+  else
+    Dir.glob('*')
+  end
+end
+
 def main
-  argv = ARGV[0] || ''
-  files = Dir.glob('*', base: argv)
+  files = search_files
   return if files.empty?
 
   max_row = (files.length % NUMBER_OF_COLUMNS).zero? ? files.length / NUMBER_OF_COLUMNS : files.length / NUMBER_OF_COLUMNS + 1
