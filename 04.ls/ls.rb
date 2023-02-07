@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 NUMBER_OF_COLUMNS = 3
-LENGTH_OFFSET = 2
 SINGLE_BYTE_CHAR_DISPLAY_LENGTH = 1
 MULTI_BYTE_CHAR_DISPLAY_LENGTH = 2
+OFFSET_SPACES = "  "
 
 def translate_display_char_length(char)
   char.bytesize == 1 ? SINGLE_BYTE_CHAR_DISPLAY_LENGTH : MULTI_BYTE_CHAR_DISPLAY_LENGTH
@@ -15,14 +15,15 @@ def display_length(string)
   end.sum
 end
 
-def file_name_lengths(file_names)
+def max_file_name_length(file_names)
   file_names.each.map do |file_name|
     display_length(file_name)
   end.max
 end
 
-def print_format_file_name(text, length)
-  print format("%-#{length + LENGTH_OFFSET}s", text)
+def print_format_file_name(file_names_hash)
+  spaces = " " * (file_names_hash[:max_length] - file_names_hash[:length])
+  print "#{file_names_hash[:name]}#{spaces}#{OFFSET_SPACES}"
 end
 
 def main
@@ -31,13 +32,17 @@ def main
   max_row = (files.length % NUMBER_OF_COLUMNS).zero? ? files.length / NUMBER_OF_COLUMNS : files.length / NUMBER_OF_COLUMNS + 1
   file_names_list = files.each_slice(max_row).to_a
 
-  lengths = file_names_list.map do |file_names|
-    file_name_lengths(file_names)
+  file_names_hash = file_names_list.map do |file_names|
+    max_length = max_file_name_length(file_names)
+    file_names.each.map do |file_name|
+      length = display_length(file_name)
+      { name: file_name, length: length, max_length: max_length }
+    end
   end
 
   max_row.times do |row|
-    file_names_list.length.times do |col|
-      print_format_file_name(file_names_list[col][row], lengths[col])
+    file_names_hash.length.times do |col|
+      print_format_file_name(file_names_hash[col][row]) if file_names_hash[col][row]
     end
     puts
   end
