@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 # frozen_string_literal: true
 
 NUMBER_OF_COLUMNS = 3
