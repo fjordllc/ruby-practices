@@ -1,4 +1,7 @@
-for num in 1..20
+
+# fyord課題
+
+ (1..20).each do |num|
 
   if num % 15 == 0
     puts "fizzbuzz"
@@ -11,3 +14,4 @@ for num in 1..20
   end
 
 end
+
