@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+score = ARGV[0]
+scores = score.split(',')
+shots = []
+scores.each do |s|
+  if s == 'X'
+    shots << 10
+    shots << 0
+  else
+    shots << s.to_i
+  end
+end
+
+frames = []
+shots.each_slice(2) do |s|
+  frames << s
+end
+
+# 9フレームまでストライク、スペア分を加算する
+point = 0
+i = 0
+while i < 9
+  if frames[i][0] == 10 # ストライク
+    point += frames[i + 1][0]
+    point += if frames[i + 1][0] == 10
+               frames[i + 2][0]
+             else
+               frames[i + 1][1]
+             end
+  elsif frames[i].sum == 10 # スペア
+    point += frames[i + 1][0]
+  end
+  i += 1
+end
+
+# 各フレームの点数を加算する
+frames.each do |frame|
+  point += frame.sum
+end
+puts point
