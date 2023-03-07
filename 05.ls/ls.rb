@@ -6,12 +6,20 @@ def files
   end
 end
 
-frame = []
-files.each_slice(4) do |s|
-  frame << s
+def columns_list
+  columns = 3
+  lists = files
+  rest_row = lists.size % columns
+  if rest_row != 0
+    (columns - rest_row).times do
+      lists << nil
+    end
+  end
+  rows = lists.size / columns
+  lists.each_slice(rows).to_a
 end
 
-def display(file_lists)
+def displays(file_lists)
   file_lists.each do |index|
     index.each do |item|
       print item.to_s.ljust(10)
@@ -19,4 +27,4 @@ def display(file_lists)
     puts "\n"
   end
 end
-display(frame.transpose)
+displays(columns_list.transpose)
