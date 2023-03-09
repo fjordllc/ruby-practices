@@ -2,14 +2,14 @@
 
 def row_column
   files = Dir.glob('*')
-  column = 3
-  rest_of_row_count = files.size % column
+  column_count = 3
+  rest_of_row_count = files.size % column_count
   if rest_of_row_count != 0 && rest_of_row_count.positive?
-    (column - rest_of_row_count).times do
+    (column_count - rest_of_row_count).times do
       files << nil
     end
   end
-  row_count = files.size / column
+  row_count = files.size / column_count
   files.each_slice(row_count).to_a
 end
 
