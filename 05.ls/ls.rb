@@ -4,7 +4,7 @@ def row_column
   files = Dir.glob('*')
   column_count = 3
   rest_of_row_count = files.size % column_count
-  if rest_of_row_count != 0 && rest_of_row_count.positive?
+  if rest_of_row_count != 0 && rest_of_row_count >= 0
     (column_count - rest_of_row_count).times do
       files << nil
     end
@@ -14,9 +14,9 @@ def row_column
 end
 
 def display(column_row)
-  column_row.each do |files_line|
-    files_line.each do |line|
-      print line.to_s.ljust(10)
+  column_row.each do |new_line|
+    new_line.each do |right_align|
+      print right_align.to_s.ljust(10)
     end
     puts "\n"
   end
