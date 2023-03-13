@@ -13,10 +13,10 @@ def row_column
   files.each_slice(row_count).to_a
 end
 
-def display(column_row)
-  column_row.each do |new_line|
-    new_line.each do |right_align|
-      print right_align.to_s.ljust(10)
+def display(rows)
+  rows.each do |row|
+    row.each do |file_name|
+      print file_name.to_s.ljust(10)
     end
     puts "\n"
   end
