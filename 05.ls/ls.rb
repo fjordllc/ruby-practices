@@ -4,7 +4,7 @@ def row_column
   files = Dir.glob('*')
   column_count = 3
   rest_of_row_count = files.size % column_count
-  if rest_of_row_count != 0 && rest_of_row_count >= 0
+  if rest_of_row_count >= 1
     (column_count - rest_of_row_count).times do
       files << nil
     end
