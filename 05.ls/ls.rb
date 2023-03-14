@@ -4,11 +4,7 @@ require 'optparse'
 
 def current_files
   option = ARGV.getopts('a')
-  if option['a']
-    Dir.glob('*', File::FNM_DOTMATCH)
-  else
-    Dir.glob('*')
-  end
+  option['a'] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
 end
 
 def row_column
