@@ -10,29 +10,24 @@
 require "date"
 require 'enumerator'
 
-def days_alignment(first, last) 
-    days_array_origin = (first.day..last.day).to_a
-    days_alignment_array = days_array_origin.map do |day|
-        if day < 10 #日にちが一桁だと他の数字と位置がズレるので修正
-            " #{day}"
-        else
-            day
-        end
-    end
-    days_array = (["  "] * first.cwday) + days_alignment_array #初日の曜日を合わせる
-end
-
-def calc_month_days(year, month) #1ヶ月の日にちを表示
-    first_date = Date.new(year, month, 1)
-    last_date = Date.new(year, month, -1)
-    week_array = days_alignment(first_date,last_date).each_slice(7)
-end
 
 def text_color(text, color)
     "\033["+ color +"m#{text}\033[0m"
 end
 
-def print_month_year(year, month, length, color) #月と日を表示
+def length_2byte(str_2byte)
+    len = 0
+    str_2byte.each_char{ |char|
+        if char.bytesize == 1
+            len += 1
+        else
+            len += 2
+        end
+    }
+    return len
+end
+
+def print_month_year(year, month, length, color) #月と年を表示
     year_month_str = "#{month}月 #{year}年".center(length) + "\n"
     text_center = year_month_str.center(length)
     text_center.gsub!(/\d+/){|str| text_color(str, color)} #数字だけ色変更
@@ -49,33 +44,46 @@ def day_color(array, normal, invert)
     }
 end
 
+def date_color(date, normal, invert)
+    if date.day < 10 #日にちが一桁だと他の数字と位置がズレるので修正
+        day = " #{date.day}"
+    else
+        day = date.day
+    end
+    if date == Date.today #今日の日付は色を反転する
+        text_color(day, invert)
+    else
+        text_color(day, normal)
+    end
+end
+
+def days_alignment(first, last, normal, invert) 
+    days_array_origin = (first..last).to_a
+    days_alignment_array = days_array_origin.map do |date|
+        date_color(date, normal, invert)
+    end
+    days_array = (["  "] * first.cwday) + days_alignment_array #初日の曜日を合わせる
+end
+
+def calc_month_days(year, month, normal, invert) #1ヶ月の日にちを表示
+    first_date = Date.new(year, month, 1)
+    last_date = Date.new(year, month, -1)
+    week_array = days_alignment(first_date, last_date, normal, invert).each_slice(7)
+end
+
 year = 2023
 month = 3
 
 # def print_month(year, month)
-    normal_color = "38;5;208"
-    invert_color = "7"
+    normal_color = "38;5;208" #オレンジ
+    invert_color = "7" #白
     dayofweek_jp_array = ["日", "月", "火", "水", "木", "金", "土"]
-    week_array = calc_month_days(year, month)
-    column_length = week_array.first.join(" ").length #月の表示を真ん中に持ってくるために列の数を計算
-    print_month_year(year, month, column_length, normal_color)
-    print dayofweek_jp_array.join(" ") + "\n"
-    (1..week_array.size).each{print day_color(week_array.next, normal_color, invert_color).join(" "), + "\n"}
-# end
 
+    length_dayofweek = length_2byte(dayofweek_jp_array.join(" ")) #月の表示を真ん中に持ってくるために列の数を計算
+    print_month_year(year, month, length_dayofweek, normal_color)
+    print (dayofweek_jp_array.join(" ") + "\n")
 
-
-
-# print_month(year, month)
-
-# p month2dates(2023, 3)
-
-# def dates2week(year, month)
-
-# end
-
-# def calender_display(year, month)
-#     week_list = dates2week(year,month)
-#     week_list.each{|week| puts week }
+    week_array = calc_month_days(year, month, normal_color, invert_color)
+    (1..week_array.size).each{print week_array.next.join(" ") + "\n"}
 # end
 
