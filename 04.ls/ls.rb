@@ -1,25 +1,20 @@
 #!/usr/bin/env ruby
 
 def calculation_row(column, files)
-  if files.count % column != 0
-    files.count / column + 1
-  else
-    files.count / column
-  end
+  row = files.count / column
+  row + 1 if files.count % column != 0
 end
 
 def ls(column, files)
   row = calculation_row(column, files)
   row.times do |r|
-    columns = (0..column - 1).map { |n| files[(row - r) * n] }
-    files -= columns
-    (0..column - 1).each do |c|
-      columns[c] ||= ''
-      print columns[c].ljust(40)
+    columns = (0...column).map { |n| files[row * n + r] }
+    columns.each do |c|
+      print c&.ljust(40)
     end
-    puts "\n"
+    puts
   end
 end
 
 files = Dir.glob('*')
-ls(3, files)
+ls(4, files)
