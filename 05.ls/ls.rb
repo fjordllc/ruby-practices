@@ -104,7 +104,6 @@ def l_option(sorted_files)
     print sorted_file
     puts
   end
-
 end
 
 opt = OptionParser.new
@@ -118,11 +117,7 @@ opt.parse!(ARGV)
 
 # -a option
 sorted_files = params[:a] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
-
 # -r option
 sorted_files = params[:r] ? sorted_files.sort.reverse : sorted_files.sort
-
 # -l option
 params[:l] ? l_option(sorted_files) : display(sorted_files, calc_row(sorted_files.size))
-
-
