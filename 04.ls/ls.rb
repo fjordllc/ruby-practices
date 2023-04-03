@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+require 'optparse'
 
 def calculation_row(column, files)
   files.count.ceildiv(column)
@@ -13,4 +14,10 @@ def ls(column, files)
 end
 
 files = Dir.glob('*')
+
+opt = OptionParser.new
+
+opt.on('-a', '全てのファイルを参照') { files = Dir.entries('.').sort }
+opt.parse!(ARGV)
+
 ls(3, files)
