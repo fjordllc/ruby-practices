@@ -53,24 +53,8 @@ def display(files, row)
   end
 end
 
-opt = OptionParser.new
-params = {}
-
-opt.on('-a') { |v| params[:a] = v }
-opt.on('-l') { |v| params[:l] = v }
-opt.on('-r') { |v| params[:r] = v }
-
-opt.parse!(ARGV)
-
-# -a option
-sorted_files = params[:a] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
-
-# -r option
-sorted_files = params[:r] ? sorted_files.sort.reverse : sorted_files.sort
-
-# -l option -----------------------
-
-if params[:l]
+# lオプションの機能：詳細表示
+def l_option(sorted_files)
   # ブロックの合計値
   total = sorted_files.size.times.sum do |i|
     File::Stat.new(sorted_files[i]).blocks.to_i
@@ -120,7 +104,25 @@ if params[:l]
     print sorted_file
     puts
   end
-else
-  display(sorted_files, calc_row(sorted_files.size))
+
 end
+
+opt = OptionParser.new
+params = {}
+
+opt.on('-a') { |v| params[:a] = v }
+opt.on('-l') { |v| params[:l] = v }
+opt.on('-r') { |v| params[:r] = v }
+
+opt.parse!(ARGV)
+
+# -a option
+sorted_files = params[:a] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
+
+# -r option
+sorted_files = params[:r] ? sorted_files.sort.reverse : sorted_files.sort
+
+# -l option
+params[:l] ? l_option(sorted_files) : display(sorted_files, calc_row(sorted_files.size))
+
 
