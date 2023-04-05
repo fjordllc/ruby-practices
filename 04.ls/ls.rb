@@ -17,7 +17,7 @@ files = Dir.glob('*')
 
 opt = OptionParser.new
 
-opt.on('-a', '全てのファイルを参照') { files = Dir.entries('.').sort }
+opt.on('-a', '全てのファイルを参照') { files = Dir.glob('*', File::FNM_DOTMATCH).sort }
 opt.parse!(ARGV)
 
 ls(3, files)
