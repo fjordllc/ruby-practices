@@ -40,7 +40,30 @@ class Cal
   end
 
   def disp
-    puts @year, @month
+    charnum_of_week = ("11 " * 7).length - 1
+    day_of_week_str = "日 月 火 水 木 金 土"
+    puts "#{@month}月 #{@year}".center(charnum_of_week)
+    firstday = Date.new(@year,@month,1)
+    lastday = Date.new(@year,@month,-1)
+    first_days_day_of_week = firstday.wday
+    puts day_of_week_str
+    day_num = 0
+    weekstr = ""
+    lastday.day.times.each do |i|
+      day_num = i + 1
+      day = Date.new(@year,@month,day_num)
+      if day.saturday?
+        weekstr += day_num.to_s.rjust(2)
+        puts weekstr.rjust(charnum_of_week)
+        weekstr = ""
+      elsif day == lastday
+        weekstr += day_num.to_s
+        puts weekstr
+        weekstr = ""
+      else
+        weekstr += day_num.to_s.rjust(2) + " "
+      end
+    end
   end
 end
 
