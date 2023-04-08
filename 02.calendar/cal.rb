@@ -26,20 +26,21 @@ class Cal
     rescue OptionParser::MissingArgument
       usage_exit
     end
-    usage_exit if options["y"] && options["m"].nil?
+    usage_exit if options["y"] && options["m"].nil? # If not found parameter values, exit.
     if options["y"]
       year = options["y"].to_i
-      usage_exit if year < 1970 || year > 2100
+      usage_exit if year < 1970 || year > 2100 # Year range is 1970-2100
       @year = year
     end
     if options["m"]
       month = options["m"].to_i
-      usage_exit if month < 1 || month > 12
+      usage_exit if month < 1 || month > 12 # Month range is 1-12
       @month = month
     end
   end
 
   def disp
+    # Preparing display varibles
     charnum_of_week = ("11 " * 7).length - 1
     day_of_week_str = "日 月 火 水 木 金 土"
     puts "#{@month}月 #{@year}".center(charnum_of_week)
@@ -49,6 +50,7 @@ class Cal
     puts day_of_week_str
     day_num = 0
     weekstr = ""
+    # Construct string
     lastday.day.times.each do |i|
       day_num = i + 1
       day = Date.new(@year,@month,day_num)
