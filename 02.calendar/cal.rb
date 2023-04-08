@@ -1,3 +1,4 @@
+require "optparse"
 require "date"
 
 class Cal
@@ -20,34 +21,21 @@ class Cal
   end
 
   def chk_argv
-    i = 0
-    chk_val_flag = false
-    ARGV.each do |argv|
-      unless chk_val_flag # check option flag
-        case argv
-        when "-y", "-m"
-          chk_val_flag = true
-        else
-          usage_exit
-        end
-      else # check option value
-        chk_val_flag = false
-        case ARGV[i-1]
-        when "-y"
-          usage_exit unless ARGV.include?("-m")
-          tmp_year = argv.to_i
-          usage_exit unless tmp_year >= 1970 && tmp_year <= 2100
-          @year = tmp_year
-        when "-m"
-          tmp_month = argv.to_i
-          usage_exit unless tmp_month >= 1 && tmp_month <= 12
-          @month = tmp_month
-        end
-      end
-      i += 1
-    end
-    if chk_val_flag
+    begin
+      options = ARGV.getopts('y:', 'm:')
+    rescue OptionParser::MissingArgument
       usage_exit
+    end
+    usage_exit if options["y"] && options["m"].nil?
+    if options["y"]
+      year = options["y"].to_i
+      usage_exit if year < 1970 || year > 2100
+      @year = year
+    end
+    if options["m"]
+      month = options["m"].to_i
+      usage_exit if month < 1 || month > 12
+      @month = month
     end
   end
 
