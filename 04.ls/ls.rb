@@ -15,9 +15,10 @@ end
 
 opt = OptionParser.new
 options = {}
-opt.on('-a', '全部のファイル表示') { |v| options[:a] = v }
+opt.on('-r', 'ファイルの逆表示') { |v| options[:r] = v }
 opt.parse(ARGV)
 
-files = Dir.glob('*', options[:a] ? File::FNM_DOTMATCH : 0)
+files = Dir.glob('*')
+files = files.reverse if options[:r]
 
 ls(3, files)
