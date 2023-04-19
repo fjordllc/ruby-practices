@@ -30,7 +30,7 @@ puts " 日 月 火 水 木 金 土"
 
 first_empty_line = firstday_wday * 3
 printf "%#{first_empty_line}s",""
-(1..number_of_days).each { |day|
+(1..number_of_days).each do |day|
   days = Date.new(display_year, display_mon,day)
   day_of_week = days.wday
   day_empty_line = " " if day < 10
@@ -40,4 +40,4 @@ printf "%#{first_empty_line}s",""
     printf("%3d",day)
   end
   puts "" if day_of_week == 6
-}
+end
