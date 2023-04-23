@@ -23,5 +23,6 @@ class TestFileNameReciever < Minitest::Test
     assert_equal 'a_test.txt', get_file_names('a_test.txt')
     assert_equal '試験.txt', get_file_names('試験.txt')
     assert_equal 'テスト-ターゲット.md', get_file_names('テスト-ターゲット.md')
+    assert_equal '.test', get_file_names('.test')
   end
 end
