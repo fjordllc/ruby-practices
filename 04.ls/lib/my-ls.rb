@@ -1,8 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
-require 'optparse'
 
-LIST_ROW_NAME = 3
+LIST_ROW_NUM = 3
 
 def get_file_names(argument_name)
   argument_name ||= '.'
@@ -23,7 +22,7 @@ def path_to_directory_and_file(absolute_path)
 end
 
 def select_file(target_dir, target_file)
-  file_names_all = Dir.entries(target_dir).sort
+  file_names_all = Dir.entries(target_dir).sort.map(&:unicode_normalize)
   if target_file.empty?
     file_names_all.reject { |file_name| file_name =~ /^\./ }
   else
@@ -75,4 +74,4 @@ end
 
 input = ARGV[0]
 file_names = get_file_names(input)
-print generate_name_list_text(file_names, LIST_ROW_NAME)
+print generate_name_list_text(file_names, LIST_ROW_NUM)
