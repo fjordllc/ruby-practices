@@ -23,10 +23,10 @@ class TestNameReciever < Minitest::Test
   end
   def test_get_file_names_file_argument
     # debugger
-    assert_equal 'a_test.txt', get_file_names('a_test.txt')
-    assert_equal '試験.txt', get_file_names('試験.txt')
-    assert_equal 'テスト-ターゲット.md', get_file_names('テスト-ターゲット.md')
-    assert_equal '.test', get_file_names('.test')
+    assert_equal ['a_test.txt'], get_file_names('a_test.txt')
+    assert_equal ['試験.txt'], get_file_names('試験.txt')
+    assert_equal ['テスト-ターゲット.md'], get_file_names('テスト-ターゲット.md')
+    assert_equal ['.test'], get_file_names('.test')
   end
 end
 
@@ -57,6 +57,10 @@ class TestStringMethod < Minitest::Test
 end
 
 class TestGenerationNameListText < Minitest::Test
+  def test_generate_name_list_text_1file
+    assert_equal "abc\n", generate_name_list_text(['abc'], 3)
+  end
+
   def test_generate_name_list_text_only_alphabet
       assert_equal "abc bc\n", generate_name_list_text(['abc','bc'], 3)
       assert_equal "abc bc  c\n", generate_name_list_text(['abc','bc','c'], 3)

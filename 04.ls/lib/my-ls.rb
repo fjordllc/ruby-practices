@@ -28,7 +28,7 @@ def select_file(target_directory, target_file)
   if target_file.empty?
     file_names_all.reject { |file_name| file_name =~ /^\./ }
   else
-    file_names_all.select{ |file_name| file_name == target_file}.first
+    file_names_all.select{ |file_name| file_name == target_file}
   end  
 end
 
