@@ -1,22 +1,28 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-file_names_all = Dir.entries('.').sort
-file_names = []
-file_names_all.each do |file_name|
-  next if file_name =~ /^\./
-  file_names << file_name
+def get_file_names(argument_name)
+  target_file = ''
+  if File.directory?(argument_name)
+    target_directory = argument_name
+  else
+    target_directory =  '.'
+    target_file = argument_name unless argument_name == ''
+  end
+  
+  file_names_all = Dir.entries(target_directory).sort
+  if target_file.empty?
+    file_names_all.reject { |file_name| file_name =~ /^\./ }
+  else
+    file_names_all.select{ |file_name| file_name == target_file}.first
+  end
 end
+# disp_column = file_names.each_slice(3).map{|n| n}
 
-disp_column = file_names.each_slice(3).map{|n| n}
+# (0..disp_column.size - 1).each do
+#   print(disp_column[])
+# end
 
-(0..disp_column.size - 1).each do
-  print(disp_column[])
-end
-
-p disp_column[0]
-p disp_column[1]
-p disp_column[2]
 
 
 # file_names = Dir.foreach('.') do |file_name|
