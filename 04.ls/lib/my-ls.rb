@@ -3,8 +3,9 @@
 
 def get_file_names(argument_name)
   target_file = ''
-  if File.directory?(argument_name)
-    target_directory = argument_name
+  absolute_path = File.expand_path(argument_name)
+  if File.directory?(absolute_path)
+    target_directory = absolute_path
   else
     target_directory =  '.'
     target_file = argument_name unless argument_name == ''
@@ -17,6 +18,7 @@ def get_file_names(argument_name)
     file_names_all.select{ |file_name| file_name == target_file}.first
   end
 end
+
 # disp_column = file_names.each_slice(3).map{|n| n}
 
 # (0..disp_column.size - 1).each do

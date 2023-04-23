@@ -17,6 +17,9 @@ class TestFileNameReciever < Minitest::Test
   def test_get_file_names_dir_argument
     assert_equal ['a_test_sub.txt', 'b_test_sub.rb', 'テスト-ターゲット_sub.md', '試験_sub.txt'], get_file_names('sub.dir')
     # lsだと　'a_test_sub.txt', 'b_test_sub.rb', '試験_sub.txt', 'テスト-ターゲット_sub.md'
+    assert_equal ['test.rb', 'test_target'], get_file_names('..')
+    assert_equal ['test.rb', 'test_target'], get_file_names('/Users/atsushi/Documents/Fjord/ruby-practices/04.ls/test')
+    assert_equal ['test.rb', 'test_target'], get_file_names('~/Documents/Fjord/ruby-practices/04.ls/test/')
   end
   def test_get_file_names_file_argument
     # debugger
