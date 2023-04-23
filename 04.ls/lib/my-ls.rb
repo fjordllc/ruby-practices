@@ -61,7 +61,7 @@ class String
   def size_jp
     count = 0
     self.each_char do |char|
-      if char.match?(/\p{Han}|\p{Hiragana}|\p{Katakana}/)
+      if char.match?(/\p{Han}|\p{Hiragana}|\p{Katakana}|ー/)
         count += 2
       else
         count += 1

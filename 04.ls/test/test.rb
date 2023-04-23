@@ -76,8 +76,8 @@ class TestGenerationNameListText < Minitest::Test
 
   def test_generate_name_list_text_with_files
     result_text = <<~TEXT
-    a_test.txt          sub.dir             試験.txt
-    b_test.rb           テスト-ターゲット.md
+    a_test.txt           sub.dir              試験.txt
+    b_test.rb            テスト-ターゲット.md
     TEXT
     assert_equal result_text, generate_name_list_text(['a_test.txt', 'b_test.rb', 'sub.dir', 'テスト-ターゲット.md', '試験.txt'], 3)
   end
