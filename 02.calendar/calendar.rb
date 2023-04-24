@@ -13,20 +13,18 @@ reference_date = Date.new(year, month, 1)
 last_date = Date.new(year, month, -1)
 first_date =  Date.new(year, month, 1)
 first_date_wday= first_date.wday
-number_of_days =  last_date.mday
 
 puts "       #{month}月 #{year}"
 puts " 日 月 火 水 木 金 土"
 
-first_empty_line = first_date_wday * 3
+first_empty_line = first_date.wday * 3
 printf "%#{first_empty_line}s",""
 (first_date..last_date).each do |date|
-  day_of_week = date.wday
-  day_empty_line = " " if date.mday < 10
+  display_day = date.mday.to_s
   if date == today
-    printf("%s"," #{day_empty_line}\e[7m#{date.mday}\e[0m")
+    printf (" \e[7m#{display_day}\e[0m")
   else  
-    printf("%3d",date.mday)
+    printf (display_day.rjust(3))
   end
-  puts "" if day_of_week == 6
+  puts "" if date.wday == 6
 end
