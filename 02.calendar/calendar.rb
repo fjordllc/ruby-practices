@@ -2,6 +2,7 @@
 
 require 'optparse'
 require 'date'
+
 params = ARGV.getopts("m:y:")
 today = Date.today
 input_month = params["m"].to_i
