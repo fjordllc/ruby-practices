@@ -27,3 +27,4 @@ printf "%#{first_empty_line}s",""
   end
   puts "" if date.wday == 6
 end
+
