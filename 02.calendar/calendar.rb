@@ -7,10 +7,9 @@ select_month = params["m"].to_i
 select_year = params["y"].to_i
 today = Date.today
 
-case
-when select_month && select_year != 0
+if select_month && select_year != 0
   reference_date = Date.new(select_year,select_month,1)
-when (select_month != 0 ) && (select_year == 0)
+elsif (select_month != 0 ) && (select_year == 0)
   reference_date = Date.new(today.year,select_month,1)
 else
   reference_date = today
