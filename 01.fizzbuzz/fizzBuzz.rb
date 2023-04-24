@@ -2,9 +2,9 @@
   if (count % 3).zero? && (count % 5).zero?
     puts 'FizzBuzz'
   elsif (count % 3).zero?
-    puts 'fizz'
+    puts 'Fizz'
   elsif (count % 5).zero?
-    puts 'buzz'
+    puts 'Buzz'
   else
     puts count
   end
