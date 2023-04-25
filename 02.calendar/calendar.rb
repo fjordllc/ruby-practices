@@ -31,8 +31,7 @@ text = ' ' * start_of_wday * 3
   today = calendar_year == current_time.year && calender_month == current_time.month && num == current_time.day
   text += "\n" if ((num + start_of_wday - 1) % 7).zero?
   text += "\e[37m\e[40m" if today
-  text += ' ' if num.to_s.length == 1
-  text += num.to_s
+  text += num.to_s.length == 1 ? num.to_s.rjust(2) : num.to_s
   text += "\e[0m" if today
   text += ' '
 end
@@ -41,6 +40,6 @@ end
 wdays = ['日', '月', '火', '水', '木', '金', '土']
 
 # 表示
-puts "      #{calender_month}月 #{calendar_year}"
+puts "#{calender_month}月 #{calendar_year}".center(20)
 puts wdays.join(' ')
 printf text += "\n"
