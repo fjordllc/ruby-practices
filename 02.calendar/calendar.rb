@@ -7,9 +7,9 @@ opt.on('-m') { |v| p v }
 opt.on('-y') { |v| p v }
 
 # デフォルトの年月
-time = Time.new
-calendar_year = time.year
-calender_month = time.month
+current_time = Time.new
+calendar_year = current_time.year
+calender_month = current_time.month
 
 # オプションがある時の年月
 unless ARGV[1].nil?
@@ -28,7 +28,7 @@ end_of_month = Date.new(calendar_year.to_i, calender_month.to_i, -1).day
 # レイアウト
 text = ' ' * start_of_wday * 3
 1.upto(end_of_month) do |num|
-  today = calendar_year == time.year && calender_month == time.month && num == time.day
+  today = calendar_year == current_time.year && calender_month == current_time.month && num == current_time.day
   text += "\n" if ((num + start_of_wday - 1) % 7).zero?
   text += "\e[37m\e[40m" if today
   text += ' ' if num.to_s.length == 1
