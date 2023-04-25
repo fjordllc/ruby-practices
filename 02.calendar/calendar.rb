@@ -29,7 +29,7 @@ end_of_month = Date.new(calendar_year.to_i, calender_month.to_i, -1).day
 text = ' ' * start_of_wday * 3
 1.upto(end_of_month) do |num|
   today = calendar_year == time.year && calender_month == time.month && num == time.day
-  text += "\n" if ((num + start_of_wday - 1) % 7).zero
+  text += "\n" if ((num + start_of_wday - 1) % 7).zero?
   text += "\e[37m\e[40m" if today
   text += ' ' if num.to_s.length == 1
   text += num.to_s
