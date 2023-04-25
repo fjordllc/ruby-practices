@@ -27,4 +27,4 @@ print " "  * padding_size_for_first_date,""
   end
   puts "" if date.wday == 6
 end
-
+puts ""
