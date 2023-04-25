@@ -16,14 +16,14 @@ first_date =  Date.new(year, month, 1)
 puts "       #{month}月 #{year}"
 puts " 日 月 火 水 木 金 土"
 
-first_empty_line = first_date.wday * 3
-printf "%#{first_empty_line}s",""
+padding_size_for_first_date = first_date.wday * 3
+print " "  * padding_size_for_first_date,""
 (first_date..last_date).each do |date|
   display_day = date.mday.to_s
   if date == today
-    printf (" \e[7m#{display_day.rjust(2)}\e[0m")
+    print (" \e[7m#{display_day.rjust(2)}\e[0m")
   else  
-    printf (display_day.rjust(3))
+    print (display_day.rjust(3))
   end
   puts "" if date.wday == 6
 end
