@@ -10,7 +10,7 @@ split_user_input = 0
 
 score = 0
 
-10.times do |frame|
+10.times do
   score_of_two = converted_num[split_user_input] + converted_num[split_user_input + 1]
   # ストライク
   if converted_num[split_user_input] == 10
