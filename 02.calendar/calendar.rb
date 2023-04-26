@@ -10,8 +10,8 @@ opts.parse!(ARGV)
 
 # デフォルトの年月
 current_time = Time.new
-calendar_year = current_time.year.to_i
-calendar_month = current_time.month.to_i
+calendar_year = current_time.year
+calendar_month = current_time.month
 
 # オプションがある時の年月
 calendar_month = program_config[:m].to_i unless program_config[:m].nil?
