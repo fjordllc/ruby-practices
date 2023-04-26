@@ -37,4 +37,4 @@ wdays = ['日', '月', '火', '水', '木', '金', '土']
 # 表示
 puts "#{calendar_month}月 #{calendar_year}".center(20)
 puts wdays.join(' ')
-printf text += "\n"
+printf "#{text}\n"
