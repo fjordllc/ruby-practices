@@ -8,14 +8,10 @@ opts.on('-m value') { |v| program_config[:m] = v }
 opts.on('-y value') { |v| program_config[:y] = v }
 opts.parse!(ARGV)
 
-# デフォルトの年月
+# 年月の設定
 current_time = Time.new
-calendar_year = current_time.year
-calendar_month = current_time.month
-
-# オプションがある時の年月
-calendar_month = program_config[:m].to_i unless program_config[:m].nil?
-calendar_year = program_config[:y].to_i unless program_config[:y].nil?
+calendar_month = program_config[:m].nil? ? current_time.month : program_config[:m].to_i
+calendar_year = program_config[:y].nil? ? current_time.year : program_config[:y].to_i
 
 # 月の初めの曜日
 start_wday = Date.new(calendar_year, calendar_month, 1).wday
