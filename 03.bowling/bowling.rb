@@ -6,24 +6,24 @@ user_inputs = ARGV[0].split(',')
 converted_nums = user_input.map { |score| score == 'X' ? 10 : score.to_i }
 
 # フレームごとに区切る
-split_user_input = 0
+current_throwing_location = 0
 
 score = 0
 
 10.times do
-  score_of_two = converted_num[split_user_input] + converted_num[split_user_input + 1]
+  score_of_two = converted_num[current_throwing_location] + converted_num[current_throwing_location + 1]
   # ストライク
-  if converted_num[split_user_input] == 10
-    score += score_of_two + converted_num[split_user_input + 2]
-    split_user_input += 1
+  if converted_num[current_throwing_location] == 10
+    score += score_of_two + converted_num[current_throwing_location + 2]
+    current_throwing_location += 1
   # スペア
   elsif score_of_two == 10
-    score += score_of_two + converted_num[split_user_input + 2]
-    split_user_input += 2
+    score += score_of_two + converted_num[current_throwing_location + 2]
+    current_throwing_location += 2
   # 9本以下
   else
     score += score_of_two
-    split_user_input += 2
+    current_throwing_location += 2
   end
 end
 
