@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-user_input = ARGV[0].split(',')
+user_inputs = ARGV[0].split(',')
 
 # 全て数字に変える
-converted_num = user_input.map { |score| score == 'X' ? 10 : score.to_i }
+converted_nums = user_input.map { |score| score == 'X' ? 10 : score.to_i }
 
 # フレームごとに区切る
 split_user_input = 0
