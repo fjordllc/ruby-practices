@@ -17,11 +17,12 @@ calendar_year = program_config[:y].nil? ? current_time.year : program_config[:y]
 start_wday = Date.new(calendar_year, calendar_month, 1).wday
 
 # 月の最後の日にち
+first_date = Date.new(calendar_year, calendar_month, 1).day
 last_date = Date.new(calendar_year, calendar_month, -1).day
 
 # レイアウト
 text = ' ' * start_wday * 3
-(1..last_date).each do |date|
+(first_date..last_date).each do |date|
   today = calendar_year == current_time.year && calendar_month == current_time.month && date == current_time.day
   text += "\n" if ((date + start_wday - 1) % 7).zero?
   text += "\e[37m\e[40m" if today
