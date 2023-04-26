@@ -4,8 +4,8 @@ require 'date'
 # コマンドラインのオプション
 opts = OptionParser.new
 program_config = Hash.new
-opts.on('-m value') { |v| ProgramConfig[:m] = v }
-opts.on('-y value') { |v| ProgramConfig[:y] = v }
+opts.on('-m value') { |v| program_config[:m] = v }
+opts.on('-y value') { |v| program_config[:y] = v }
 opts.parse!(ARGV)
 
 # デフォルトの年月
@@ -14,8 +14,8 @@ calendar_year = current_time.year.to_i
 calendar_month = current_time.month.to_i
 
 # オプションがある時の年月
-calendar_month = ProgramConfig[:m].to_i unless ProgramConfig[:m].nil?
-calendar_year = ProgramConfig[:y].to_i unless ProgramConfig[:y].nil?
+calendar_month = program_config[:m].to_i unless program_config[:m].nil?
+calendar_year = program_config[:y].to_i unless program_config[:y].nil?
 
 # 月の初めの曜日
 start_wday = Date.new(calendar_year, calendar_month, 1).wday
