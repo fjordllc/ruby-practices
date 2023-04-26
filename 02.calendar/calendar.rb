@@ -3,7 +3,7 @@ require 'date'
 
 # コマンドラインのオプション
 opts = OptionParser.new
-ProgramConfig = Hash.new
+program_config = Hash.new
 opts.on('-m value') { |v| ProgramConfig[:m] = v }
 opts.on('-y value') { |v| ProgramConfig[:y] = v }
 opts.parse!(ARGV)
