@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'optparse'
-require 'debug'
-
 user_input = ARGV[0].split(',')
 
 # 全て数字に変える
@@ -28,7 +25,6 @@ score = 0
     score += score_of_two
     split_user_input += 2
   end
-  p frame
 end
 
 p score
