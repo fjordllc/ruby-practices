@@ -6,15 +6,15 @@
 =end
 
 number = 1
-NumFizz = 3
-NumBuzz = 5
+NUM_FIZZ = 3
+NUM_BUZZ = 5
 
 20.times do 
-  if number % NumFizz == 0 && number % NumBuzz == 0
+  if number % NUM_FIZZ == 0 && number % NUM_BUZZ == 0
     puts "FizzBuzz"
-  elsif number % NumFizz == 0
+  elsif number % NUM_FIZZ == 0
     puts "Fizz"
-  elsif number % NumBuzz == 0
+  elsif number % NUM_BUZZ == 0
     puts "Buzz"
   else
     puts number
