@@ -21,11 +21,11 @@ last_date = Date.new(calendar_year, calendar_month, -1)
 text = ' ' * first_date.wday * 3
 (first_date..last_date).each do |date|
   today = date == Date.today
-  text += "\n" if ((date.day + first_date.wday - 1) % 7).zero?
   text += "\e[7m" if today
   text += date.day.to_s.rjust(2)
   text += "\e[0m" if today
   text += ' '
+  text += "\n" if date.wday == 6
 end
 
 # 曜日
