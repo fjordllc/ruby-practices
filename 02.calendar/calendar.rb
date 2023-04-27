@@ -13,20 +13,17 @@ current_time = Time.new
 calendar_month = program_config[:m].nil? ? current_time.month : program_config[:m].to_i
 calendar_year = program_config[:y].nil? ? current_time.year : program_config[:y].to_i
 
-# 月の初めの曜日
-start_wday = Date.new(calendar_year, calendar_month, 1).wday
-
 # 月の最後の日にち
-first_date = Date.new(calendar_year, calendar_month, 1).day
-last_date = Date.new(calendar_year, calendar_month, -1).day
+first_date = Date.new(calendar_year, calendar_month, 1)
+last_date = Date.new(calendar_year, calendar_month, -1)
 
 # レイアウト
-text = ' ' * start_wday * 3
+text = ' ' * first_date.wday * 3
 (first_date..last_date).each do |date|
-  today = calendar_year == current_time.year && calendar_month == current_time.month && date == current_time.day
-  text += "\n" if ((date + start_wday - 1) % 7).zero?
+  today = date == Date.today
+  text += "\n" if ((date.day + first_date.wday - 1) % 7).zero?
   text += "\e[7m" if today
-  text += date.to_s.rjust(2)
+  text += date.day.to_s.rjust(2)
   text += "\e[0m" if today
   text += ' '
 end
