@@ -26,7 +26,7 @@ text = ' ' * start_wday * 3
   today = calendar_year == current_time.year && calendar_month == current_time.month && date == current_time.day
   text += "\n" if ((date + start_wday - 1) % 7).zero?
   text += "\e[7m" if today
-  text += date.to_s.length == 1 ? date.to_s.rjust(2) : date.to_s
+  text += date.to_s.rjust(2)
   text += "\e[0m" if today
   text += ' '
 end
