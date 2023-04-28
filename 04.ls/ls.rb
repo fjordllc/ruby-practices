@@ -3,40 +3,59 @@
 
 columns = 3
 
-# 仮の配列
-temporary_outputs = []
+directory_path = ARGV[0] || '.'
 
-# ファイル名の最大文字数
-max_file_length = 0
+# 出力するファイルの取得
+def get_file(path)
+  # 仮の配列
+  temporary_outputs = []
 
-file = ARGV[0] || '.'
-
-# ファイルの取得
-Dir.foreach(file) do |item|
-  next if item.eql?('.') || item.eql?('..')
-
-  temporary_outputs << item
-  max_file_length = item.length if max_file_length < item.length
+  Dir.foreach(path) do |item|
+    temporary_outputs << item
+  end
+  temporary_outputs
 end
+
+def get_max_length(array)
+  # 最大文字数
+  max_file_length = 0
+
+  array.each do |file|
+    max_file_length = file.length if max_file_length < file.length
+  end
+  max_file_length
+end
+
+# ファイルの並び替えと二次元配列に変える
+def sort_and_covert(array, columns, size)
+  # 出力する配列
+  outputs = Array.new(columns) { [] }
+
+  array_num = 0
+  array.sort.each do |item|
+    outputs[array_num].push(item)
+    array_num += 1 if (outputs[array_num].length % size).zero?
+  end
+  outputs
+end
+
+# 出力
+def output_file(size, columns, length, array)
+  size.times do |time|
+    columns.times do |column|
+      print array[column][time]
+      print ' ' * (length - array[column][time].to_s.length + 1)
+    end
+    puts "\n"
+  end
+end
+
+temporary_outputs = get_file(directory_path)
+max_file_length = get_max_length(temporary_outputs)
 
 # 一列に出力するファイルの数
 max_size = temporary_outputs.length / columns + 1
 
-# 出力する配列
-outputs = Array.new(columns) { [] }
+outputs = sort_and_covert(temporary_outputs, columns, max_size)
 
-# ファイルの並び替えと二次元配列に変える
-array_num = 0
-temporary_outputs.sort.each do |item|
-  outputs[array_num].push(item)
-  array_num += 1 if (outputs[array_num].length % max_size).zero?
-end
-
-# 出力
-max_size.times do |time|
-  columns.times do |column|
-    print outputs[column][time]
-    print ' ' * (max_file_length - outputs[column][time].to_s.length + 1)
-  end
-  puts "\n"
-end
+output_file(max_size, columns, max_file_length, outputs)
