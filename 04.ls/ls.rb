@@ -1,8 +1,9 @@
 #! /usr/bin/env ruby
 # frozen_string_literal: true
 
+# 3列
 columns = 3
-
+# 引数にディレクトリを指定(初期値はカレントディレクトリ)
 directory_path = ARGV[0] || '.'
 
 # 出力するファイルの取得
@@ -16,8 +17,8 @@ def get_file(path)
   temporary_outputs
 end
 
+# 最大文字数の取得
 def get_max_length(array)
-  # 最大文字数
   max_file_length = 0
 
   array.each do |file|
@@ -33,7 +34,7 @@ def sort_and_covert(array, columns, size)
 
   array_num = 0
   array.sort.each do |item|
-    outputs[array_num].push(item)
+    outputs[array_num] << item
     array_num += 1 if (outputs[array_num].length % size).zero?
   end
   outputs
@@ -52,10 +53,8 @@ end
 
 temporary_outputs = get_file(directory_path)
 max_file_length = get_max_length(temporary_outputs)
-
 # 一列に出力するファイルの数
 max_size = temporary_outputs.length / columns + 1
-
 outputs = sort_and_covert(temporary_outputs, columns, max_size)
 
 output_file(max_size, columns, max_file_length, outputs)
