@@ -23,7 +23,7 @@ def output_calendar(first_date, year:, month:)
   (first_date..Date.new(year, month, -1)).each do |date|
     print date.day.to_s.rjust(2)
     print ' '
-    print "\n" if ((first_date.wday + date.day) % 7).zero?
+    print "\n" if date.saturday?
   end
 end
 
