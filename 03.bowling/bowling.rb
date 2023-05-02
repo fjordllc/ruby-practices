@@ -29,8 +29,8 @@ shots.each_with_index do |shot, shot_index|
   frame.push(shot)
   frame_sum = frame.sum
   next if frame.length == 1 && frame_sum < 10 && is_not_frame10
-  point += frame_sum
 
+  point += frame_sum
   if frame[0] == 10 && is_not_frame10
     point += calculate_strike_additional_point(shots, shot_index)
   elsif frame_sum == 10 && is_not_frame10
