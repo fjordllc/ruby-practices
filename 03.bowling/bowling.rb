@@ -1,12 +1,12 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-def calculate_spare_additional_point(shots, current_pitching)
-  shots[current_pitching + 1]
+def calculate_strike_additional_point(shots, shot_index)
+  shots[shot_index + 1] + shots[shot_index + 2]
 end
 
-def calculate_strike_additional_point(shots, current_pitching)
-  shots[current_pitching + 1] + shots[current_pitching + 2]
+def calculate_spare_additional_point(shots, shot_index)
+  shots[shot_index + 1]
 end
 
 score = ARGV[0]
@@ -23,22 +23,19 @@ end
 frame = []
 point = 0
 
-shots.each_with_index do |value, current_pitching|
-  remaining_pitching_number = shots.length - current_pitching
-  is_not_frame10 = (remaining_pitching_number > 3)
-  frame.push(value)
+shots.each_with_index do |shot, shot_index|
+  remaining_shot_number = shots.length - shot_index
+  is_not_frame10 = (remaining_shot_number > 3)
+  frame.push(shot)
+  frame_sum = frame.sum
+  next if frame.length == 1 && frame_sum < 10 && is_not_frame10
+  point += frame_sum
+
   if frame[0] == 10 && is_not_frame10
-    point += frame[0] + calculate_strike_additional_point(shots, current_pitching)
-    frame.clear
-  elsif frame.sum == 10 && is_not_frame10
-    point += frame.sum + calculate_spare_additional_point(shots, current_pitching)
-    frame.clear
-  elsif remaining_pitching_number == 1      # frame10のポイントの合計
-    point += frame.sum
-    frame.clear
-  elsif frame.sum < 10 && frame.length == 2
-    point += frame.sum
-    frame.clear
+    point += calculate_strike_additional_point(shots, shot_index)
+  elsif frame_sum == 10 && is_not_frame10
+    point += calculate_spare_additional_point(shots, shot_index)
   end
+  frame.clear
 end
 puts point
