@@ -23,12 +23,12 @@ end
 point = 0
 frames.each_with_index do |frame, index|
   point += if index <= 8 && frame.length == 2 && frame.sum == 10 # スペア
-             (10 + frames.dig(index + 1, 0))
+             10 + frames.dig(index + 1, 0)
            elsif index <= 8 && frame[0] == 10 # ストライク
              if frames[index + 1].length == 2 # 次投がストライク以外
-               (10 + frames[index + 1].sum)
+               10 + frames[index + 1].sum
              else
-               (10 + 10 + frames.dig(index + 2, 0)) # 次投がストライク
+               10 + 10 + frames.dig(index + 2, 0) # 次投がストライク
              end
            else
              frame.sum
