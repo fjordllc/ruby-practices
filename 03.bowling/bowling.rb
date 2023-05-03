@@ -30,7 +30,7 @@ frames.each_with_index do |frame, index|
            elsif frames[index + 1].length == 2 # ストライクで次投がストライク以外
              frames[index + 1].sum
            else
-             frames.dig(index + 2, 0) # ストライクで次投がストライク
+             10 + frames.dig(index + 2, 0) # ストライクで次投がストライク
            end
 end
 
