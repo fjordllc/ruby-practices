@@ -16,7 +16,7 @@ end
 frames = []
 frames = shots.each_slice(2).to_a
 
-frames.map do |frame|
+frames.each do |frame|
   frame.pop if frame[0] == 10 # 仮登録したストライク時の２投目を削除
 end
 
