@@ -17,11 +17,6 @@ opt.parse!(ARGV)
 # ARGVはただ入れた情報を読み込んでそのままarrayとして入れているだけのもの。opt.parse!で動くようになる。
 
 
-
-
-
-
-
 print "#{month}月"
 puts " #{year}"
 
@@ -58,7 +53,6 @@ while num < end_of_date do
         print " " + "#{num}".rjust(2)
     end
 
-
     # case 
     # when (youbi)%7 == 0 && num < 10
     #     print "#{num}".rjust(2)
@@ -85,7 +79,6 @@ while num < end_of_date do
     #     print "_#{num}"
     # end
 
-
     #　↓ 前書いたコード（念の為残しておく）
     # if (youbi)%7 == 0
     #     print num
@@ -96,11 +89,10 @@ while num < end_of_date do
     #     print "_#{num}"
     # end
 
-
     if ((youbi+=1)%7 == 0)
         #曜日は0〜６までなので、numにプラス１することで、７の倍数が作れる。
       puts
     end
-
 end
 #始まりは、その前のwhileのコードで最後のyoubiの数字が3なので、その情報が最後のwhileで引き継がれている。
+
