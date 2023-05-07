@@ -12,8 +12,8 @@ opt.parse!(ARGV)
 # まずはopt.parse!(ARGV)を読み込まないと3〜４行目は動かない。
 # p ARGV
 # ARGVはただ入れた情報を読み込んでそのままarrayとして入れているだけのもの。opt.parse!で動くようになる。
-print "\x1B[36;1m#{month}\x1B[37;m月"
-puts " \x1B[36;1m#{year}\x1B[37;m"
+puts "\x1B[36;1m#{month}\x1B[37;m月\x1B[36;1m#{year}\x1B[37;m".rjust(38)
+# puts "\x1B[36;1m#{year}\x1B[37;m"
 puts "日 月 火 水 木 金 土"
 end_of_date = Date.new(year, month, -1).day
 #-1は一番最後の日にち取得
