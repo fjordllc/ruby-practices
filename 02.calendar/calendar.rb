@@ -25,6 +25,10 @@ num = 0
 while num < end_of_date do
   num += 1
   case 
+  when num == today && num < 10 && (youbi)%7 == 0
+    print "\x1B[31;1m#{num}\x1B[37;m".rjust(15)
+  when num == today && num < 10 
+    print "\x1B[31;1m#{num}\x1B[37;m".rjust(16)
   when num == today
     print "\x1B[31;1m#{num}\x1B[37;m".rjust(15)
   when (youbi)%7 == 0 && num < 10
