@@ -12,7 +12,8 @@ def get_file(path)
   temporary_outputs = []
 
   Dir.foreach(path) do |item|
-    next if item.include?(".") || item.include?('..')
+    next if item.include?('.') || item.include?('..')
+
     temporary_outputs << item
   end
   temporary_outputs
@@ -20,7 +21,7 @@ end
 
 # 最大文字数の取得
 def get_max_length(file_array)
-  max_file_length = file_array.map {|file| file.length}.max
+  file_array.map(&:length).max
 end
 
 # ファイルの並び替えと二次元配列に変える
@@ -54,4 +55,3 @@ max_size = temporary_outputs.length / COLUMNS + 1
 outputs = sort_and_covert(temporary_outputs, COLUMNS, max_size)
 
 output_file(max_size, COLUMNS, max_file_length, outputs)
-
