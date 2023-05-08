@@ -25,24 +25,24 @@ def get_max_length(file_array)
 end
 
 # ファイルの並び替えと二次元配列に変える
-def sort_and_covert(file_array, columns, size)
+def sort_and_covert(file_array, columns, output_num)
   # 出力する配列
   outputs = Array.new(columns) { [] }
 
   array_num = 0
   file_array.sort.each do |item|
     outputs[array_num] << item
-    array_num += 1 if (outputs[array_num].length % size).zero?
+    array_num += 1 if (outputs[array_num].length % output_num).zero?
   end
   outputs
 end
 
 # 出力
-def output_file(size, columns, length, file_array)
-  size.times do |time|
+def output_file(output_num, columns, file_name_length, file_array)
+  output_num.times do |time|
     columns.times do |column|
       print file_array[column][time]
-      print ' ' * (length - file_array[column][time].to_s.length + 1)
+      print ' ' * (file_name_length - file_array[column][time].to_s.length + 1)
     end
     puts "\n"
   end
@@ -51,7 +51,7 @@ end
 temporary_outputs = get_file(directory_path)
 max_file_length = get_max_length(temporary_outputs)
 # 一列に出力するファイルの数
-max_size = temporary_outputs.length / COLUMNS + 1
-outputs = sort_and_covert(temporary_outputs, COLUMNS, max_size)
+maximum_num = temporary_outputs.length / COLUMNS + 1
+outputs = sort_and_covert(temporary_outputs, COLUMNS, maximum_num)
 
-output_file(max_size, COLUMNS, max_file_length, outputs)
+output_file(maximum_num, COLUMNS, max_file_length, outputs)
