@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 # 3列
-columns = 3
+COLUMNS = 3
 # 引数にディレクトリを指定(初期値はカレントディレクトリ)
 directory_path = ARGV[0] || '.'
 
@@ -29,9 +29,9 @@ def get_max_length(array)
 end
 
 # ファイルの並び替えと二次元配列に変える
-def sort_and_covert(array, columns, size)
+def sort_and_covert(array, COLUMNS, size)
   # 出力する配列
-  outputs = Array.new(columns) { [] }
+  outputs = Array.new(COLUMNS) { [] }
 
   array_num = 0
   array.sort.each do |item|
@@ -42,9 +42,9 @@ def sort_and_covert(array, columns, size)
 end
 
 # 出力
-def output_file(size, columns, length, array)
+def output_file(size, COLUMNS, length, array)
   size.times do |time|
-    columns.times do |column|
+    COLUMNS.times do |column|
       print array[column][time]
       print ' ' * (length - array[column][time].to_s.length + 1)
     end
@@ -55,7 +55,7 @@ end
 temporary_outputs = get_file(directory_path)
 max_file_length = get_max_length(temporary_outputs)
 # 一列に出力するファイルの数
-max_size = temporary_outputs.length / columns + 1
-outputs = sort_and_covert(temporary_outputs, columns, max_size)
+max_size = temporary_outputs.length / COLUMNS + 1
+outputs = sort_and_covert(temporary_outputs, COLUMNS, max_size)
 
-output_file(max_size, columns, max_file_length, outputs)
+output_file(max_size, COLUMNS, max_file_length, outputs)
