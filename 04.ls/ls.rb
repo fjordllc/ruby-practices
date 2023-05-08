@@ -12,6 +12,7 @@ def get_file(path)
   temporary_outputs = []
 
   Dir.foreach(path) do |item|
+    next if item.include?(".") || item.include?('..')
     temporary_outputs << item
   end
   temporary_outputs
@@ -21,7 +22,7 @@ end
 def get_max_length(array)
   max_file_length = 0
 
-  array.each do |file|
+  array.map do |file|
     max_file_length = file.length if max_file_length < file.length
   end
   max_file_length
