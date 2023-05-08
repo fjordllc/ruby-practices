@@ -19,22 +19,17 @@ def get_file(path)
 end
 
 # 最大文字数の取得
-def get_max_length(array)
-  max_file_length = 0
-
-  array.map do |file|
-    max_file_length = file.length if max_file_length < file.length
-  end
-  max_file_length
+def get_max_length(file_array)
+  max_file_length = file_array.map {|file| file.length}.max
 end
 
 # ファイルの並び替えと二次元配列に変える
-def sort_and_covert(array, COLUMNS, size)
+def sort_and_covert(file_array, columns, size)
   # 出力する配列
-  outputs = Array.new(COLUMNS) { [] }
+  outputs = Array.new(columns) { [] }
 
   array_num = 0
-  array.sort.each do |item|
+  file_array.sort.each do |item|
     outputs[array_num] << item
     array_num += 1 if (outputs[array_num].length % size).zero?
   end
@@ -42,11 +37,11 @@ def sort_and_covert(array, COLUMNS, size)
 end
 
 # 出力
-def output_file(size, COLUMNS, length, array)
+def output_file(size, columns, length, file_array)
   size.times do |time|
-    COLUMNS.times do |column|
-      print array[column][time]
-      print ' ' * (length - array[column][time].to_s.length + 1)
+    columns.times do |column|
+      print file_array[column][time]
+      print ' ' * (length - file_array[column][time].to_s.length + 1)
     end
     puts "\n"
   end
@@ -59,3 +54,4 @@ max_size = temporary_outputs.length / COLUMNS + 1
 outputs = sort_and_covert(temporary_outputs, COLUMNS, max_size)
 
 output_file(max_size, COLUMNS, max_file_length, outputs)
+
