@@ -8,15 +8,7 @@ directory_path = ARGV[0] || '.'
 
 # 出力するファイルの取得
 def get_file(path)
-  # 仮の配列
-  temporary_outputs = []
-
-  Dir.foreach(path) do |item|
-    next if item.include?('.') || item.include?('..')
-
-    temporary_outputs << item
-  end
-  temporary_outputs
+  Dir.glob("*", base: path, sort: true)
 end
 
 # 最大文字数の取得
