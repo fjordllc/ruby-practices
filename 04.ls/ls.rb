@@ -8,7 +8,7 @@ directory_path = ARGV[0] || '.'
 
 # 出力するファイルの取得
 def get_file(path)
-  Dir.glob("*", base: path, sort: true)
+  Dir.glob('*', base: path, sort: true)
 end
 
 # 最大文字数の取得
