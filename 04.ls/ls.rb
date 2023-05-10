@@ -17,7 +17,7 @@ def get_max_length(files_and_directories)
 end
 
 # ファイルの並び替えと二次元配列に変える
-def sort_and_covert(files_and_directories, columns, output_num)
+def organizing_arrays(files_and_directories, columns, output_num)
   # 出力する配列
   outputs = Array.new(columns) { [] }
 
@@ -44,6 +44,6 @@ temporary_outputs = get_file(directory_path)
 max_file_length = get_max_length(temporary_outputs)
 # 一列に出力するファイルの数
 maximum_num = temporary_outputs.length / COLUMNS + 1
-outputs = sort_and_covert(temporary_outputs, COLUMNS, maximum_num)
+outputs = organizing_arrays(temporary_outputs, COLUMNS, maximum_num)
 
 output_file(maximum_num, COLUMNS, max_file_length, outputs)
