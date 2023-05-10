@@ -20,17 +20,17 @@ def get_file(path)
 end
 
 # 最大文字数の取得
-def get_max_length(file_array)
-  file_array.map(&:length).max
+def get_max_length(files_and_directories)
+  files_and_directories.map(&:length).max
 end
 
 # ファイルの並び替えと二次元配列に変える
-def sort_and_covert(file_array, columns, output_num)
+def sort_and_covert(files_and_directories, columns, output_num)
   # 出力する配列
   outputs = Array.new(columns) { [] }
 
   array_num = 0
-  file_array.sort.each do |item|
+  files_and_directories.sort.each do |item|
     outputs[array_num] << item
     array_num += 1 if (outputs[array_num].length % output_num).zero?
   end
@@ -38,11 +38,11 @@ def sort_and_covert(file_array, columns, output_num)
 end
 
 # 出力
-def output_file(output_num, columns, file_name_length, file_array)
+def output_file(output_num, columns, file_name_length, files_and_directories)
   output_num.times do |time|
     columns.times do |column|
-      print file_array[column][time]
-      print ' ' * (file_name_length - file_array[column][time].to_s.length + 1)
+      print files_and_directories[column][time]
+      print ' ' * (file_name_length - files_and_directories[column][time].to_s.length + 1)
     end
     puts "\n"
   end
