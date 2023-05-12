@@ -1,24 +1,20 @@
 #! /usr/bin/env ruby
 # frozen_string_literal: true
 
-# 3列
 COLUMNS = 3
-# 引数にディレクトリを指定(初期値はカレントディレクトリ)
+
 directory_path = ARGV[0] || '.'
 
-# 出力するファイルの取得
+
 def get_file(path)
   Dir.glob('*', base: path, sort: true)
 end
 
-# 最大文字数の取得
 def get_max_length(files_and_directories)
   files_and_directories.map(&:length).max
 end
 
-# ファイルの並び替えと二次元配列に変える
 def organizing_arrays(files_and_directories, columns, output_num)
-  # 出力する配列
   outputs = Array.new(columns) { [] }
 
   array_num = 0
@@ -29,7 +25,6 @@ def organizing_arrays(files_and_directories, columns, output_num)
   outputs
 end
 
-# 出力
 def output_file(output_num, columns, file_name_length, files_and_directories)
   output_num.times do |time|
     columns.times do |column|
