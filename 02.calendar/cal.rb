@@ -1,14 +1,19 @@
+require 'date'
 require 'optparse'
-#日付ハッシュ作成
-date={year:2000, month:1, day:1} 
+
+#今日のDateオブジェクトを変数todayに代入
+today = Date.today
+
+#日付ハッシュ「date」を作成 (初期値として今日の日付を代入)
+date = {year:today.year, month:today.mon, day:today.mday} 
+
 #optオブジェクト生成
 opt = OptionParser.new
 
-#オプションを設定
+#オプション引数で得た月と年をdateに設定
 opt.on('-m VAL',Integer) {|m| date[:month]= m}
 opt.on('-y VAL',Integer) {|y| date[:year] = y}
 opt.parse(ARGV)
-
 
 puts "      #{date[:month]}月 #{date[:year]}"
 
