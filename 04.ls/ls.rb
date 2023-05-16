@@ -4,8 +4,8 @@
 require 'optparse'
 
 opts = OptionParser.new
-program_configs = Array.new
-opts.on('-a') { |v| program_configs.push('a') }
+program_configs = []
+opts.on('-a') { program_configs.push('a') }
 opts.parse!(ARGV)
 
 COLUMNS = 3
@@ -13,9 +13,8 @@ COLUMNS = 3
 directory_path = ARGV[0] || '.'
 
 def get_file(path, option)
-  case 
-  when option.include?("a")
-    Dir.glob('*',File::FNM_DOTMATCH, base: path, sort: true)
+  if option.include?('a')
+    Dir.glob('*', File::FNM_DOTMATCH, base: path, sort: true)
   else
     Dir.glob('*', base: path, sort: true)
   end
