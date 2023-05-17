@@ -9,14 +9,24 @@ def identify_tgt_date(today)
 
   #オプション引数が指定された場合、その値を月と年を出力する年月に設定
   opt = OptionParser.new
-  opt.on('-m VAL',Integer) {|m| date[:month]= m}
-  opt.on('-y VAL',Integer) {|y| date[:year] = y}
+  opt.on('-m VAL',Integer) do |m|
+    if m >=1 && m<=12 
+    date[:month]= m
+    else 
+      return "invailid month"
+    end 
+  end
+  opt.on('-y VAL',Integer) do |y| 
+    if y >= 1
+      date[:year] = y
+    else
+      return "invailed year"
+    end
+  end
   opt.parse(ARGV)
 
   return date
 end
-
-
 
 #日付ハッシュと今日のDateオブジェクトから、カレンダー出力に必要な情報へ加工するメソッド
 def processing_date (date:, today:)
@@ -69,10 +79,16 @@ def output_cal(info_for_cal)
   puts "" #なぜか最後に%が表示されてしまう問題への暫定策
 end
 
-
 #mainプログラム
 today = Date.today
 
 tgt_date = identify_tgt_date(today)
-info_for_cal = processing_date(date:tgt_date,today:today)
-output_cal(info_for_cal)
+
+if tgt_date == "invailid month"
+  puts "指定された月の値は無効です。1～12の範囲で入力して下さい。"
+elsif tgt_date == "invailed year"
+  puts "指定された西暦の値は無効です。1以上の値を入力して下さい"
+else
+  info_for_cal = processing_date(date:tgt_date,today:today)
+  output_cal(info_for_cal)
+end
