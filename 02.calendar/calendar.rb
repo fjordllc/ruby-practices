@@ -21,12 +21,14 @@ today = Date.today
 puts "      #{month}月 #{year}" 
 puts " 日 月 火 水 木 金 土"
 
-(month_first_day..month_last_day).each do |date|
   for i in 1..6
-    if date.day == 1 && date.wday == i
+    if month_first_day.wday == i
       print ' ' * i * 3
     end
   end 
+  
+(month_first_day..month_last_day).each do |date|
+
   if date.day == today.day
     print " \e[47m\e[30m#{today.day.to_s.rjust(2)}\e[0m"
   else
@@ -38,4 +40,4 @@ puts " 日 月 火 水 木 金 土"
 end
 
 puts "\n"
-   
+  
