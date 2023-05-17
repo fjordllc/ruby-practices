@@ -49,7 +49,7 @@ def processing_date (date:, today:)
   else
     info_for_cal[:color_inv_date] = nil
   end
-  
+
   return info_for_cal
 end
 
@@ -84,7 +84,6 @@ def output_cal(info_for_cal)
   end
   puts "" #なぜか最後に%が表示されてしまう問題への暫定策
 end
-」
 
 #mainプログラム
 today = Date.today
