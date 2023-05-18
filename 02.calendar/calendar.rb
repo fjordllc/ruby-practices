@@ -30,3 +30,4 @@ print ' ' * (first_day.wday * 3)
 end
 
 puts "\n"
+
