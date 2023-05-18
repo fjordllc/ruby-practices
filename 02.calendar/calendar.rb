@@ -16,7 +16,7 @@ last_date = Date.new(year, month, -1)
 puts "      #{month}月 #{year}年" 
 puts " 日 月 火 水 木 金 土"
 
-print ' ' * (first_day.wday * 3)
+print ' ' * (first_date.wday * 3)
   
 (first_date..last_date).each do |date|
   if date == today
