@@ -1,43 +1,32 @@
 require 'date'
 require 'optparse'
 
-opt = OptionParser.new
-
 options = {}
+opt = OptionParser.new
 opt.on('-m MONTH') { |v| options[:month] = v.to_i }
 opt.on('-y YEAR') { |v| options[:year] = v.to_i }
-
 opt.parse!(ARGV)
 
-option_year = options[:year] || Date.today.year
-option_month = options[:month] || Date.today.month
-
-month_first_day = Date.new(option_year, option_month)
-month_last_day = Date.new(option_year, option_month, -1)
-year = Date.new(option_year).year
-month = Date.new(option_year, option_month).month
+year = options[:year] || Date.today.year
+month = options[:month] || Date.today.month
 today = Date.today
-  
-puts "      #{month}月 #{year}" 
+first_day = Date.new(year, month)
+last_day = Date.new(year, month, -1)
+
+puts "      #{month}月 #{year}年" 
 puts " 日 月 火 水 木 金 土"
 
-  for i in 1..6
-    if month_first_day.wday == i
-      print ' ' * i * 3
-    end
-  end 
+print ' ' * (first_day.wday * 3)
   
-(month_first_day..month_last_day).each do |date|
-
-  if date.day == today.day
+(first_day..last_day).each do |day|
+  if day == today
     print " \e[47m\e[30m#{today.day.to_s.rjust(2)}\e[0m"
   else
-    print " #{date.day.to_s.rjust(2)}"
+    print " #{day.day.to_s.rjust(2)}"
   end 
-  if date.saturday?
+  if day.saturday?
     print "\n"
   end
 end
 
 puts "\n"
-  
