@@ -8,59 +8,58 @@ scores.each do |s|
   else
     shots << s.to_i
   end
-end
+end 
+# ここまで新ルールと同様
 
+#配列shotsを2つずつに分割した配列sをつくる
+#配列framesに、キーを:score,値を配列sとしたハッシュを追加していく
+#第10フレームでストライクかスコアがあると、framesの要素数が11もしくは12になる
 frames = []
 shots.each_slice(2) do |s|
-  s << 0 if s.size == 1
-  frames << s
+  frames << {score: s}
 end
 
+#framesの各要素の:scoreの値から:sumと:markの値を決定してハッシュに追加
+#ストライクかスペアの際は:sumを暫定的に10とする
 frames.each do |frame|
-  if frame[0] == 10
-   frame << {sum: 10, mark: :strike}
-  elsif frame.sum == 10
-    frame << {sum: 10, mark: :spare}
+  if frame[:score][0] == 10
+    frame[:sum] = 10
+    frame[:mark] = :strike
+  elsif frame[:score].sum == 10
+    frame[:sum] = 10
+    frame[:mark] = :spare
   else
-    frame << {sum: frame.sum, mark: :none}
+    frame[:sum] = frame[:score].sum
+    frame[:mark] = :none 
   end
 end
 
-(0..8).each do |number|
-  current= frames[number]
-  one_ahead=frames[number+1]
-  two_ahead= frames[number+2]
-  if current[2][:mark] == :strike
-    if one_ahead[2][:mark] == :strike
-      current[2][:sum] += 10 + two_ahead[0]
+#1フレームから9フレームにおいて、ストライクとスペアのフレームの:sumを再計算
+#ストライクで、かつ次のフレームもストライクであれば「10 + 2つ次のフレームの1投目」を加算
+#ストライクで、次のフレームがストライクでなければ、次のフレームの合計値を加算
+#スペアであれば、次のフレームの1投目を加算
+(0..8).each do |n|
+  current= frames[n]
+  one_ahead=frames[n+1]
+  two_ahead= frames[n+2]
+  if current[:mark] == :strike
+    if one_ahead[:mark] == :strike
+      current[:sum] += 10 + two_ahead[:score][0]
     else 
-      current[2][:sum] += one_ahead[0]+one_ahead[1]
+      current[:sum] += one_ahead[:score].sum
     end
-  elsif current[2][:mark] == :spare
-    current[2][:sum] += one_ahead[0]
+  elsif current[:mark] == :spare
+    current[:sum] += one_ahead[:score][0]
+  else
   end
 end
+#10フレーム目の得点はframesの10番目以降の要素の:sumの合計と等しくなるので再計算は不要
 
-# if frames[10]
-#   frames[9][2][:sum] +=[] 
-# end
 
+#framesの全ての要素の:sumを合計してpointとする
 point = 0
 frames.each do |frame|
-  point += frame[2][:sum]
+  point += frame[:sum]
 end
 
 puts point
-
-# point = 0
-# frames.each do |frame|
-#   if frame[0] == 10
-#     point += 30
-#   elsif frame.sum == 10
-#     point += frame[0] + 10
-#   else
-#     point += frame.sum
-#   end
-# end
-
-# puts point
