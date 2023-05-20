@@ -45,11 +45,12 @@ end
   one_ahead = frames[n + 1]
   two_ahead = frames[n + 2]
   if current[:mark] == :strike
-    if one_ahead[:mark] == :strike
-      current[:sum] += 10 + two_ahead[:score][0]
-    else
-      current[:sum] += one_ahead[:score].sum
-    end
+    current[:sum] +=
+      if one_ahead[:mark] == :strike
+        10 + two_ahead[:score][0]
+      else
+        one_ahead[:score].sum
+      end
   elsif current[:mark] == :spare
     current[:sum] += one_ahead[:score][0]
   end
