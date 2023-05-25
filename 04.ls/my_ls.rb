@@ -3,7 +3,7 @@
 
 def line_up_files
   files_with_space = gets_files
-  column = 3
+  Column = 3
   files_number = files_with_space.count
   rows = files_number / column
   if files_number % column != 0
