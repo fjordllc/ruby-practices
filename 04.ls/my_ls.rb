@@ -10,7 +10,7 @@ def line_up_files
     (column - files_number % column).times { files_with_space << '' }
     rows += 1
   end
-  out_put(files_with_space, rows)
+  output(files_with_space, rows)
 end
 
 def gets_files
@@ -21,7 +21,7 @@ def gets_files
   end
 end
 
-def out_put(files, rows)
+def output(files, rows)
   output_files = []
   files.each_slice(rows) do |file|
     output_files << file
