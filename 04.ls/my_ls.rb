@@ -15,9 +15,7 @@ end
 def gets_files
   files = Dir.glob('*')
   filename_max_length = files.map(&:size).max + 7
-  files.map do |file|
-    file + ' ' * (filename_max_length - file.size)
-  end
+  files.map { |file| file.ljust(filename_max_length) }
 end
 
 def output(files, rows)
