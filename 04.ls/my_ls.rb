@@ -1,13 +1,13 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-COLUMN = 3
+COLUMN_NUMBER = 3
 def line_up_files
   array_of_files = files_with_space
   files_number = files_with_space.count
-  rows = files_number / COLUMN
-  if files_number % COLUMN != 0
-    (COLUMN - files_number % COLUMN).times { array_of_files << '' }
+  rows = files_number / COLUMN_NUMBER
+  if files_number % COLUMN_NUMBER != 0
+    (COLUMN_NUMBER - files_number % COLUMN_NUMBER).times { array_of_files << '' }
     rows += 1
   end
   output(array_of_files, rows)
