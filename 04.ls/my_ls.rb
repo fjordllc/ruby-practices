@@ -1,33 +1,33 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+COLUMN_NUMBER = 3
 def line_up_files
-  files_with_space = gets_files
-  column = 3
-  files_number = files_with_space.count
-  if files_number % column != 0
-    (column - files_number % column).times { files_with_space << '' }
-    rows = files_number / column + 1
-  else
-    rows = files_number / column
+  files = files_with_space
+  files_number = files.count
+  rows = files_number / COLUMN_NUMBER
+  if files_number % COLUMN_NUMBER != 0
+    (COLUMN_NUMBER - files_number % COLUMN_NUMBER).times { files << '' }
+    rows += 1
   end
+  output(files, rows)
+end
 
+def files_with_space
+  files = Dir.glob('*')
+  filename_max_length = files.map(&:size).max + 7
+  files.map { |file| file.ljust(filename_max_length) }
+end
+
+def output(files, rows)
   output_files = []
-  files_with_space.each_slice(rows) do |file|
+  files.each_slice(rows) do |file|
     output_files << file
   end
 
   output_files.transpose.each do |file|
     file.each { |filename| print filename }
     puts "\n"
-  end
-end
-
-def gets_files
-  files = Dir.glob('*')
-  filename_max_length = files.map(&:size).max + 4
-  files.map do |file|
-    file + ' ' * (filename_max_length - file.size)
   end
 end
 
