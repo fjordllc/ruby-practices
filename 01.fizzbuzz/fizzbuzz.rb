@@ -1,12 +1,11 @@
-(1..50).each do |a|
-    if a%15==0
-        puts "fizzbuzz"
-    elsif a%3==0
-        puts "fizz"
-    elsif a%5==0
-        puts "buzz"
-    else
-        puts a   
-    end
+(1..20).each do |n|
+  if n % 15==0
+    puts "FizzBuzz"
+  elsif n % 3==0
+    puts "Fizz"
+  elsif n % 5==0
+    puts "Buzz"
+   else
+   puts n   
+  end
 end
-
