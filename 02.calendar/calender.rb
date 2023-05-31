@@ -4,10 +4,10 @@ require "date"
 def main
   options = parse_options
 
-  month = options[:month]
-  year = options[:year]
+  month = options[:month] || Date.today.month
+  year = options[:year] || Date.today.year
 
-  print_calendar(month, year) if month && year
+  print_calendar(month, year)
 end
 
 def parse_options
