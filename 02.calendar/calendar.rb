@@ -10,35 +10,20 @@ OptionParser.new do |opt|
   opt.parse!(ARGV)
 end
 
-if option[:y]
-    year = option[:y].to_i
-else
-    year = Date.today.year
-end
+year = option[:y] ? option[:y].to_i : Date.today.year
 
-if option[:m]
-  month = option[:m].to_i
-else
-  month = Date.today.month
-end
+month = option[:m] ? option[:m].to_i : Date.today.month
 
 
 puts "#{month}月 #{year}年".center(20)
 
 puts ["日", "月", "火", "水", "木", "金", "土"].join(" ")
 
-# year = Date.today.year
-# mon = Date.today.mon
-firstday_wday = Date.new(year,month,1).wday
-lastday_date = Date.new(year,month,-1).day
-wday = firstday_wday
+print "   " * Date.new(year,month,1).wday
 
-print "   " * firstday_wday
-
-(1..lastday_date).each do |date|
+(1..Date.new(year,month,-1).day).each do |date|
   print date.to_s.rjust(2) + " "
-  wday += 1
-  if wday % 7 == 0
+  if Date.new(year, month, date).saturday?
     print "\n"
   end
 end
