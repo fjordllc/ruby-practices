@@ -11,7 +11,7 @@ options = {}
 OptionParser.new do |o|
   o.on('-m', '--month [ITEM]', 'set month') { |v| options[:month] = v }
   o.on('-y', '--year [ITEM]', 'set year') { |v| options[:year] = v }
-  o.on('-h', '--help', 'show this help') { puts o exit }
+  o.on('-h', '--help', 'show this help') { puts o; exit }
   o.parse!(ARGV)
 rescue OptionParser::InvalidOption => e
   puts e.message
@@ -65,3 +65,5 @@ TODAY = Date.today
   print "\n" if weekday % 7 == 6
   weekday += 1
 end
+
+puts "\n"
