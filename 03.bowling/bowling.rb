@@ -1,5 +1,21 @@
 # frozen_string_literal: true
 
+def score_strike(frames, idx)
+  if frames[idx + 1][0] == 10
+    frames[idx + 1][0] + frames[idx + 2][0] + 10
+  else
+    frames[idx + 1].sum + 10
+  end
+end
+
+def score_spare(frames, idx)
+  frames[idx + 1][0] + 10
+end
+
+def score_normal(frame)
+  frame.sum
+end
+
 def shaping_to_frame(string)
   scores = string.split(',')
   shots = []
@@ -23,15 +39,11 @@ def bowling(score)
     break if idx == 9 # skip 10th frame
 
     point += if frame[0] == 10 # strike
-               if frames[idx + 1][0] == 10 # strike , twice in a row
-                 frames[idx + 1][0] + frames[idx + 2][0] + 10
-               else
-                 frames[idx + 1].sum + 10
-               end
+               score_strike(frames, idx)
              elsif frame.sum == 10 # spare
-               frames[idx + 1][0] + 10
+               score_spare(frames, idx)
              else
-               frame.sum
+               score_normal(frame)
              end
   end
 
