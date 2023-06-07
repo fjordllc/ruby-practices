@@ -50,7 +50,6 @@ def bowling(score)
   # calcu 10th frame
   frames[9..].each { |frame| point += frame.sum }
   puts point
-  point
 end
 
 if __FILE__ == $PROGRAM_NAME
