@@ -7,8 +7,7 @@ def line_up_files
   files = files_with_space
   files_number = files.count
   rows = (files_number / COLUMN_NUMBER.to_f).ceil
-  (COLUMN_NUMBER - files_number % COLUMN_NUMBER).times { files << '' } \
-  if files_number % COLUMN_NUMBER != 0
+  (COLUMN_NUMBER - files_number % COLUMN_NUMBER).times { files << '' } if files_number % COLUMN_NUMBER != 0
   output(files, rows)
 end
 
