@@ -17,54 +17,36 @@ def get_file(path)
   Dir.glob('*', base: path, sort: true)
 end
 
-def check_file_type(file_type)
-  case file_type
-  when 'file'
-    '-'
-  when 'directory'
-    'd'
-  when 'characterSpecial'
-    'c'
-  when 'fifo'
-    'f'
-  when 'link'
-    'l'
-  when 'socket'
-    's'
-  end
-end
+FILE_TYPE = {
+  'file' => '-',
+  'directory' => 'd',
+  'characterSpecial' => 'c',
+  'fifo' => 'f',
+  'link' => 'l',
+  'socket' => 's',
+}
 
-def check_file_permission(file_permission)
-  case file_permission
-  when '0'
-    '---'
-  when '1'
-    '--x'
-  when '2'
-    '-w-'
-  when '3'
-    '-wx'
-  when '4'
-    'r--'
-  when '5'
-    'r-x'
-  when '6'
-    'rw-'
-  when '7'
-    'rwx'
-  end
-end
+FILE_PERMISSION = {
+  '0' => '---',
+  '1' => '--x',
+  '2' => '-w-',
+  '3' => '-wx',
+  '4' => 'r--',
+  '5' => 'r-x',
+  '6' => 'rw-',
+  '7' => 'rwx',
+}
 
-def get_details(files_and_directories, options, byte_length)
+def get_details(files_and_directories, options, byte_length, type, permission_type)
   files_and_directories.map! do |files_and_directorie|
     details_files_and_directorie = {}
     if options[:l]
       permission = ''
       file_type = File::Stat.new(files_and_directorie).ftype
-      permission += check_file_type(file_type)
+      permission += type[file_type]
       permission_base_eight = File::Stat.new(files_and_directorie).mode.to_s(8)
       three_digit = permission_base_eight[(permission_base_eight.length.to_i - 3)...permission_base_eight.to_i]
-      three_digit.each_char { |c| permission += check_file_permission(c) }
+      three_digit.each_char { |c| permission += permission_type[c] }
       details_files_and_directorie[:permission] = permission
       file_stat = File::Stat.new(files_and_directorie)
       details_files_and_directorie[:links] = file_stat.nlink.to_s.rjust(file_stat.nlink.to_s.length.to_i + 1)
@@ -111,7 +93,7 @@ def output_file(output_num, files_and_directories, options)
 end
 
 temporary_outputs = get_file(directory_path)
-temporary_outputs = get_details(temporary_outputs, params, BYTE_LENGTH)
+temporary_outputs = get_details(temporary_outputs, params, BYTE_LENGTH, FILE_TYPE, FILE_PERMISSION)
 max_file_length = get_max_length(temporary_outputs)
 # # 一列に出力するファイルの数
 maximum_num = temporary_outputs.length / COLUMNS + 1
