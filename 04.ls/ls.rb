@@ -23,8 +23,8 @@ FILE_TYPE = {
   'characterSpecial' => 'c',
   'fifo' => 'f',
   'link' => 'l',
-  'socket' => 's',
-}
+  'socket' => 's'
+}.freeze
 
 FILE_PERMISSION = {
   '0' => '---',
@@ -34,8 +34,8 @@ FILE_PERMISSION = {
   '4' => 'r--',
   '5' => 'r-x',
   '6' => 'rw-',
-  '7' => 'rwx',
-}
+  '7' => 'rwx'
+}.freeze
 
 def get_details(files_and_directories, options, byte_length, type, permission_type)
   files_and_directories.map! do |files_and_directorie|
