@@ -1,15 +1,23 @@
-def get_entries # 隠し以外のファイルとディレクトリを取得
-  Dir.entries('.').reject{ |entry| entry.start_with?('.') }
+# frozen_string_literal: true
+require 'pp'
+
+def file_entries # 隠し以外のファイルとディレクトリを取得しソート
+  Dir.glob("*").sort
 end
 
-def align_left(string)
-  string.ljust(30)
+def align_left(string) # 要素を左揃え
+  string.to_s.ljust(30)
 end
 
-entries = get_entries().each_slice((get_entries().size.to_f / 3).ceil).to_a #　配列を列数（3）と同じ数に分割
-entries_max_size = entries.map(&:size).max # 2次元配列の中で最も要素が多い配列の要素数
+entries = file_entries.each_slice((file_entries.size.to_f / 3).ceil).to_a #.compact # 列数（３）と同じ数に分割、2次元配列にする
+entries_max_size = entries.map { |i| i.size }.max # 二次元配列の中にある配列の最大要素数を取得
 
-(0..entries_max_size - 1).each do |i|
-  puts "#{align_left(entries[0][i])} #{align_left(entries[1][i])} #{align_left(entries[2][i])}" # 列数が4以上にする場合は #{entries[3][i]}.. を追加しないといけない リファクタリングだが難しくて断念 
+new_entries = entries.map do |entry| # 二次元配列の要素数が均等じゃなかった場合、均等になるようにnilを追加
+  entry << nil if entries_max_size > entry.size
+  entry 
+end
+
+new_entries.transpose.each do |entry| # 配列を列を行に変換することで、各配列の先頭から値を並行して取り出す
+  puts entry.map { |item | align_left(item) }.join
 end
 
