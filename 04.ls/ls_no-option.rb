@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require 'pp'
 
 def file_entries # 隠し以外のファイルとディレクトリを取得しソート
   Dir.glob("*").sort
