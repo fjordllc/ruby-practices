@@ -3,8 +3,9 @@
 require 'date'
 require 'optparse'
 
-year = Date.today.year
-month = Date.today.month
+TODAY = Date.today
+year = TODAY.year
+month = TODAY.month
 
 # コマンドライン引数の取得
 options = {}
@@ -54,16 +55,12 @@ print format("　　　　　%<m>2d月  %<y>4d \n", m: month, y: year)
 puts '日　月　火　水　木　金　土'
 
 # 月初日の曜日分だけ、スペースを出力
-weekday = Date.new(year, month, 1).wday
-(0...weekday).each { print '　　' }
+Date.new(year, month, 1).wday.times { print '　　' }
 
-TODAY = Date.today
-(1..Date.new(year, month, -1).day).each do |day|
-  print "\e[7m" if TODAY.eql?(Date.new(year, month, day))
-  print format('%<x>2d', x: day)
-  print "\e[0m  "
-  print "\n" if weekday % 7 == 6
-  weekday += 1
+(Date.new(year, month, 1)..Date.new(year, month, -1)).each do |day|
+  print "\e[7m" if TODAY.eql?(day)
+  print format("%<x>2d\e[0m  ", x: day.day)
+  print "\n" if day.saturday?
 end
 
 puts "\n"
