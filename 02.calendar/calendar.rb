@@ -30,10 +30,9 @@ rescue ArgumentError
   exit
 end
 
-
 # コマンドライン引数の取得
 OptionParser.new do |o|
-  o.on('-m', '--month [ITEM]', 'set month') do |m|
+  o.on('-m', '--month ITEM', 'set month') do |m|
     month = get_arg_month(m) unless m.nil?
   end
 
@@ -47,6 +46,9 @@ OptionParser.new do |o|
   o.parse!(ARGV)
 rescue OptionParser::InvalidOption => e
   puts e.message
+  exit
+rescue OptionParser::MissingArgument => e
+  puts "option requires an argument -- '#{e.args[0].chars[-1]}'"
   exit
 end
 
