@@ -33,7 +33,7 @@ end
 # コマンドライン引数の取得
 OptionParser.new do |o|
   o.on('-m', '--month ITEM', 'set month') do |m|
-    month = get_arg_month(m) unless m.nil?
+    month = get_arg_month(m)
   end
 
   o.on('-y', '--year [ITEM]', 'set year') do |y|
