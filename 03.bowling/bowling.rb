@@ -1,21 +1,5 @@
 # frozen_string_literal: true
 
-def score_strike(frames, idx)
-  if frames[idx + 1][0] == 10
-    frames[idx + 1][0] + frames[idx + 2][0] + 10
-  else
-    frames[idx + 1].sum + 10
-  end
-end
-
-def score_spare(frames, idx)
-  frames[idx + 1][0] + 10
-end
-
-def score_normal(frame)
-  frame.sum
-end
-
 def shaping_to_frame(string)
   scores = string.split(',')
   shots = []
@@ -27,28 +11,29 @@ def shaping_to_frame(string)
       shots << s.to_i
     end
   end
-  frames = []
-  shots.each_slice(2) { |s| frames << s }
-  frames
+  shots.each_slice(2).to_a
 end
 
 def bowling(score)
   frames = shaping_to_frame(score)
   point = 0
   frames.each_with_index do |frame, idx|
-    break if idx == 9 # skip 10th frame
+    point += frame.sum
+    next if idx >= 9 || frame.sum != 10
 
-    point += if frame[0] == 10 # strike
-               score_strike(frames, idx)
-             elsif frame.sum == 10 # spare
-               score_spare(frames, idx)
+    # これ以降は9フレーム以内、かつ、スペアかストライクのどちらか
+    point += if frame[0] == 10
+               # ストライクのボーナススコア
+               if frames[idx + 1][0] == 10
+                 frames[idx + 1][0] + frames[idx + 2][0]
+               else
+                 frames[idx + 1].sum
+               end
              else
-               score_normal(frame)
+               # スペアのボーナススコア
+               frames[idx + 1][0]
              end
   end
-
-  # calcu 10th frame
-  frames[9..].each { |frame| point += frame.sum }
   puts point
 end
 
