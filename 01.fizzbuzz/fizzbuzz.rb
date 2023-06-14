@@ -8,6 +8,8 @@
   elsif num % 5 == 0
     puts 'Buzz'
   else
+    print "\e[31m"
     puts num
+    print "\e[0m"
   end
 end
