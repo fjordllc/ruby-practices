@@ -8,26 +8,26 @@ year = TODAY.year
 month = TODAY.month
 
 def get_arg_month(arg_month)
-  # 文字列を数値変換できない場合ArgumentError
-  raise ArgumentError unless (1..12).cover?(Integer(arg_month))
-
-  Integer(arg_month)
-rescue ArgumentError
-  puts "#{arg_month} is neither a month number (1..12) nor a name"
-  exit
+  if /^\d+$/.match?(arg_month) && (1..12).cover?(arg_month.to_i)
+    arg_month.to_i
+  else
+    puts "#{arg_month} is neither a month number (1..12) nor a name"
+    exit
+  end
 end
 
 def get_arg_year(arg_year)
-  # 文字列を数値変換できない場合ArgumentError
-  if (1..9999).cover?(Integer(arg_year))
-    Integer(arg_year)
+  if /^\d+$/.match?(arg_year)
+    if (1..9999).cover?(arg_year.to_i)
+      arg_year.to_i
+    else
+      puts "year '#{arg_year}' not in range 1..9999"
+      exit
+    end
   else
-    puts "year '#{arg_year}' not in range 1..9999"
+    puts "not a valid year #{arg_year}"
     exit
   end
-rescue ArgumentError
-  puts "not a valid year #{arg_year}"
-  exit
 end
 
 # コマンドライン引数の取得
@@ -36,8 +36,8 @@ OptionParser.new do |o|
     month = get_arg_month(m)
   end
 
-  o.on('-y', '--year [ITEM]', 'set year') do |y|
-    year = get_arg_year(y) unless y.nil?
+  o.on('-y', '--year ITEM', 'set year') do |y|
+    year = get_arg_year(y)
   end
   o.on('-h', '--help', 'show this help') do
     puts o
@@ -59,7 +59,7 @@ puts '日　月　火　水　木　金　土'
 Date.new(year, month, 1).wday.times { print '　　' }
 
 (Date.new(year, month, 1)..Date.new(year, month, -1)).each do |day|
-  print "\e[7m" if TODAY.eql?(day)
+  print "\e[7m" if TODAY === day
   print format("%<x>2d\e[0m  ", x: day.day)
   print "\n" if day.saturday?
 end
