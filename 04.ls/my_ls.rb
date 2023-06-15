@@ -3,6 +3,7 @@
 
 require 'optparse'
 COLUMN_NUMBER = 3
+
 def line_up_files
   files = files_with_space
   files_number = files.count
@@ -12,7 +13,9 @@ def line_up_files
 end
 
 def files_with_space
-  files = (options[:a] ? Dir.entries('.').sort : Dir.glob('*'))
+  judgement_opts = options
+  files = (judgement_opts[:a] ? Dir.entries('.').sort : Dir.glob('*'))
+  files.reverse! if judgement_opts[:r]
   filename_max_length = files.map(&:size).max + 7
   files.map { |file| file.ljust(filename_max_length) }
 end
@@ -21,6 +24,7 @@ def options
   opt = OptionParser.new
   params = {}
   opt.on('-a') { |v| params[:a] = v }
+  opt.on('-r') { |v| params[:r] = v }
   opt.parse!
   params
 end
