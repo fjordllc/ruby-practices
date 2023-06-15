@@ -1,22 +1,28 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'optparse'
 COLUMN_NUMBER = 3
 def line_up_files
   files = files_with_space
   files_number = files.count
-  rows = files_number / COLUMN_NUMBER
-  if files_number % COLUMN_NUMBER != 0
-    (COLUMN_NUMBER - files_number % COLUMN_NUMBER).times { files << '' }
-    rows += 1
-  end
+  rows = (files_number / COLUMN_NUMBER.to_f).ceil
+  (COLUMN_NUMBER - files_number % COLUMN_NUMBER).times { files << '' } if files_number % COLUMN_NUMBER != 0
   output(files, rows)
 end
 
 def files_with_space
-  files = Dir.glob('*')
+  files = (options[:a] ? Dir.entries('.').sort : Dir.glob('*'))
   filename_max_length = files.map(&:size).max + 7
   files.map { |file| file.ljust(filename_max_length) }
+end
+
+def options
+  opt = OptionParser.new
+  params = {}
+  opt.on('-a') { |v| params[:a] = v }
+  opt.parse!
+  params
 end
 
 def output(files, rows)
