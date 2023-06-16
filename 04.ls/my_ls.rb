@@ -13,9 +13,9 @@ def line_up_files
 end
 
 def files_with_space
-  judgement_opts = options
-  files = (judgement_opts[:a] ? Dir.entries('.').sort : Dir.glob('*'))
-  files.reverse! if judgement_opts[:r]
+  has_options = options
+  files = (has_options[:a] ? Dir.entries('.').sort : Dir.glob('*'))
+  files.reverse! if has_options[:r]
   filename_max_length = files.map(&:size).max + 7
   files.map { |file| file.ljust(filename_max_length) }
 end
