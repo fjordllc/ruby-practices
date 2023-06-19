@@ -16,7 +16,7 @@ class Game
     end
 
     frames = shots.each_slice(2).to_a
-    @frames = frames.map { |frame| Frame.new(frame[0], frame[1]) }
+    @frames = frames.map { |frame| Frame.new(*frame) }
   end
 
   def score
