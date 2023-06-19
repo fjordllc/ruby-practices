@@ -6,11 +6,11 @@ class Frame
   attr_reader :first_score
 
   def initialize(first_score, second_score = nill)
-    @first_score = Shot.new(first_score).shot_score
-    @second_score = Shot.new(second_score).shot_score
+    @first_score = Shot.new(first_score).score
+    @second_score = Shot.new(second_score).score
   end
 
-  def frame_score
+  def score
     @first_score + @second_score
   end
 end

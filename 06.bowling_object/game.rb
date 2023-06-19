@@ -19,20 +19,20 @@ class Game
     @frames = frames.map { |frame| Frame.new(frame[0], frame[1]) }
   end
 
-  def game_score
+  def score
     point = 0
     @frames.each.with_index do |frame, index|
       break if index == 10
 
-      point += frame.frame_score
+      point += frame.score
       if frame.first_score == 10
         if @frames[index + 1].first_score == 10
           point += frame.first_score
           point += @frames[index + 2].first_score
         else
-          point += @frames[index + 1].frame_score
+          point += @frames[index + 1].score
         end
-      elsif frame.frame_score == 10
+      elsif frame.score == 10
         point += @frames[index + 1].first_score
       end
     end
