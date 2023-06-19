@@ -4,6 +4,7 @@ require 'date'
 require 'optparse'
 
 today = Date.today
+puts today
 # ターゲットの日付は、todayで初期化する
 target_year = today.year
 target_month = today.month
@@ -47,8 +48,8 @@ days_in_month.length.times do |i|
   color = RED
   puts if i % 7 == 0
   # 日付がtodayと同じ時だけ、カラーを青色にする
-  color = BLUE if target_month < 10 && "#{target_year}-0#{target_month}-#{i}".eql?(today.to_s)
-  color = BLUE if target_month > 10 && "#{target_year}-#{target_month}-#{i}".eql?(today.to_s)
+  color = BLUE if target_month < 10 && "#{target_year}-0#{target_month}-#{days_in_month[i]}".eql?(today.to_s)
+  color = BLUE if target_month > 10 && "#{target_year}-#{target_month}-#{days_in_month[i]}".eql?(today.to_s)
   printf("%8s", "\e[#{color}m#{days_in_month[i]}")
 end
 puts
