@@ -5,7 +5,7 @@ require_relative 'shot'
 class Frame
   attr_reader :first_score
 
-  def initialize(first_score, second_score = nill)
+  def initialize(first_score, second_score = nil)
     @first_score = Shot.new(first_score).score
     @second_score = Shot.new(second_score).score
   end
