@@ -1,7 +1,7 @@
 require 'optparse'
 require 'Date'
 
-# get date
+# get argv
 options = ARGV.getopts('y:', 'm:')
 options["y"] = Date.today.year  if options["y"].nil?
 options["m"] = Date.today.month if options["m"].nil?
@@ -18,30 +18,24 @@ puts "      #{cal_month}月 #{cal_year}"
 puts "日 月 花 水 木 金 土"
 
 next_sat = 7 - first_wday
-next_sun =  next_sat + 1
 
-time = first_wday - 1
-time.times do |i|
+first_wday.times do |i|
   print "   "
 end
-print "  "
 
 def put_date(d)
   if d < 10
-    return " #{d}"
+    return " #{d} "
   else
-    return "#{d}"
+    return "#{d} "
   end
 end
 
 (1..last_day).each do |d|
   if d == next_sat
     next_sat += 7
-    puts " #{put_date(d)}"
-  elsif d == next_sun
-    print put_date(d)
-    next_sun += 7
+    puts put_date(d)
   else
-    print " #{put_date(d)}"
+    print put_date(d)
   end
 end
