@@ -1,15 +1,17 @@
 ## checked fizzbuzz
 def fizzbuzz(x)
-  return "FizzBuzz" if x % 15 == 0
-  return "Fizz" if x % 3 == 0
-  return "Buzz" if x % 5 == 0
+  if x % 3 == 0
+    return "Fizz"
+  elsif x % 5 == 0
+    return "Buzz"
+  elsif x % 15 == 0
+    return "FizzBuzz"
+  else
+    return x.to_s
+  end
 end
 
 ## view
 (1..20).each do |num|
-  if fizzbuzz(num)
-    puts fizzbuzz(num)
-  else
-    puts num
-  end
+  puts fizzbuzz(num)
 end
