@@ -1,13 +1,14 @@
-#!/Users/iwamurahiroshi/.rbenv/shims/ruby
+#! /usr/bin/env ruby
+# frozen_string_literal: true
 
-(1..20).each do |x|
-  if x % 3 == 0 && x % 5 == 0
+(1..20).each do |i|
+  if (i % 3).zero? && (i % 5).zero?
     puts 'FizzBuzz'
-  elsif x % 3 == 0
+  elsif (i % 3).zero?
     puts 'Fizz'
-  elsif x % 5 == 0
+  elsif (i % 5).zero?
     puts 'Buzz'
   else
-    puts x
+    puts i
   end
 end
