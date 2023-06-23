@@ -16,12 +16,17 @@ OptionParser.new do |options|
   end
 end.parse!
 
-display_date = Date.new(display_year, display_month, -1)
+first_day = Date.new(display_year, display_month, 1)
+last_day = Date.new(display_year, display_month, -1)
 
-printf("      %s %d     \n", display_date.strftime("%B"), display_date.year)
+printf("      %s %d     \n", last_day.strftime("%B"), last_day.year)
 puts 'Su Mo Tu We Th Fr Sa'
 
-(1..display_date.mday).each_with_index do |date, i|
+first_day_wday = first_day.wday
+blank = '   ' * first_day_wday
+print blank
+
+(1..last_day.mday).each_with_index do |date, i|
   printf("%2d ", date)
-  puts "\n" if (date % 7).zero? || i == display_date.mday - 1
+  puts "\n" if ((first_day_wday + date) % 7).zero? || i == last_day.mday - 1
 end
