@@ -13,21 +13,23 @@ class Frame
   def score
     @first_score + @second_score
   end
-end
 
-def calculate_frame_point(frame, next_frame, after_next_frame)
-  frame_point = 0
-  frame_point += frame.score
-
-  if frame.first_score == 10
-    if next_frame.first_score == 10
-      frame_point += frame.first_score
-      frame_point += after_next_frame.first_score
-    else
-      frame_point += next_frame.score
-    end
-  elsif frame.score == 10
-    frame_point += next_frame.first_score
+  def strike?
+    first_score == 10
   end
-  frame_point
+
+  def calculate_point(next_frame, after_next_frame)
+    point = score
+    if strike?
+      if next_frame.strike?
+        point += first_score
+        point += after_next_frame.first_score
+      else
+        point += next_frame.score
+      end
+    elsif score == 10
+      point += next_frame.first_score
+    end
+    point
+  end
 end
