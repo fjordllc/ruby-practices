@@ -19,15 +19,11 @@ class Game
   end
 
   def score
-    total_point = 0
-    @frames.each.with_index do |frame, index|
-      break if index == 10
-
+    @frames.each.with_index.take(10).sum do |frame, index|
       next_frame = @frames[index + 1]
       after_next_frame = @frames[index + 2]
 
-      total_point += calculate_frame_point(frame, next_frame, after_next_frame)
+      frame.calculate_point(next_frame, after_next_frame)
     end
-    total_point
   end
 end
