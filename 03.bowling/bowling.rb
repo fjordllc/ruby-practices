@@ -1,46 +1,46 @@
 #!/usr/bin/env ruby
 
+# frozen_string_literal: true
+
 STRIKE_SCORE = 10
 
 to_integer_array = ARGV[0].split(',').map { |s| s == 'X' ? s : s.to_i }
 
-dividedByFrameArray = []
+divided_by_frame_array = []
 tmp_array = []
 to_integer_array.each_with_index do |num, i|
   if num == 'X'
-    dividedByFrameArray << [num]
+    divided_by_frame_array << [num]
     tmp_array = []
   else
     tmp_array << num
 
     if tmp_array.size == 2 || i == to_integer_array.size - 1
-      dividedByFrameArray << tmp_array
+      divided_by_frame_array << tmp_array
       tmp_array = []
     end
   end
 end
 
-excepted_X_score_array = dividedByFrameArray.map { |s| s == ['X'] ? [10] : s }
+excepted_x_score_array = divided_by_frame_array.map { |s| s == ['X'] ? [10] : s }
 
-groupedByFrameScoresArray = []
-excepted_X_score_array.each_with_index do |array, i|
-  if array.length == 2 && array.sum == STRIKE_SCORE && i != excepted_X_score_array.length - 1
-    groupedByFrameScoresArray << array.push(excepted_X_score_array[i + 1][0])
+grouped_by_frame_scores_array = []
+excepted_x_score_array.each_with_index do |array, i|
+  if array.length == 2 && array.sum == STRIKE_SCORE && i != excepted_x_score_array.length - 1
+    grouped_by_frame_scores_array << array.push(excepted_x_score_array[i + 1][0])
   elsif array[0] == STRIKE_SCORE
-    if excepted_X_score_array[i + 1]&.size == 1
-      if excepted_X_score_array[i + 1] && excepted_X_score_array[i + 2]
-        groupedByFrameScoresArray << array + [excepted_X_score_array[i + 1][0]] + [excepted_X_score_array[i + 2][0]]
+    if excepted_x_score_array[i + 1]&.size == 1
+      if excepted_x_score_array[i + 1] && excepted_x_score_array[i + 2]
+        grouped_by_frame_scores_array << array + [excepted_x_score_array[i + 1][0]] + [excepted_x_score_array[i + 2][0]]
       end
     else
-      groupedByFrameScoresArray << array + (excepted_X_score_array[i + 1]&.first(2) || [])
+      grouped_by_frame_scores_array << array + (excepted_x_score_array[i + 1]&.first(2) || [])
     end
   else
-    groupedByFrameScoresArray << array
+    grouped_by_frame_scores_array << array
   end
 end
 
-if groupedByFrameScoresArray[-2].size == 3 && groupedByFrameScoresArray[-1].size < 3
-  groupedByFrameScoresArray.pop
-end
+grouped_by_frame_scores_array.pop if grouped_by_frame_scores_array[-2].size == 3 && grouped_by_frame_scores_array[-1].size < 3
 
-p groupedByFrameScoresArray.flatten.sum
+p grouped_by_frame_scores_array.flatten.sum
