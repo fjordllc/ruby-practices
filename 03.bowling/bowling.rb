@@ -1,42 +1,46 @@
 #!/usr/bin/env ruby
 
-score = ARGV[0]
-splited_scores = score.split(',')
+STRIKE_SCORE = 10
 
-except_X_scores = splited_scores.map { |s| s == 'X' ? 10 : s.to_i }
-p except_X_scores
+to_integer_array = ARGV[0].split(',').map { |s| s == 'X' ? s : s.to_i }
 
-# 結果の出力用配列
-output_array = []
-
-# 一時的な配列
+dividedByFrameArray = []
 tmp_array = []
-
-except_X_scores.each do |num|
-  if num == 10
-    output_array << [num]
+to_integer_array.each_with_index do |num, i|
+  if num == 'X'
+    dividedByFrameArray << [num]
     tmp_array = []
   else
     tmp_array << num
 
-    if tmp_array.size == 2
-      output_array << tmp_array
+    if tmp_array.size == 2 || i == to_integer_array.size - 1
+      dividedByFrameArray << tmp_array
       tmp_array = []
     end
   end
 end
 
-p output_array
+excepted_X_score_array = dividedByFrameArray.map { |s| s == ['X'] ? [10] : s }
 
-result_array = []
-
-output_array.each_with_index do |array, i|
-  if array.length == 2 && array.sum == output_array.length && i != output_array.length - 1
-    result_array << array.push(output_array[i + 1][0])
-  elsif array.length == 1 && array[0] == 10
-    result_array << array + output_array[i + 1].take(2)
+groupedByFrameScoresArray = []
+excepted_X_score_array.each_with_index do |array, i|
+  if array.length == 2 && array.sum == STRIKE_SCORE && i != excepted_X_score_array.length - 1
+    groupedByFrameScoresArray << array.push(excepted_X_score_array[i + 1][0])
+  elsif array[0] == STRIKE_SCORE
+    if excepted_X_score_array[i + 1]&.size == 1
+      if excepted_X_score_array[i + 1] && excepted_X_score_array[i + 2]
+        groupedByFrameScoresArray << array + [excepted_X_score_array[i + 1][0]] + [excepted_X_score_array[i + 2][0]]
+      end
+    else
+      groupedByFrameScoresArray << array + (excepted_X_score_array[i + 1]&.first(2) || [])
+    end
   else
-    result_array << array
+    groupedByFrameScoresArray << array
   end
 end
-p result_array
+
+if groupedByFrameScoresArray[-2].size == 3 && groupedByFrameScoresArray[-1].size < 3
+  groupedByFrameScoresArray.pop
+end
+
+p groupedByFrameScoresArray.flatten.sum
