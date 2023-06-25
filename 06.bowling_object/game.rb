@@ -22,8 +22,7 @@ class Game
     @frames.each.with_index.take(10).sum do |frame, index|
       next_frame = @frames[index + 1]
       after_next_frame = @frames[index + 2]
-
-      frame.calculate_point(next_frame, after_next_frame)
+      frame.score(next_frame, after_next_frame)
     end
   end
 end
