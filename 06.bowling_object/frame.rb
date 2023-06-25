@@ -10,7 +10,7 @@ class Frame
     @second_score = Shot.new(second_mark).convert
   end
 
-  def score
+  def regular
     @first_score + @second_score
   end
 
@@ -18,16 +18,16 @@ class Frame
     first_score == 10
   end
 
-  def calculate_point(next_frame, after_next_frame)
-    point = score
+  def score(next_frame, after_next_frame)
+    point = regular
     if strike?
       if next_frame.strike?
         point += first_score
         point += after_next_frame.first_score
       else
-        point += next_frame.score
+        point += next_frame.regular
       end
-    elsif score == 10
+    elsif regular == 10
       point += next_frame.first_score
     end
     point
