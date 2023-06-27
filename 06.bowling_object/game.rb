@@ -19,7 +19,9 @@ class Game
   end
 
   def score
-    @frames.each.with_index.take(10).sum do |frame, index|
+    @frames.each.with_index.sum do |frame, index|
+      next 0 if index == 10
+
       next_frame = @frames[index + 1]
       after_next_frame = @frames[index + 2]
       frame.score(next_frame, after_next_frame)
