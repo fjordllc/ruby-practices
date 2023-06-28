@@ -20,7 +20,7 @@ class Game
 
   def score
     @frames.each.with_index.sum do |frame, index|
-      next 0 if index == 10
+      next 0 if index >= 10
 
       next_frame = @frames[index + 1]
       after_next_frame = @frames[index + 2]
