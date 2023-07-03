@@ -42,9 +42,10 @@ def ls_display_matrix(file_dir_list, upper_limit_column_count, column_padding_si
   display_matrix_transposed[-1][num_of_row - 1] ||= nil
 
   display_matrix_transposed.transpose.each do |line|
-    puts line.compact.each_with_index.inject('') { |result, (item, idx)|
+    row_string = line.compact.each_with_index.inject('') do |result, (item, idx)|
       result + item.mb_ljust(column_width_list[idx])
-    }
+    end
+    puts row_string
   end
 end
 
