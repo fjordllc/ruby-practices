@@ -17,7 +17,9 @@ nothing_option = files.sort
 rows.each do |row|
   # debugger
   cols.each do |col|
-      print nothing_option[ row + col * rows.size ].ljust(26)
+    break if nothing_option[ row + col * rows.size ] == nil
+
+    print nothing_option[ row + col * rows.size ].ljust(26)
   end
 
   puts
