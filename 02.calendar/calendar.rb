@@ -20,12 +20,12 @@ first_day = Date.new(display_year, display_month, 1)
 last_day = Date.new(display_year, display_month, -1)
 
 printf("      %s %d     \n", last_day.strftime("%B"), last_day.year)
-puts 'Su Mo Tu We Th Fr Sa'
+puts ' Su Mo Tu We Th Fr Sa'
 
 blank = '   ' * first_day.wday
 print blank
 
-(1..last_day.mday).each_with_index do |date, i|
-  printf("%2d ", date)
-  puts "\n" if ((first_day.wday + date) % 7).zero? || i == last_day.mday - 1
+(first_day..last_day).each do |date|
+  printf(date.day.to_s.rjust(3))
+  puts "\n" if date.saturday? || date == last_day
 end
