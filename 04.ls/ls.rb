@@ -9,7 +9,7 @@ file.each do |x|
   files.push(x)
 end
 
-col_num = 5
+col_num = 3
 row_num = (files.size / col_num.to_f).ceil
 
 cols = [*0..col_num - 1]
