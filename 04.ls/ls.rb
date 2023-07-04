@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-current_directory = Dir.pwd
-file = Dir.entries(current_directory)
-files = []
 def ls_normal(file, files)
   file.each do |x|
     next if x.match?(/^\./)
@@ -10,14 +7,7 @@ def ls_normal(file, files)
     files.push(x)
   end
 end
-ls_normal(file, files)
 
-col_num = 3
-row_num = (files.size / col_num.to_f).ceil
-
-cols = [*0..col_num - 1]
-rows = [*0..row_num - 1]
-files_sorted = files.sort
 def make_cell(rows, cols, files_sorted)
   rows.each do |row|
     cols.each do |col|
@@ -29,4 +19,18 @@ def make_cell(rows, cols, files_sorted)
     puts
   end
 end
+
+current_directory = Dir.pwd
+file = Dir.entries(current_directory)
+files = []
+
+ls_normal(file, files)
+
+col_num = 3
+row_num = (files.size / col_num.to_f).ceil
+
+cols = [*0..col_num - 1]
+rows = [*0..row_num - 1]
+files_sorted = files.sort
+
 make_cell(rows, cols, files_sorted)
