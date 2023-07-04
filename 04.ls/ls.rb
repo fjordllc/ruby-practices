@@ -8,17 +8,17 @@ file.each do |x|
   files.push(x)
 end
 
-cols = [*0..4]
-rows = [*0..((files.size / 5.0).ceil-1)]
+col_num = 5
+row_num = (files.size / col_num.to_f).ceil
+
+cols = [*0..col_num-1]
+rows = [*0..row_num-1]
 nothing_option = files.sort
 rows.each do |row|
+  # debugger
   cols.each do |col|
-    if rows.size == 1
-      print files[ row + col ]
-    else
-      print nothing_option[ row + col * 5 ]
-    end
+      print nothing_option[ row + col * rows.size ].ljust(26)
   end
-  
+
   puts
 end
