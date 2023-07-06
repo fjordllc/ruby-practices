@@ -5,6 +5,21 @@ require 'optparse'
 require 'etc'
 COLUMN_NUMBER = 3
 L_OPTION_PADDING = 2
+FILETYPES = { 'fifo' => 'p',
+              'characterSpecial' => 'c',
+              'directory' => 'd',
+              'blockSpecial' => 'b',
+              'file' => '_',
+              'link' => 'l',
+              'socket' => 's' }.freeze
+PERMISSION_NUMBERS = { 0 => '---',
+                       1 => '--x',
+                       2 => '-w-',
+                       3 => '-wx',
+                       4 => 'r--',
+                       5 => 'r-x',
+                       6 => 'rw-',
+                       7 => 'rwx' }.freeze
 
 def run_ls_with_options
   has_option = options
@@ -62,8 +77,8 @@ def output_file_info(file_infomations)
   size_length = adjust_size(arrange_infomations)
 
   arrange_infomations.each do |file_name, file_info|
-    print filetype(file_info.ftype)
-    (-3..-1).each { |num| print permission(file_info.mode.to_s(8)[num].to_i) }
+    print FILETYPES[file_info.ftype]
+    (-3..-1).each { |num| print PERMISSION_NUMBERS[file_info.mode.to_s(8)[num].to_i] }
     print file_info.nlink.to_s.rjust(link_length)
     print Etc.getpwuid(file_info.uid).name.rjust(uid_length)
     print Etc.getgrgid(file_info.gid).name.rjust(gid_length)
@@ -103,29 +118,6 @@ def adjust_size(arrange_infomations)
   lengths = []
   arrange_infomations.each_value { |file| lengths << file.size.to_s.size }
   lengths.max + L_OPTION_PADDING
-end
-
-def filetype(file_info)
-  filetypes = { 'fifo' => 'p',
-                'characterSpecial' => 'c',
-                'directory' => 'd',
-                'blockSpecial' => 'b',
-                'file' => '_',
-                'link' => 'l',
-                'socket' => 's' }
-  filetypes[file_info]
-end
-
-def permission(permisson_number)
-  permission_numbers = { 0 => '---',
-                         1 => '--x',
-                         2 => '-w-',
-                         3 => '-wx',
-                         4 => 'r--',
-                         5 => 'r-x',
-                         6 => 'rw-',
-                         7 => 'rwx' }
-  permission_numbers[permisson_number]
 end
 
 run_ls_with_options
