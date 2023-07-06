@@ -45,14 +45,14 @@ def line_up_files(files)
   files_number = files_with_spaces.count
   rows = (files_number / COLUMN_NUMBER.to_f).ceil
   (COLUMN_NUMBER - files_number % COLUMN_NUMBER).times { files_with_spaces << '' } if files_number % COLUMN_NUMBER != 0
-  output(files_with_spaces, rows)
+  output_files = []
+  files_with_spaces.each_slice(rows) { |file| output_files << file }
+  output_files.transpose
+  output(output_files)
 end
 
-def output(files, rows)
-  output_files = []
-  files.each_slice(rows) { |file| output_files << file }
-
-  output_files.transpose.each do |file|
+def output(output_files)
+  output_files.each do |file|
     file.each { |filename| print filename }
     puts "\n"
   end
