@@ -70,11 +70,10 @@ end
 def output_file_info(file_infomations)
   arrange_infomations = file_infomations
   puts "total #{arrange_infomations.each_value.sum(&:blocks)}"
-
-  link_length = adjust_link(arrange_infomations)
-  uid_length = adjust_uid(arrange_infomations)
-  gid_length = adjust_gid(arrange_infomations)
-  size_length = adjust_size(arrange_infomations)
+  link_length = arrange_infomations.each_value.max {|file| file.nlink.size}.nlink.to_s.size + L_OPTION_PADDING
+  uid_length = Etc.getpwuid(arrange_infomations.each_value.max { |file| Etc.getpwuid(file.uid).name.size }.uid).name.size + L_OPTION_PADDING
+  gid_length = Etc.getgrgid(arrange_infomations.each_value.max { |file| Etc.getgrgid(file.gid).name.size }.gid).name.size + L_OPTION_PADDING
+  size_length = arrange_infomations.each_value.max { |file| file.size.to_s.size }.size.to_s.size + L_OPTION_PADDING
 
   arrange_infomations.each do |file_name, file_info|
     print FILETYPES[file_info.ftype]
@@ -88,30 +87,6 @@ def output_file_info(file_infomations)
     print " -> #{File.readlink(file_name)}" if file_info.ftype == 'link'
     puts "\n"
   end
-end
-
-def adjust_link(arrange_infomations)
-  lengths = []
-  arrange_infomations.each_value { |file| lengths << file.nlink.to_s.size }
-  lengths.max + L_OPTION_PADDING
-end
-
-def adjust_uid(arrange_infomations)
-  lengths = []
-  arrange_infomations.each_value { |file| lengths << Etc.getpwuid(file.uid).name.size }
-  lengths.max + L_OPTION_PADDING
-end
-
-def adjust_gid(arrange_infomations)
-  lengths = []
-  arrange_infomations.each_value { |file| lengths << Etc.getgrgid(file.gid).name.size }
-  lengths.max + L_OPTION_PADDING
-end
-
-def adjust_size(arrange_infomations)
-  lengths = []
-  arrange_infomations.each_value { |file| lengths << file.size.to_s.size }
-  lengths.max + L_OPTION_PADDING
 end
 
 run_ls_with_options
