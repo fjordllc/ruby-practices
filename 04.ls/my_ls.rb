@@ -69,7 +69,7 @@ end
 
 def output_file_info(file_infomations)
   arrange_infomations = file_infomations
-  puts "total #{total_blocks(arrange_infomations)}"
+  puts "total #{arrange_infomations.each_value.sum(&:blocks)}"
 
   link_length = adjust_link(arrange_infomations)
   uid_length = adjust_uid(arrange_infomations)
@@ -88,12 +88,6 @@ def output_file_info(file_infomations)
     print " -> #{File.readlink(file_name)}" if file_info.ftype == 'link'
     puts "\n"
   end
-end
-
-def total_blocks(arrange_infomations)
-  blocks = 0
-  arrange_infomations.each_value { |file_info| blocks += file_info.blocks }
-  blocks
 end
 
 def adjust_link(arrange_infomations)
