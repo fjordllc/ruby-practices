@@ -64,17 +64,20 @@ def line_up_infomations(files)
   full_paths.each { |full_path| infomations << File.lstat(full_path) }
   ary = [files, infomations].transpose
   file_infomations = Hash[*ary.flatten]
-  output_file_info(file_infomations)
+  adjust_file_length(file_infomations)
 end
 
-def output_file_info(file_infomations)
+def adjust_file_length(file_infomations)
   arrange_infomations = file_infomations
-  puts "total #{arrange_infomations.each_value.sum(&:blocks)}"
-  link_length = arrange_infomations.each_value.max {|file| file.nlink.size}.nlink.to_s.size + L_OPTION_PADDING
-  uid_length = Etc.getpwuid(arrange_infomations.each_value.max { |file| Etc.getpwuid(file.uid).name.size }.uid).name.size + L_OPTION_PADDING
-  gid_length = Etc.getgrgid(arrange_infomations.each_value.max { |file| Etc.getgrgid(file.gid).name.size }.gid).name.size + L_OPTION_PADDING
-  size_length = arrange_infomations.each_value.max { |file| file.size.to_s.size }.size.to_s.size + L_OPTION_PADDING
+  link_length = arrange_infomations.each_value.max_by { |file| file.nlink.to_s.size }.nlink.to_s.size + L_OPTION_PADDING
+  uid_length = Etc.getpwuid(arrange_infomations.each_value.max_by { |file| Etc.getpwuid(file.uid).name.size }.uid).name.size + L_OPTION_PADDING
+  gid_length = Etc.getgrgid(arrange_infomations.each_value.max_by { |file| Etc.getgrgid(file.gid).name.size }.gid).name.size + L_OPTION_PADDING
+  size_length = arrange_infomations.each_value.max_by { |file| file.size.to_s.size }.size.to_s.size + L_OPTION_PADDING
+  output_file_info(arrange_infomations, link_length, uid_length, gid_length, size_length)
+end
 
+def output_file_info(arrange_infomations, link_length, uid_length, gid_length, size_length)
+  puts "total #{arrange_infomations.each_value.sum(&:blocks)}"
   arrange_infomations.each do |file_name, file_info|
     print FILETYPES[file_info.ftype]
     (-3..-1).each { |num| print PERMISSION_NUMBERS[file_info.mode.to_s(8)[num].to_i] }
