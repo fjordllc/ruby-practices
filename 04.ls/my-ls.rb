@@ -14,7 +14,7 @@ def transpose(entities)
   entities.transpose
 end
 
-divided_entities = divide_into_three(Dir.entries('.'))
+divided_entities = divide_into_three(Dir.glob('*'))
 
 transposed_entities = transpose(divided_entities)
 
