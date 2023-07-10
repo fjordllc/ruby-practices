@@ -59,9 +59,7 @@ def output(output_files)
 end
 
 def line_up_informations(files)
-  full_paths = files.map { |file_name| File.absolute_path("./#{file_name}") }
-  informations = []
-  full_paths.each { |full_path| informations << File.lstat(full_path) }
+  informations = files.map { |file_name| File.absolute_path("./#{file_name}") }.each.map { |full_path| File.lstat(full_path) }
   ary = [files, informations].transpose
   file_informations = Hash[*ary.flatten]
   adjust_file_length(file_informations)
