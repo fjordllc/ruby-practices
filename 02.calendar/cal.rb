@@ -28,7 +28,7 @@ def output_cal(date:, today:)
   print '   ' * Date.new(date[:year], date[:month], 1).wday
 
   last_day = Date.new(date[:year], date[:month], -1).mday
-  
+
   (1..last_day).each do |day|
     output_date = Date.new(date[:year], date[:month], day)
     if output_date == today
