@@ -32,8 +32,8 @@ files = ls_normal(file)
 col_num = 3
 row_num = (files.size / col_num.to_f).ceil
 
-cols = [*0..col_num - 1]
-rows = [*0..row_num - 1]
+cols = (0..col_num - 1)
+rows = (0..row_num - 1)
 files_sorted = files.sort
 
 make_cell(rows, cols, files_sorted)
