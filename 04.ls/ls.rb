@@ -21,18 +21,6 @@ def make_cell(rows, cols, files_sorted)
       end
 end
 
-def option_a_make_cell(rows, cols, files_sorted)
-  rows.each do |row|
-    cols.each do |col|
-      break if files_sorted[row + col * rows.size].nil?
-
-      print files_sorted[row + col * rows.size].ljust(26)
-    end
-
-    puts
-  end
-end
-
 files = Dir.glob('*')
 a_option_files = Dir.glob("*", File::FNM_DOTMATCH)
 files_sorted = files.sort
@@ -45,7 +33,7 @@ cols = (0..COL_NUM)
 rows = (0..row_num - 1)
 
 if option == {:a => true}
-  option_a_make_cell(rows, cols, a_option_files_sorted)
+  make_cell(rows, cols, a_option_files_sorted)
 else
   make_cell(rows, cols, files_sorted)
 end
