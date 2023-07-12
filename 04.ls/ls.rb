@@ -17,7 +17,7 @@ files = Dir.glob('*')
 COL_NUM = 3
 row_num = (files.size / COL_NUM.to_f).ceil
 
-cols = (0..COL_NUM - 1)
+cols = (0..COL_NUM)
 rows = (0..row_num - 1)
 files_sorted = files.sort
 
