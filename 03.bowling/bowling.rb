@@ -37,21 +37,21 @@ end
   current_frame = frames[n]
   one_ahead_frame = frames[n + 1]
   two_ahead_frame = frames[n + 2]
-  if current_frame[:mark] == :strike
-    current_frame[:sum] +=
+  bonus_point =
+    if current_frame[:mark] == :strike
       if one_ahead_frame[:mark] == :strike
         10 + two_ahead_frame[:score][0]
       else
         one_ahead_frame[:score].sum
       end
-  elsif current_frame[:mark] == :spare
-    current_frame[:sum] += one_ahead_frame[:score][0]
-  end
+    elsif current_frame[:mark] == :spare
+      one_ahead_frame[:score][0]
+    else
+      0
+    end
+  current_frame[:sum] += bonus_point
 end
 
-point = 0
-frames.each do |frame|
-  point += frame[:sum]
-end
+point = frames.sum { |frame| frame[:sum] }
 
 puts point
