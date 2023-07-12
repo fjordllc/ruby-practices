@@ -21,12 +21,12 @@ def make_cell(rows, cols, files_sorted)
       end
 end
 
-def option_a_make_cell(rows, cols, a_option_files_sorted)
+def option_a_make_cell(rows, cols, files_sorted)
   rows.each do |row|
     cols.each do |col|
-      break if a_option_files_sorted[row + col * rows.size].nil?
+      break if files_sorted[row + col * rows.size].nil?
 
-      print a_option_files_sorted[row + col * rows.size].ljust(26)
+      print files_sorted[row + col * rows.size].ljust(26)
     end
 
     puts
