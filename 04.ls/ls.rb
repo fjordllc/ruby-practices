@@ -27,7 +27,7 @@ a_option_files_sorted = a_option_files.sort
 COL_NUM = 3
 row_num = (files.size / COL_NUM.to_f).ceil
 
-cols = (0..COL_NUM)
+cols = (0..COL_NUM - 1)
 rows = (0..row_num - 1)
 
 if option == { a: true }
