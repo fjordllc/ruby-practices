@@ -8,7 +8,7 @@ option = {}
 opt.on('-a') {|a| option[:a] = a }
 argv = opt.parse(ARGV)
 
-def make_cell(rows, cols, files_sorted, option)
+def make_cell(rows, cols, files_sorted)
   # debugger
     rows.each do |row|
       cols.each do |col|
@@ -47,5 +47,5 @@ rows = (0..row_num - 1)
 if option == {:a => true}
   option_a_make_cell(rows, cols, a_option_files_sorted)
 else
-  make_cell(rows, cols, files_sorted, option)
+  make_cell(rows, cols, files_sorted)
 end
