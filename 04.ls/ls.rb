@@ -19,10 +19,10 @@ def make_cell(rows, cols, files_sorted)
   end
 end
 
-if option == { a: true }
-  files = Dir.glob('*', File::FNM_DOTMATCH)
+files = if option == { a: true }
+  Dir.glob('*', File::FNM_DOTMATCH)
 else
-  files = Dir.glob('*')
+  Dir.glob('*')
 end
 
 files_sorted = files.sort
