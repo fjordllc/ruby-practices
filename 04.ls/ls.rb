@@ -19,10 +19,13 @@ def make_cell(rows, cols, files_sorted)
   end
 end
 
-files = Dir.glob('*')
-a_option_files = Dir.glob('*', File::FNM_DOTMATCH)
+if option == { a: true }
+  files = Dir.glob('*', File::FNM_DOTMATCH)
+else
+  files = Dir.glob('*')
+end
+
 files_sorted = files.sort
-a_option_files_sorted = a_option_files.sort
 
 COL_NUM = 3
 row_num = (files.size / COL_NUM.to_f).ceil
@@ -30,8 +33,4 @@ row_num = (files.size / COL_NUM.to_f).ceil
 cols = (0..COL_NUM - 1)
 rows = (0..row_num - 1)
 
-if option == { a: true }
-  make_cell(rows, cols, a_option_files_sorted)
-else
-  make_cell(rows, cols, files_sorted)
-end
+make_cell(rows, cols, files_sorted)
