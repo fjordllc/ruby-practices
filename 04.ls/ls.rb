@@ -19,7 +19,7 @@ def make_cell(rows, cols, files_sorted)
   end
 end
 
-flags = if option == {a: true} then File::FNM_DOTMATCH else 0 end
+flags = option == { a: true } ? File::FNM_DOTMATCH : 0
 files = Dir.glob('*', flags)
 
 files_sorted = files.sort
