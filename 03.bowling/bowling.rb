@@ -20,6 +20,7 @@ p frames
 point = 0
 
 frames.each_with_index do |frame, index|
+
   next_frame = frames[index+1]
   next_after_frame = frames[index+2]
 
@@ -32,7 +33,7 @@ frames.each_with_index do |frame, index|
   else
     point += frame.sum
   end
-
+  
   break if index == 9
 end
 puts point
