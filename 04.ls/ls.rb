@@ -1,47 +1,28 @@
 #! /usr/bin/env ruby
 # frozen_string_literal: true
 
-Acquired_file_names = Dir.glob('*')
-desired_number_of_columns = 3
-NUMBER_OF_COLUMN = Acquired_file_names.find { |name| name.size >= 24 } ? 1 : desired_number_of_columns
+acquired_file = Dir.glob('*')
+NUMBER_OF_COLUMN = 3
 
-def insert_empty_filename_and_sort_by_each_columns(filenames, columns)
-  copied_filenames = filenames.dup
-  copied_filenames << '' while copied_filenames.size % columns != 0
-  numbers_of_lines = copied_filenames.size / columns
-  copied_filenames.each_slice(numbers_of_lines).to_a.transpose
+def transposed_by_each_columns(files, number_of_columns)
+  files << '' while files.size % number_of_columns != 0
+  numbers_of_lines = files.size / number_of_columns
+  files.each_slice(numbers_of_lines).to_a.transpose
 end
 
-def get_maximum_number_of_characters_each_columns(filenames)
-  maximum_number_of_characters = 0
-  filenames.each do |name|
-    maximum_number_of_characters = name.size if maximum_number_of_characters < name.size
-  end
-  maximum_number_of_characters
+def get_column_width(files)
+  i = 1
+  maximum_number_of_characters = files.max_by(&:size).size
+  i += 1 until maximum_number_of_characters < (8 * i)
+  8 * i
 end
 
-def get_number_of_characters_of_filenames_including_margins(filenames)
-  case get_maximum_number_of_characters_each_columns(filenames)
-  when (0..7)
-    8
-  when (8..15)
-    16
-  when (16..23)
-    24
+def display(files, number_of_columns)
+  transposed_files = transposed_by_each_columns(files, number_of_columns)
+  transposed_files.each do |files_each_lines|
+    files_with_mergins = files_each_lines.map { |file| file.ljust(get_column_width(files)) }
+    puts files_with_mergins.join('')
   end
 end
 
-def display_filenames_with_some_columns(filenames, columns)
-  insert_empty_filename_and_sort_by_each_columns(filenames, columns).each do |arr|
-    arr.each_with_index do |name, i|
-      if i == (NUMBER_OF_COLUMN - 1)
-        puts name
-      else
-        print name.ljust(Number_of_characters_of_filenames_including_margins)
-      end
-    end
-  end
-end
-
-Number_of_characters_of_filenames_including_margins = get_number_of_characters_of_filenames_including_margins(Acquired_file_names)
-display_filenames_with_some_columns(Acquired_file_names, NUMBER_OF_COLUMN)
+display(acquired_file, NUMBER_OF_COLUMN)
