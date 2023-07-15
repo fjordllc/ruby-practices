@@ -1,5 +1,12 @@
 # frozen_string_literal: true
 
+require 'optparse'
+
+opt = OptionParser.new
+option = {}
+opt.on('-a') { |a| option[:a] = a }
+opt.parse(ARGV)
+
 def make_cell(rows, cols, files_sorted)
   rows.each do |row|
     cols.each do |col|
@@ -12,13 +19,15 @@ def make_cell(rows, cols, files_sorted)
   end
 end
 
-files = Dir.glob('*')
+flags = option[:a] ? File::FNM_DOTMATCH : 0
+files = Dir.glob('*', flags)
+
+files_sorted = files.sort
 
 COL_NUM = 3
 row_num = (files.size / COL_NUM.to_f).ceil
 
-cols = (0..COL_NUM)
+cols = (0..COL_NUM - 1)
 rows = (0..row_num - 1)
-files_sorted = files.sort
 
 make_cell(rows, cols, files_sorted)
