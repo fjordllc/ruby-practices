@@ -59,7 +59,7 @@ def output(output_files)
 end
 
 def line_up_informations(files)
-  informations = files.map { |file_name| File.absolute_path("./#{file_name}") }.each.map { |full_path| File.lstat(full_path) }
+  informations = files.map { |file_name| File.absolute_path("./#{file_name}") }.map { |full_path| File.lstat(full_path) }
   file_informations = Hash[*[files, informations].transpose.flatten]
   adjust_file_length(file_informations)
 end
