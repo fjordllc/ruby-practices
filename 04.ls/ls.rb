@@ -7,12 +7,12 @@ option = {}
 opt.on('-a') { |a| option[:a] = a }
 opt.parse(ARGV)
 
-def make_cell(rows, cols, files_sorted)
+def make_cell(rows, cols, files_ordered)
   rows.each do |row|
     cols.each do |col|
-      break if files_sorted[row + col * rows.size].nil?
+      break if files_ordered[row + col * rows.size].nil?
 
-      print files_sorted[row + col * rows.size].ljust(26)
+      print files_ordered[row + col * rows.size].ljust(26)
     end
 
     puts
@@ -22,7 +22,7 @@ end
 flags = option[:a] ? File::FNM_DOTMATCH : 0
 files = Dir.glob('*', flags)
 
-files_sorted = files.sort
+files_ordered = files.sort
 
 COL_NUM = 3
 row_num = (files.size / COL_NUM.to_f).ceil
@@ -30,4 +30,4 @@ row_num = (files.size / COL_NUM.to_f).ceil
 cols = (0..COL_NUM - 1)
 rows = (0..row_num - 1)
 
-make_cell(rows, cols, files_sorted)
+make_cell(rows, cols, files_ordered)
