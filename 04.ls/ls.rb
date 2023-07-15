@@ -5,7 +5,7 @@ require 'optparse'
 opt = OptionParser.new
 option = {}
 opt.on('-a') { |a| option[:a] = a }
-opt.on('-r') { |r| option[:r] = r}
+opt.on('-r') { |r| option[:r] = r }
 opt.parse(ARGV)
 
 def make_cell(rows, cols, files_ordered)
