@@ -5,6 +5,7 @@ require 'optparse'
 opt = OptionParser.new
 option = {}
 opt.on('-a') { |a| option[:a] = a }
+opt.on('-r') { |r| option[:r] = r}
 opt.parse(ARGV)
 
 def make_cell(rows, cols, files_ordered)
@@ -22,7 +23,7 @@ end
 flags = option[:a] ? File::FNM_DOTMATCH : 0
 files = Dir.glob('*', flags)
 
-files_ordered = files.sort
+files_ordered = option[:r] ? files.reverse : files.sort
 
 COL_NUM = 3
 row_num = (files.size / COL_NUM.to_f).ceil
