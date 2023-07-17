@@ -22,7 +22,13 @@ def make_cell(rows, cols, files_ordered, option)
 end
 def option_l(files)
   files.each do |file|
-    puts file
+    if File.ftype("#{file}") == "directory"
+      print "d"
+    else
+      print "-"
+    end
+    print file
+    puts
   end
 end
 
