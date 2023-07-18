@@ -45,9 +45,9 @@ def option_l(files)
     user = Etc.getpwuid(file_path.uid).name
     group = Etc.getgrgid(file_path.gid).name
     size = file_path.size
-    time_stanp = file_path.mtime
+    time_stanp = file_path.mtime.to_a
 
-    print "#{permission} #{link} #{user} #{group} #{size} #{time_stanp} #{file}"
+    print "#{permission} #{link} #{user} #{group} #{size} #{time_stanp[4]} #{time_stanp[3]} #{time_stanp[2]}:#{time_stanp[1]} #{file}"
     puts
   end
 end
