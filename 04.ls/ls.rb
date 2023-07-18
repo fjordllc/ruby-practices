@@ -39,7 +39,12 @@ def option_l(files)
       print "-"
     end
     
+    user = Etc.getpwuid(File.stat("#{file}").uid).name
+    group = Etc.getgrgid(File.stat("#{file}").gid).name
     print File.stat("#{file}").mode.to_s(2)
+    print user
+    print group
+    print File.stat("#{file}").nlink
     print file
     puts
   end
