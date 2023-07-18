@@ -30,6 +30,16 @@ def block_sum(files)
   puts "total #{block_total}"
 end
 
+def make_permission(file_path, file, y, b)
+  permission = file_path.mode.to_s(2)
+
+  if (permission.to_i(2) & 1 << y) == 0
+    print "-"
+  else
+    print b
+  end
+end
+
 def option_l(files)
   block_sum(files)
   files.each do |file|
@@ -41,60 +51,15 @@ def option_l(files)
     
     file_path = File.stat("#{file}")
     permission = file_path.mode.to_s(2)
-
-    if (permission.to_i(2) & 1 << 8) == 0
-      print "-"
-    else
-      print "r"
-    end
-
-    if (permission.to_i(2) & 1 << 7) == 0
-      print "-"
-    else
-      print "w"
-    end
-
-    if (permission.to_i(2) & 1 << 6) == 0
-      print "-"
-    else
-      print "x"
-    end
-
-    if (permission.to_i(2) & 1 << 5) == 0
-      print "-"
-    else
-      print "r"
-    end
-
-    if (permission.to_i(2) & 1 << 4) == 0
-      print "-"
-    else
-      print "w"
-    end
-
-    if (permission.to_i(2) & 1 << 3) == 0
-      print "-"
-    else
-      print "x"
-    end
-
-    if (permission.to_i(2) & 1 << 2) == 0
-      print "-"
-    else
-      print "r"
-    end
-
-    if (permission.to_i(2) & 1 << 1) == 0
-      print "-"
-    else
-      print "w"
-    end
-
-    if (permission.to_i(2) & 1 << 0) == 0
-      print "-"
-    else
-      print "x"
-    end
+    make_permission(file_path, file, 8, "r")
+    make_permission(file_path, file, 7, "w")
+    make_permission(file_path, file, 6, "x")
+    make_permission(file_path, file, 5, "r")
+    make_permission(file_path, file, 4, "w")
+    make_permission(file_path, file, 3, "x")
+    make_permission(file_path, file, 2, "r")
+    make_permission(file_path, file, 1, "w")
+    make_permission(file_path, file, 0, "x")
     
     link = file_path.nlink
     user = Etc.getpwuid(file_path.uid).name
@@ -128,7 +93,6 @@ cols = (0..COL_NUM - 1)
 rows = (0..row_num - 1)
 
 if option[:l]
-  # debugger
   option_l(files)
 else
   make_cell(rows, cols, files_ordered, option)
