@@ -41,13 +41,78 @@ def option_l(files)
     
     file_path = File.stat("#{file}")
     permission = file_path.mode.to_s(2)
+
+    if (permission.to_i(2) & 1 << 8) == 0
+      debugger
+      print "-"
+    elsif (permission.to_i(2) & 1 << 8) == 1 << 8
+      print "r"
+    end
+
+    if (permission.to_i(2) & 1 << 7) == 0
+      print "-"
+    elsif (permission.to_i(2) & 1 << 7) == 1 << 7
+      print "w"
+    end
+
+    if (permission.to_i(2) & 1 << 6) == 0
+      print "-"
+    elsif (permission.to_i(2) & 1 << 6) == 1 << 6
+      print "x"
+    end
+
+    if (permission.to_i(2) & 1 << 5) == 0
+      print "-"
+    elsif (permission.to_i(2) & 1 << 5) == 1 << 5
+      print "r"
+    end
+
+    if (permission.to_i(2) & 1 << 4) == 0
+      print "-"
+    elsif (permission.to_i(2) & 1 << 4) == 1 << 4
+      print "w"
+    end
+
+    if (permission.to_i(2) & 1 << 3) == 0
+      print "-"
+    elsif (permission.to_i(2) & 1 << 3) == 1 << 3
+      print "x"
+    end
+
+    if (permission.to_i(2) & 1 << 2) == 0
+      print "-"
+    elsif (permission.to_i(2) & 1 << 2) == 1 << 2
+      print "r"
+    end
+
+    if (permission.to_i(2) & 1 << 1) == 0
+      print "-"
+    elsif (permission.to_i(2) & 1 << 1) == 1 << 1
+      print "w"
+    end
+
+    if (permission.to_i(2) & 1 << 0) == 0
+      print "-"
+    elsif (permission.to_i(2) & 1 << 0) == 1 << 0
+      print "x"
+    end
+    
     link = file_path.nlink
     user = Etc.getpwuid(file_path.uid).name
     group = Etc.getgrgid(file_path.gid).name
     size = file_path.size
     time_stanp = file_path.mtime.to_a
+    hour = sprintf("%02d", time_stanp[2])
+    minutes = sprintf("%02d", time_stanp[1])
 
-    print "#{permission} #{link} #{user} #{group} #{size} #{time_stanp[4]} #{time_stanp[3]} #{time_stanp[2]}:#{time_stanp[1]} #{file}"
+    print "#{link}".rjust(3)
+    print "#{user}".rjust(8)
+    print "#{group}".rjust(7)
+    print "#{size}".rjust(6)
+    print "#{time_stanp[4]}".rjust(3)
+    print "#{time_stanp[3]}".rjust(3)
+    print "#{hour}:#{minutes}".rjust(6)
+    print " #{file}"
     puts
   end
 end
