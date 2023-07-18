@@ -1,11 +1,29 @@
 #! /usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'optparse'
+require 'debug'
+
 NUMBER_OF_COLUMNS = 3
 MULTIPLE_OF_COLUMN_WIDTH = 8
 
-def acquire_files
-  Dir.glob('*')
+def select_option
+  params = {}
+  opt = OptionParser.new
+  opt.on('-a') { |v| params[:a] = v }
+  opt.on('-r') { |v| params[:r] = v }
+  params[:dir] = opt.parse!(ARGV)[0]
+  params
+end
+
+SELECTED_OPTION = select_option
+
+def acquire_files(a_option: false)
+  if a_option
+    Dir.glob('*', File::FNM_DOTMATCH, base: SELECTED_OPTION[:dir])
+  else
+    Dir.glob('*', base: SELECTED_OPTION[:dir])
+  end
 end
 
 def transpose_by_each_columns(files, number_of_columns)
@@ -28,4 +46,4 @@ def display(files, number_of_columns)
   end
 end
 
-display(acquire_files, NUMBER_OF_COLUMNS)
+display(acquire_files(a_option: SELECTED_OPTION[:a]), NUMBER_OF_COLUMNS)
