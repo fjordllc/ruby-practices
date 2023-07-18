@@ -4,7 +4,6 @@
 
 require 'debug'
 require 'optparse'
-require 'date'
 
 SEGMENT_LENGTH = 3
 
