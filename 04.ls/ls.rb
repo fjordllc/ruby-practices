@@ -20,13 +20,26 @@ def make_cell(rows, cols, files_ordered, option)
     puts
   end
 end
+
+def block_sum(files)
+  block_total = 0
+  files.each do |file|
+    block_num = File.stat("#{file}").blocks
+    block_total += block_num
+  end
+  puts "total #{block_total}"
+end
+
 def option_l(files)
+  block_sum(files)
   files.each do |file|
     if File.ftype("#{file}") == "directory"
       print "d"
     else
       print "-"
     end
+    
+    print File.stat("#{file}").mode.to_s(2)
     print file
     puts
   end
