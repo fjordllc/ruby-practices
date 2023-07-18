@@ -43,57 +43,56 @@ def option_l(files)
     permission = file_path.mode.to_s(2)
 
     if (permission.to_i(2) & 1 << 8) == 0
-      debugger
       print "-"
-    elsif (permission.to_i(2) & 1 << 8) == 1 << 8
+    else
       print "r"
     end
 
     if (permission.to_i(2) & 1 << 7) == 0
       print "-"
-    elsif (permission.to_i(2) & 1 << 7) == 1 << 7
+    else
       print "w"
     end
 
     if (permission.to_i(2) & 1 << 6) == 0
       print "-"
-    elsif (permission.to_i(2) & 1 << 6) == 1 << 6
+    else
       print "x"
     end
 
     if (permission.to_i(2) & 1 << 5) == 0
       print "-"
-    elsif (permission.to_i(2) & 1 << 5) == 1 << 5
+    else
       print "r"
     end
 
     if (permission.to_i(2) & 1 << 4) == 0
       print "-"
-    elsif (permission.to_i(2) & 1 << 4) == 1 << 4
+    else
       print "w"
     end
 
     if (permission.to_i(2) & 1 << 3) == 0
       print "-"
-    elsif (permission.to_i(2) & 1 << 3) == 1 << 3
+    else
       print "x"
     end
 
     if (permission.to_i(2) & 1 << 2) == 0
       print "-"
-    elsif (permission.to_i(2) & 1 << 2) == 1 << 2
+    else
       print "r"
     end
 
     if (permission.to_i(2) & 1 << 1) == 0
       print "-"
-    elsif (permission.to_i(2) & 1 << 1) == 1 << 1
+    else
       print "w"
     end
 
     if (permission.to_i(2) & 1 << 0) == 0
       print "-"
-    elsif (permission.to_i(2) & 1 << 0) == 1 << 0
+    else
       print "x"
     end
     
