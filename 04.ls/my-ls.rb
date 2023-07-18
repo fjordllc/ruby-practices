@@ -3,6 +3,8 @@
 # frozen_string_literal: true
 
 require 'debug'
+require 'optparse'
+require 'date'
 
 SEGMENT_LENGTH = 3
 
@@ -16,7 +18,14 @@ def transpose(entities)
   entities.transpose
 end
 
-divided_entities = divide_into_segments(Dir.glob('*'))
+under_entities = Dir.glob('*')
+OptionParser.new do |options|
+  options.on("-a", Integer) do |year|
+    under_entities = Dir.entries('.')
+  end
+end.parse!
+
+divided_entities = divide_into_segments(under_entities)
 
 longest_entity_length = divided_entities.flatten.max_by { |element| element.length }.length
 
