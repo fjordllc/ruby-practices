@@ -39,13 +39,15 @@ def option_l(files)
       print "-"
     end
     
-    user = Etc.getpwuid(File.stat("#{file}").uid).name
-    group = Etc.getgrgid(File.stat("#{file}").gid).name
-    print File.stat("#{file}").mode.to_s(2)
-    print user
-    print group
-    print File.stat("#{file}").nlink
-    print file
+    file_path = File.stat("#{file}")
+    permission = file_path.mode.to_s(2)
+    link = file_path.nlink
+    user = Etc.getpwuid(file_path.uid).name
+    group = Etc.getgrgid(file_path.gid).name
+    size = file_path.size
+    time_stanp = file_path.mtime
+
+    print "#{permission} #{link} #{user} #{group} #{size} #{time_stanp} #{file}"
     puts
   end
 end
