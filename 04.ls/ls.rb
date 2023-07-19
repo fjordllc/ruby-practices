@@ -11,7 +11,6 @@ def select_option
   params = {}
   opt = OptionParser.new
   opt.on('-a') { |v| params[:a] = v }
-  opt.on('-r') { |v| params[:r] = v }
   params[:dir] = opt.parse!(ARGV)[0]
   params
 end
@@ -40,10 +39,9 @@ end
 def display(files, number_of_columns)
   column_width = get_column_width(files)
   transposed_files = transpose_by_each_columns(files, number_of_columns)
-  transposed_files.each do |files_each_lines|
-    files_with_mergins = files_each_lines.map { |file| file.ljust(column_width) }
-    puts files_with_mergins.join('')
+  transposed_files.map do |files_each_lines|
+    files_each_lines.map { |file| file.ljust(column_width) }.join('')
   end
 end
 
-display(acquire_files(a_option: SELECTED_OPTION[:a]), NUMBER_OF_COLUMNS)
+puts display(acquire_files(a_option: SELECTED_OPTION[:a]), NUMBER_OF_COLUMNS)
