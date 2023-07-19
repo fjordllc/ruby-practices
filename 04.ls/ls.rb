@@ -49,11 +49,12 @@ def ls_display_matrix(file_dir_list, upper_limit_column_count, column_padding_si
   end
 end
 
-a_option_flag = 0
+a_option = false
 
 # コマンドライン引数の取得
 OptionParser.new do |o|
-  o.on('-a') { a_option_flag = File::FNM_DOTMATCH }
+  o.on('-a') { a_option = true }
+
   # TODO:	後のプラクティスで実装
   o.on('-r') {}
   o.on('-l') {}
@@ -69,7 +70,12 @@ path_list = ARGV[0] ? ARGV : ['.']
 path_list.each do |path|
   if File.exist?(path)
     if File.directory?(path)
-      file_dir_list = Dir.glob('*', flags: a_option_flag, base: path).map { |m| File.basename(m) }
+      file_dir_list =
+        if a_option
+          Dir.glob('*', flags: File::FNM_DOTMATCH, base: path).map { |m| File.basename(m) }
+        else
+          Dir.glob('*', base: path).map { |m| File.basename(m) }
+        end
       ls_display_matrix(file_dir_list, UPPER_LIMIT_COLUMN_COUNT, COLUMN_PADDING_SIZE)
     else
       puts File.basename(path)
