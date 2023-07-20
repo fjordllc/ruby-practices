@@ -3,44 +3,42 @@
 # frozen_string_literal: true
 
 STRIKE_SCORE = 10
+TOTAL_GAME_COUNT = 10
 
-to_integer_array = ARGV[0].split(',').map { |s| s == 'X' ? s : s.to_i }
+parsed_score_numbers = ARGV[0].split(',').map { |s| s == 'X' ? 10 : s.to_i }
 
-divided_by_frame_array = []
-tmp_array = []
-to_integer_array.each_with_index do |num, i|
-  if num == 'X'
-    divided_by_frame_array << [num]
-    tmp_array = []
+divided_by_frame_score_pairs = []
+tmp_scores = []
+parsed_score_numbers.each do |num|
+  if tmp_scores == [] && num == STRIKE_SCORE && divided_by_frame_score_pairs.size < TOTAL_GAME_COUNT - 1
+    divided_by_frame_score_pairs << [num]
+    tmp_scores = []
   else
-    tmp_array << num
-
-    if tmp_array.size == 2 || i == to_integer_array.size - 1
-      divided_by_frame_array << tmp_array
-      tmp_array = []
+    tmp_scores << num
+    if tmp_scores.size == 2
+      divided_by_frame_score_pairs << tmp_scores
+      tmp_scores = [] unless divided_by_frame_score_pairs.size == TOTAL_GAME_COUNT
     end
   end
 end
-
-excepted_x_score_array = divided_by_frame_array.map { |s| s == ['X'] ? [10] : s }
 
 grouped_by_frame_scores_array = []
-excepted_x_score_array.each_with_index do |array, i|
-  if array.length == 2 && array.sum == STRIKE_SCORE && i != excepted_x_score_array.length - 1
-    grouped_by_frame_scores_array << array.push(excepted_x_score_array[i + 1][0])
-  elsif array[0] == STRIKE_SCORE
-    if excepted_x_score_array[i + 1]&.size == 1
-      if excepted_x_score_array[i + 1] && excepted_x_score_array[i + 2]
-        grouped_by_frame_scores_array << array + [excepted_x_score_array[i + 1][0]] + [excepted_x_score_array[i + 2][0]]
-      end
+divided_by_frame_score_pairs.each_with_index do |each_frame_scores, i|
+  if each_frame_scores.length == 1
+    if divided_by_frame_score_pairs[i + 1] && divided_by_frame_score_pairs[i + 2] && divided_by_frame_score_pairs[i + 1]&.size == 1
+      grouped_by_frame_scores_array << each_frame_scores + [divided_by_frame_score_pairs[i + 1][0]] + [divided_by_frame_score_pairs[i + 2][0]]
     else
-      grouped_by_frame_scores_array << array + (excepted_x_score_array[i + 1]&.first(2) || [])
+      grouped_by_frame_scores_array << each_frame_scores + divided_by_frame_score_pairs[i + 1]&.first(2)
+    end
+  elsif each_frame_scores.length == 2
+    if each_frame_scores.sum == STRIKE_SCORE
+      grouped_by_frame_scores_array << each_frame_scores.push(divided_by_frame_score_pairs[i + 1][0])
+    else
+      grouped_by_frame_scores_array << each_frame_scores
     end
   else
-    grouped_by_frame_scores_array << array
+    grouped_by_frame_scores_array << each_frame_scores
   end
 end
-
-grouped_by_frame_scores_array.pop if grouped_by_frame_scores_array[-2].size == 3 && grouped_by_frame_scores_array[-1].size < 3
 
 p grouped_by_frame_scores_array.flatten.sum
