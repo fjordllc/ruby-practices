@@ -22,23 +22,23 @@ parsed_score_numbers.each do |num|
   end
 end
 
-grouped_by_frame_scores_array = []
+frame_result_point_pairs = []
 divided_by_frame_score_pairs.each_with_index do |each_frame_scores, i|
   if each_frame_scores.length == 1
-    if divided_by_frame_score_pairs[i + 1] && divided_by_frame_score_pairs[i + 2] && divided_by_frame_score_pairs[i + 1]&.size == 1
-      grouped_by_frame_scores_array << each_frame_scores + [divided_by_frame_score_pairs[i + 1][0]] + [divided_by_frame_score_pairs[i + 2][0]]
+    if divided_by_frame_score_pairs[i + 1] && divided_by_frame_score_pairs[i + 2] && divided_by_frame_score_pairs[i + 1].size == 1
+      frame_result_point_pairs << each_frame_scores + [divided_by_frame_score_pairs[i + 1][0]] + [divided_by_frame_score_pairs[i + 2][0]]
     else
-      grouped_by_frame_scores_array << each_frame_scores + divided_by_frame_score_pairs[i + 1]&.first(2)
+      frame_result_point_pairs << each_frame_scores + divided_by_frame_score_pairs[i + 1]&.first(2)
     end
   elsif each_frame_scores.length == 2
     if each_frame_scores.sum == STRIKE_SCORE
-      grouped_by_frame_scores_array << each_frame_scores.push(divided_by_frame_score_pairs[i + 1][0])
+      frame_result_point_pairs << each_frame_scores.push(divided_by_frame_score_pairs[i + 1][0])
     else
-      grouped_by_frame_scores_array << each_frame_scores
+      frame_result_point_pairs << each_frame_scores
     end
   else
-    grouped_by_frame_scores_array << each_frame_scores
+    frame_result_point_pairs << each_frame_scores
   end
 end
 
-p grouped_by_frame_scores_array.flatten.sum
+p frame_result_point_pairs.flatten.sum
