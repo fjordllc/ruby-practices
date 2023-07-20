@@ -5,10 +5,8 @@ NUMBER_OF_ROW = 3
 target_path = ARGV[0] ||= './'
 
 def get_filenames(target_path)
-  Dir.entries(target_path).sort
+  Dir.glob("*", base: target_path)
 end
-
-
 
 def output(filenames)
   number_of_col = ((filenames.size - 1) / NUMBER_OF_ROW) + 1
