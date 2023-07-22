@@ -50,13 +50,14 @@ def ls_display_matrix(file_dir_list, upper_limit_column_count, column_padding_si
 end
 
 a_option = false
+r_option = false
 
 # コマンドライン引数の取得
 OptionParser.new do |o|
   o.on('-a') { a_option = true }
+  o.on('-r') { r_option = true }
 
   # TODO:	後のプラクティスで実装
-  o.on('-r') {}
   o.on('-l') {}
 
   o.parse!(ARGV) # パス指定オプションが入る
@@ -76,6 +77,7 @@ path_list.each do |path|
         else
           Dir.glob('*', base: path).map { |m| File.basename(m) }
         end
+      file_dir_list.reverse! if r_option
       ls_display_matrix(file_dir_list, UPPER_LIMIT_COLUMN_COUNT, COLUMN_PADDING_SIZE)
     else
       puts File.basename(path)
