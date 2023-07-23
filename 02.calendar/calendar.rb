@@ -32,9 +32,7 @@ week_day_box = Array.new(7)
 puts "#{entered_day.month}月 #{entered_day.year}"
 puts "日  月  火  水  木  金  土"
 if first_day_of_the_week != 7
-  first_day_of_the_week.times do 
-    print "    "
-  end
+  print  "    " * first_day_of_the_week
 end
 1.upto(last_day) do |day|
   if Date.today == Date.new(year_and_month[:year], year_and_month[:month], day)
