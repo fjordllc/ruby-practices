@@ -38,7 +38,7 @@ if first_day_of_the_week != 7
 end
 1.upto(last_day) do |day|
   if Date.today == Date.new(year_and_month[:year], year_and_month[:month], day)
-    print "\e[31m#{day}\e[0m  "
+    print "\e[7m#{day}\e[0m  "
   else
     print "#{day}  "
   end
