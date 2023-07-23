@@ -1,3 +1,5 @@
+require 'debug'
+
 score = ARGV[0]
 scores = score.split(',')
 shots = []
@@ -11,9 +13,20 @@ scores.each do |s|
 end
 
 frames = []
-shots.each_slice(2) do |s|
-  frames << s
+shots.each_slice(2).with_index do |s, index|
+  if index < 9
+    frames << s
+  elsif index == 9
+    frame_10 = []
+    18.upto(shots.length - 1) { |i|
+      frame_10 << shots[i] unless shots[i] == 0
+    }
+    frames << frame_10
+  else
+    break
+  end
 end
+binding.break
 
 point = 0
 frames.each do |frame|
