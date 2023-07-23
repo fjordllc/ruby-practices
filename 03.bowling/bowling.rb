@@ -27,16 +27,20 @@ shots.each_slice(2).with_index do |s, index|
 end
 
 point = 0
-frames.each_with_index do |frame, index|
-  if index < 9
+frames.each_with_index do |frame, i|
+  if i < 9
     if frame[0] == 10 # strike
-      point += 30
+      if frames[(i + 1)][0] == 10
+        point += 20 + (frames[(i + 2)] ? frames[(i + 2)][0] : 0)
+      else
+        point += 10 + frames[(i + 1)][0] + frames[(i + 2)][0]
+      end
     elsif frame.sum == 10 # spare
-      point += frame[0] + 10
+      point += 10 + frames[(i + 1)][0]
     else
       point += frame.sum
     end
-  elsif index == 9
+  elsif i == 9
     point += frame.sum
     break
   end
