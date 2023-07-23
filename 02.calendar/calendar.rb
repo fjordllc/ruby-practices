@@ -19,7 +19,7 @@ else year_and_month[:month].nil?
 end
 
 #曜日判断メソッド
-def judge_day(year, month, day)
+def saturday?(year, month, day)
   day_of_the_week = Date.new(year, month, day).saturday?
 end
 
@@ -42,5 +42,5 @@ end
   else
     print "#{day}".ljust(4)
   end
-  puts "" if judge_day(entered_day.year, entered_day.month, day)
+  puts "" if saturday?(entered_day.year, entered_day.month, day)
 end
