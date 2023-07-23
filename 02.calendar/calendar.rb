@@ -38,10 +38,9 @@ if first_day_of_the_week != 7
 end
 1.upto(last_day) do |day|
   if Date.today == Date.new(year_and_month[:year], year_and_month[:month], day)
-    print "\e[7m#{day}\e[0m  "
+    print "\e[7m#{day}\e[0m" + " " * (4 - day.to_s.length)
   else
-    print "#{day}  "
+    print "#{day}".ljust(4)
   end
-  print " " if day.to_s.length == 1
   puts "" if judge_day(entered_day.year, entered_day.month, day)
 end
