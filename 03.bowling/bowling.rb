@@ -22,7 +22,6 @@ shots.each_slice(2).with_index do |s, index|
       frame_10 << shots[i] unless shots[i] == 0
     }
     frames << frame_10
-  else
     break
   end
 end
@@ -39,7 +38,6 @@ frames.each_with_index do |frame, index|
     end
   elsif index == 9
     point += frame.sum
-  else
     break
   end
 end
