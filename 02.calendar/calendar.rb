@@ -18,11 +18,6 @@ else year_and_month[:month].nil?
   year_and_month[:month] = today.month
 end
 
-#曜日判断メソッド
-def saturday?(year, month, day)
-  day_of_the_week = Date.new(year, month, day).saturday?
-end
-
 entered_day  = Date.new(year_and_month[:year], year_and_month[:month])
 last_day = Date.new(entered_day.year, entered_day.month, -1).day
 first_day_of_the_week = Date.new(entered_day.year, entered_day.month, 1).cwday
