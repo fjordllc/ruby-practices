@@ -31,7 +31,7 @@ def calc_strike_point(time, frames)
     if time < 8
       20 + (frames[time + 2] ? frames[time + 2][0] : 0)
     else
-      20 + frames[time + 1][1]
+      20 + (frames[time + 1][1] ? frames[time + 1][1] : 0)
     end
   else
     time < 8 ? 10 + frames[time + 1].sum : 10 + frames[time + 1][0] + frames[time + 1][1]
