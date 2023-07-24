@@ -9,16 +9,10 @@ opt.parse!(ARGV)
 
 #入力がなかった場合、今日の日付にする
 today = Date.today
-if year_and_month.empty?
-  year_and_month[:month] = today.month
-  year_and_month[:year] = today.year
-elsif year_and_month[:year].nil?
-  year_and_month[:year] = today.year
-else year_and_month[:month].nil?
-  year_and_month[:month] = today.month
-end
+year = year_and_month[:year] ? year_and_month[:year] : today.year
+month = year_and_month[:month] ? year_and_month[:month] : today.month
 
-entered_day  = Date.new(year_and_month[:year], year_and_month[:month])
+entered_day  = Date.new(year, month)
 last_day = Date.new(entered_day.year, entered_day.month, -1).day
 first_day_of_the_week = Date.new(entered_day.year, entered_day.month, 1).cwday
 
