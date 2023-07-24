@@ -36,10 +36,10 @@ if first_day_of_the_week != 7
 end
 (Date.new(entered_day.year, entered_day.month, 1)..Date.new(entered_day.year, entered_day.month, -1)).each do |date|
   day = date.day
-  if Date.today == day
+  if Date.today.day == day
     print "\e[7m#{day}\e[0m" + " " * (4 - day.to_s.length)
   else
     print "#{day}".ljust(4)
   end
-  puts "" if saturday?(date.year, date.month, day)
+  puts "" if date.saturday?
 end
