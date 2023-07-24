@@ -28,13 +28,13 @@ end
 
 def calc_strike_point(time, frames)
   if frames[time + 1][0] == 10
-    if i < 8
+    if time < 8
       20 + (frames[time + 2] ? frames[time + 2][0] : 0)
     else
       20 + frames[time + 1][1]
     end
   else
-    10 + frames[time + 1].sum
+    time < 8 ? 10 + frames[time + 1].sum : 10 + frames[time + 1][0] + frames[time + 1][1]
   end
 end
 
@@ -50,7 +50,6 @@ frames.each_with_index do |frame, i|
              end
            elsif i == 9
              frame.sum
-             break
            end
 end
 puts point
