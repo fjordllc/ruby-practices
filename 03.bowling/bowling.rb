@@ -10,7 +10,7 @@ parsed_score_numbers = ARGV[0].split(',').map { |s| s == 'X' ? 10 : s.to_i }
 divided_by_frame_score_pairs = []
 tmp_scores = []
 parsed_score_numbers.each do |num|
-  if tmp_scores == [] && num == STRIKE_SCORE && divided_by_frame_score_pairs.size < TOTAL_GAME_COUNT - 1
+  if tmp_scores.empty? && num == STRIKE_SCORE && divided_by_frame_score_pairs.size < TOTAL_GAME_COUNT - 1
     divided_by_frame_score_pairs << [num]
     tmp_scores = []
   else
