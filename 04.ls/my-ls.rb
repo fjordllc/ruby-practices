@@ -2,7 +2,6 @@
 
 # frozen_string_literal: true
 
-require 'debug'
 require 'optparse'
 
 SEGMENT_LENGTH = 3
@@ -17,12 +16,20 @@ def transpose(entities)
   entities.transpose
 end
 
-under_entities = Dir.glob('*')
-OptionParser.new do |options|
-  options.on("-a", Integer) do |year|
-    under_entities = Dir.entries('.')
-  end
-end.parse!
+def assign_entities(params)
+  return Dir.entries('.') if params[:a]
+  Dir.glob('*')
+end
+
+opt = OptionParser.new
+
+params = {}
+
+opt.on('-a') {|v| params[:a] = v }
+
+opt.parse!(ARGV)
+
+under_entities = assign_entities(params)
 
 divided_entities = divide_into_segments(under_entities)
 
