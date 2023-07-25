@@ -19,7 +19,7 @@ last_day = Date.new(entered_day.year, entered_day.month, -1)
 
 #calendarを表示
 week_day_box = Array.new(7)
-puts "#{entered_day.month}月 #{entered_day.year}"
+puts "      #{entered_day.month}月 #{entered_day.year}"
 puts "日 月 火 水 木 金 土"
 if first_day.cwday != 7
   print  "   " * (first_day.cwday)
@@ -34,3 +34,4 @@ end
   print " "
   puts "" if date.saturday?
 end
+puts ""
