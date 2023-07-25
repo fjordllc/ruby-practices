@@ -18,6 +18,7 @@ end
 
 def assign_entities(params)
   return Dir.entries('.') if params[:a]
+
   Dir.glob('*')
 end
 
@@ -25,7 +26,7 @@ opt = OptionParser.new
 
 params = {}
 
-opt.on('-a') {|v| params[:a] = v }
+opt.on('-a') { |v| params[:a] = v }
 
 opt.parse!(ARGV)
 
@@ -33,7 +34,7 @@ under_entities = assign_entities(params)
 
 divided_entities = divide_into_segments(under_entities)
 
-longest_entity_length = divided_entities.flatten.max_by { |element| element.length }.length
+longest_entity_length = divided_entities.flatten.max_by(&:length).length
 
 transposed_entities = transpose(divided_entities)
 
