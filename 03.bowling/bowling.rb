@@ -41,4 +41,4 @@ divided_by_frame_score_pairs.each_with_index do |each_frame_scores, i|
   end
 end
 
-p frame_result_point_pairs.flatten.sum
+puts frame_result_point_pairs.flatten.sum
