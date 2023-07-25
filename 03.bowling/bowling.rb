@@ -24,21 +24,21 @@ end
 
 frame_result_points = []
 frames_score_points.each_with_index do |frame_scores, i|
-  if frame_scores.length == 1
-    frame_result_points << if frames_score_points[i + 1] && frames_score_points[i + 2] && frames_score_points[i + 1].size == 1
-                                  frame_scores + [frames_score_points[i + 1][0]] + [frames_score_points[i + 2][0]]
-                                else
-                                  frame_scores + frames_score_points[i + 1]&.first(2)
-                                end
-  elsif frame_scores.length == 2
-    frame_result_points << if frame_scores.sum == STRIKE_SCORE
-                                  frame_scores << frames_score_points[i + 1][0]
-                                else
-                                  frame_scores
-                                end
-  else
-    frame_result_points << frame_scores
-  end
+  frame_result_points << if frame_scores.length == 1
+                           if frames_score_points[i + 1] && frames_score_points[i + 2] && frames_score_points[i + 1].size == 1
+                             frame_scores + [frames_score_points[i + 1][0]] + [frames_score_points[i + 2][0]]
+                           else
+                             frame_scores + frames_score_points[i + 1]&.first(2)
+                           end
+                         elsif frame_scores.length == 2
+                           if frame_scores.sum == STRIKE_SCORE
+                             frame_scores << frames_score_points[i + 1][0]
+                           else
+                             frame_scores
+                           end
+                         else
+                           frame_scores
+                         end
 end
 
 puts frame_result_points.flatten.sum
