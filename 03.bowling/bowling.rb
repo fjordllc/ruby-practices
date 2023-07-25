@@ -32,7 +32,7 @@ divided_by_frame_score_pairs.each_with_index do |each_frame_scores, i|
                                 end
   elsif each_frame_scores.length == 2
     frame_result_point_pairs << if each_frame_scores.sum == STRIKE_SCORE
-                                  each_frame_scores.push(divided_by_frame_score_pairs[i + 1][0])
+                                  each_frame_scores << divided_by_frame_score_pairs[i + 1][0]
                                 else
                                   each_frame_scores
                                 end
