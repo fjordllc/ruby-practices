@@ -2,7 +2,6 @@
 # frozen_string_literal: true
 
 NUMBER_OF_ROW = 3
-target_path = ARGV[0] ||= './'
 
 def get_filenames(target_path)
   Dir.glob('*', base: target_path)
@@ -24,5 +23,6 @@ def output(filenames)
   end
 end
 
+target_path = ARGV[0] || './'
 filenames = get_filenames(target_path)
 output(filenames)
