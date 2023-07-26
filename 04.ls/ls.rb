@@ -15,13 +15,13 @@ def select_option
   params
 end
 
-SELECTED_OPTION = select_option
+selected_option = select_option
 
-def acquire_files(a_option: false)
+def acquire_files(selected_directory:, a_option: false)
   if a_option
-    Dir.glob('*', File::FNM_DOTMATCH, base: SELECTED_OPTION[:dir])
+    Dir.glob('*', File::FNM_DOTMATCH, base: selected_directory)
   else
-    Dir.glob('*', base: SELECTED_OPTION[:dir])
+    Dir.glob('*', base: selected_directory)
   end
 end
 
@@ -44,4 +44,4 @@ def generate_files_for_display(files, number_of_columns)
   end
 end
 
-puts generate_files_for_display(acquire_files(a_option: SELECTED_OPTION[:a]), NUMBER_OF_COLUMNS)
+puts generate_files_for_display(acquire_files(selected_directory: selected_option[:dir], a_option: selected_option[:a]), NUMBER_OF_COLUMNS)
