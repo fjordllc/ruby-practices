@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 NUMBER_OF_COL = 3
+SPACE_WIDTH = 2
 
 def get_filenames(target_path)
   Dir.glob('*', base: target_path)
@@ -9,18 +10,17 @@ end
 
 def output(filenames)
   number_of_row = ((filenames.size - 1) / NUMBER_OF_COL) + 1
+  filenames_table = filenames.each_slice(number_of_row).to_a
+
   ljust_widths = []
-
-  split_filenames = filenames.each_slice(number_of_row).to_a
-
-  split_filenames.each do |col|
-    ljust_widths << col.map(&:size).max + 2
+  filenames_table.each do |col|
+    ljust_widths << col.map(&:size).max + SPACE_WIDTH
   end
 
   number_of_row.times do |row|
     NUMBER_OF_COL.times do |col|
-      # split_filenamesのcolとrowを入れ替えて出力
-      print split_filenames[col][row].ljust(ljust_widths[col]) unless split_filenames[col][row].nil?
+      target_filename = filenames_table[col][row] #colとrowを入れ替えて出力させる
+      print target_filename.ljust(ljust_widths[col]) unless target_filename.nil?
     end
     print "\n"
   end
