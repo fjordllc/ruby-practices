@@ -36,7 +36,7 @@ def get_column_width(files)
   (maximum_number_of_characters.next..).find { |n| (n % MULTIPLE_OF_COLUMN_WIDTH).zero? }
 end
 
-def display(files, number_of_columns)
+def generate_files_for_display(files, number_of_columns)
   column_width = get_column_width(files)
   transposed_files = transpose_by_each_columns(files, number_of_columns)
   transposed_files.map do |files_each_lines|
@@ -44,4 +44,4 @@ def display(files, number_of_columns)
   end
 end
 
-puts display(acquire_files(a_option: SELECTED_OPTION[:a]), NUMBER_OF_COLUMNS)
+puts generate_files_for_display(acquire_files(a_option: SELECTED_OPTION[:a]), NUMBER_OF_COLUMNS)
