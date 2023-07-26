@@ -16,7 +16,7 @@ def transpose(entities)
   entities.transpose
 end
 
-def assign_entities(params)
+def list_filenames(params)
   return Dir.entries('.') if params[:a]
 
   Dir.glob('*')
@@ -27,7 +27,7 @@ params = {}
 opt.on('-a') { |v| params[:a] = v }
 opt.parse!(ARGV)
 
-under_entities = assign_entities(params)
+under_entities = list_filenames(params)
 divided_entities = divide_into_segments(under_entities)
 longest_entity_length = divided_entities.flatten.max_by(&:length).length
 transposed_entities = transpose(divided_entities)
