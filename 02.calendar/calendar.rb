@@ -26,7 +26,7 @@ if first_day.cwday != 7
 end
 (first_day..last_day).each do |date|
   day = date.day
-  if Date.today.day == day
+  if today.day == day
     print " " * (2 - day.to_s.length) + "\e[7m#{day}\e[0m"
   else
     print "#{day}".rjust(2)
@@ -34,4 +34,4 @@ end
   print " "
   puts "" if date.saturday?
 end
-puts ""
+puts
