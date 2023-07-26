@@ -21,9 +21,7 @@ last_day = Date.new(entered_day.year, entered_day.month, -1)
 week_day_box = Array.new(7)
 puts "      #{entered_day.month}月 #{entered_day.year}"
 puts "日 月 火 水 木 金 土"
-if first_day.cwday != 7
-  print  "   " * (first_day.cwday)
-end
+print  "   " * (first_day.cwday) unless first_day.sunday?
 (first_day..last_day).each do |date|
   day = date.day
   if today.day == day
