@@ -1,23 +1,26 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-NUMBER_OF_ROW = 3
+NUMBER_OF_COL = 3
+SPACE_WIDTH = 2
 
 def get_filenames(target_path)
   Dir.glob('*', base: target_path)
 end
 
 def output(filenames)
-  number_of_col = ((filenames.size - 1) / NUMBER_OF_ROW) + 1
-  ljust_widths = []
+  number_of_row = ((filenames.size - 1) / NUMBER_OF_COL) + 1
+  filenames_table = filenames.each_slice(number_of_row).to_a
 
-  filenames.each_slice(number_of_col) do |row|
-    ljust_widths << row.map(&:size).max
+  ljust_widths = []
+  filenames_table.each do |col|
+    ljust_widths << col.map(&:size).max + SPACE_WIDTH
   end
 
-  number_of_col.times do |col|
-    NUMBER_OF_ROW.times do |row|
-      print filenames[col + row * number_of_col].ljust(ljust_widths[row] + 2) if filenames[col + row * number_of_col]
+  number_of_row.times do |row|
+    NUMBER_OF_COL.times do |col|
+      target_filename = filenames_table[col][row] #colとrowを入れ替えて出力させる
+      print target_filename.ljust(ljust_widths[col]) unless target_filename.nil?
     end
     print "\n"
   end
