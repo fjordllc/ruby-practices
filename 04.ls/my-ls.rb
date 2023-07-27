@@ -18,6 +18,7 @@ end
 
 def list_filenames(params)
   return Dir.entries('.') if params[:a]
+  return Dir.glob('*').reverse if params[:r]
 
   Dir.glob('*')
 end
@@ -25,6 +26,7 @@ end
 opt = OptionParser.new
 params = {}
 opt.on('-a') { |v| params[:a] = v }
+opt.on('-r') { |v| params[:r] = v }
 opt.parse!(ARGV)
 
 under_entities = list_filenames(params)
