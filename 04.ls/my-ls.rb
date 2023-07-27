@@ -2,7 +2,7 @@
 
 # frozen_string_literal: true
 
-require 'debug'
+require 'optparse'
 
 SEGMENT_LENGTH = 3
 
@@ -16,10 +16,20 @@ def transpose(entities)
   entities.transpose
 end
 
-divided_entities = divide_into_segments(Dir.glob('*'))
+def list_filenames(params)
+  return Dir.entries('.') if params[:a]
 
-longest_entity_length = divided_entities.flatten.max_by { |element| element.length }.length
+  Dir.glob('*')
+end
 
+opt = OptionParser.new
+params = {}
+opt.on('-a') { |v| params[:a] = v }
+opt.parse!(ARGV)
+
+under_entities = list_filenames(params)
+divided_entities = divide_into_segments(under_entities)
+longest_entity_length = divided_entities.flatten.max_by(&:length).length
 transposed_entities = transpose(divided_entities)
 
 transposed_entities.each do |column_entitites|
