@@ -12,10 +12,7 @@ def output(filenames)
   number_of_row = ((filenames.size - 1) / NUMBER_OF_COL) + 1
   filenames_table = filenames.each_slice(number_of_row).to_a
 
-  ljust_widths = []
-  filenames_table.each do |col|
-    ljust_widths << col.map(&:size).max + SPACE_WIDTH
-  end
+  ljust_widths = filenames_table.map{|cols| cols.map(&:size).max + SPACE_WIDTH}
 
   number_of_row.times do |row|
     NUMBER_OF_COL.times do |col|
