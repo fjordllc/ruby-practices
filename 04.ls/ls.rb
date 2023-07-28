@@ -1,11 +1,22 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'optparse'
+
 NUMBER_OF_COL = 3
 SPACE_WIDTH = 2
 
 def get_filenames(target_path)
-  Dir.glob('*', base: target_path)
+  opt = OptionParser.new
+  params = {}
+  opt.on('-a') {|v| params[:a] = v }
+  opt.parse(ARGV)
+
+  if params[:a]
+    Dir.entries(target_path).sort
+  else
+    Dir.glob('*', base: target_path)
+  end
 end
 
 def output(filenames)
