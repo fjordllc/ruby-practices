@@ -21,7 +21,6 @@ frame10 = shots[18..].flatten.reject(&:zero?)
 frames.slice!(9, 11)
 frames << frame10
 
-
 def double_strike?(time, frames)
   next_frame = frames[time + 1]
   next_to_frame = frames[time + 2]
