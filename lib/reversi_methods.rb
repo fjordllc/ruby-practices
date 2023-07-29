@@ -30,7 +30,7 @@ def copy_board(to_board, from_board)
 end
 
 def put_stone!(board, cell_ref, stone_color, execute = true) # rubocop:disable Style/OptionalBooleanParameter
-  pos = Position.new(cell_ref:)
+  pos = Position.new(cell_ref)
   raise '無効なポジションです' if pos.invalid?
   raise 'すでに石が置かれています' unless pos.stone_color(board) == BLANK_CELL
 
@@ -72,7 +72,7 @@ def placeable?(board, attack_stone_color)
     cols.each.with_index do |cell, row|
       next unless cell == BLANK_CELL # 空セルでなければ判定skip
 
-      position = Position.new(row:, col:)
+      position = Position.new(row, col)
       return true if put_stone!(board, position.to_cell_ref, attack_stone_color, false)
     end
   end

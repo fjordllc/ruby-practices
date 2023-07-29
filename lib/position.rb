@@ -19,13 +19,15 @@ class Position
 
   attr_accessor :row, :col
 
-  def initialize(cell_ref: nil, row: nil, col: nil)
-    if cell_ref
-      @row = ROW.index(cell_ref[0])
-      @col = COL.index(cell_ref[1])
-    else
-      @row = row
+  def initialize(row_or_cell_ref, col = nil)
+    if col
+      # Position.new(1, 5) のような呼び出し
+      @row = row_or_cell_ref
       @col = col
+    else
+      # Position.new('f7')のような呼び出し
+      @row = ROW.index(row_or_cell_ref[0])
+      @col = COL.index(row_or_cell_ref[1])
     end
   end
 
@@ -51,14 +53,14 @@ class Position
 
   def next_position(direction)
     case direction
-    when TOP_LEFT     then Position.new(row: row - 1, col: col - 1)
-    when TOP          then Position.new(row:, col: col - 1)
-    when TOP_RIGHT    then Position.new(row: row + 1, col: col - 1)
-    when LEFT         then Position.new(row: row - 1, col:)
-    when RIGHT        then Position.new(row: row + 1, col:)
-    when BOTTOM_LEFT  then Position.new(row: row - 1, col: col + 1)
-    when BOTTOM       then Position.new(row:, col: col + 1)
-    when BOTTOM_RIGHT then Position.new(row: row + 1, col: col + 1)
+    when TOP_LEFT     then Position.new(row - 1,  col - 1)
+    when TOP          then Position.new(row,      col - 1)
+    when TOP_RIGHT    then Position.new(row + 1,  col - 1)
+    when LEFT         then Position.new(row - 1,  col)
+    when RIGHT        then Position.new(row + 1,  col)
+    when BOTTOM_LEFT  then Position.new(row - 1,  col + 1)
+    when BOTTOM       then Position.new(row,      col + 1)
+    when BOTTOM_RIGHT then Position.new(row + 1,  col + 1)
     else raise 'Unknown direction'
     end
   end
