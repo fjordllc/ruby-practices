@@ -8,7 +8,7 @@ BLANK_CELL = 0
 
 def output(board)
   puts "  #{Position::ROW.join(' ')}"
-  board.each.with_index do |row, i|
+  board.transpose.each.with_index do |row, i|
     print Position::COL[i]
     row.each do |cell|
       case cell
@@ -22,9 +22,9 @@ def output(board)
 end
 
 def copy_board(to_board, from_board)
-  from_board.each.with_index do |col, col_i|
-    col.each.with_index do |cell, row_j|
-      to_board[col_i][row_j] = cell
+  from_board.each.with_index do |cols, row|
+    cols.each.with_index do |cell, col|
+      to_board[row][col] = cell
     end
   end
 end
@@ -36,7 +36,7 @@ def put_stone!(board, cell_ref, stone_color, execute = true) # rubocop:disable S
 
   # コピーした盤面にて石の配置を試みて、成功すれば反映する
   copied_board = Marshal.load(Marshal.dump(board))
-  copied_board[pos.row][pos.col] = stone_color
+  copied_board[pos.col][pos.row] = stone_color
 
   turn_succeed = false
   Position::DIRECTIONS.each do |direction|
@@ -56,7 +56,7 @@ def turn!(board, target_pos, attack_stone_color, direction)
 
   next_pos = target_pos.next_position(direction)
   if (next_pos.stone_color(board) == attack_stone_color) || turn!(board, next_pos, attack_stone_color, direction)
-    board[target_pos.col][target_pos.row] = attack_stone_color
+    board[target_pos.row][target_pos.col] = attack_stone_color
     true
   else
     false
@@ -68,8 +68,8 @@ def finished?(board)
 end
 
 def placeable?(board, attack_stone_color)
-  board.each.with_index do |cols, col|
-    cols.each.with_index do |cell, row|
+  board.each.with_index do |cols, row|
+    cols.each.with_index do |cell, col|
       next unless cell == BLANK_CELL # 空セルでなければ判定skip
 
       position = Position.new(row, col)

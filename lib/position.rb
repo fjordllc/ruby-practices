@@ -42,7 +42,7 @@ class Position
   def stone_color(board)
     return nil if out_of_board?
 
-    board[col][row]
+    board[row][col]
   end
 
   def to_cell_ref

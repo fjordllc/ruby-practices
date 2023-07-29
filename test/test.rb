@@ -5,8 +5,8 @@ require_relative '../lib/reversi_methods'
 
 def build_board(datas)
   board = Array.new(8) { Array.new(8, BLANK_CELL) }
-  datas.split("\n").each.with_index do |row, i|
-    row.chars.each.with_index do |cell, j|
+  datas.split("\n").each.with_index do |row, j|
+    row.chars.each.with_index do |cell, i|
       board[i][j] = cell.to_i
     end
   end
