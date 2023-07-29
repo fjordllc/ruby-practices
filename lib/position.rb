@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 class Position
-  # チェスボードを参考として、マスを 'a8', 'd6' と書いて表現する。
-  # 変数名cell_refとして取り扱う。
+  # マスを'f3','d6'などの表記で表現する。変数名cell_refとして取り扱う。
   ROW = %w[a b c d e f g h].freeze
-  COL = %w[8 7 6 5 4 3 2 1].freeze
+  COL = %w[1 2 3 4 5 6 7 8].freeze
 
   DIRECTIONS = [
     TOP_LEFT      = :top_left,

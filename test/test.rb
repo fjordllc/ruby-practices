@@ -43,7 +43,7 @@ class TestReversi < Minitest::Test
 
   def test_put_stone
     board = initial_board
-    assert put_stone!(board, 'e3', BLACK_STONE)
+    assert put_stone!(board, 'e6', BLACK_STONE)
     assert_equal build_board(<<~BOARD), board
       00000000
       00000000
@@ -54,7 +54,7 @@ class TestReversi < Minitest::Test
       00000000
       00000000
     BOARD
-    assert put_stone!(board, 'f5', WHITE_STONE)
+    assert put_stone!(board, 'f4', WHITE_STONE)
     assert_equal build_board(<<~BOARD), board
       00000000
       00000000
@@ -79,7 +79,7 @@ class TestReversi < Minitest::Test
       00200000
     BOARD
     board = build_board(initial_data)
-    refute put_stone!(board, 'b8', BLACK_STONE)
+    refute put_stone!(board, 'b1', BLACK_STONE)
     assert_equal build_board(initial_data), board
   end
 
@@ -94,7 +94,7 @@ class TestReversi < Minitest::Test
       00000000
       00000000
     BOARD
-    assert put_stone!(board, 'b5', BLACK_STONE)
+    assert put_stone!(board, 'b4', BLACK_STONE)
     assert_equal build_board(<<~BOARD), board
       00000000
       00020000
