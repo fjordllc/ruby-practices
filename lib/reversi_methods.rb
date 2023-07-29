@@ -11,17 +11,6 @@ BLANK_CELL = 0
 ROW = %w[a b c d e f g h].freeze
 COL = %w[8 7 6 5 4 3 2 1].freeze
 
-DIRECTIONS = [
-  DIRECTION_TOP_LEFT      = :top_left,
-  DIRECTION_TOP           = :top,
-  DIRECTION_TOP_RIGHT     = :top_right,
-  DIRECTION_LEFT          = :left,
-  DIRECTION_RIGHT         = :right,
-  DIRECTION_BOTTOM_LEFT   = :bottom_left,
-  DIRECTION_BOTTOM        = :bottom,
-  DIRECTION_BOTTOM_RIGHT  = :bottom_right
-].freeze
-
 def output(board)
   puts "  #{ROW.join(' ')}"
   board.each.with_index do |row, i|
@@ -55,7 +44,7 @@ def put_stone!(board, cellstr, stone_color, execute = true) # rubocop:disable St
   copied_board[pos.row][pos.col] = stone_color
 
   turn_succeed = false
-  DIRECTIONS.each do |direction|
+  Position::DIRECTIONS.each do |direction|
     next_pos = pos.next_position(direction)
     turn_succeed = true if turn!(copied_board, next_pos, stone_color, direction)
   end

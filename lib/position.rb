@@ -1,6 +1,18 @@
 # frozen_string_literal: true
 
 class Position
+
+  DIRECTIONS = [
+    TOP_LEFT      = :top_left,
+    TOP           = :top,
+    TOP_RIGHT     = :top_right,
+    LEFT          = :left,
+    RIGHT         = :right,
+    BOTTOM_LEFT   = :bottom_left,
+    BOTTOM        = :bottom,
+    BOTTOM_RIGHT  = :bottom_right
+  ].freeze
+
   attr_accessor :row, :col
 
   def initialize(cellstr: nil, row: nil, col: nil)
@@ -35,14 +47,14 @@ class Position
 
   def next_position(direction)
     case direction
-    when DIRECTION_TOP_LEFT     then Position.new(row: row - 1, col: col - 1)
-    when DIRECTION_TOP          then Position.new(row:, col: col - 1)
-    when DIRECTION_TOP_RIGHT    then Position.new(row: row + 1, col: col - 1)
-    when DIRECTION_LEFT         then Position.new(row: row - 1, col:)
-    when DIRECTION_RIGHT        then Position.new(row: row + 1, col:)
-    when DIRECTION_BOTTOM_LEFT  then Position.new(row: row - 1, col: col + 1)
-    when DIRECTION_BOTTOM       then Position.new(row:, col: col + 1)
-    when DIRECTION_BOTTOM_RIGHT then Position.new(row: row + 1, col: col + 1)
+    when TOP_LEFT     then Position.new(row: row - 1, col: col - 1)
+    when TOP          then Position.new(row:, col: col - 1)
+    when TOP_RIGHT    then Position.new(row: row + 1, col: col - 1)
+    when LEFT         then Position.new(row: row - 1, col:)
+    when RIGHT        then Position.new(row: row + 1, col:)
+    when BOTTOM_LEFT  then Position.new(row: row - 1, col: col + 1)
+    when BOTTOM       then Position.new(row:, col: col + 1)
+    when BOTTOM_RIGHT then Position.new(row: row + 1, col: col + 1)
     else raise 'Unknown direction'
     end
   end
