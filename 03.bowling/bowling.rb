@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+require 'debug'
 score = ARGV[0]
 scores = score.split(',')
 shots = []
@@ -13,23 +13,13 @@ scores.each do |s|
 end
 
 frames = []
-shots.each_slice(2).with_index do |s, index|
-  if index < 9
-    frames << s
-  elsif index == 9
-    frame10 = []
-    18.upto(shots.length - 1) do |i|
-      frame10 << shots[i] unless shots[i].zero?
-    end
-    if frame10.empty?
-      2.times do
-        frame10 << 0
-      end
-    end
-    frames << frame10
-    break
-  end
+shots.each_slice(2) do |shot|
+  frames << shot
 end
+
+frame_10 = shots[18..].flatten
+frames.slice!(9, 11)
+frames << frame_10
 
 def calc_strike_point(time, frames)
   if frames[time + 1][0] == 10
