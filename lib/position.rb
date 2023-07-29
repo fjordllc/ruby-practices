@@ -2,7 +2,7 @@
 
 class Position
   # チェスボードを参考として、マスを 'a8', 'd6' と書いて表現する。
-  # 変数名cellstrとして取り扱う。
+  # 変数名cell_refとして取り扱う。
   ROW = %w[a b c d e f g h].freeze
   COL = %w[8 7 6 5 4 3 2 1].freeze
 
@@ -19,10 +19,10 @@ class Position
 
   attr_accessor :row, :col
 
-  def initialize(cellstr: nil, row: nil, col: nil)
-    if cellstr
-      @row = ROW.index(cellstr[0])
-      @col = COL.index(cellstr[1])
+  def initialize(cell_ref: nil, row: nil, col: nil)
+    if cell_ref
+      @row = ROW.index(cell_ref[0])
+      @col = COL.index(cell_ref[1])
     else
       @row = row
       @col = col
@@ -43,7 +43,7 @@ class Position
     board[col][row]
   end
 
-  def to_cellstr
+  def to_cell_ref
     return '盤面外' if out_of_board?
 
     "#{ROW[row]}#{COL[col]}"
