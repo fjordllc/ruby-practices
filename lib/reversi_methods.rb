@@ -6,15 +6,10 @@ WHITE_STONE = 1
 BLACK_STONE = 2
 BLANK_CELL = 0
 
-# チェスボードを参考として、マスを 'a8', 'd6' と書いて表現する。
-# 変数名cellstrとして取り扱う。
-ROW = %w[a b c d e f g h].freeze
-COL = %w[8 7 6 5 4 3 2 1].freeze
-
 def output(board)
-  puts "  #{ROW.join(' ')}"
+  puts "  #{Position::ROW.join(' ')}"
   board.each.with_index do |row, i|
-    print COL[i]
+    print Position::COL[i]
     row.each do |cell|
       case cell
       when WHITE_STONE then print ' ○'
