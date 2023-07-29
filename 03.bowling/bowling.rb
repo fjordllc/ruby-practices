@@ -17,19 +17,19 @@ shots.each_slice(2) do |shot|
   frames << shot
 end
 
-frame_10 = shots[18..].flatten
+frame_10 = shots[18..].flatten.reject { |n| n.zero? }
 frames.slice!(9, 11)
 frames << frame_10
 
 def calc_strike_point(time, frames)
-  if frames[time + 1][0] == 10
-    if time < 8
-      20 + (frames[time + 2] ? frames[time + 2][0] : 0)
-    else
-      20 + (frames[time + 1][1] || 0)
-    end
-  else
-    time < 8 ? 10 + frames[time + 1].sum : 10 + frames[time + 1][0] + frames[time + 1][1]
+  next_frame = frames[time + 1]
+  next_to_frame = frames[time + 2]
+  if time == 8 && next_frame
+    10 + next_frame[0] + next_frame[1]
+  elsif next_frame && next_to_frame && next_frame[0] == 10
+    20 + next_to_frame[0]
+  elsif next_frame
+    10 + next_frame[0]
   end
 end
 
@@ -43,7 +43,7 @@ frames.each_with_index do |frame, i|
              else
                frame.sum
              end
-           elsif i == 9
+             elsif i == 9
              frame.sum
            end
 end
