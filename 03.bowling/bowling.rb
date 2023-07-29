@@ -36,7 +36,7 @@ def calc_strike_point(time, frames)
   elsif double_strike?(time, frames)
     20 + (next_to_frame[0] || 0)
   elsif next_frame
-    10 + (next_frame[0] || 0)
+    10 + next_frame.sum
   end
 end
 
