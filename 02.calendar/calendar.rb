@@ -24,7 +24,7 @@ puts "日 月 火 水 木 金 土"
 print  "   " * (first_day.cwday) unless first_day.sunday?
 (first_day..last_day).each do |date|
   day = date.day
-  if today.day == day
+  if today == date
     print " " * (2 - day.to_s.length) + "\e[7m#{day}\e[0m"
   else
     print "#{day}".rjust(2)
