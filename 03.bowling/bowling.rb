@@ -39,7 +39,7 @@ def calc_strike_point(time, frames)
   end
 end
 
-point = frames.each_with_index do |frame, i|
+point = frames.each_with_index.sum do |frame, i|
   if i < 9
     if frame[0] == 10 # strike
       calc_strike_point(i, frames)
