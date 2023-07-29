@@ -21,12 +21,18 @@ frame_10 = shots[18..].flatten.reject { |n| n.zero? }
 frames.slice!(9, 11)
 frames << frame_10
 
+def double_strike?(time, frames)
+  next_frame = frames[time + 1]
+  next_to_frame = frames[time + 2]
+  next_frame && next_to_frame && next_frame[0] == 10
+end
+
 def calc_strike_point(time, frames)
   next_frame = frames[time + 1]
   next_to_frame = frames[time + 2]
-  if time == 8 && next_frame
+  if time == 8 #10フレーム目は3投することもあるため。
     10 + next_frame[0] + next_frame[1]
-  elsif next_frame && next_to_frame && next_frame[0] == 10
+  elsif double_strike?(time, frames)
     20 + next_to_frame[0]
   elsif next_frame
     10 + next_frame[0]
