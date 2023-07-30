@@ -132,8 +132,7 @@ OptionParser.new do |o|
   o.on('-a') { a_option = true }
   o.on('-r') { r_option = true }
   o.on('-l') { l_option = true }
-  # TODO:	後のプラクティスで実装
-
+  
   o.parse!(ARGV) # パス指定オプションが入る
 rescue OptionParser::InvalidOption => e
   puts e.message
