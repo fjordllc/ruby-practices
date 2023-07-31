@@ -40,6 +40,6 @@ def generate_files_for_display(files, number_of_col)
   end
 end
 
-selected_option = select_option
-acquired_files = acquire_files(selected_dir: selected_option[:dir], a_option: selected_option[:a], r_option: selected_option[:r])
+options = select_option
+acquired_files = acquire_files(selected_dir: options[:dir], a_option: options[:a], r_option: options[:r])
 puts generate_files_for_display(acquired_files, NUMBER_OF_COL)
