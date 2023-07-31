@@ -11,16 +11,18 @@ def select_option
   params = {}
   opt = OptionParser.new
   opt.on('-a') { |v| params[:a] = v }
+  opt.on('-r') { |v| params[:r] = v }
   params[:dir] = opt.parse!(ARGV)[0]
   params
 end
 
-def acquire_files(selected_directory:, a_option: false)
-  if a_option
-    Dir.glob('*', File::FNM_DOTMATCH, base: selected_directory)
-  else
-    Dir.glob('*', base: selected_directory)
-  end
+def acquire_files(selected_directory:, a_option: false, r_option: false)
+  files = if a_option
+                Dir.glob('*', File::FNM_DOTMATCH, base: selected_directory)
+              else
+                Dir.glob('*', base: selected_directory)
+              end
+  r_option ? files.reverse : files
 end
 
 def transpose_by_each_columns(files, number_of_columns)
@@ -43,5 +45,5 @@ def generate_files_for_display(files, number_of_columns)
 end
 
 selected_option = select_option
-acquired_files = acquire_files(selected_directory: selected_option[:dir], a_option: selected_option[:a])
+acquired_files = acquire_files(selected_directory: selected_option[:dir], a_option: selected_option[:a], r_option: selected_option[:r])
 puts generate_files_for_display(acquired_files, NUMBER_OF_COLUMNS)
