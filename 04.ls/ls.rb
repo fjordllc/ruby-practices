@@ -30,7 +30,7 @@ class File::Stat
       'characterSpecial' => 'c',
       'blockSpecial' => 'b',
       'fifo' => 'p',
-      'link' => 'l',
+      'link' => 'l', # シンボリックリンクは判別されない
       'socket' => 's',
       'unknown' => '?'
     }[ftype]
@@ -75,8 +75,12 @@ def make_files_info(file_dir_list, path)
   list = file_dir_list.map do |n|
     fs = File::Stat.new("#{path}/#{n}")
     total_blocks += fs.blocks
+
+    # シンボリックリンクの時はリンク先のfiletypeが表示されてしまう。
+    # シンボリックリンクを示す"l"を表示するために、個別の分岐を適用
+    mode = File.symlink?("#{path}/#{n}") ? "l#{fs.mode_formatted}" : fs.filetype + fs.mode_formatted
     {
-      mode: fs.filetype + fs.mode_formatted,
+      mode:,
       num_link: fs.nlink,
       owner: Etc.getpwuid(fs.uid).name,
       group: Etc.getgrgid(fs.gid).name,
@@ -132,7 +136,7 @@ OptionParser.new do |o|
   o.on('-a') { a_option = true }
   o.on('-r') { r_option = true }
   o.on('-l') { l_option = true }
-  
+
   o.parse!(ARGV) # パス指定オプションが入る
 rescue OptionParser::InvalidOption => e
   puts e.message
