@@ -17,11 +17,7 @@ def select_option
 end
 
 def acquire_files(selected_directory:, a_option: false, r_option: false)
-  files = if a_option
-                Dir.glob('*', File::FNM_DOTMATCH, base: selected_directory)
-              else
-                Dir.glob('*', base: selected_directory)
-              end
+  files = a_option ? Dir.glob('*', File::FNM_DOTMATCH, base: selected_directory) : Dir.glob('*', base: selected_directory)
   r_option ? files.reverse : files
 end
 
