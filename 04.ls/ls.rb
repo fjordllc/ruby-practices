@@ -6,12 +6,15 @@ require 'optparse'
 NUMBER_OF_COL = 3
 SPACE_WIDTH = 2
 
-def get_filenames(target_path)
+def search_option
   opt = OptionParser.new
   params = {}
   opt.on('-a') {|v| params[:a] = v }
-  opt.parse(ARGV)
+  opt.parse!(ARGV)
+  params
+end
 
+def get_filenames(target_path, params)
   if params[:a]
     Dir.entries(target_path).sort
   else
@@ -36,6 +39,7 @@ def output(filenames)
   end
 end
 
+option = search_option
 target_path = ARGV[0] || './'
-filenames = get_filenames(target_path)
+filenames = get_filenames(target_path, option)
 output(filenames)
