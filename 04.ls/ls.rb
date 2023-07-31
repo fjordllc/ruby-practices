@@ -39,7 +39,7 @@ def output(filenames)
   end
 end
 
-option = search_option
+option_params = search_option
 target_path = ARGV[0] || './'
-filenames = get_filenames(target_path, option)
+filenames = get_filenames(target_path, option_params)
 output(filenames)
