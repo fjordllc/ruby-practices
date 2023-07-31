@@ -89,7 +89,9 @@ def make_files_info(file_dir_list, path)
       path: name_with_symlink_target_if_exists(path, n)
     }
   end
-  [total_blocks, list]
+  # ブロック数割り当ての基準が、File.Statでは512Byte,Linux(ls)では1024Byteであるため、
+  # total_block数に差がでる。その問題を解消するために2で割る。
+  [total_blocks / 2, list]
 end
 
 def ls_display_long_format(hash_list, widths)
