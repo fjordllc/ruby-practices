@@ -22,6 +22,33 @@ class String
   end
 end
 
+def add_suid_permission(permission)
+  permission[2] =
+    if permission[2] == 'x'
+      's'
+    else
+      'S'
+    end
+end
+
+def add_sgid_permission(permission)
+  permission[2] =
+    if permission[2] == 'x'
+      's'
+    else
+      'S'
+    end
+end
+
+def add_sticiky_permission(permission)
+  permission[2] =
+    if permission[2] == 'x'
+      't'
+    else
+      'T'
+    end
+end
+
 class File::Stat
   def filetype
     {
@@ -38,7 +65,18 @@ class File::Stat
 
   def mode_formatted
     modes = ['---', '--x', '-w-', '-wx', 'r--', 'r-x', 'rw-', 'rwx']
-    mode.to_s(8)[-3..].chars.map { |num| modes[num.to_i] }.join
+    mode.to_s(8)[-3..].chars.map.with_index do |num, idx|
+      permission = modes[num.to_i].dup
+      case idx # 特殊権限を持つ場合の分岐
+      when 0
+        permission = add_suid_permission(permission) if setuid?
+      when 1
+        permission = add_sgid_permission(permission) if setgid?
+      when 2
+        permission = add_sticiky_permission(permission) if sticky?
+      end
+      permission
+    end.join
   end
 end
 
