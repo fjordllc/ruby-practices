@@ -146,8 +146,14 @@ end
 path_list = ARGV[0] ? ARGV : ['.']
 
 path_list.each do |path|
-  puts "ls: cannot access '#{path}': No such file or directory" unless File.exist?(path)
-  puts File.basename(path) unless File.directory?(path)
+  unless File.exist?(path)
+    puts "ls: cannot access '#{path}': No such file or directory"
+    exit
+  end
+  unless File.directory?(path)
+    puts File.basename(path) unless File.directory?(path)
+    exit
+  end
 
   file_dir_list =
     if a_option
