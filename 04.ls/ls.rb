@@ -30,7 +30,7 @@ def output(filenames)
     else
       NUMBER_OF_COL_MAX
     end
-  # NOTE: OS標準のlsコマンドは横並びではなく縦並びで出力される
+  # NOTE: OS標準のlsコマンドは横並びではなく縦並びで出力される(転置して出力される)
   # NOTE: filenames_tableの要素は行と列が出力したい形(縦並び)とは逆で保存されている
   filenames_table = filenames.each_slice(number_of_row).to_a
   widths = filenames_table.map { |col| col.map(&:size).max + SPACE_WIDTH }
