@@ -1,8 +1,7 @@
-a = (1..20).to_a
+a = (1..20)
 
 a.each do |x|
-    x.to_i
-    case x
+    case 
     when x % 15 == 0 
         puts "FizzBuzz"
     when x % 3 == 0
