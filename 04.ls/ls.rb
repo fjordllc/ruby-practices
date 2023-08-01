@@ -23,6 +23,8 @@ def get_filenames(target_path, params)
 end
 
 def output(filenames)
+  return if filenames.empty?
+
   number_of_row = ((filenames.size - 1) / NUMBER_OF_COL_MAX) + 1
   number_of_col =
     if filenames.size < NUMBER_OF_COL_MAX
@@ -48,4 +50,4 @@ end
 option_params = search_option(ARGV)
 target_path = ARGV[0] || './'
 filenames = get_filenames(target_path, option_params)
-output(filenames) unless filenames.empty?
+output(filenames)
