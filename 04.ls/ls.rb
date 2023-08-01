@@ -38,8 +38,8 @@ def output(filenames)
   number_of_row.times do |row_index|
     number_of_col.times do |col_index|
       # filenames_tableの行と列が逆で保存されているので、col_indexとrow_indexを入れ替えて出力させている
-      current_filename = filenames_table[col_index][row_index]
-      print current_filename.ljust(widths[col_index]) unless current_filename.nil?
+      target_filename = filenames_table[col_index][row_index]
+      print target_filename.ljust(widths[col_index]) unless target_filename.nil?
     end
     print "\n"
   end
