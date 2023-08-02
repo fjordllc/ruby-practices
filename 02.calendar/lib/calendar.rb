@@ -27,6 +27,10 @@ end
 options = ARGV.getopts('m:', 'y:')
 if options['m'].nil? and options['y'].nil?
   Calendar.new.show_calendar(Date.today)
+elsif options['m'].nil?
+  Calendar.new.show_calendar(Date::strptime(options['y']+"-"+Date.today.month.to_s+"-1", "%Y-%m-%d"))
+elsif options['y'].nil?
+  Calendar.new.show_calendar(Date::strptime(Date.today.year.to_s+"-"+options['m']+"-1", "%Y-%m-%d")) 
 else
   Calendar.new.show_calendar(Date::strptime(options['y']+"-"+options['m']+"-1", "%Y-%m-%d"))
 end
