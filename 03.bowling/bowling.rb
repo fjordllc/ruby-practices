@@ -48,7 +48,7 @@ point = frames.each_with_index.sum do |frame, i|
     else
       frame.sum
     end
-  elsif i == 9
+  else
     frame.sum
   end
 end
