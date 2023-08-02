@@ -23,12 +23,10 @@ def double_strike?(next_frame, next_to_frame)
 end
 
 def calc_strike_point(next_frame, next_to_frame)
-  if time == 8 # 10フレーム目は3投することもあるため。
-    10 + (next_frame[0] || 0) + (next_frame[1] || 0)
-  elsif double_strike?(time, frames)
-    20 + (next_to_frame[0] || 0)
-  elsif next_frame
-    10 + next_frame.sum
+  if double_strike?(next_frame, next_to_frame)
+    20 + (next_to_frame[0])
+  else
+    10 + (next_frame[0..1].sum)
   end
 end
 
