@@ -18,15 +18,11 @@ frame10 = shots[18..].flatten.reject(&:zero?)
 frames.slice!(9, 11)
 frames << frame10
 
-def double_strike?(time, frames)
-  next_frame = frames[time + 1]
-  next_to_frame = frames[time + 2]
+def double_strike?(next_frame, next_to_frame)
   next_frame && next_to_frame && next_frame[0] == 10
 end
 
-def calc_strike_point(time, frames)
-  next_frame = frames[time + 1]
-  next_to_frame = frames[time + 2]
+def calc_strike_point(next_frame, next_to_frame)
   if time == 8 # 10フレーム目は3投することもあるため。
     10 + (next_frame[0] || 0) + (next_frame[1] || 0)
   elsif double_strike?(time, frames)
@@ -37,11 +33,13 @@ def calc_strike_point(time, frames)
 end
 
 point = frames.each_with_index.sum do |frame, i|
+  next_frame = frames[i + 1]
+  next_to_frame = frames[i + 2]
   if i < 9
     if frame[0] == 10 # strike
-      calc_strike_point(i, frames)
+      calc_strike_point(next_frame, next_to_frame)
     elsif frame.sum == 10 # spare
-      10 + frames[(i + 1)][0]
+      10 + next_frame[0]
     else
       frame.sum
     end
