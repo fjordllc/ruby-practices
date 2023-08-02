@@ -12,10 +12,7 @@ scores.each do |s|
   end
 end
 
-frames = []
-shots.each_slice(2) do |shot|
-  frames << shot
-end
+frames = shots.each_slice(2).to_a
 
 frame10 = shots[18..].flatten.reject(&:zero?)
 frames.slice!(9, 11)
