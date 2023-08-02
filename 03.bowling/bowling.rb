@@ -26,7 +26,7 @@ def calc_strike_point(next_frame, next_to_frame)
   if double_strike?(next_frame, next_to_frame)
     20 + (next_to_frame[0])
   else
-    10 + (next_frame[0..1].sum)
+    10 + next_frame[0..1].sum
   end
 end
 
