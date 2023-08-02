@@ -4,11 +4,11 @@ score = ARGV[0]
 scores = score.split(',')
 shots = []
 
-strike = 10
+STRIKE = 10
 
 scores.each do |s|
   if s == 'X'
-    shots << strike
+    shots << STRIKE
     shots << 0
   else
     shots << s.to_i
