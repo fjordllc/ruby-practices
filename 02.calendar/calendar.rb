@@ -36,4 +36,4 @@ days.each do |n| #1から最終日までを繰り返し表示
   end
 end
 
-puts 
+puts
