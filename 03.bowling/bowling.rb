@@ -1,40 +1,39 @@
+# frozen_string_literal: true
+
 scores = ARGV[0].split(',').to_a
 
 total_score = 0
 index = 0
 frame = 1
 
-while frame < 11 do
-    if scores[index] == "X"
-        total_score += 10 
-        if scores[index+1] == "X"
-            total_score+=10
-        else
-            total_score += scores[index+1].to_i
-        end
+while frame < 11
+  if scores[index] == 'X'
+    total_score += 10
+    total_score += if scores[index + 1] == 'X'
+                     10
+                   else
+                     scores[index + 1].to_i
+                   end
 
-        if scores[index+2] == "X"
-            total_score+=10
-        else
-            total_score += scores[index+2].to_i
-        end
+    total_score += if scores[index + 2] == 'X'
+                     10
+                   else
+                     scores[index + 2].to_i
+                   end
 
-        index+=1
-        frame+=1
-    else
-        temp = scores[index].to_i + scores[index+1].to_i
-        if temp < 10
-            total_score+= temp
-        else
-            if scores[index+2] == "X"
-                total_score+= (temp+10)
-            else
-                total_score+= (temp+ scores[index+2].to_i)
-            end
-        end
-        index+=2
-        frame+=1
-    end
+    index += 1
+  else
+    temp = scores[index].to_i + scores[index + 1].to_i
+    total_score += if temp < 10
+                     temp
+                   elsif scores[index + 2] == 'X'
+                     (temp + 10)
+                   else
+                     (temp + scores[index + 2].to_i)
+                   end
+    index += 2
+  end
+  frame += 1
 end
 
 puts total_score
