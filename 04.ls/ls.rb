@@ -21,10 +21,10 @@ def acquire_files(selected_dir:, a_option: false, r_option: false)
   r_option ? files.reverse : files
 end
 
-def transpose_by_each_columns(files, number_of_col)
-  files << '' while files.size % number_of_col != 0
-  numbers_of_lines = files.size / number_of_col
-  files.each_slice(numbers_of_lines).to_a.transpose
+def transpose_by_each_columns(files, columns)
+  files << '' while files.size % columns != 0
+  lines = files.size / columns
+  files.each_slice(lines).to_a.transpose
 end
 
 def get_column_width(files)
