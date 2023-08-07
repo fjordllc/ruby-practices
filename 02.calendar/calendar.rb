@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 require 'date'
 
 if ARGV.empty?
@@ -39,10 +41,4 @@ end
 
 
 puts "\n" + "\n"
-
-
-
-
-
-
 
