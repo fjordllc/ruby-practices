@@ -7,7 +7,7 @@ require 'debug'
 NUMBER_OF_COLUMNS = 3
 MULTIPLE_OF_COLUMN_WIDTH = 8
 
-def select_option
+def select_options
   params = {}
   opt = OptionParser.new
   opt.on('-a') { |v| params[:a] = v }
@@ -40,6 +40,6 @@ def generate_files_for_display(files, column_number)
   end
 end
 
-options = select_option
-acquired_files = acquire_files(selected_dir: options[:dir], a_option: options[:a], r_option: options[:r])
-puts generate_files_for_display(acquired_files, NUMBER_OF_COLUMNS)
+options = select_options
+files = acquire_files(selected_dir: options[:dir], a_option: options[:a], r_option: options[:r])
+puts generate_files_for_display(files, NUMBER_OF_COLUMNS)
