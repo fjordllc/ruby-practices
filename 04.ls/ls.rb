@@ -28,8 +28,8 @@ def transpose_by_each_columns(files, columns)
 end
 
 def get_column_width(files)
-  maximum_number_of_characters = files.max_by(&:size).size
-  (maximum_number_of_characters.next..).find { |n| (n % MULTIPLE_OF_COLUMN_WIDTH).zero? }
+  max_of_length = files.max_by(&:length).length
+  (max_of_length.next..).find { |n| (n % MULTIPLE_OF_COLUMN_WIDTH).zero? }
 end
 
 def generate_files_for_display(files, number_of_col)
