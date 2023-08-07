@@ -32,9 +32,9 @@ def get_column_width(files)
   (max_of_length.next..).find { |n| (n % MULTIPLE_OF_COLUMN_WIDTH).zero? }
 end
 
-def generate_files_for_display(files, number_of_columns)
+def generate_files_for_display(files, column_number)
   column_width = get_column_width(files)
-  transposed_files = transpose_by_each_columns(files, number_of_columns)
+  transposed_files = transpose_by_each_columns(files, column_number)
   transposed_files.map do |files_each_lines|
     files_each_lines.map { |file| file.ljust(column_width) }.join('')
   end
