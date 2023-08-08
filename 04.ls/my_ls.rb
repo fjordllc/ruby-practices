@@ -23,7 +23,8 @@ PERMISSION_NUMBERS = { 0 => '---',
 
 def run_ls_with_options
   has_option = options
-  files = Dir.glob('*')
+  files = (has_option[:a] ? Dir.entries('.').sort : Dir.glob('*'))
+  files.reverse! if has_option[:r]
   if has_option[:l]
     line_up_informations(files)
   else
@@ -34,6 +35,8 @@ end
 def options
   opt = OptionParser.new
   params = {}
+  opt.on('-a') { |v| params[:a] = v }
+  opt.on('-r') { |v| params[:r] = v }
   opt.on('-l') { |v| params[:l] = v }
   opt.parse!
   params
@@ -47,7 +50,7 @@ def line_up_files(files)
   (COLUMN_NUMBER - files_number % COLUMN_NUMBER).times { files_with_spaces << '' } if files_number % COLUMN_NUMBER != 0
   output_files = []
   files_with_spaces.each_slice(rows) { |file| output_files << file }
-  output_files.transpose
+  output_files = output_files.transpose
   output(output_files)
 end
 
