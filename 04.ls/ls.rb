@@ -16,9 +16,9 @@ end
 
 def get_filenames(target_path, params)
   if params[:a]
-    Dir.entries(target_path).sort
+    Dir.glob('*', File::FNM_DOTMATCH, base: target_path, sort: true)
   else
-    Dir.glob('*', base: target_path)
+    Dir.glob('*', base: target_path, sort: true)
   end
 end
 
