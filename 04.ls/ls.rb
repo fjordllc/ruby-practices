@@ -8,10 +8,10 @@ SPACE_WIDTH = 2
 
 def search_option(argv)
   opt = OptionParser.new
-  params = {}
-  opt.on('-a') { |v| params[:a] = v }
-  opt.parse!(argv)
-  params
+  option_params = {}
+  opt.on('-a') { |v| option_params[:a] = v }
+  arguments_without_options = opt.parse(argv)
+  return option_params, arguments_without_options
 end
 
 def get_filenames(target_path, params)
@@ -47,7 +47,7 @@ def output(filenames)
   end
 end
 
-option_params = search_option(ARGV)
-target_path = ARGV[0] || './'
+option_params, arguments_without_options = search_option(ARGV)
+target_path = arguments_without_options[0] || './'
 filenames = get_filenames(target_path, option_params)
 output(filenames)
