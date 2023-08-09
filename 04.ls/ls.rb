@@ -11,15 +11,12 @@ def search_option(argv)
   options = {}
   opt.on('-a') { |v| options[:a] = v }
   file_paths = opt.parse(argv)
-  return options, file_paths
+  retrun options, file_paths
 end
 
 def get_filenames(target_path, options)
-  if options[:a]
-    Dir.glob('*', File::FNM_DOTMATCH, base: target_path, sort: true)
-  else
-    Dir.glob('*', base: target_path, sort: true)
-  end
+  dotmatch_flag = options[:a] ? File::FNM_DOTMATCH : 0
+  Dir.glob('*', dotmatch_flag, base: target_path)
 end
 
 def output(filenames)
