@@ -11,7 +11,7 @@ def search_option(argv)
   options = {}
   opt.on('-a') { |v| options[:a] = v }
   file_paths = opt.parse(argv)
-  retrun options, file_paths
+  [options, file_paths]
 end
 
 def get_filenames(target_path, options)
