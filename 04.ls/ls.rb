@@ -8,7 +8,7 @@ SPACE_WIDTH = 2
 
 def search_option(argv)
   opt = OptionParser.new
-  option_params = {}
+  params = {}
   opt.on('-a') { |v| params[:a] = v }
   file_paths = opt.parse(argv)
   return params, file_paths
