@@ -23,7 +23,7 @@ def output(filenames)
   return if filenames.empty?
 
   number_of_row = ((filenames.size - 1) / NUMBER_OF_COL_MAX) + 1
-  number_of_col = filenames.size < NUMBER_OF_COL_MAX ? filenames.size : NUMBER_OF_COL_MAX
+  number_of_col = [filenames.size, NUMBER_OF_COL_MAX].min
 
   # NOTE: OS標準のlsコマンドは横並びではなく縦並びで出力される(転置して出力される)
   # NOTE: filenames_tableの要素は行と列が出力したい形(縦並び)とは逆で保存されている
