@@ -29,6 +29,7 @@ def add_suid_permission(permission)
     else
       'S'
     end
+  permission
 end
 
 def add_sgid_permission(permission)
@@ -38,6 +39,7 @@ def add_sgid_permission(permission)
     else
       'S'
     end
+  permission
 end
 
 def add_sticiky_permission(permission)
@@ -47,6 +49,7 @@ def add_sticiky_permission(permission)
     else
       'T'
     end
+  permission
 end
 
 class File::Stat
