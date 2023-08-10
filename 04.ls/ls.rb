@@ -69,16 +69,18 @@ class File::Stat
   def mode_formatted
     modes = ['---', '--x', '-w-', '-wx', 'r--', 'r-x', 'rw-', 'rwx']
     mode.to_s(8)[-3..].chars.map.with_index do |num, idx|
-      permission = modes[num.to_i].dup
-      case idx # 特殊権限を持つ場合の分岐
-      when 0
-        permission = add_suid_permission(permission) if setuid?
-      when 1
-        permission = add_sgid_permission(permission) if setgid?
-      when 2
-        permission = add_sticiky_permission(permission) if sticky?
-      end
-      permission
+      permission =
+        case idx # 特殊権限を持つ場合の分岐
+        when 0
+          add_suid_permission(modes[num.to_i].dup) if setuid?
+        when 1
+          add_sgid_permission(modes[num.to_i].dup) if setgid?
+        when 2
+          add_sticiky_permission(modes[num.to_i].dup) if sticky?
+        end
+
+      # 通常権限(後置ifがfalse)の場合はpermissionにnilが入るので ||　で対応
+      permission || modes[num.to_i].dup
     end.join
   end
 end
@@ -111,15 +113,13 @@ def ls_display_matrix(file_dir_list, upper_limit_column_count, column_padding_si
   end
 end
 
-def make_files_info(file_dir_list, path)
-  total_blocks = 0
-  list = file_dir_list.map do |n|
-    fs = File::Stat.new("#{path}/#{n}")
-    total_blocks += fs.blocks
+def details_in_long_format(file_dir_list, path)
+  file_dir_list.map do |name|
+    fs = File::Stat.new("#{path}/#{name}")
 
     # シンボリックリンクの時はリンク先のfiletypeが表示されてしまう。
     # シンボリックリンクを示す"l"を表示するために、個別の分岐を適用
-    mode = File.symlink?("#{path}/#{n}") ? "l#{fs.mode_formatted}" : fs.filetype + fs.mode_formatted
+    mode = File.symlink?("#{path}/#{name}") ? "l#{fs.mode_formatted}" : fs.filetype + fs.mode_formatted
     {
       mode:,
       num_link: fs.nlink,
@@ -127,12 +127,20 @@ def make_files_info(file_dir_list, path)
       group: Etc.getgrgid(fs.gid).name,
       file_size: fs.size,
       time: format_time_by_modification(fs.mtime),
-      path: name_with_symlink_target_if_exists(path, n)
+      path: name_with_symlink_target_if_exists(path, name)
     }
+  end
+end
+
+def calculate_total_blocks(file_dir_list, path)
+  total_blocks = 0
+  file_dir_list.each do |name|
+    fs = File::Stat.new("#{path}/#{name}")
+    total_blocks += fs.blocks
   end
   # ブロック数割り当ての基準が、File.Statでは512Byte,Linux(ls)では1024Byteであるため、
   # total_block数に差がでる。その問題を解消するために2で割る。
-  [total_blocks / 2, list]
+  total_blocks / 2
 end
 
 def ls_display_long_format(hash_list, widths)
@@ -194,7 +202,7 @@ path_list.each do |path|
     exit
   end
   unless File.directory?(path)
-    puts File.basename(path) unless File.directory?(path)
+    puts File.basename(path)
     exit
   end
 
@@ -206,9 +214,10 @@ path_list.each do |path|
     end
   file_dir_list.reverse! if r_option
   if l_option
-    total_blocks, files_info = make_files_info(file_dir_list, path)
+    total_blocks = calculate_total_blocks(file_dir_list, path)
+    files_details = details_in_long_format(file_dir_list, path)
     puts "total #{total_blocks}"
-    ls_display_long_format(files_info, calculate_max_widths(files_info))
+    ls_display_long_format(files_details, calculate_max_widths(files_details))
   else
     ls_display_matrix(file_dir_list, UPPER_LIMIT_COLUMN_COUNT, COLUMN_PADDING_SIZE)
   end
