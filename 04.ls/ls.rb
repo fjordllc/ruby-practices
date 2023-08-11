@@ -216,9 +216,8 @@ path_list.each do |path|
     end
   file_dir_list.reverse! if r_option
   if l_option
-    total_blocks = calculate_total_blocks(file_dir_list, path)
     files_details = details_in_long_format(file_dir_list, path)
-    puts "total #{total_blocks}"
+    puts "total #{calculate_total_blocks(file_dir_list, path)}"
     ls_display_long_format(files_details, calculate_max_widths(files_details))
   else
     ls_display_matrix(file_dir_list, UPPER_LIMIT_COLUMN_COUNT, COLUMN_PADDING_SIZE)
