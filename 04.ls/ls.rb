@@ -206,6 +206,8 @@ path_list.each do |path|
     exit
   end
 
+  next if Dir.empty?(path)
+
   file_dir_list =
     if a_option
       Dir.glob('*', flags: File::FNM_DOTMATCH, base: path).map { |m| File.basename(m) }
