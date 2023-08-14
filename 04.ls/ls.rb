@@ -10,13 +10,15 @@ def parse_options(argv)
   opt = OptionParser.new
   options = {}
   opt.on('-a') { |v| options[:a] = v }
+  opt.on('-r') { |v| options[:r] = v }
   directory_paths = opt.parse(argv)
   [options, directory_paths]
 end
 
 def fetch_file_names(target_directory_path, options)
   dotmatch_flag = options[:a] ? File::FNM_DOTMATCH : 0
-  Dir.glob('*', dotmatch_flag, base: target_directory_path)
+  file_names = Dir.glob('*', dotmatch_flag, base: target_directory_path)
+  options[:r] ? file_names.reverse : file_names
 end
 
 def output(file_names)
