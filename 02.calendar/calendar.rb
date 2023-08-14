@@ -26,17 +26,9 @@ end
 
 options = ARGV.getopts('m:', 'y:')
 
-month = if options['m'].nil?
-          Date.today.month.to_s
-        else
-          options['m']
-        end
+month = options['m'] || Date.today.month
 
-year = if options['y'].nil?
-          Date.today.year.to_s
-        else
-          options['y']
-        end
+year = options['y'] || Date.today.year
 
 
-Calendar.new.show_calendar(Date::strptime("#{year}-#{month}-1", "%Y-%m-%d"))
+Calendar.new.show_calendar(Date.new(year.to_i, month.to_i, 1))
