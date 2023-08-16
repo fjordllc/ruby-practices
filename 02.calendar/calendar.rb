@@ -1,44 +1,47 @@
 #!/usr/bin/env ruby
 
 require 'date'
+require 'optparse'
 
-if ARGV.empty?
-  year = Date.today.year
-  month = Date.today.month
-else
-  year = ARGV[1].to_i
-  month = ARGV[3].to_i
-end
+options = {}
+OptionParser.new do |opts|
+  opts.on('-y year', Integer) do |year|
+    options[:year] = year
+  end
+  opts.on('-m month', Integer) do |month|
+    options[:month] = month
+  end
+end.parse!
 
+year = options[:year] || Date.today.year
+month = options[:month] || Date.today.month
 
 date = Date.new(year, month)
 
 first_day = Date.new(year, month, 1)
 last_day = Date.new(year, month, -1)
 
-
 top = date.strftime("%-m月 %Y")
-puts " "*6 + top
+puts " " * 6 + top
 
 weekdays = %w[日 月 火 水 木 金 土]
 weekdays.each do |weekday|
     print "#{weekday} "
 end
 
-puts "\n"
+puts 
 
 first_day_wday = first_day.wday
-print "   "*first_day_wday
+print "   " * first_day_wday
 
 wday = first_day_wday
 (1..last_day.day).each do |current_date|
   print current_date.to_s.rjust(2) + ' '
   wday += 1
   if wday % 7 == 0
-    print  "\n"
+    puts
   end
 end
 
-
-puts "\n" + "\n"
+puts "\n\n"
 
