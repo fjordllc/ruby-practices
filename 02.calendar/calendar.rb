@@ -25,9 +25,8 @@ top = date.strftime("%-m月 %Y")
 puts " " * 6 + top
 
 weekdays = %w[日 月 火 水 木 金 土]
-weekdays.each do |weekday|
-    print "#{weekday} "
-end
+result = weekdays.join(' ')
+print result
 
 puts 
 
