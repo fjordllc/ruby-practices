@@ -7,17 +7,6 @@ require 'etc'
 
 SEGMENT_LENGTH = 3
 
-def calculate_total_block(files)
-  total_blocks = 0
-
-  files.each do |file|
-    stat = File.stat(file)
-    total_blocks += stat.blocks
-  end
-
-  total_blocks
-end
-
 def get_entity_type(entity)
   return 'd' if File.directory?(entity)
   return '-' if File.file?(entity)
@@ -55,7 +44,7 @@ def transpose(entities)
 end
 
 def list_entities_in_details(entities)
-  total_blocks = calculate_total_block(entities)
+  total_blocks = entities.sum { |entity| File.stat(entity).blocks }
   puts "total #{total_blocks}"
 
   entities.each do |entity|
