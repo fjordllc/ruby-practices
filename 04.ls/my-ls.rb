@@ -19,18 +19,18 @@ end
 
 def format_permissions(mode)
   perm = mode.to_s(8)[-3..]
-  perm.chars.map do |char|
-    case char
-    when '0' then '---'
-    when '1' then '--x'
-    when '2' then '-w-'
-    when '3' then '-wx'
-    when '4' then 'r--'
-    when '5' then 'r-x'
-    when '6' then 'rw-'
-    when '7' then 'rwx'
-    end
-  end.join('')
+  permission_map = {
+    '0' => '---',
+    '1' => '--x',
+    '2' => '-w-',
+    '3' => '-wx',
+    '4' => 'r--',
+    '5' => 'r-x',
+    '6' => 'rw-',
+    '7' => 'rwx'
+  }
+
+  perm.chars.map { |char| permission_map[char] }.join('')
 end
 
 def divide_into_segments(entities)
@@ -74,7 +74,7 @@ end
 options = {}
 
 OptionParser.new do |opts|
-  opts.on("-l", "--list-details") do
+  opts.on('-l', '--list-details') do
     options[:details] = true
   end
 end.parse!
