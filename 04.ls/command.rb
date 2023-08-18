@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
-current_path = __dir__
+current_path = if ARGV[0].nil? then __dir__ else ARGV[0] end
 
 def empty_space_length(filename)
   50 - filename.length
+end
+
+def contains_cjk?
+  !!(self =~ /\p{Han}|\p{Katakana}|\p{Hiragana}\p{Hangul}/)
 end
 
 def formatted_print(current_file)
