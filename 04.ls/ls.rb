@@ -1,9 +1,8 @@
 require 'debug'
 def parse_file
   all_file = Dir.glob('*').sort
-  div = all_file.size / 3
-  amari = all_file.size % 3
-  total_row = (amari == 0) ? div : (div + 1)
+  div, mod = all_file.size.divmod(3)
+  total_row = (mod == 0) ? div : (div + 1)
   width = all_file.max { |a, b| a.length <=> b.length }.size + 7
   [all_file, total_row, width]
 end
