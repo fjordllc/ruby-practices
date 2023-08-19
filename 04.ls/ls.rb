@@ -12,7 +12,8 @@ def ls_v1(all_file, total_row, width)
   all_sort_file = all_file.each_slice(3).to_a
   total_row.times do |row|
     3.times do |col|
-      print all_sort_file[row][col].ljust(width)
+      file_name = all_sort_file[row][col]
+      print file_name.ljust(width) unless file_name.nil?
     end
     puts
   end
@@ -29,7 +30,8 @@ def ls_v2(all_file, total_row, width)
 
   total_row.times do |row|
     3.times do |col|
-      print grouped_files[row][col][1].ljust(width)
+      file_name = grouped_files[row][col]
+      print file_name[1].ljust(width) unless file_name.nil?
     end
     puts
   end
