@@ -8,6 +8,8 @@ def parse_file
   [all_file, total_row, width]
 end
 
+all_file, total_row, width = parse_file
+
 def ls_v1(all_file, total_row, width)
   all_sort_file = all_file.each_slice(5).to_a
   total_row.times do |col|
@@ -18,8 +20,6 @@ def ls_v1(all_file, total_row, width)
     puts
   end
 end
-
-all_file, total_row, width = parse_file
 
 ls_v1(all_file, total_row, width)
 
