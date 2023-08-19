@@ -69,18 +69,15 @@ class File::Stat
   def mode_formatted
     modes = ['---', '--x', '-w-', '-wx', 'r--', 'r-x', 'rw-', 'rwx']
     mode.to_s(8)[-3..].chars.map.with_index do |num, idx|
-      permission =
-        case idx # 特殊権限を持つ場合の分岐
-        when 0
-          add_suid_permission(modes[num.to_i].dup) if setuid?
-        when 1
-          add_sgid_permission(modes[num.to_i].dup) if setgid?
-        when 2
-          add_sticiky_permission(modes[num.to_i].dup) if sticky?
-        end
-
-      # 通常権限(後置ifがfalse)の場合はpermissionにnilが入るので ||　で対応
-      permission || modes[num.to_i].dup
+      if idx.zero? && setuid?
+        add_suid_permission(modes[num.to_i].dup)
+      elsif (idx == 1) && setuid?
+        add_sgid_permission(modes[num.to_i].dup)
+      elsif (idx == 2) && sticky?
+        add_sticiky_permission(modes[num.to_i].dup)
+      else
+        modes[num.to_i].dup
+      end
     end.join
   end
 end
