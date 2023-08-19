@@ -1,7 +1,10 @@
 require 'debug'
+
+initial_row = 3
+
 def parse_file
   all_file = Dir.glob('*').sort
-  div, mod = all_file.size.divmod(3)
+  div, mod = all_file.size.divmod(initial_row)
   total_row = (mod == 0) ? div : (div + 1)
   width = all_file.max { |a, b| a.length <=> b.length }.size + 7
   [all_file, total_row, width]
@@ -12,7 +15,7 @@ all_file, total_row, width = parse_file
 def ls_v1(all_file, total_row, width)
   all_sort_file = all_file.each_slice(5).to_a
   total_row.times do |col|
-    3.times do |row|
+    initial_row.times do |row|
       file_name = all_sort_file[row][col]
       print file_name.ljust(width) unless file_name.nil?
     end
@@ -27,7 +30,7 @@ def ls_v2(all_file, total_row, width)
     [idx % total_row, file]
   end.group_by { |div, file| div }
   total_row.times do |row|
-    3.times do |col|
+    initial_row.times do |col|
       file_name = grouped_files[row][col]
       print file_name[1].ljust(width) unless file_name.nil?
     end
