@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'debug'
 
 def parse_file
   Dir.glob('*').sort
@@ -14,8 +15,14 @@ end
 initial_row = 3
 all_file = parse_file
 total_row, width = calculate_row_and_space(initial_row, all_file)
+argument = {
+  initial_row: 3,
+  all_file: parse_file,
+  total_row: total_row,
+  width: width
+}
 
-def ls_v1(initial_row, all_file, total_row, width)
+def ls_v1(initial_row:, all_file:, total_row:, width:)
   all_sort_file = all_file.each_slice(total_row).to_a
   total_row.times do |col|
     initial_row.times do |row|
@@ -26,7 +33,7 @@ def ls_v1(initial_row, all_file, total_row, width)
   end
 end
 
-def ls_v2(initial_row, all_file, total_row, width)
+def ls_v2(initial_row:, all_file:, total_row:, width:)
   grouped_files = all_file.map.with_index do |file, idx|
     [idx % total_row, file]
   end
@@ -40,5 +47,5 @@ def ls_v2(initial_row, all_file, total_row, width)
   end
 end
 
-ls_v1(initial_row, all_file, total_row, width)
-ls_v2(initial_row, all_file, total_row, width)
+ls_v1(**argument)
+ls_v2(**argument)
