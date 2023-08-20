@@ -46,5 +46,7 @@ def ls_v2(initial_row:, all_files:, total_row:, width:)
   end
 end
 
+puts "ls_v1の結果"
 ls_v1(**argument)
+puts "ls_v2の結果"
 ls_v2(**argument)
