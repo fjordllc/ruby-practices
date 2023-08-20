@@ -1,10 +1,9 @@
-require 'debug'
+# frozen_string_literal: true
 
 initial_row = 3
 
-def parse_file(initial_row)
-  all_file = Dir.glob('*').sort
-  all_file
+def parse_file
+  Dir.glob('*').sort
 end
 
 def calculate_row_and_space(initial_row, all_file)
@@ -14,7 +13,7 @@ def calculate_row_and_space(initial_row, all_file)
   [total_row, width]
 end
 
-all_file = parse_file(initial_row)
+all_file = parse_file
 total_row, width = calculate_row_and_space(initial_row, all_file)
 
 def ls_v1(initial_row, all_file, total_row, width)
