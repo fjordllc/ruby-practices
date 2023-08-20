@@ -13,7 +13,7 @@ end
 all_file, total_row, width = parse_file(initial_row)
 
 def ls_v1(initial_row, all_file, total_row, width)
-  all_sort_file = all_file.each_slice(5).to_a
+  all_sort_file = all_file.each_slice(total_row).to_a
   total_row.times do |col|
     initial_row.times do |row|
       file_name = all_sort_file[row][col]
