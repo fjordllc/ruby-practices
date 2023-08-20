@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-initial_row = 3
-
 def parse_file
   Dir.glob('*').sort
 end
@@ -13,6 +11,7 @@ def calculate_row_and_space(initial_row, all_file)
   [total_row, width]
 end
 
+initial_row = 3
 all_file = parse_file
 total_row, width = calculate_row_and_space(initial_row, all_file)
 
