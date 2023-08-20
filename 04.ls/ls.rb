@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require 'debug'
 
 def parse_file
   Dir.glob('*').sort
