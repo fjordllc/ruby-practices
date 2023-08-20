@@ -17,8 +17,8 @@ total_row, width = calculate_row_and_space(initial_row, all_file)
 argument = {
   initial_row: 3,
   all_file: parse_file,
-  total_row: total_row,
-  width: width
+  total_row:,
+  width:
 }
 
 def ls_v1(initial_row:, all_file:, total_row:, width:)
