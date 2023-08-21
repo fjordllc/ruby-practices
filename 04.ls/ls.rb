@@ -1,6 +1,5 @@
-# ディレクトリ内のファイルを取得して整形する関数
-def get_and_justify_files
-  files = Dir.glob("*").sort
+def justify_files
+  files = Dir.glob('*').sort
   max_length = files.map(&:size).max
   files.map { |file| file.ljust(max_length + 5) }
 end
@@ -13,7 +12,7 @@ end
 
 # 列数が揃わないところに空文字を挿入して列数を揃える関数
 def align_columns(array, number_of_columns)
-  array[-1] += [""] * (number_of_columns - array[-1].length)
+  array[-1] += [''] * (number_of_columns - array[-1].length)
   array
 end
 
