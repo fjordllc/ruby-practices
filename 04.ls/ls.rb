@@ -20,7 +20,7 @@ end
 FILES = justify_files
 
 # 表示する行数を指定
-number_of_lines = 3
+NUMBER_OF_LINES = 3
 
 # 3つの行の二次元配列に変換
 files_in_rows = convert_to_rows(files, number_of_lines)
