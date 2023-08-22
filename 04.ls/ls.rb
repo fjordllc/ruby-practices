@@ -6,7 +6,7 @@ end
 
 # 3つの行の二次元配列に直す関数
 def convert_to_rows(array, number_of_rows)
-  rows = (array.length / number_of_rows.to_f).ceil
+  rows = array.length.ceildiv(number_of_rows.to_f)
   array.each_slice(rows).to_a
 end
 
