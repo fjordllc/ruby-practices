@@ -26,9 +26,7 @@ puts " " * 6 + top
 
 weekdays = %w[日 月 火 水 木 金 土]
 result = weekdays.join(' ')
-print result
-
-puts 
+puts result
 
 first_day_wday = first_day.wday
 print "   " * first_day_wday
