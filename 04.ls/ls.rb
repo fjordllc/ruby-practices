@@ -1,7 +1,8 @@
-def justify_files
-  files = Dir.glob('*').sort
-  max_length = files.map(&:size).max
-  files.map { |file| file.ljust(max_length + 5) }
+# frozen_string_literal: true
+
+def justify_filenames(filenames)
+  max_length = filenames.map(&:size).max
+  filenames.map { |file| file.ljust(max_length + 5) }
 end
 
 # 3つの行の二次元配列に直す関数
@@ -16,14 +17,16 @@ def align_columns(array, number_of_columns)
   array
 end
 
+filenames = Dir.glob('*').sort
+
 # ファイルを取得して整形
-FILES = justify_files
+FILES = justify_filenames(filenames)
 
 # 表示する行数を指定
 NUMBER_OF_LINES = 3
 
 # 3つの行の二次元配列に変換
-files_in_rows = convert_to_rows(files, number_of_lines)
+files_in_rows = convert_to_rows(FILES, NUMBER_OF_LINES)
 
 # 列数が揃わないところに空文字を挿入して列数を揃える
 files_in_rows = align_columns(files_in_rows, files_in_rows[0].length)
