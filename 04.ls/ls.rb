@@ -17,7 +17,7 @@ def align_columns(array, number_of_columns)
 end
 
 # ファイルを取得して整形
-files = justify_files
+FILES = justify_files
 
 # 表示する行数を指定
 number_of_lines = 3
