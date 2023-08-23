@@ -82,8 +82,9 @@ OptionParser.new do |opts|
   end
 end.parse!
 
+filenames = Dir.glob('*')
 if options[:details]
-  list_entities_in_details(Dir.glob('*'))
+  list_entities_in_details(filenames)
 else
-  list_entities(Dir.glob('*'))
+  list_entities(filenames)
 end
