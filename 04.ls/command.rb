@@ -2,19 +2,21 @@
 
 current_path = ARGV[0].nil? ? __dir__ : ARGV[0]
 
-def empty_space_length(filename)
-  40 - filename.length
+def get_column_spacing(file_list)
+  margin = 3
+  file_list.max_by(&:length).length + margin
 end
 
-def formatted_print(current_file)
-  print(current_file + ' ' * empty_space_length(current_file))
-end
+file_list = Dir.glob("#{current_path}/*").collect! { |file_path| File.basename(file_path) }
+file_count = file_list.length
+row_count = (file_count / 3.to_f).ceil
+column_spacing = get_column_spacing(file_list)
 
-file_list = Dir.glob("#{current_path}/*")
-
-0.upto(file_list.length - 1) do |index|
-  formatted_print(File.basename(file_list[index]))
-  puts '' if ((index + 1) % 3).zero?
+0.upto(row_count - 1) do |index|
+  print(File.basename(file_list[index]).ljust(column_spacing))
+  row_count + index <= file_count - 1 ? print(File.basename(file_list[row_count + index]).ljust(column_spacing)) : print(' '.ljust(column_spacing))
+  row_count * 2 + index <= file_count - 1 ? print(File.basename(file_list[row_count * 2 + index])) : print(' ')
+  puts ''
 end
 
 puts ''
