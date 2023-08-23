@@ -77,7 +77,7 @@ end
 options = {}
 
 OptionParser.new do |opts|
-  opts.on('-l', '--list-details') do
+  opts.on('-l') do
     options[:details] = true
   end
 end.parse!
