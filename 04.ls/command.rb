@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 current_path = ARGV[0].nil? ? __dir__ : ARGV[0]
+MARGIN = 3
 
 def get_column_spacing(file_list)
-  margin = 3
-  file_list.max_by(&:length).length + margin
+  file_list.max_by(&:length).length + MARGIN
 end
 
 file_list = Dir.glob("#{current_path}/*").collect! { |file_path| File.basename(file_path) }
