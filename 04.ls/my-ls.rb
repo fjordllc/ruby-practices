@@ -20,12 +20,12 @@ SEGMENT_LENGTH = 3
 
 def get_entity_type(entity)
   return 'd' if File.directory?(entity)
-  return '-' if File.file?(entity)
   return 'l' if File.symlink?(entity)
   return 'c' if File.chardev?(entity)
   return 'b' if File.blockdev?(entity)
   return 'p' if File.pipe?(entity)
   return 's' if File.socket?(entity)
+  return '-' if File.file?(entity)
 end
 
 def format_permissions(mode)
