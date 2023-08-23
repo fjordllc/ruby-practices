@@ -57,7 +57,7 @@ def list_entities_in_details(entities)
     file_size = stat.size
     last_modified_time = stat.mtime.strftime('%b %d %H:%M')
 
-    puts "#{type}#{permissions}@ #{hard_link} #{owner}  #{group}  #{file_size} #{last_modified_time} #{entity}"
+    puts "#{type}#{permissions} #{hard_link} #{owner}  #{group}  #{file_size} #{last_modified_time} #{entity}"
   end
 end
 
