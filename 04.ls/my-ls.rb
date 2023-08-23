@@ -5,6 +5,17 @@
 require 'optparse'
 require 'etc'
 
+PERMISSION_MAP = {
+  '0' => '---',
+  '1' => '--x',
+  '2' => '-w-',
+  '3' => '-wx',
+  '4' => 'r--',
+  '5' => 'r-x',
+  '6' => 'rw-',
+  '7' => 'rwx'
+}
+
 SEGMENT_LENGTH = 3
 
 def get_entity_type(entity)
@@ -19,18 +30,7 @@ end
 
 def format_permissions(mode)
   perm = mode.to_s(8)[-3..]
-  permission_map = {
-    '0' => '---',
-    '1' => '--x',
-    '2' => '-w-',
-    '3' => '-wx',
-    '4' => 'r--',
-    '5' => 'r-x',
-    '6' => 'rw-',
-    '7' => 'rwx'
-  }
-
-  perm.chars.map { |char| permission_map[char] }.join('')
+  perm.chars.map { |char| PERMISSION_MAP[char] }.join('')
 end
 
 def divide_into_segments(entities)
