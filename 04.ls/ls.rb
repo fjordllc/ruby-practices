@@ -20,13 +20,13 @@ end
 filenames = Dir.glob('*').sort
 
 # ファイルを取得して整形
-FILES = justify_filenames(filenames)
+files = justify_filenames(filenames)
 
 # 表示する行数を指定
 NUMBER_OF_LINES = 3
 
 # 3つの行の二次元配列に変換
-files_in_rows = convert_to_rows(FILES, NUMBER_OF_LINES)
+files_in_rows = convert_to_rows(files, NUMBER_OF_LINES)
 
 # 列数が揃わないところに空文字を挿入して列数を揃える
 files_in_rows = align_columns(files_in_rows, files_in_rows[0].length)
