@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'optparse'
+
 def justify_filenames(filenames)
   max_length = filenames.map(&:size).max
   filenames.map { |file| file.ljust(max_length + 5) }
@@ -17,7 +19,13 @@ def align_columns(array, number_of_columns)
   array
 end
 
-filenames = Dir.glob('*').sort
+opt = ARGV.getopts('a')
+
+filenames = if opt['a']
+              Dir.glob('*', File::FNM_DOTMATCH).sort
+            else
+              Dir.glob('*').sort
+            end
 
 # ファイルを取得して整形
 files = justify_filenames(filenames)
