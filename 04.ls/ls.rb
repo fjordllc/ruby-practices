@@ -16,7 +16,7 @@ end
 all_files = parse_file
 total_row, width = calculate_row_and_space(all_files)
 
-def ls_v1(all_files, total_row, width)
+def ls(all_files, total_row, width)
   all_sort_files = all_files.each_slice(total_row).to_a
   total_row.times do |col|
     INITIAL_COLUMN.times do |row|
@@ -27,4 +27,5 @@ def ls_v1(all_files, total_row, width)
   end
 end
 
-ls_v1(all_files, total_row, width)
+ls(all_files, total_row, width)
+
