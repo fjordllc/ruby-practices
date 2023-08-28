@@ -18,31 +18,31 @@ PERMISSION_MAP = {
   '7' => 'rwx'
 }.freeze
 
-def divide_into_segments(entities)
-  entities.each_slice((entities.length + 2) / SEGMENT_LENGTH).to_a
+def divide_into_segments(filenames)
+  filenames.each_slice((filenames.length + 2) / SEGMENT_LENGTH).to_a
 end
 
-def transpose(entities)
-  max_size = entities.map(&:size).max
-  entities.map! { |items| items.values_at(0...max_size) }
-  entities.transpose
+def transpose(filenames)
+  max_size = filenames.map(&:size).max
+  filenames.map! { |items| items.values_at(0...max_size) }
+  filenames.transpose
 end
 
-def get_under_entities(options)
-  entities = Dir.glob('*')
-  entities = Dir.entries('.') if options[:a]
-  entities.reverse! if options[:r]
-  entities
+def fetch_filenames(options)
+  filenames = Dir.glob('*')
+  filenames = Dir.entries('.') if options[:a]
+  filenames.reverse! if options[:r]
+  filenames
 end
 
-def get_entity_type(entity)
-  return 'd' if File.directory?(entity)
-  return 'l' if File.symlink?(entity)
-  return 'c' if File.chardev?(entity)
-  return 'b' if File.blockdev?(entity)
-  return 'p' if File.pipe?(entity)
-  return 's' if File.socket?(entity)
-  return '-' if File.file?(entity)
+def file_type(filename)
+  return 'd' if File.directory?(filename)
+  return 'l' if File.symlink?(filename)
+  return 'c' if File.chardev?(filename)
+  return 'b' if File.blockdev?(filename)
+  return 'p' if File.pipe?(filename)
+  return 's' if File.socket?(filename)
+  return '-' if File.file?(filename)
 end
 
 def format_permissions(mode)
@@ -50,26 +50,26 @@ def format_permissions(mode)
   perm.chars.map { |char| PERMISSION_MAP[char] }.join('')
 end
 
-def list_entities(entities)
-  divided_entities = divide_into_segments(entities)
-  longest_entity_length = divided_entities.flatten.max_by(&:length).length
-  transposed_entities = transpose(divided_entities)
+def list_filenames(filenames)
+  divided_filenames = divide_into_segments(filenames)
+  longest_filename_length = divided_filenames.flatten.max_by(&:length).length
+  transposed_filenames = transpose(divided_filenames)
 
-  transposed_entities.each do |column_entitites|
-    column_entitites.each do |column_entitiy|
-      print column_entitiy&.ljust(longest_entity_length + 1)
+  transposed_filenames.each do |column_filenames|
+    column_filenames.each do |column_filename|
+      print column_filename&.ljust(longest_filename_length + 1)
     end
     print("\n")
   end
 end
 
-def list_entities_in_details(entities)
-  total_blocks = entities.sum { |entity| File.stat(entity).blocks }
+def list_filenames_in_details(filenames)
+  total_blocks = filenames.sum { |filename| File.stat(filename).blocks }
   puts "total #{total_blocks}"
 
-  entities.each do |entity|
-    stat = File.stat(entity)
-    type = get_entity_type(entity)
+  filenames.each do |filename|
+    stat = File.stat(filename)
+    type = file_type(filename)
     permissions = format_permissions(stat.mode)
     hard_link = stat.nlink
     owner = Etc.getpwuid(stat.uid).name
@@ -77,7 +77,7 @@ def list_entities_in_details(entities)
     file_size = stat.size
     last_modified_time = stat.mtime.strftime('%b %d %H:%M')
 
-    puts "#{type}#{permissions} #{hard_link} #{owner}  #{group}  #{file_size} #{last_modified_time} #{entity}"
+    puts "#{type}#{permissions} #{hard_link} #{owner}  #{group}  #{file_size} #{last_modified_time} #{filename}"
   end
 end
 
@@ -88,9 +88,9 @@ opt.on('-r') { |v| options[:r] = v }
 opt.on('-l') { |v| options[:l] = v }
 opt.parse!(ARGV)
 
-entities = get_under_entities(options)
+filenames = fetch_filenames(options)
 if options[:l]
-  list_entities_in_details(entities)
+  list_filenames_in_details(filenames)
 else
-  list_entities(entities)
+  list_filenames(filenames)
 end
