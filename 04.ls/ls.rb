@@ -32,21 +32,4 @@ def ls_v1(all_files:, total_row:, width:)
   end
 end
 
-def ls_v2(all_files:, total_row:, width:)
-  grouped_files = all_files.map.with_index do |file, idx|
-    [idx % total_row, file]
-  end
-  grouped_files = grouped_files.group_by { |div, _| div }
-  total_row.times do |row|
-    INITIAL_COLUMN.times do |col|
-      file_name = grouped_files[row][col]
-      print file_name[1].ljust(width) unless file_name.nil?
-    end
-    puts
-  end
-end
-
-puts "ls_v1の結果"
 ls_v1(**argument)
-puts "ls_v2の結果"
-ls_v2(**argument)
