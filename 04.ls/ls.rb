@@ -13,9 +13,6 @@ def calculate_row_and_space(all_files)
   [total_row, width]
 end
 
-all_files = parse_file
-total_row, width = calculate_row_and_space(all_files)
-
 def ls(all_files, total_row, width)
   all_sort_files = all_files.each_slice(total_row).to_a
   total_row.times do |col|
@@ -27,5 +24,6 @@ def ls(all_files, total_row, width)
   end
 end
 
+all_files = parse_file
+total_row, width = calculate_row_and_space(all_files)
 ls(all_files, total_row, width)
-
