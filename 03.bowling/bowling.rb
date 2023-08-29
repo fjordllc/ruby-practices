@@ -21,19 +21,25 @@ frames = []
 shots.each_slice(2) do |s|
   frames << s
 end
-frames << [0,0]
-if frames.count == 11
-  frames << [0,0]
+
+# 　以下each_consイテレータのために仮に１１回を作り出す
+if frames.count == 10
+  2.times { frames << [0, 0] }
+else
+  frames << [0, 0]
 end
+
 p frames
 
 # 点数を計算する
 point = 0
 frames.each_cons(3).each.with_index(1) do |frame, count|
+  # 10フレームの計算のために仮に作り出した
   break if count == 11
 
   if frame[0][0] == 10
     if frame[1][0] == 10
+      # ２連続でストライクがあった場合の例外（９フレームとターキーの真ん中）
       if count == 9 || frame[2][0] != 10
         point += (20 + frame[2][0])
       else
