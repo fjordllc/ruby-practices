@@ -1,40 +1,34 @@
 # frozen_string_literal: true
 
-CURRENT_PATH = ARGV[0].nil? ? __dir__ : ARGV[0]
+current_path = ARGV[0].nil? ? __dir__ : ARGV[0]
 MARGIN = 3
 
-def add_spacing(filename)
-  filename.ljust(COLUMN_SPACING + MARGIN)
+def add_spacing(filename, column_spacing)
+  filename.ljust(column_spacing + MARGIN)
 end
 
-def formatted_print(ordered_file_list)
-  0.upto(ROW_COUNT - 1) do |index|
-    first_column = ordered_file_list[0][index]
-    second_column = ordered_file_list[1][index].nil? ? ' ' : ordered_file_list[1][index]
-    third_column = ordered_file_list[2][index].nil? ? ' ' : ordered_file_list[2][index]
-
-    print(add_spacing(first_column) + add_spacing(second_column) + third_column)
+def formatted_print(ordered_file_list, column_spacing, row_count)
+  row_count.times do |row_index|
+    3.times do |column_index|
+      formatted_row = ordered_file_list[column_index][row_index].nil? ? ' ' : ordered_file_list[column_index][row_index]
+      print(add_spacing(formatted_row, column_spacing))
+    end
     puts('')
   end
 end
 
-file_list = Dir.glob("#{CURRENT_PATH}/*")
+file_list = Dir.glob("#{current_path}/*")
 file_count = file_list.length
-ROW_COUNT = (file_count / 3.to_f).ceil
+row_count = (file_count / 3.to_f).ceil
 
 max_length = 0
-ordered_file_list = []
-current_column = 0
+ordered_file_list = [] << []
 
 file_list.each_with_index do |file_path, index|
-  if (index % ROW_COUNT).zero? || index.zero?
-    ordered_file_list.append([])
-    current_column += 1 if index.positive?
-  end
+  ordered_file_list << [] if (index % row_count).zero?
   file_name = File.basename(file_path)
   max_length = file_name.length if file_name.length > max_length
-  ordered_file_list[current_column].append(file_name)
+  ordered_file_list[index / row_count].append(file_name)
 end
 
-COLUMN_SPACING = max_length
-formatted_print(ordered_file_list)
+formatted_print(ordered_file_list, max_length, row_count)
