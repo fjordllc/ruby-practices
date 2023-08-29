@@ -18,6 +18,11 @@ end
 def fetch_file_names(target_directory_path, options)
   dotmatch_flag = options[:a] ? File::FNM_DOTMATCH : 0
   file_names = Dir.glob('*', dotmatch_flag, base: target_directory_path)
+
+  stats = file_names.map{|file_name| File.stat("#{target_directory_path}/#{file_name}")}
+  
+  stats.each {|stat| puts  "#{stat.ctime} #{stat.size}"}
+
   options[:r] ? file_names.reverse : file_names
 end
 
