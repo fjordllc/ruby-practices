@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'optparse'
 
 INITIAL_COLUMN = 3
