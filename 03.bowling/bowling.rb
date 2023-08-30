@@ -1,4 +1,5 @@
 require 'rubocop'
+require 'debug'
 
 score = ARGV[0]
 scores = score.split(',')
@@ -17,23 +18,33 @@ frames = []
 shots.each_slice(2) do |s|
   frames << s
 end
-
+p frames
 point = 0
-frame_index = 0
 
 frames.each_with_index do |frame, index|
-  if frame_index >= 9
+    # binding.break
+  if index >=9
     point += frame.sum
+#   elsif frame_index == 11
+
   else
     if frame[0] == 10
-      point += 10 + frames[index + 1][0] + frames[index + 1][1]
-      frame_index += 1
+        if frames[index + 1][0] == 10
+            if frames[index + 2][0] == 10
+                point += 30
+            else
+                point += 20 + frames[index + 2][0]
+            end
+
+        else
+            point += 10 + frames[index + 1].sum
+        end
+
+      
     elsif frame.sum == 10
       point += 10 + frames[index + 1][0]
-      frame_index += 1
     else
       point += frame.sum
-      frame_index += 1
     end
   end
 end
