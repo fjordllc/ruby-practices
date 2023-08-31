@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-OPTION_COMMANDS = ['-a', '-r', '-l'].freeze
-show_hidden_files = true if ARGV.include? OPTION_COMMANDS[0]
+show_hidden_files = true if ARGV.include? '-a'
 
-current_path = ARGV[0].nil? || OPTION_COMMANDS.include?(ARGV[0]) ? __dir__ : ARGV[0]
+current_path = __dir__ 
 
 MARGIN = 3
 COLUMN_COUNT = 3
