@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
-current_path = ARGV[0].nil? ? __dir__ : ARGV[0]
+OPTION_COMMANDS = ['-a', '-r', '-l'].freeze
+show_hidden_files = true if ARGV.include? OPTION_COMMANDS[0]
+
+current_path = ARGV[0].nil? || OPTION_COMMANDS.include?(ARGV[0]) ? __dir__ : ARGV[0]
+
 MARGIN = 3
 COLUMN_COUNT = 3
 
@@ -18,7 +22,7 @@ def formatted_print(ordered_file_list, column_spacing, row_count)
   end
 end
 
-file_list = Dir.glob("#{current_path}/*")
+file_list = show_hidden_files ? Dir.glob("#{current_path}/*", File::FNM_DOTMATCH) : Dir.glob("#{current_path}/*")
 file_count = file_list.length
 row_count = (file_count / COLUMN_COUNT.to_f).ceil
 
