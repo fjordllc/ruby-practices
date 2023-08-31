@@ -21,11 +21,8 @@ end
 
 opt = ARGV.getopts('a')
 
-filenames = if opt['a']
-              Dir.glob('*', File::FNM_DOTMATCH).sort
-            else
-              Dir.glob('*').sort
-            end
+flags = opt['a'] ? File::FNM_DOTMATCH : 0
+filenames = Dir.glob('*', flags)
 
 # ファイルを取得して整形
 files = justify_filenames(filenames)
