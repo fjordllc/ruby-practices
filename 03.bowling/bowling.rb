@@ -1,7 +1,20 @@
 # frozen_string_literal: true
 
 require 'debug'
-require 'bundler/setup'
+# require 'bundler/setup'
+class Array
+  def strike?
+    return true if self[0] == 10
+
+    false
+  end
+
+  def spare?
+    return true if sum == 10
+
+    false
+  end
+end
 
 score = ARGV[0]
 scores = score.split(',')
@@ -21,38 +34,32 @@ frames = []
 shots.each_slice(2) do |s|
   frames << s
 end
-
-# 　以下each_consイテレータのために仮に１１回を作り出す
-if frames.count == 10
-  2.times { frames << [0, 0] }
-else
-  frames << [0, 0]
-end
-
 p frames
 
 # 点数を計算する
 point = 0
-frames.each_cons(3).each.with_index(1) do |frame, count|
+frames.each_with_index do |frame, count|
+  # binding.break
   # 10フレームの計算のために仮に作り出した
-  break if count == 11
-
-  if frame[0][0] == 10
-    if frame[1][0] == 10
-      # ２連続でストライクがあった場合の例外（９フレームとターキーの真ん中）
-      if count == 9 || frame[2][0] != 10
-        point += (20 + frame[2][0])
-      else
-        point += 30
-      end
-    else
-      point += (10 + frame[1].sum)
-    end
-  elsif frame[0].sum == 10
-    point += (10 + frame[1][0])
-  else
-    point += frame[0].sum
+  if count >= 9
+    point += frame.sum
+    next
   end
+
+  point +=
+    if frame.strike?
+      if frames[count + 1][0] == 10
+        30 if frames[count + 2][0] == 10
+        (20 + frames[count + 2][0])
+      else
+        10 + frames[count + 1].sum
+      end
+
+    elsif frame.spare?
+      10 + frames[count + 1][0]
+    else
+      frame.sum
+    end
 end
 
 puts point
