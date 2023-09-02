@@ -1,3 +1,4 @@
+require "debug"
 #Dateクラスを取得
 require "date"
 #コマンドラインオプションを取得
@@ -6,17 +7,12 @@ opt = OptionParser.new
 params = ARGV.getopts("y:m:")
 array_params = params.values
 
-#年月指定の場合分け
-if array_params.first != nil && array_params.last != nil
-  ARGV.push(array_params.first.to_i, array_params.last.to_i)
-elsif array_params.first != nil && array_params.last == nil
-  puts "月を指定してください。"
-  exit
-elsif array_params.first == nil && array_params.last != nil
-  ARGV.push(Date.today.year, array_params.last.to_i)
-else
+if params == {"y"=>nil, "m"=>nil}
   ARGV.push(Date.today.year, Date.today.month)
+else
+  ARGV.push(array_params.first.to_i, array_params.last.to_i)
 end
+
 
 #月初めの年月日
 first_day = Date.new(ARGV.first.to_i, ARGV.last.to_i, 1)
@@ -31,12 +27,17 @@ puts yearmonth.center(20)
 #曜日を表示
 puts "日 月 火 水 木 金 土"
 
-#1日目を配置
-days = first_day.day
+#日付に0を代入
+days = first_day.day - 1
+
+#1週目を配置
+  while days < 1
+    days = days + 1
       print "#{days}".rjust(2 + week * 3) + " "
       if week == 6
         print "\n"
       end
+  end
 #2日目以降
     for days in 2..last_day.day
       print "#{days} ".rjust(3)
