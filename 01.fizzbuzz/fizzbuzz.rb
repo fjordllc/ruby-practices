@@ -15,4 +15,4 @@ class Fizzbuzz
     end
 end
 
-fizzbuzz = Fizzbuzz.new().puts_fizzbuzz()
+Fizzbuzz.new().puts_fizzbuzz()
