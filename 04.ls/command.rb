@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 require 'optparse'
+require 'debug'
 
-options = ARGV.getopts('a')
-show_hidden_files = options['a']
+options = ARGV.getopts('a','all')
+
+show_hidden_files = options['a'] || options['all']
 
 current_path = ARGV[0].nil? || ARGV[-1] == '-a' ? __dir__ : ARGV[-1]
 
