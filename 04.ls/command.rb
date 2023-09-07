@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
-OPTION_COMMANDS = ['-a','-r','-l']
+require 'optparse'
 
-show_hidden_files = true if ARGV.include? '-a'
+options = ARGV.getopts('a')
+show_hidden_files = options['a']
 
-current_path = ARGV[0].nil? || OPTION_COMMANDS.include?(ARGV[-1]) ? __dir__ :  ARGV[-1]
+current_path = ARGV[0].nil? || ARGV[-1] == '-a' ? __dir__ : ARGV[-1]
 
 MARGIN = 3
 COLUMN_COUNT = 3
