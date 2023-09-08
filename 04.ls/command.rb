@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
 require 'optparse'
-require 'debug'
 
-options = ARGV.getopts('a','all')
+file_list_options = ARGV.getopts('a','all')
 
-show_hidden_files = options['a'] || options['all']
+show_hidden_files = file_list_options['a'] || file_list_options['all']
 
-current_path = ARGV[0].nil? || ARGV[-1] == '-a' ? __dir__ : ARGV[-1]
+current_path = ARGV[0].nil? ? __dir__ : ARGV[0]
 
 MARGIN = 3
 COLUMN_COUNT = 3
