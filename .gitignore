@@ -2,6 +2,8 @@
 
 # Ruby.gitignore ****************************
 
+Gemfile
+Gemfile.lock
 *.gem
 *.rbc
 /.config
@@ -67,6 +69,8 @@ build-iPhoneSimulator/
 .DS_Store
 .AppleDouble
 .LSOverride
+.vscode
+.gitignore
 
 # Icon must end with two \r
 Icon
