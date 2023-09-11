@@ -15,9 +15,10 @@ def get_show_ym
     # パラメータチェック
     if ret_date["year"] < 1970 || ret_date["year"] > 2100
       puts("年の指定に誤りがあります。")
+      exit
     end
   end
-
+  
   # 月の指定
   opt.on('-m', '--month [ITEM]', 'select month') do |param_month|
     if param_month != nil
@@ -26,6 +27,7 @@ def get_show_ym
     # パラメータチェック
     if ret_date["month"] < 1 || ret_date["month"] > 12
       puts("月の指定に誤りがあります。")
+      exit
     end
   end
   opt.parse(ARGV)
