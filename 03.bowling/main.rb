@@ -5,9 +5,13 @@ param_score_csv = []
 $*.each do |argv|
   param_score_csv = argv.split(",")
 end
-puts param_score_csv
+# 点数を数値に変換
+param_score_csv = param_score_csv.map{|n| n.to_i}
+puts("each score: #{param_score_csv}")
 
 # ボーリング計算
-
+total_score = 0
+param_score_csv.each {|score| total_score += score}
 
 # 出力
+puts("total score:#{total_score}")
