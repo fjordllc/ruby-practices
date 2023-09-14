@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'optparse'
 require 'etc'
 require 'debug'
@@ -18,16 +19,16 @@ FILE_PERMISSION_SYMBOLS = {
   '5' => 'r-x',
   '6' => 'rw-',
   '7' => 'rwx'
-}
+}.freeze
 FILE_TYPE_SYMBOLS = {
   'file' => '-',
   'directory' => 'd',
   'link' => 'l',
   'fifo' => 'p',
-  'characterSpecial' => 'c',  
+  'characterSpecial' => 'c',
   'blockSpecial' => 'b',
   'socket' => 's'
-}
+}.freeze
 
 def add_spacing(filename, column_spacing)
   filename.ljust(column_spacing + MARGIN)
@@ -45,42 +46,10 @@ end
 
 def file_mode_symbol(file_mode)
   file_mode_octal = file_mode.to_s(8).rjust(6, '0')
-  permission_symbol = ""
+  permission_symbol = ''
 
-  case file_mode_octal[2]
-  when '1'
-    special_permission = 'Sticky Bit'
-  when '2'
-    special_permission = 'SGID'
-  when '3'
-    special_permission = 'SUID'
-  end
-
-  file_mode_octal.slice(3,3).each_char.with_index do |permission_number, index|
+  file_mode_octal.slice(3, 3).each_char do |permission_number|
     current_permission = FILE_PERMISSION_SYMBOLS[permission_number]
-
-    if special_permission == 'SUID' && index == 3
-      if current_permission[0] == 'x'
-        current_permission[0].gsub(/.$/, 's')
-      else
-        current_permission[0].gsub(/.$/, 'S')
-      end
-
-    elsif special_permission == 'SGID' && index == 4
-      if current_permission[1] == 'x'
-        current_permission[1].gsub(/.$/, 's')
-      else
-        current_permission[1].gsub(/.$/, 'S')
-      end
-
-    elsif special_permission == 'Sticky Bit' && index == 5
-      if current_permission[2] == 'x'
-        current_permission[2].gsub(/.$/, 't')
-      else
-        current_permission[2].gsub(/.$/, 'T')
-      end
-    end
-
     permission_symbol += current_permission
   end
   permission_symbol
@@ -96,40 +65,45 @@ def print_long_list(file_list_long_mode, column_max_lengths)
     print file['file_owner'].rjust(column_max_lengths['file_owner'] + MARGIN)
     print file['file_group'].rjust(column_max_lengths['file_group'] + MARGIN)
     print file['file_size'].rjust(column_max_lengths['file_size'] + MARGIN)
-    print file['file_last_modified'].rjust(column_max_lengths['file_last_modified'] + MARGIN).ljust(column_max_lengths['file_last_modified'] + MARGIN*2)
+    print file['file_last_modified'].rjust(column_max_lengths['file_last_modified'] + MARGIN).ljust(column_max_lengths['file_last_modified'] + MARGIN * 2)
     print file['file_name']
     puts ''
   end
 end
 
+def column_spacing(file_list_long_mode)
+  column_max_lengths = {
+    'file_owner' => 0,
+    'file_group' => 0,
+    'file_size' => 0,
+    'file_last_modified' => 11,
+    'file_name' => 0
+  }
+
+  file_list_long_mode.each do |file|
+    column_max_lengths['file_owner'] = file['file_owner'].length if file['file_owner'].length > column_max_lengths['file_owner']
+    column_max_lengths['file_group'] = file['file_group'].length if file['file_group'].length > column_max_lengths['file_group']
+    column_max_lengths['file_size'] = file['file_size'].length if file['file_size'].length > column_max_lengths['file_size']
+    column_max_lengths['file_name'] = file['file_name'].length if file['file_name'].length > column_max_lengths['file_name']
+  end
+  column_max_lengths
+end
 
 def long_list(file_list)
   file_list_long_mode = []
-  column_max_lengths = {
-    "file_owner" => 0,
-    "file_group" => 0,
-    "file_size" => 0,
-    "file_last_modified" => 11,
-    "file_name" => 0
-  }
   file_list.each do |file|
     file_details = File.stat(file)
     formatted_file_long_mode = {
-      "file_permission" => file_type_symbol(file_details.ftype) + file_mode_symbol(file_details.mode),
-      "file_owner" => Etc.getpwuid(file_details.uid).name,
-      "file_group" => Etc.getgrgid(file_details.gid).name,
-      "file_size" => file_details.size.to_s,
-      "file_last_modified" => file_details.mtime.strftime("%-m %-d %R"),
-      "file_name" =>  File.basename(file)
+      'file_permission' => file_type_symbol(file_details.ftype) + file_mode_symbol(file_details.mode),
+      'file_owner' => Etc.getpwuid(file_details.uid).name,
+      'file_group' => Etc.getgrgid(file_details.gid).name,
+      'file_size' => file_details.size.to_s,
+      'file_last_modified' => file_details.mtime.strftime('%-m %-d %R'),
+      'file_name' => File.basename(file)
     }
-    column_max_lengths['file_owner'] = formatted_file_long_mode['file_owner'].length if formatted_file_long_mode['file_owner'].length > column_max_lengths['file_owner']
-    column_max_lengths['file_group'] = formatted_file_long_mode['file_group'].length if formatted_file_long_mode['file_group'].length > column_max_lengths['file_group']
-    column_max_lengths['file_size'] = formatted_file_long_mode['file_size'].length if formatted_file_long_mode['file_size'].length > column_max_lengths['file_size']
-    column_max_lengths['file_name'] = formatted_file_long_mode['file_name'].length if formatted_file_long_mode['file_name'].length > column_max_lengths['file_name']
-
     file_list_long_mode << formatted_file_long_mode
   end
- 
+  column_max_lengths = column_spacing(file_list_long_mode)
   print_long_list(file_list_long_mode, column_max_lengths)
 end
 
@@ -137,7 +111,7 @@ file_list = Dir.glob("#{current_path}/*")
 file_count = file_list.length
 row_count = (file_count / COLUMN_COUNT.to_f).ceil
 if show_in_detailed_list
-  long_list(file_list) 
+  long_list(file_list)
 else
   max_length = 0
   ordered_file_list = [] << []
