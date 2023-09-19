@@ -34,10 +34,10 @@ def add_spacing(filename, column_spacing)
   filename.ljust(column_spacing + MARGIN)
 end
 
-def formatted_print(ordered_file_list, column_spacing, row_count)
+def formatted_print(ordered_files, column_spacing, row_count)
   row_count.times do |row_index|
     COLUMN_COUNT.times do |column_index|
-      formatted_row = ordered_file_list[column_index][row_index].nil? ? ' ' : ordered_file_list[column_index][row_index]
+      formatted_row = ordered_files[column_index][row_index].nil? ? ' ' : ordered_files[column_index][row_index]
       print(add_spacing(formatted_row, column_spacing))
     end
     puts('')
@@ -59,8 +59,8 @@ def file_type_symbol(file_type)
   FILE_TYPE_SYMBOLS[file_type]
 end
 
-def print_long_list(file_list_long_mode, column_max_lengths)
-  file_list_long_mode.each do |file|
+def print_long_list(long_mode_files, column_max_lengths)
+  long_mode_files.each do |file|
     print file['file_permission']
     print file['file_owner'].rjust(column_max_lengths['file_owner'] + MARGIN)
     print file['file_group'].rjust(column_max_lengths['file_group'] + MARGIN)
@@ -71,7 +71,7 @@ def print_long_list(file_list_long_mode, column_max_lengths)
   end
 end
 
-def column_spacing(file_list_long_mode)
+def calculate_max_length(long_mode_files)
   column_max_lengths = {
     'file_owner' => 0,
     'file_group' => 0,
@@ -80,7 +80,7 @@ def column_spacing(file_list_long_mode)
     'file_name' => 0
   }
 
-  file_list_long_mode.each do |file|
+  long_mode_files.each do |file|
     column_max_lengths['file_owner'] = file['file_owner'].length if file['file_owner'].length > column_max_lengths['file_owner']
     column_max_lengths['file_group'] = file['file_group'].length if file['file_group'].length > column_max_lengths['file_group']
     column_max_lengths['file_size'] = file['file_size'].length if file['file_size'].length > column_max_lengths['file_size']
@@ -89,9 +89,9 @@ def column_spacing(file_list_long_mode)
   column_max_lengths
 end
 
-def long_list(file_list)
-  file_list_long_mode = []
-  file_list.each do |file|
+def long_list(files)
+  long_mode_files = []
+  files.each do |file|
     file_details = File.stat(file)
     formatted_file_long_mode = {
       'file_permission' => file_type_symbol(file_details.ftype) + file_mode_symbol(file_details.mode),
@@ -101,22 +101,19 @@ def long_list(file_list)
       'file_last_modified' => file_details.mtime.strftime('%-m %-d %R'),
       'file_name' => File.basename(file)
     }
-    file_list_long_mode << formatted_file_long_mode
+    long_mode_files << formatted_file_long_mode
   end
-  column_max_lengths = column_spacing(file_list_long_mode)
-  print_long_list(file_list_long_mode, column_max_lengths)
+  column_max_lengths = calculate_max_length(long_mode_files)
+  print_long_list(long_mode_files, column_max_lengths)
 end
 
-file_list = Dir.glob("#{current_path}/*")
-file_count = file_list.length
-row_count = (file_count / COLUMN_COUNT.to_f).ceil
-if show_in_detailed_list
-  long_list(file_list)
-else
+def normal_list(files)
+  file_count = files.length
+  row_count = (file_count / COLUMN_COUNT.to_f).ceil
   max_length = 0
   ordered_file_list = [] << []
 
-  file_list.each_with_index do |file_path, index|
+  files.each_with_index do |file_path, index|
     ordered_file_list << [] if (index % row_count).zero?
     file_name = File.basename(file_path)
     max_length = file_name.length if file_name.length > max_length
@@ -124,4 +121,11 @@ else
   end
 
   formatted_print(ordered_file_list, max_length, row_count)
+end
+
+files = Dir.glob("#{current_path}/*")
+if show_in_detailed_list
+  long_list(files)
+else
+  normal_list(files)
 end
