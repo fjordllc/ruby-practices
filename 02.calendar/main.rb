@@ -1,3 +1,5 @@
+#!ruby
+
 require 'optparse'
 require_relative './calendar'
 
