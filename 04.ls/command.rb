@@ -2,12 +2,15 @@
 
 require 'optparse'
 require 'etc'
-require 'debug'
 
 file_list_options = ARGV.getopts('l')
 show_in_detailed_list = file_list_options['l']
+file_list_options = ARGV.getopts('r')
+show_in_reversed_order = file_list_options['r'] || file_list_options['reverse']
+
 
 current_path = ARGV[0].nil? ? __dir__ : ARGV[0]
+
 MARGIN = 3
 COLUMN_COUNT = 3
 FILE_PERMISSION_SYMBOLS = {
