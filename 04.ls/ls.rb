@@ -19,10 +19,9 @@ def align_columns(array, number_of_columns)
   array
 end
 
-opt = ARGV.getopts('a')
+opt = ARGV.getopts('r')
 
-flags = opt['a'] ? File::FNM_DOTMATCH : 0
-filenames = Dir.glob('*', flags)
+filenames = opt['r'] ? Dir.glob('*').sort.reverse : Dir.glob('*').sort
 
 # ファイルを取得して整形
 files = justify_filenames(filenames)
