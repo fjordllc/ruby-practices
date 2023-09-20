@@ -2,9 +2,8 @@
 
 require 'optparse'
 
-file_list_options = ARGV.getopts('a','all')
-
-show_hidden_files = file_list_options['a'] || file_list_options['all']
+file_list_options = ARGV.getopts('r', 'reverse')
+show_in_reversed_order = file_list_options['r'] || file_list_options['reverse']
 
 current_path = ARGV[0].nil? ? __dir__ : ARGV[0]
 
@@ -25,7 +24,8 @@ def formatted_print(ordered_file_list, column_spacing, row_count)
   end
 end
 
-file_list = show_hidden_files ? Dir.glob("#{current_path}/*", File::FNM_DOTMATCH) : Dir.glob("#{current_path}/*")
+file_list = Dir.glob("#{current_path}/*")
+file_list.reverse! if show_in_reversed_order
 file_count = file_list.length
 row_count = (file_count / COLUMN_COUNT.to_f).ceil
 
