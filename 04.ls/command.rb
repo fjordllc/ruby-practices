@@ -3,11 +3,10 @@
 require 'optparse'
 require 'etc'
 
-file_list_options = ARGV.getopts('l')
+file_list_options = ARGV.getopts('lra')
 show_in_detailed_list = file_list_options['l']
-file_list_options = ARGV.getopts('r')
-show_in_reversed_order = file_list_options['r'] || file_list_options['reverse']
-
+show_in_reversed_order = file_list_options['r']
+show_hidden_files = file_list_options['a']
 
 current_path = ARGV[0].nil? ? __dir__ : ARGV[0]
 
@@ -126,7 +125,14 @@ def normal_list(files)
   formatted_print(ordered_file_list, max_length, row_count)
 end
 
-files = Dir.glob("#{current_path}/*")
+files = if show_hidden_files
+          Dir.glob("#{current_path}/*", File::FNM_DOTMATCH)
+        else
+          Dir.glob("#{current_path}/*")
+        end
+
+files.reverse! if show_in_reversed_order
+
 if show_in_detailed_list
   long_list(files)
 else
