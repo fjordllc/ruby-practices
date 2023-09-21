@@ -11,21 +11,12 @@ class Calendar
       'Sat' => 7 }.freeze
 
   def initialize(year, month)
-    @year = if !year.nil?
-              year
-            else
-              Date.today.year.to_s # 引数yearはnil以外でstringで渡ってくるので、この値もstringに合わせる
-            end
-
-    @month = if !month.nil?
-               month
-             else
-               Date.today.month.to_s
-             end
+    @year = (year || Date.today.year).to_i
+    @month = (month || Date.today.month).to_i
   end
 
   def fetch_the_end_of_the_month
-    Date.new(@year.to_i, @month.to_i, -1).mday
+    Date.new(@year, @month, -1).mday
   end
 
   def create_date(day)
@@ -65,7 +56,7 @@ class Calendar
       day_s = day.to_s
 
       # 曜日の取得: week_day
-      date = create_date(day_s)
+      date = create_date(day)
       week_day = date.strftime('%a')
 
       if week_day != 'Sun'

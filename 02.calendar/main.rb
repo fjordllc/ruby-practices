@@ -1,7 +1,7 @@
 #!ruby
 
 require 'optparse'
-require_relative './calendar'
+require_relative 'calendar'
 
 # argvでコマンドライン引数を受け取る
 params = ARGV.getopts('y:', 'm:') # ruby main.rb -m 1 => {"y"=>nil, "m"=>"01"}
