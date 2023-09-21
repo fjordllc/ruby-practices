@@ -7,7 +7,7 @@ shots = []
 
 # 受け取った引数からショット毎のスコアを計算 & ストライクの時に10, 0を追加し、各フレーム毎に２要素または３要素あるように調整する。
 scores.each do |s|
-  if shots.length >= 18
+  if shots.length >= 18 # １０フレーム目の処理
     shots << if s == 'X' # strike
                10
              else
@@ -40,7 +40,7 @@ point = 0
 frames.each.with_index(1) do |frame, index|
   i = index - 1
   point +=
-    # In 10 frame
+    # １０フレーム目の時
     if i == 9
       frame.sum
     # Strike case
