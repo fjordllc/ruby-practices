@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class LsMethods
   def initialize(path = '.')
     @all_contents = Dir.entries(path) # path配下にあるhidden fileを含む全てのファイルシステムを取得
