@@ -4,18 +4,15 @@ require "date"
 require "optparse"
 opt = OptionParser.new
 params = ARGV.getopts("y:m:")
-array_params = params.values
 
-if array_params.first != nil && array_params.last != nil
-  ARGV.push(array_params.first.to_i, array_params.last.to_i)
-elsif array_params.first != nil && array_params.last == nil
-  puts "月を指定してください。"
-  exit
-elsif array_params.first == nil && array_params.last != nil
-  ARGV.push(Date.today.year, array_params.last.to_i)
-else
-  ARGV.push(Date.today.year, Date.today.month)
+#年月の指定
+if params["y"] == nil
+  params["y"] = Date.today.year
 end
+if params["m"] == nil
+  params["m"] = Date.today.month
+end
+ARGV.push(params["y"], params["m"])
 
 #月初めの年月日
 first_day = Date.new(ARGV.first.to_i, ARGV.last.to_i, 1)
@@ -30,14 +27,11 @@ puts yearmonth.center(20)
 #曜日を表示
 puts "日 月 火 水 木 金 土"
 
-#1日目を配置
+#1日目の前の空白を配置
 days = first_day.day
-      print "#{days}".rjust(2 + week * 3) + " "
-      if week == 6
-        print "\n"
-      end
-#2日目以降
-    for days in 2..last_day.day
+      print "".rjust(week * 3)
+#日付を配置
+    for days in 1..last_day.day
       print "#{days} ".rjust(3)
 #土曜日のとき改行
       if (days + week) % 7 == 0
