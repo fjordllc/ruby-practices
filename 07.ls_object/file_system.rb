@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'optparse'
+require './singular_file_column_group'
+require './plural_file_column_group'
 
 SEGMENT_LENGTH = 3
 
