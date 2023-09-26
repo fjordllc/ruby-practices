@@ -11,6 +11,12 @@ class FileSystem
     @column_file_groups = create_column_file_groups(argv)
   end
 
+  def display
+    @column_file_groups.each do |column_file_group|
+      puts column_file_group.text
+    end
+  end
+
   private
 
   def create_column_file_groups(argv)
