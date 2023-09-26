@@ -12,6 +12,7 @@ class PluralFileColumnGroup < FileColumnGroup
   private
 
   def create_file_items(filenames)
+    filenames.map { |filename| FileItem.new(filename) }
   end
 
   def create_text(files, longest_filename_length)

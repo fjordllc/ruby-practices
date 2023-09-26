@@ -12,6 +12,7 @@ class SingularFileColumnGroup < FileColumnGroup
   private
 
   def create_file_item(filename)
+    FileDetailItem.new(filename)
   end
 
   def create_text(file, _)
