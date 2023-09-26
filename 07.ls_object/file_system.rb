@@ -24,7 +24,22 @@ class FileSystem
     filenames.reverse! if options[:r]
 
     if options[:l]
+      filenames.map { |filename| SingularFileColumnGroup.new(filename) }
     else
+      divided_filenames = divide_into_segments(filenames)
+      longest_filename_length = divided_filenames.flatten.max_by(&:length).length
+      transposed_filenames = transpose(divided_filenames)
+      transposed_filenames.map { |transposed_filename| PluralFileColumnGroup.new(transposed_filename, longest_filename_length) }
     end
+  end
+
+  def divide_into_segments(filenames)
+    filenames.each_slice((filenames.length + 2) / SEGMENT_LENGTH).to_a
+  end
+
+  def transpose(filenames)
+    max_size = filenames.map(&:size).max
+    filenames.map! { |items| items.values_at(0...max_size) }
+    filenames.transpose
   end
 end
