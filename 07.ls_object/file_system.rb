@@ -21,13 +21,13 @@ class FileSystem
   private
 
   def create_column_file_groups(argv)
-    options = extract_options(argv)
+    extract_options(argv)
 
-    filenames = decide_display_type(options)
+    filenames = fetch_filenames
 
     @total_blocks = filenames.sum { |filename| File.stat(filename).blocks }
 
-    if options[:l]
+    if @options[:l]
       filenames.map { |filename| SingularFileColumnGroup.new(filename) }
     else
       divided_filenames = divide_into_segments(filenames)
@@ -38,17 +38,17 @@ class FileSystem
 
   def extract_options(argv)
     opt = OptionParser.new
-    options = {}
-    opt.on('-a') { |v| options[:a] = v }
-    opt.on('-r') { |v| options[:r] = v }
-    opt.on('-l') { |v| options[:l] = v }
+    @options = {}
+    opt.on('-a') { |v| @options[:a] = v }
+    opt.on('-r') { |v| @options[:r] = v }
+    opt.on('-l') { |v| @options[:l] = v }
     opt.parse!(argv)
   end
 
-  def decide_display_type(options)
+  def fetch_filenames
     filenames = Dir.glob('*')
-    filenames = Dir.entries('.') if options[:a]
-    filenames.reverse! if options[:r]
+    filenames = Dir.entries('.') if @options[:a]
+    filenames.reverse! if @options[:r]
     filenames
   end
 
