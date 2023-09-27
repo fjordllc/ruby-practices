@@ -12,6 +12,7 @@ class FileSystem
   end
 
   def display
+    puts "total #{@total_blocks}"  if @options[:l]
     @column_file_groups.each do |column_file_group|
       puts column_file_group.text
     end
@@ -21,17 +22,18 @@ class FileSystem
 
   def create_column_file_groups(argv)
     opt = OptionParser.new
-    options = {}
-    opt.on('-a') { |v| options[:a] = v }
-    opt.on('-r') { |v| options[:r] = v }
-    opt.on('-l') { |v| options[:l] = v }
+    @options = {}
+    opt.on('-a') { |v| @options[:a] = v }
+    opt.on('-r') { |v| @options[:r] = v }
+    opt.on('-l') { |v| @options[:l] = v }
     opt.parse!(argv)
 
     filenames = Dir.glob('*')
-    filenames = Dir.entries('.') if options[:a]
-    filenames.reverse! if options[:r]
+    filenames = Dir.entries('.') if @options[:a]
+    filenames.reverse! if @options[:r]
 
-    if options[:l]
+    if @options[:l]
+      @total_blocks = filenames.sum { |filename| File.stat(filename).blocks }
       filenames.map { |filename| SingularFileColumnGroup.new(filename) }
     else
       divided_filenames = divide_into_segments(filenames)
