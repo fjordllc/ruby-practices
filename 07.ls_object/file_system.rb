@@ -12,7 +12,7 @@ class FileSystem
   end
 
   def display
-    puts "total #{@total_blocks}"  if @options[:l]
+    puts "total #{@total_blocks}" if @options[:l]
     @column_file_groups.each do |column_file_group|
       puts column_file_group.text
     end
