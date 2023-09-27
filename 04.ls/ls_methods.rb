@@ -16,7 +16,7 @@ def show_ls(contents)
     # 列のナンバリング　今回は最大３列までなので最大３つまで表示したら次の行に折り返す。
     3.times do |w_num|
       contents_index = h_num + (height * w_num)
-      print "#{contents[contents_index]}".ljust(20) if !contents[contents_index].nil?
+      print contents[contents_index].ljust(20) if !contents[contents_index].nil?
     end
     puts # ターミナル上で見栄えが悪いので改行。
   end
