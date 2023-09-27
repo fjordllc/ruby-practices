@@ -3,7 +3,8 @@
 
 require_relative 'ls_methods'
 def main
-  LsMethods.new.ls_without_any_options
+  file_system_arr = get_all_file_system
+  ls_without_any_options(file_system_arr)
 end
 
 main
