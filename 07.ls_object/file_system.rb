@@ -21,29 +21,35 @@ class FileSystem
   private
 
   def create_column_file_groups(argv)
-    opt = OptionParser.new
-    @options = {}
-    opt.on('-a') { |v| @options[:a] = v }
-    opt.on('-r') { |v| @options[:r] = v }
-    opt.on('-l') { |v| @options[:l] = v }
-    opt.parse!(argv)
+    options = extract_options(argv)
 
-    filenames = Dir.glob('*')
-    filenames = Dir.entries('.') if @options[:a]
-    filenames.reverse! if @options[:r]
+    filenames = decide_display_type(options)
 
-    if @options[:l]
-      @total_blocks = filenames.sum { |filename| File.stat(filename).blocks }
+    @total_blocks = filenames.sum { |filename| File.stat(filename).blocks }
+
+    if options[:l]
       filenames.map { |filename| SingularFileColumnGroup.new(filename) }
     else
-      divide_per_column(filenames).map { |transposed_filename| PluralFileColumnGroup.new(transposed_filename, longest_filename_length) }
+      divided_filenames = divide_into_segments(filenames)
+      longest_filename_length = divided_filenames.flatten.max_by(&:length).length
+      transpose(divided_filenames).map { |transposed_filename| PluralFileColumnGroup.new(transposed_filename, longest_filename_length) }
     end
   end
 
-  def divide_per_column(filenames)
-    divided_filenames = divide_into_segments(filenames)
-    longest_filename_length = divided_filenames.flatten.max_by(&:length).length
-    transpose(divided_filenames)
+  def extract_options(argv)
+    opt = OptionParser.new
+    options = {}
+    opt.on('-a') { |v| options[:a] = v }
+    opt.on('-r') { |v| options[:r] = v }
+    opt.on('-l') { |v| options[:l] = v }
+    opt.parse!(argv)
+  end
+
+  def decide_display_type(options)
+    filenames = Dir.glob('*')
+    filenames = Dir.entries('.') if options[:a]
+    filenames.reverse! if options[:r]
+    filenames
   end
 
   def divide_into_segments(filenames)
