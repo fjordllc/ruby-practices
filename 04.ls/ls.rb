@@ -1,23 +1,39 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-FIND_FILES = Dir.glob('*')
 SPLIT_NUMBER = 3
 
-def splitting_array
-  max_length = FIND_FILES.length / SPLIT_NUMBER
-  FIND_FILES.length % SPLIT_NUMBER != 0 ? max_length += 1 : max_length
+def group_files
+  find_files = Dir.glob('*')
+  max_length = find_files.length / SPLIT_NUMBER
+  max_length = find_files.length % SPLIT_NUMBER != 0 ? max_length + 1 : max_length
 
-  split_array = FIND_FILES.each_slice(max_length).to_a
-  split_array[2] += Array.new(split_array[0].length - split_array[2].length, nil) if FIND_FILES.length % SPLIT_NUMBER != 0
-  split_array
+  grouped_files = find_files.each_slice(max_length).to_a
+  hoge = grouped_files[0].length - grouped_files[SPLIT_NUMBER - 1].length
+  grouped_files[SPLIT_NUMBER - 1] += Array.new(hoge, nil) if find_files.length % SPLIT_NUMBER != 0
+  grouped_files
 end
 
-def sorting_array(array)
-  transpose_arrays = array.transpose
-  transpose_arrays.each do |f|
-    puts f.join("\t")
+def sort_files(group_files)
+  vertical_files = group_files.transpose
+  max_name_length = calc_max_value_of_name(group_files)
+
+  vertical_files.each do |files|
+    files.each do |file|
+      printf("%-#{max_name_length}s\t", file)
+    end
+    print("\n")
   end
 end
 
-sorting_array(splitting_array)
+def calc_max_value_of_name(group_files)
+  name_length = 1
+  group_files.each do |files|
+    files.each do |file|
+      name_length = file.length if name_length < file.length
+    end
+  end
+  name_length
+end
+
+sort_files(group_files)
