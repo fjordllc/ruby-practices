@@ -6,7 +6,7 @@ class LsMethods
   end
 
   def ls_without_any_options
-    filtered_contents = @all_contents.filter { |content| content !~ /^\..*$/ } # hidden file をファイル
+    filtered_contents = @all_contents.filter { |content| content !~ /^\..*$/ } # hidden fileをall_contentsから除外する。
     show_ls(filtered_contents)
   end
 
@@ -17,7 +17,7 @@ class LsMethods
       # 列のナンバリング　今回は最大３列までなので最大３つまで表示したら次の行に折り返す。
       3.times do |w_num|
         contents_index = h_num + (height * w_num)
-        print "#{contents[contents_index]}".ljust(20) if !contents[contents_index].nil? # rubocop:disable all
+        print "#{contents[contents_index]}".ljust(20) if !contents[contents_index].nil?
       end
       puts
     end
