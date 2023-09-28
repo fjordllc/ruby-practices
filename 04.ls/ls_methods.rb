@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 def get_files_and_directories(path = '.')
-  Dir.entries(path) # path配下にあるhidden fileを含む全てのファイルシステムを取得
+  Dir.entries(path).sort # path配下にあるhidden fileを含む全てのファイルシステムを取得
 end
 
 def ls_without_any_options(file_system_arr)
