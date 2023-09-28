@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-def get_files_and_directories(path = '.')
-  Dir.entries(path).sort # path配下にあるhidden fileを含む全てのファイルシステムを取得
+def get_files_and_directories(path)
+  Dir.entries(path).sort # path配下にあるhiddenfileを含む全てのファイルとフォルダを取得
 end
 
-def ls_without_any_options(file_system_arr)
-  filtered_file_system_arr = file_system_arr.filter { |content| !content.start_with?('.') } # hidden fileをall_contentsから除外する。
-  show_ls(filtered_file_system_arr)
+def ls_with_options(contents)
+  filtered_contents = contents.filter { |content| !content.start_with?('.') } # hidden fileをcontentsから除外する。
+  show_ls(filtered_contents)
 end
 
 def show_ls(contents)
