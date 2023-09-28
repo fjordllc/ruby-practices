@@ -6,7 +6,7 @@ require_relative 'ls_methods'
 
 def main
   # lsロジックに渡す引数をargsに整理する
-  args = { 'path' => '.' }
+  args = { 'option' => nil, 'path' => '.' }
   # 引数を処理
   ARGV.each do |arg|
     if arg.start_with?('-')
@@ -19,7 +19,7 @@ def main
   end
 
   contents = get_files_and_directories(args['path'])
-  ls_with_options(contents)
+  ls_with_options(contents, args['option'])
 end
 
 main
