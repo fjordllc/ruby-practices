@@ -8,7 +8,7 @@ def main
 
   ARGV.each do |arg|
     if arg.start_with?('-')
-      args['option'] = arg[1..-1]
+      args['option'] = arg[1..]
     else
       args['path'] = arg
     end

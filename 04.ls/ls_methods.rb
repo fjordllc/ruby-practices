@@ -7,9 +7,7 @@ end
 def ls_with_options(contents, option)
   if option.nil?
     filtered_contents = contents.filter { |content| !content.start_with?('.') } # hidden fileをcontentsから除外する。
-
   end
-
   show_ls(filtered_contents)
 end
 
