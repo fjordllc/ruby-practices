@@ -1,14 +1,13 @@
 # frozen_string_literal: true
 
-def get_files_and_directories(path)
-  Dir.entries(path).sort # path配下にあるhiddenfileを含む全てのファイルとフォルダを取得
+def get_files(path)
+  Dir.entries(path).sort
 end
 
 def ls_with_options(contents, option)
-  # optionの指定がない時
   if option.nil?
     filtered_contents = contents.filter { |content| !content.start_with?('.') } # hidden fileをcontentsから除外する。
-  # else 以下にoptionが存在する時、各記号によって処理を加える予定。
+
   end
 
   show_ls(filtered_contents)
