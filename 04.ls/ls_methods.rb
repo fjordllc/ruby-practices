@@ -11,7 +11,7 @@ def convert_with_option!(contents, option)
   else
     case option
     when option[:a]
-      contents
+      contents # 引数のcontentsはオプション指定時に隠しファイルを含むものが渡されるのでそのまま返す。
     end
   end
 end
