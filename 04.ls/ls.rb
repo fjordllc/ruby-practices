@@ -8,7 +8,6 @@ def main
   option = {}
   opt = OptionParser.new
 
-  # optionをコンテナに格納
   opt.on('-a') { |v| option[:a] = v }
   opt.parse!(ARGV)
 
