@@ -8,11 +8,8 @@ end
 def convert_with_option!(contents, option)
   if option.empty?
     contents.reject! { |content| content.start_with?('.') } # hidden fileをcontentsから除外する。
-  else
-    case option
-    when option[:a]
-      contents # 引数のcontentsはオプション指定時に隠しファイルを含むものが渡されるのでそのまま返す。
-    end
+  elsif option[:a]
+    contents
   end
 end
 
