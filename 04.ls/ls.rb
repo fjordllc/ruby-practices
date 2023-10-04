@@ -4,18 +4,17 @@
 SPLIT_NUMBER = 3
 
 def group_files
-  find_files = Dir.glob('*')
-  max_length = find_files.length / SPLIT_NUMBER
-  max_length = find_files.length % SPLIT_NUMBER != 0 ? max_length + 1 : max_length
+  obtained_files = Dir.glob('*')
+  max_length = (obtained_files.length.to_f / SPLIT_NUMBER).ceil
 
-  grouped_files = find_files.each_slice(max_length).to_a
-  hoge = grouped_files[0].length - grouped_files[SPLIT_NUMBER - 1].length
-  grouped_files[SPLIT_NUMBER - 1] += Array.new(hoge, nil) if find_files.length % SPLIT_NUMBER != 0
+  grouped_files = obtained_files.each_slice(max_length).to_a
+  blank_numbers = grouped_files[0].length - grouped_files[SPLIT_NUMBER - 1].length
+  grouped_files[SPLIT_NUMBER - 1] += Array.new(blank_numbers, nil)
   grouped_files
 end
 
-def sort_files(group_files)
-  vertical_files = group_files.transpose
+def transpose_columns_and_rows(classified_files)
+  vertical_files = classified_files.transpose
   max_name_length = calc_max_value_of_name(group_files)
 
   vertical_files.each do |files|
@@ -26,14 +25,13 @@ def sort_files(group_files)
   end
 end
 
-def calc_max_value_of_name(group_files)
+def calc_max_value_of_name(classified_files)
   name_length = 1
-  group_files.each do |files|
-    files.each do |file|
-      name_length = file.length if name_length < file.length
-    end
+
+  classified_files.each do |files|
+    files.compact.max { |file| name_length = file.length }
   end
   name_length
 end
 
-sort_files(group_files)
+transpose_columns_and_rows(group_files)
