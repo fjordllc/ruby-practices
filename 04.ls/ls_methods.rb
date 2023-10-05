@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 
 def get_files(path)
+  path ||= '.'
   Dir.entries(path).sort
 end
 
-def ls_with_options(contents, option)
-  if option.nil?
-    filtered_contents = contents.filter { |content| !content.start_with?('.') } # hidden fileをcontentsから除外する。
-  end
-  show_ls(filtered_contents)
+def convert_with_option!(contents, option)
+  contents.reverse! if option[:r]
+
+  return if option[:a]
+
+  contents.reject! { |content| content.start_with?('.') } # hidden fileをcontentsから除外する。
 end
 
 def show_ls(contents)
