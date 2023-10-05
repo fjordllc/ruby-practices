@@ -13,7 +13,7 @@ def main
   path = ARGV[0].nil? ? '.' : ARGV[0]
   contents = get_files(path)
   converted_contents = convert_with_option!(contents, option, path)
-  # lオプションがあると表示が変わる
+
   if option[:l]
     converted_contents.each { |content| puts content }
   else
