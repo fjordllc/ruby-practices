@@ -2,20 +2,22 @@
 # frozen_string_literal: true
 
 require_relative 'ls_methods'
+require 'optparse'
 
 def main
-  args = { 'option' => nil, 'path' => '.' }
+  option = {}
+  opt = OptionParser.new
 
-  ARGV.each do |arg|
-    if arg.start_with?('-')
-      args['option'] = arg[1..]
-    else
-      args['path'] = arg
-    end
+  opt.on('-l') { |v| option[:l] = v }
+  opt.parse!(ARGV)
+  path = ARGV[0].nil? ? '.' : ARGV[0]
+  contents = get_files(path)
+  converted_contents = convert_with_option!(contents, option, path)
+  # lオプションがあると表示が変わる
+  if option[:l]
+    converted_contents.each { |content| puts content }
+  else
+    show_ls(converted_contents)
   end
-
-  contents = get_files(args['path'])
-  ls_with_options(contents, args['option'])
 end
-
 main

@@ -39,16 +39,18 @@ def convert_with_l_option!(contents, path)
     size_length = fs.size.to_s.length
     max_size_length = size_length if size_length > max_size_length
     mode = convert_to_mode_symbol(fs.mode.to_s(8).rjust(6, '0'))
-    new_contents << "#{mode} #{Etc.getpwuid(fs.uid).name} #{Etc.getgrgid(fs.gid).name} #{fs.size} #{fs.mtime} #{content}"
+    time = time_formatter(fs.mtime)
+    # " 9 11 17:18"
+    new_contents << [mode, fs.nlink.to_s.rjust(2), Etc.getpwuid(fs.uid).name, Etc.getgrgid(fs.gid).name, fs.size.to_s, time, content]
   end
 
   # 各行のファイルサイズを最大文字列長に合わせて整形
-  new_contents.map! do |line|
-    parts = line.split
-    parts[3] = parts[3].rjust(max_size_length + 1)
-    parts.join(' ')
+  formatted_new_contents = []
+  new_contents.each do |content|
+    content[4] = content[4].rjust(max_size_length + 1)
+    formatted_new_contents << content.join(' ')
   end
-  new_contents
+  formatted_new_contents
 end
 
 def convert_to_mode_symbol(octal_mode)
@@ -73,4 +75,8 @@ def convert_to_mode_symbol(octal_mode)
     '0' => '---'
   }
   "#{file_map[octal_mode[0..2]]}#{permission_map[octal_mode[3]]}#{permission_map[octal_mode[4]]}#{permission_map[octal_mode[5]]}@"
+end
+
+def time_formatter(mtime)
+  "#{mtime.month.to_s.rjust(2)} #{mtime.mday.to_s.rjust(2)} #{mtime.hour.to_s.rjust(2, '0')}:#{mtime.min.to_s.rjust(2, '0')}"
 end
