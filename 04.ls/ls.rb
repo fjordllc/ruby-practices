@@ -1,4 +1,3 @@
-#!/usr/bin/env ruby
 # frozen_string_literal: true
 
 require_relative 'ls_methods'
@@ -10,10 +9,10 @@ def main
 
   opt.on('-a') { |v| option[:a] = v }
   opt.parse!(ARGV)
-
-  contents = get_files(ARGV[0])
-  convert_with_option!(contents, option)
-  show_ls(contents)
+  path = ARGV[0].nil? ? '.' : ARGV[0]
+  contents = get_files(path)
+  converted_contents = convert_with_option(contents, option)
+  show_ls(converted_contents)
 end
 
 main
