@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 def fizz(x)
     return "Fizz" if x % 3 == 0
     return ""
