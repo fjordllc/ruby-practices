@@ -14,7 +14,7 @@ def convert_with_option(contents, option)
   contents
 end
 
-def show_ls(contents)
+def show(contents)
   maximum_length = contents.max_by(&:length).length + 3
   height = contents.length.ceildiv(3)
   # 行のナンバリング
