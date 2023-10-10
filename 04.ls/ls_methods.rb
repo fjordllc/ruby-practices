@@ -17,7 +17,7 @@ def convert_with_option(contents, option)
 end
 
 def show(contents)
-  maximum_length = contents.max_by(&:length).length + 3
+  maximum_length = contents.max_by(&:length).length + 3 # 本家lsコマンドに寄せたスペース幅に調整
   height = contents.length.ceildiv(COLUMN_NUMBER)
 
   (0...height).each do |h_num|
