@@ -10,10 +10,11 @@ def main
 
   opt.on('-r') { |v| option[:r] = v }
   opt.parse!(ARGV)
-
-  contents = get_files(ARGV[0])
-  convert_with_option!(contents, option)
-  show_ls(contents)
+  # ARGV[0]にpathの入力値が渡される。ファイル名を渡すことは出来ない。
+  path = ARGV[0].nil? ? '.' : ARGV[0]
+  contents = get_files(path)
+  filtered_contents = filter_with_option(contents, option)
+  show(filtered_contents)
 end
 
 main
