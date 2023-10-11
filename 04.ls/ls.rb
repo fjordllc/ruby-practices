@@ -15,17 +15,17 @@ end
 
 def output_like_ls_command(completed_grouped_files)
   vertical_files = completed_grouped_files.transpose
-  max_name_length = calc_max_value_of_name(completed_grouped_files)
+  max_name_length = calc_max_value_of_name
 
   vertical_files.each do |files|
     files.each do |file|
-      print "#{file}".ljust(max_name_length).concat("\s")
+      print file.to_s.ljust(max_name_length).concat("\s")
     end
     print("\n")
   end
 end
 
-def calc_max_value_of_name(completed_grouped_files)
+def calc_max_value_of_name
   Dir.glob('*').map(&:size).max
 end
 
