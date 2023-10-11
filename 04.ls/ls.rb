@@ -13,9 +13,9 @@ def group_files
   grouped_files
 end
 
-def output_like_ls_command(classified_files)
-  vertical_files = classified_files.transpose
-  max_name_length = calc_max_value_of_name(classified_files)
+def output_like_ls_command(completed_grouped_files)
+  vertical_files = completed_grouped_files.transpose
+  max_name_length = calc_max_value_of_name(completed_grouped_files)
 
   vertical_files.each do |files|
     files.each do |file|
@@ -25,7 +25,7 @@ def output_like_ls_command(classified_files)
   end
 end
 
-def calc_max_value_of_name(classified_files)
+def calc_max_value_of_name(completed_grouped_files)
   Dir.glob('*').map(&:size).max
 end
 
