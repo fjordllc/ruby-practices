@@ -13,7 +13,7 @@ def group_files
   grouped_files
 end
 
-def transpose_columns_and_rows(classified_files)
+def output_like_ls_command(classified_files)
   vertical_files = classified_files.transpose
   max_name_length = calc_max_value_of_name(classified_files)
 
@@ -29,4 +29,4 @@ def calc_max_value_of_name(classified_files)
   Dir.glob('*').map(&:size).max
 end
 
-transpose_columns_and_rows(group_files)
+output_like_ls_command(group_files)
