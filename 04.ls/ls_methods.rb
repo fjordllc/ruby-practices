@@ -8,11 +8,9 @@ def get_files(path)
   Dir.entries(path).sort
 end
 
-def convert_with_option(contents, option)
-  unless option[:a]
-    converted_contents = contents.reject { |content| content.start_with?('.') } # hidden fileをcontentsから除外する。
-    return converted_contents
-  end
+def filter_with_option(contents, option)
+  return contents.reject { |content| content.start_with?('.') } unless option[:a]
+
   contents
 end
 
