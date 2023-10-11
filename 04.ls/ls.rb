@@ -15,7 +15,7 @@ end
 
 def transpose_columns_and_rows(classified_files)
   vertical_files = classified_files.transpose
-  max_name_length = calc_max_value_of_name(group_files)
+  max_name_length = Dir.glob('*').map(&:size).max
 
   vertical_files.each do |files|
     files.each do |file|
@@ -23,11 +23,6 @@ def transpose_columns_and_rows(classified_files)
     end
     print("\n")
   end
-end
-
-def calc_max_value_of_name(classified_files)
-  without_nil_files = classified_files.flatten.compact
-  without_nil_files.map(&:size).max
 end
 
 transpose_columns_and_rows(group_files)
