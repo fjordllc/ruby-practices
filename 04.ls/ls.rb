@@ -19,7 +19,7 @@ def transpose_columns_and_rows(classified_files)
 
   vertical_files.each do |files|
     files.each do |file|
-      printf("%-#{max_name_length}s\s", file)
+      print "#{file}".ljust(max_name_length).concat("\s")
     end
     print("\n")
   end
