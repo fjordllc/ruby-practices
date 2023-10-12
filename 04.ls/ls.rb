@@ -1,21 +1,19 @@
-#!/usr/bin/env ruby
 # frozen_string_literal: true
 
 require_relative 'ls_methods'
+require 'optparse'
 
 def main
-  args = { 'option' => nil, 'path' => '.' }
+  option = {}
+  opt = OptionParser.new
 
-  ARGV.each do |arg|
-    if arg.start_with?('-')
-      args['option'] = arg[1..]
-    else
-      args['path'] = arg
-    end
-  end
-
-  contents = get_files(args['path'])
-  ls_with_options(contents, args['option'])
+  opt.on('-a') { |v| option[:a] = v }
+  opt.parse!(ARGV)
+  # ARGV[0]にpathの入力値が渡される。ファイル名を渡すことは出来ない。
+  path = ARGV[0].nil? ? '.' : ARGV[0]
+  contents = get_files(path)
+  filtered_contents = filter_with_option(contents, option)
+  show(filtered_contents)
 end
 
 main
