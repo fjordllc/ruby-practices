@@ -3,8 +3,12 @@
 
 SPLIT_NUMBER = 3
 
+def obtain_files
+  Dir.glob('*')
+end
+
 def group_files
-  obtained_files = Dir.glob('*')
+  obtained_files = obtain_files
   max_length = (obtained_files.length.to_f / SPLIT_NUMBER).ceil
 
   grouped_files = obtained_files.each_slice(max_length).to_a
@@ -13,20 +17,16 @@ def group_files
   grouped_files
 end
 
-def output_like_ls_command(grouped_files)
-  vertical_files = grouped_files.transpose
-  max_name_length = calc_max_value_of_name
+def output_like_ls_command
+  vertical_files = group_files.transpose
+  max_name_length = obtain_files.map(&:size).max
 
   vertical_files.each do |files|
     files.each do |file|
-      print file.to_s.ljust(max_name_length).concat("\s")
+      print file.to_s.ljust(max_name_length + 1)
     end
     print("\n")
   end
 end
 
-def calc_max_value_of_name
-  Dir.glob('*').map(&:size).max
-end
-
-output_like_ls_command(group_files)
+output_like_ls_command
