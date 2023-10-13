@@ -13,8 +13,8 @@ def group_files
   grouped_files
 end
 
-def output_like_ls_command(completed_grouped_files)
-  vertical_files = completed_grouped_files.transpose
+def output_like_ls_command(grouped_files)
+  vertical_files = grouped_files.transpose
   max_name_length = calc_max_value_of_name
 
   vertical_files.each do |files|
