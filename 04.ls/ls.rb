@@ -13,8 +13,8 @@ def main
   # ARGV[0]にpathの入力値が渡される。ファイル名を渡すことは出来ない。
   path = ARGV[0].nil? ? '.' : ARGV[0]
   contents = get_files(path)
-  filtered_contents = filter_with_option(contents, option)
-  show(filtered_contents)
+  transformed_contents = transform_with_ls_option(contents, option)
+  show(transformed_contents)
 end
 
 main
