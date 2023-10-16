@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
+require 'debug'
 
 SPLIT_NUMBER = 3
 
@@ -21,9 +22,10 @@ end
 
 def group_files
   obtained_files = obtain_files
-  max_length = (obtained_files.length.to_f / SPLIT_NUMBER).ceil
+  max_row_number = (obtained_files.length.to_f / SPLIT_NUMBER).ceil
+  #binding.break
 
-  grouped_files = obtained_files.each_slice(max_length).to_a
+  grouped_files = obtained_files.each_slice(max_row_number).to_a
   blank_numbers = grouped_files[0].length - grouped_files[-1].length
   grouped_files[-1] += Array.new(blank_numbers, nil)
   grouped_files
