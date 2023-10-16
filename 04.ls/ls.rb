@@ -3,7 +3,7 @@
 
 SPLIT_NUMBER = 3
 
-def output_like_ls_command
+def main
   vertical_files = group_files.transpose
   max_name_length = obtain_files.map(&:size).max
 
