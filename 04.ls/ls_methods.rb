@@ -6,10 +6,10 @@ def get_files(path)
   Dir.entries(path).sort
 end
 
-def transform_with_ls_option(contents, option)
+def transform_by_option(contents, option)
   filtered_contents = contents.reject { |content| content.start_with?('.') }
 
-  return format_with_r_option(filtered_contents) if option[:r]
+  return filtered_contents.reverse if option[:r]
 
   filtered_contents
 end
@@ -25,8 +25,4 @@ def show(contents)
     end
     puts # ターミナル上で見栄えが悪いので改行。
   end
-end
-
-def format_with_r_option(array)
-  array.reverse
 end
