@@ -29,4 +29,4 @@ def group_files
   grouped_files
 end
 
-output_like_ls_command
+main
