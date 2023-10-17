@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
-require 'etc'
-
 COLUMN_NUMBER = 3
 
 def get_files(path)
   Dir.entries(path).sort
 end
 
-def filter_with_option(contents, option)
-  return contents.reject { |content| content.start_with?('.') } unless option[:a]
+def transform_by_option(contents, option)
+  filtered_contents = contents.reject { |content| content.start_with?('.') }
 
-  contents
+  return filtered_contents.reverse if option[:r]
+
+  filtered_contents
 end
 
 def show(contents)
