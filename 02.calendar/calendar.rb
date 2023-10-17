@@ -1,5 +1,6 @@
 require 'date'
 
-date = Date.today
-puts "#{date.strftime('%m')}月 #{date.strftime('%Y')}"
+day = Date.today
+puts "#{day.strftime('%m')}月 #{day.strftime('%Y')}"
 puts "日 月 火 水 木 金 土"
+
