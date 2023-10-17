@@ -12,12 +12,12 @@ def main
   opt.parse!(ARGV)
   path = ARGV[0].nil? ? '.' : ARGV[0]
   contents = get_files(path)
-  converted_contents = convert_with_option!(contents, option, path)
+  transformed_contents = transform_by_option(contents, option, path)
 
   if option[:l]
-    converted_contents.each { |content| puts content }
+    transformed_contents.each { |content| puts content }
   else
-    show_ls(converted_contents)
+    show(transformed_contents)
   end
 end
 main
