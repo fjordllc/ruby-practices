@@ -9,5 +9,7 @@ require 'debug'
     puts('Buzz')
   elsif (num % 3).zero?
     puts('Fizz')
+  else
+    puts(num)
   end
 end
