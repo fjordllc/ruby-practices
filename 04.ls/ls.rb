@@ -4,12 +4,8 @@
 SPLIT_NUMBER = 3
 
 def main
-  obtained_files = obtain_files
+  obtained_filesfiles = Dir.glob('*')
   display_files(obtained_files)
-end
-
-def obtain_files
-  Dir.glob('*')
 end
 
 def display_files(obtained_files)
