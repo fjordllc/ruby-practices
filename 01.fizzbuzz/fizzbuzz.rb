@@ -1,7 +1,5 @@
 #! /usr/bin/env ruby
 
-require 'debug'
-
 (1..50).each do |num|
   if (num % 15).zero?
     puts('FizzBuzz')
