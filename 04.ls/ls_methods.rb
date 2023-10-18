@@ -12,7 +12,7 @@ FILE_MAP = {
   '100' => '-',
   '120' => '|',
   '140' => 's'
-}
+}.freeze
 
 PERMISSION_MAP = {
   '7' => 'rwx',
@@ -23,13 +23,13 @@ PERMISSION_MAP = {
   '2' => '-w-',
   '1' => '--x',
   '0' => '---'
-}
+}.freeze
 
 def get_files(path)
   Dir.entries(path).sort
 end
 
-def transform_contents_for_long_format(contents, option, path)
+def transform_contents_for_long_format(contents, option, path) # rubocop:disable all メソッドの行数が[22/20]となっていると警告が出るため。
   filtered_contents = contents.reject { |content| content.start_with?('.') }
 
   if option[:l]
