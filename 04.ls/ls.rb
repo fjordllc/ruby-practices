@@ -11,13 +11,13 @@ def main
   opt.on('-l') { |v| option[:l] = v }
   opt.parse!(ARGV)
   path = ARGV[0].nil? ? '.' : ARGV[0]
-  contents = get_files(path)
-  transformed_contents = transform_contents_for_long_format(contents, option, path)
+  files = get_files(path)
+  transformed_files = transform_files_for_long_format(files, option, path)
 
   if option[:l]
-    transformed_contents.each { |content| puts content }
+    transformed_files.each { |files| puts files }
   else
-    show_as_grid(transformed_contents)
+    show_as_grid(transformed_files)
   end
 end
 main
