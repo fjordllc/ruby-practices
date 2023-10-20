@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-def ls_method(row, path)
+def main(row, path)
   @row = row
   find_files(path)
   format_files(@files)
@@ -33,4 +33,4 @@ def display_files
   @vertical_lines.each_with_index { |file, index| print ((index + 1) % @row).zero? ? "#{file}\n" : file }
 end
 
-ls_method(3, '*')
+main(3, '*')
