@@ -1,11 +1,23 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'optparse'
+
 SPLIT_NUMBER = 3
 
 def main
-  files = Dir.glob('*')
+  options = ARGV.getopts('a')
+  files = obtain_files(params: options['a'])
+
   display_files(files)
+end
+
+def obtain_files(params)
+  if params.values == [true]
+    Dir.glob('*', File::FNM_DOTMATCH)
+  else
+    Dir.glob('*')
+  end
 end
 
 def display_files(obtained_files)
