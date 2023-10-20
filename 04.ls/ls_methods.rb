@@ -15,7 +15,7 @@ PERMISSION_MAP = {
   '0' => '---'
 }.freeze
 
-def get_files(path)
+def files(path)
   Dir.entries(path).sort
 end
 
@@ -23,7 +23,7 @@ def transform_files_for_long_format(files, option, path)
   filtered_files = files.reject { |file| file.start_with?('.') }
 
   if option[:l]
-    get_file_detail_array(path, filtered_files)
+    file_stats(path, filtered_files)
   else
     filtered_files
   end
@@ -42,7 +42,7 @@ def show_as_grid(files)
   end
 end
 
-def get_file_type(file_lstat)
+def file_type(file_lstat)
   if file_lstat.file?
     '-'
   elsif file_lstat.symlink?
@@ -58,8 +58,8 @@ def get_file_type(file_lstat)
   end
 end
 
-def get_file_detail_array(path, file_names)
-  file_detail_array = []
+def file_stats(path, file_names)
+  file_stats = []
   max_size_length = 0
 
   file_names.each do |file_name|
@@ -67,18 +67,18 @@ def get_file_detail_array(path, file_names)
     fs = File::Stat.new(outfile)
     size_length = fs.size.to_s.length
     max_size_length = size_length if size_length > max_size_length
-    file_type = get_file_type(File.lstat(outfile)) # File::Statは自動的にシンボリックリンクをたどっていき常にfalseを返すのでlstatを渡す。
+    file_type = file_type(File.lstat(outfile)) # File::Statは自動的にシンボリックリンクをたどっていき常にfalseを返すのでlstatを渡す。
     octal_mode = fs.mode.to_s(8).rjust(6, '0')
     mode = "#{PERMISSION_MAP[octal_mode[3]]}#{PERMISSION_MAP[octal_mode[4]]}#{PERMISSION_MAP[octal_mode[5]]}"
     time = fs.mtime.strftime('%m %d %H:%M ')
-    file_detail_array << [file_type + mode, fs.nlink.to_s.rjust(2), Etc.getpwuid(fs.uid).name, Etc.getgrgid(fs.gid).name, fs.size.to_s, time, file_name]
+    file_stats << [file_type + mode, fs.nlink.to_s.rjust(2), Etc.getpwuid(fs.uid).name, Etc.getgrgid(fs.gid).name, fs.size.to_s, time, file_name]
   end
 
   # 最大文字列長に合わせて整形
-  formatted_file_detail_array = []
-  file_detail_array.each do |s|
+  formatted_file_stats = []
+  file_stats.each do |s|
     s[4] = s[4].rjust(max_size_length + 1)
-    formatted_file_detail_array << s.join(' ')
+    formatted_file_stats << s.join(' ')
   end
-  formatted_file_detail_array
+  formatted_file_stats
 end

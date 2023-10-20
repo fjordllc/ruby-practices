@@ -11,7 +11,7 @@ def main
   opt.on('-l') { |v| option[:l] = v }
   opt.parse!(ARGV)
   path = ARGV[0].nil? ? '.' : ARGV[0]
-  files = get_files(path)
+  files = files(path)
   transformed_files = transform_files_for_long_format(files, option, path)
 
   if option[:l]
