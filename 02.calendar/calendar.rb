@@ -17,7 +17,7 @@ puts " " * first_day_wday
     print "#{day}" + " "
   end
 
-  if (first_day_wday + day ) % 7 == 0
+  if (first_day_wday + day) % 7 == 0
     print "\n"
   end
 end
