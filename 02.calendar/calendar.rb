@@ -4,8 +4,6 @@ require 'date'
 require 'optparse'
 
 params = ARGV.getopts('y:', 'm:')
-# puts params['y']
-# puts params['m']
 
 if params['y']
   year = params['y'].to_i
@@ -19,8 +17,6 @@ else
   month = Date.today.month
 end
 
-# puts year
-# puts month
 
 day = Date.new(year, month)
 
