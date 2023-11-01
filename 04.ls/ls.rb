@@ -1,10 +1,21 @@
 # frozen_string_literal: true
 
-def main(row, path)
+require 'optparse'
+
+def main(row)
+  path = set_paramater
   files = find_files(path)
   formatted_files = format_files(files)
   vertical_lines = sort_files(formatted_files, row)
   display_files(vertical_lines, row)
+end
+
+def set_paramater
+  path = '*'
+  option = OptionParser.new
+  option.on('-a') { path = '{.,*}{.,*}' }
+  option.parse!(ARGV)
+  path
 end
 
 def find_files(path)
@@ -32,4 +43,4 @@ def display_files(vertical_lines, row)
   vertical_lines.each_with_index { |file, index| print ((index + 1) % row).zero? ? "#{file}\n" : file }
 end
 
-main(3, '*')
+main(3)
