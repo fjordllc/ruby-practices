@@ -14,18 +14,14 @@ def main
   opt.on('-w') { |v| params[:words] = v }
   opt.parse!(ARGV)
 
-  file_paths = ARGV.empty? ? fetch_file_paths : ARGV
-  # if ARGV.empty?
-
-  # else
-  #   file_paths = ARGV # パイプを使ったときにどのようにfile_pathsにファイルの配列を渡すか
-  # end
-  puts run_wc(file_paths, params)
+  file_names = ARGV.empty? ? fetch_file_names : ARGV
+  puts run_wc(file_names, params)
 end
 
-def fetch_file_paths
+def fetch_file_names
   file_names = []
   ARGF.each do |line|
+    # lsのlオプションの有無に関わらずファイル名のみを取得出来るように加工する
     file_names << line.chomp.split.last if line.include? '.txt'
   end
   file_names
