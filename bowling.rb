@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'debug'
 score = ARGV[0]
 scores = score.split(',')
 shots = []
@@ -20,17 +19,17 @@ end
 
 point = 0
 frames.each_with_index do |frame, n|
-  if n <= 8 # 7フレーム目まで
+  if n <= 8
     point += frame.sum
-    if frame[0] == 10 # ストライク
+    if frame[0] == 10
       point += frames[n + 1].sum
-      point += frames[n + 2][0] if frames[n + 1][0] == 10 # 2連続ストライク
-    elsif frame[0] + frame[1] == 10 # スペア
+      point += frames[n + 2][0] if frames[n + 1][0] == 10
+    elsif frame[0] + frame[1] == 10
       point += frames[n + 1][0]
     end
   end
 
-  point += frame.sum if n > 8 # 最終フレーム
+  point += frame.sum if n > 8
 end
 
 puts point
