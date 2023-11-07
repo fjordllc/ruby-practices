@@ -1,4 +1,3 @@
-number = 0
 (1..20).each do |number|
   case
   when number % 15 == 0
