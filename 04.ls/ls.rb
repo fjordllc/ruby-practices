@@ -26,7 +26,6 @@ end
 
 def setup_array(files)
   quotient, remainder = files.size.divmod(DISPLAY_COLUMN)
-  # ファイルの数に応じた2次元配列を用意
   row = if remainder.zero?
           quotient
         else
