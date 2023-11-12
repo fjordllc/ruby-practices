@@ -12,7 +12,7 @@ class Reversi
     @current_stone = BLACK_STONE
   end
 
-  def run # rubocop:disable Metrics/MethodLength
+  def run
     loop do
       output(@board)
 
