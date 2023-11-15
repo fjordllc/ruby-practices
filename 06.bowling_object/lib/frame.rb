@@ -16,4 +16,12 @@ class Frame
   def sum_shots_score
     first_shot.score + second_shot.score + third_shot.score
   end
+
+  def strike?
+    first_shot.mark == 'X'
+  end
+
+  def spare?
+    sum_shots_score == 10 && first_shot.mark != 'X'
+  end
 end
