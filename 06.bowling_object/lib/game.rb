@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Game
-  attr_reader :frame1, :frame2, :frame3, :frame4, :frame5, :frame6, :frame7, :frame8, :frame9, :frame10
-
   def initialize(marks)
     grouped_marks = Game.group_by_frame(marks.split(','))
     @frame1 = Frame.new(grouped_marks[0])
@@ -36,12 +34,12 @@ class Game
   end
 
   def sum_frames_score
-    frames = [frame1, frame2, frame3, frame4, frame5, frame6, frame7, frame8, frame9, frame10]
+    frames = [@frame1, @frame2, @frame3, @frame4, @frame5, @frame6, @frame7, @frame8, @frame9, @frame10]
     frames.map!(&:sum_shots_score).sum
   end
 
   def sum_bonus_score
-    frames = [frame1, frame2, frame3, frame4, frame5, frame6, frame7, frame8, frame9, frame10]
+    frames = [@frame1, @frame2, @frame3, @frame4, @frame5, @frame6, @frame7, @frame8, @frame9, @frame10]
     frames.map!.with_index do |frame, i|
       break if i == 9
 
