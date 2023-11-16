@@ -1,9 +1,8 @@
-require 'debug'
-
 class Game
   attr_reader :frame1, :frame2, :frame3, :frame4, :frame5, :frame6, :frame7, :frame8, :frame9, :frame10
 
-  def initialize(frames)
+  def initialize(marks)
+    frames = Game.group_by_frame(marks.split(','))
     @frame1 = Frame.new(frames[0])
     @frame2 = Frame.new(frames[1])
     @frame3 = Frame.new(frames[2])
@@ -42,5 +41,23 @@ class Game
     end
     frames.delete_at(-1)
     frames.sum
+  end
+
+  def self.group_by_frame(marks)
+    frames = Array.new(10) { [] }
+    frames.each.with_index do |frame, i|
+      if i == 9
+        frame.concat(marks)
+      elsif marks[0] == 'X'
+        frame.push(marks[0])
+        marks.delete_at(0)
+      else
+        2.times do
+          frame.push(marks[0])
+          marks.delete_at(0)
+        end
+      end
+    end
+    frames
   end
 end
