@@ -46,7 +46,7 @@ class Game
       break if i == 9
 
       if frame.strike?
-        strike_bonus_score(frames, i)
+        calculate_strike_bonus(frames, i)
       elsif frame.spare?
         frames[i + 1].first_shot.score
       else
@@ -57,7 +57,7 @@ class Game
     frames.sum
   end
 
-  def strike_bonus_score(frames, index)
+  def calculate_strike_bonus(frames, index)
     if index == 8 || !frames[index + 1].strike?
       frames[index + 1].first_shot.score + frames[index + 1].second_shot.score
     else
