@@ -40,7 +40,7 @@ class Game
         0
       end
     end
-    frames.delete_at(-1)
+    frames.pop
     frames.sum
   end
 
