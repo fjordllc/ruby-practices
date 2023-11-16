@@ -4,17 +4,17 @@ class Game
   attr_reader :frame1, :frame2, :frame3, :frame4, :frame5, :frame6, :frame7, :frame8, :frame9, :frame10
 
   def initialize(marks)
-    marks_grouped = Game.group_by_frame(marks.split(','))
-    @frame1 = Frame.new(marks_grouped[0])
-    @frame2 = Frame.new(marks_grouped[1])
-    @frame3 = Frame.new(marks_grouped[2])
-    @frame4 = Frame.new(marks_grouped[3])
-    @frame5 = Frame.new(marks_grouped[4])
-    @frame6 = Frame.new(marks_grouped[5])
-    @frame7 = Frame.new(marks_grouped[6])
-    @frame8 = Frame.new(marks_grouped[7])
-    @frame9 = Frame.new(marks_grouped[8])
-    @frame10 = Frame.new(marks_grouped[9])
+    grouped_marks = Game.group_by_frame(marks.split(','))
+    @frame1 = Frame.new(grouped_marks[0])
+    @frame2 = Frame.new(grouped_marks[1])
+    @frame3 = Frame.new(grouped_marks[2])
+    @frame4 = Frame.new(grouped_marks[3])
+    @frame5 = Frame.new(grouped_marks[4])
+    @frame6 = Frame.new(grouped_marks[5])
+    @frame7 = Frame.new(grouped_marks[6])
+    @frame8 = Frame.new(grouped_marks[7])
+    @frame9 = Frame.new(grouped_marks[8])
+    @frame10 = Frame.new(grouped_marks[9])
   end
 
   def self.group_by_frame(marks)
