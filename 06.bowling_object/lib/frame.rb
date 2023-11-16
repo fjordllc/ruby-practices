@@ -16,6 +16,6 @@ class Frame
   end
 
   def spare?
-    sum_shots_score == 10 && first_shot.mark != 'X'
+    sum_shots_score == 10 && !strike?
   end
 end
