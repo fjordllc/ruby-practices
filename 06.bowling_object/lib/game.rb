@@ -1,3 +1,5 @@
+require 'debug'
+
 class Game
   attr_reader :frame1, :frame2, :frame3, :frame4, :frame5, :frame6, :frame7, :frame8, :frame9, :frame10
 
@@ -23,20 +25,22 @@ class Game
   end
 
   def sum_bonus_score
-    frames_excluded_frame10 = [frame1, frame2, frame3, frame4, frame5, frame6, frame7, frame8, frame9, frame10]
-    frames_excluded_frame10.map!.with_index do |frame, i|
-        if frame.strike?
-          if frames_excluded_frame10[i + 1].strike? && i != 8
-            10 + frames_excluded_frame10[i + 2].first_shot.score
-          else
-            frames_excluded_frame10[i + 1].first_shot.score + frames_excluded_frame10[i + 1].second_shot.score
-          end
-        elsif frame.spare?
-          frames_excluded_frame10[i + 1].first_shot.score
+    frames = [frame1, frame2, frame3, frame4, frame5, frame6, frame7, frame8, frame9, frame10]
+    frames.map!.with_index do |frame, i|
+      break if i == 9
+      if frame.strike?
+        if i == 8 || !frames[i + 1].strike?
+          frames[i + 1].first_shot.score + frames[i + 1].second_shot.score
         else
-          0
+          10 + frames[i + 2].first_shot.score
         end
+      elsif frame.spare?
+        frames[i + 1].first_shot.score
+      else
+        0
+      end
     end
-    frames_excluded_frame10.sum
+    frames.delete_at(-1)
+    frames.sum
   end
 end
