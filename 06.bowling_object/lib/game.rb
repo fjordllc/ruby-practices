@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Game
   attr_reader :frame1, :frame2, :frame3, :frame4, :frame5, :frame6, :frame7, :frame8, :frame9, :frame10
 
@@ -15,6 +17,20 @@ class Game
     @frame10 = Frame.new(marks_grouped[9])
   end
 
+  def self.group_by_frame(marks)
+    frames = Array.new(10) { [] }
+    frames.each.with_index do |frame, i|
+      if i == 9
+        frame.concat(marks)
+      elsif marks[0] == 'X'
+        frame.push(marks.shift)
+      else
+        2.times { frame.push(marks.shift) }
+      end
+    end
+    frames
+  end
+
   def total_score
     sum_frames_score + sum_bonus_score
   end
@@ -28,12 +44,9 @@ class Game
     frames = [frame1, frame2, frame3, frame4, frame5, frame6, frame7, frame8, frame9, frame10]
     frames.map!.with_index do |frame, i|
       break if i == 9
+
       if frame.strike?
-        if i == 8 || !frames[i + 1].strike?
-          frames[i + 1].first_shot.score + frames[i + 1].second_shot.score
-        else
-          10 + frames[i + 2].first_shot.score
-        end
+        strike_bonus_score(frames, i)
       elsif frame.spare?
         frames[i + 1].first_shot.score
       else
@@ -44,17 +57,11 @@ class Game
     frames.sum
   end
 
-  def self.group_by_frame(marks)
-    frames = Array.new(10) { [] }
-    frames.each.with_index do |frame, i|
-      if i == 9
-        frame.concat(marks)
-      elsif marks[0] == 'X'
-        frame.push(marks.shift)
-      else
-        2.times { frame.push(marks.shift) }
-      end
+  def strike_bonus_score(frames, index)
+    if index == 8 || !frames[index + 1].strike?
+      frames[index + 1].first_shot.score + frames[index + 1].second_shot.score
+    else
+      10 + frames[index + 2].first_shot.score
     end
-    frames
   end
 end

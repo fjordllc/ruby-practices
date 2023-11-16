@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'minitest/autorun'
 require_relative '../lib/game'
 require_relative '../lib/frame'
@@ -6,11 +8,11 @@ require_relative '../lib/shot'
 class GameTest < Minitest::Test
   def setup
     @marks1 = '6,3,9,0,0,3,8,2,7,3,X,9,1,8,0,X,6,4,5'
-    @frames1 = [['6', '3'], ['9', '0'], ['0', '3'], ['8', '2'], ['7', '3'], ['X'], ['9', '1'], ['8', '0'], ['X'], ['6', '4', '5']]
+    @frames1 = [%w[6 3], %w[9 0], %w[0 3], %w[8 2], %w[7 3], ['X'], %w[9 1], %w[8 0], %w[X], %w[6 4 5]]
     @game1 = Game.new(@marks1)
 
     @marks2 = 'X,X,X,X,X,X,X,X,X,X,X,X'
-    @frames2 = [['X'], ['X'], ['X'], ['X'], ['X'], ['X'], ['X'], ['X'], ['X'], ['X', 'X', 'X']]
+    @frames2 = [['X'], ['X'], ['X'], ['X'], ['X'], ['X'], ['X'], ['X'], ['X'], %w[X X X]]
     @game2 = Game.new(@marks2)
   end
 
