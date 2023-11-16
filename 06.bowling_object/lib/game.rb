@@ -50,13 +50,9 @@ class Game
       if i == 9
         frame.concat(marks)
       elsif marks[0] == 'X'
-        frame.push(marks[0])
-        marks.delete_at(0)
+        frame.push(marks.shift)
       else
-        2.times do
-          frame.push(marks[0])
-          marks.delete_at(0)
-        end
+        2.times { frame.push(marks.shift) }
       end
     end
     frames
