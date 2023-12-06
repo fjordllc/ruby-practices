@@ -11,7 +11,7 @@ files.each_slice(4) do |file1, file2, file3, file4|
   matrix.push({ row: valid_row, size: max_size })
 end
 
-(0..matrix.length + 1).each do |i|
+(0..matrix.length).each do |i|
   matrix.each do |value|
     print value[:row][i].ljust(value[:size]) if !value[:row][i].nil?
     print "\t"
