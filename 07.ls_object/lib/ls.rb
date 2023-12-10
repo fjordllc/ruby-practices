@@ -30,7 +30,7 @@ def sort_items(sliced_items)
   else
     max_size = sliced_items.map(&:size).max
     sliced_items.each do |item| # サブ配列の要素数を揃える
-      item << nil if item.size < max_size
+      item << nil while item.size < max_size
     end
   end
   sliced_items.transpose
