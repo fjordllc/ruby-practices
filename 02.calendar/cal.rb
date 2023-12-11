@@ -37,7 +37,7 @@ print ' ' * (first_day.wday * 3)
 (first_day..last_day).each do |date|
   day_to_display = date.day.to_s.rjust(2, ' ')
   # 今日の日付を表示する場合のみ、色を反転して表示する
-  print date == Date.today ? "\e[30m\e[47m#{day_to_display}\e[0m " : "#{day_to_display} "
+  print date == now ? "\e[30m\e[47m#{day_to_display}\e[0m " : "#{day_to_display} "
   # 表示した日付が土曜日(カレンダーの右端)の場合、表示を改行する
   puts if date.saturday?
 end
