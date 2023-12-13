@@ -3,28 +3,42 @@
 
 MAX_COL_SIZE = 3
 
-input = ARGV[0]&.to_s || '.'
-files = Dir.entries(input).reject { |file| /^\..*/.match(file) }.sort
-matrix = []
-
-row_size = if files.empty?
-             return
-           elsif (files.length % MAX_COL_SIZE).zero?
-             files.length / MAX_COL_SIZE
-           else
-             files.length / (MAX_COL_SIZE - 1)
-           end
-
-files.each_slice(row_size) do |col|
-  valid_col = col.compact
-  max_size = valid_col.max_by(&:length).length
-  matrix.push({ col: valid_col, size: max_size })
-end
-
-matrix[0][:col].length.times do |i|
-  matrix.each do |value|
-    print value[:col][i].ljust(value[:size]) if !value[:col][i].nil?
-    print "\s\s"
+# 最大列数から行数を計算
+def calc_row_size(files, max_col_size)
+  if (files.length % max_col_size).zero?
+    files.length / max_col_size
+  else
+    files.length / (max_col_size - 1)
   end
-  puts
 end
+
+# 表示用行列を生成
+def create_matrix(files, max_col_size)
+  matrix = []
+  row_size = calc_row_size(files, max_col_size)
+  files.each_slice(row_size) do |col|
+    valid_col = col.compact
+    max_size = valid_col.max_by(&:length).length
+    matrix.push({ col: valid_col, size: max_size })
+  end
+  matrix
+end
+
+# ファイルを表示
+def show_files(matrix)
+  matrix[0][:col].length.times do |i|
+    matrix.each do |value|
+      print value[:col][i].ljust(value[:size]) if !value[:col][i].nil?
+      print "\s\s"
+    end
+    puts
+  end
+end
+
+path = ARGV[0]&.to_s || '.'
+files = Dir.entries(path).reject { |file| /^\..*/.match(file) }.sort
+
+return if files.empty?
+
+matrix = create_matrix(files, MAX_COL_SIZE)
+show_files(matrix)
