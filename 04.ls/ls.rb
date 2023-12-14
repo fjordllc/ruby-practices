@@ -3,19 +3,10 @@
 
 MAX_COL_SIZE = 3
 
-# 最大列数から行数を計算
-def calc_row_size(files, max_col_size)
-  if (files.length % max_col_size).zero?
-    files.length / max_col_size
-  else
-    files.length / (max_col_size - 1)
-  end
-end
-
 # 表示用行列を生成
 def create_matrix(files, max_col_size)
   matrix = []
-  row_size = calc_row_size(files, max_col_size)
+  row_size = files.length / max_col_size + 1
   files.each_slice(row_size) do |col|
     valid_col = col.compact
     max_size = valid_col.max_by(&:length).length
