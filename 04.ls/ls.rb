@@ -6,8 +6,8 @@ PADDING = 2
 
 def main
   path = ARGV[0] || '.'
-  file_names = Dir.children(path).sort if FileTest.directory?(path)
-  file_names or return
+  FileTest.directory?(path) or return
+  file_names = Dir.children(path).sort
   display_file_names(file_names)
 end
 
