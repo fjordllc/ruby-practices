@@ -5,14 +5,26 @@ COL_MAX = 3
 PADDING = 2
 
 def main
-  path = ARGV[0] || '.'
-  FileTest.directory?(path) or return
-  file_names = Dir.children(path).sort
-  display_file_names(file_names)
+  path = '.'
+  option_settings = { is_option_a_enabled: false }
+  ARGV.each do |argv|
+    case argv
+    when '-a'
+      option_settings[:is_option_a_enabled] = true
+    else
+      path = argv if FileTest.directory?(path)
+    end
+  end
+  file_names = Dir.glob('*', File::FNM_DOTMATCH).sort_by { |name| name.delete('.') }
+  display_file_names(file_names, option_settings)
 end
 
-def display_file_names(file_names)
-  filtered_file_names = file_names.reject { |name| name.start_with?('.') }
+def display_file_names(file_names, option_settings)
+  filtered_file_names = if option_settings[:is_option_a_enabled]
+                          file_names
+                        else
+                          file_names.reject { |name| name.start_with?('.') }
+                        end
   total_file_names = filtered_file_names.size.to_f
   row_size = (total_file_names / COL_MAX).ceil
   col_size = (total_file_names / row_size).ceil
