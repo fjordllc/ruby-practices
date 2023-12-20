@@ -1,20 +1,19 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'optparse'
+
 COL_MAX = 3
 PADDING = 2
 
 def main
-  path = '.'
   options = { a: false }
-  ARGV.each do |argv|
-    case argv
-    when '-a'
-      options[:a] = true
-    else
-      path = argv if FileTest.directory?(path)
-    end
-  end
+  opt = OptionParser.new
+  opt.on('-a') { options[:a] = true }
+  argv = opt.parse(ARGV)
+
+  path = argv[0] || '.'
+  FileTest.directory?(path) or return
   file_names = Dir.glob('*', File::FNM_DOTMATCH).sort_by { |name| name.delete('.') }
   display_file_names(file_names, options)
 end
