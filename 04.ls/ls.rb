@@ -6,21 +6,21 @@ PADDING = 2
 
 def main
   path = '.'
-  option_settings = { is_option_a_enabled: false }
+  options = { a: false }
   ARGV.each do |argv|
     case argv
     when '-a'
-      option_settings[:is_option_a_enabled] = true
+      options[:a] = true
     else
       path = argv if FileTest.directory?(path)
     end
   end
   file_names = Dir.glob('*', File::FNM_DOTMATCH).sort_by { |name| name.delete('.') }
-  display_file_names(file_names, option_settings)
+  display_file_names(file_names, options)
 end
 
-def display_file_names(file_names, option_settings)
-  filtered_file_names = if option_settings[:is_option_a_enabled]
+def display_file_names(file_names, options)
+  filtered_file_names = if options[:a]
                           file_names
                         else
                           file_names.reject { |name| name.start_with?('.') }
