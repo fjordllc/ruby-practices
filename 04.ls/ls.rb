@@ -19,11 +19,7 @@ def main
 end
 
 def display_file_names(file_names, options)
-  filtered_file_names = if options[:a]
-                          file_names
-                        else
-                          file_names.reject { |name| name.start_with?('.') }
-                        end
+  filtered_file_names = options[:a] ? file_names : file_names.reject { |name| name.start_with?('.') }
   total_file_names = filtered_file_names.size.to_f
   row_size = (total_file_names / COL_MAX).ceil
   col_size = (total_file_names / row_size).ceil
