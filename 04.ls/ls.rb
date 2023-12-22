@@ -1,18 +1,26 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'optparse'
+
 COL_MAX = 3
 PADDING = 2
 
 def main
-  path = ARGV[0] || '.'
+  options = { r: false }
+  opt = OptionParser.new
+  opt.on('-r') { options[:r] = true }
+  argv = opt.parse(ARGV)
+
+  path = argv[0] || '.'
   FileTest.directory?(path) or return
   file_names = Dir.children(path).sort
-  display_file_names(file_names)
+  display_file_names(file_names, options)
 end
 
-def display_file_names(file_names)
+def display_file_names(file_names, options)
   filtered_file_names = file_names.reject { |name| name.start_with?('.') }
+  filtered_file_names = filtered_file_names.reverse if options[:r]
   total_file_names = filtered_file_names.size.to_f
   row_size = (total_file_names / COL_MAX).ceil
   col_size = (total_file_names / row_size).ceil
