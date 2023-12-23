@@ -7,6 +7,7 @@ COL_MAX = 3
 PADDING = 2
 
 def main
+
   options = { r: false }
   opt = OptionParser.new
   opt.on('-r') { options[:r] = true }
@@ -19,6 +20,7 @@ def main
 end
 
 def display_file_names(file_names, options)
+
   filtered_file_names = file_names.reject { |name| name.start_with?('.') }
   filtered_file_names = filtered_file_names.reverse if options[:r]
   total_file_names = filtered_file_names.size.to_f
