@@ -7,7 +7,6 @@ COL_MAX = 3
 PADDING = 2
 
 def main
-
   options = { r: false }
   opt = OptionParser.new
   opt.on('-r') { options[:r] = true }
@@ -20,17 +19,18 @@ def main
 end
 
 def display_file_names(file_names, options)
-
   filtered_file_names = file_names.reject { |name| name.start_with?('.') }
-  filtered_file_names = filtered_file_names.reverse if options[:r]
-  total_file_names = filtered_file_names.size.to_f
+  reversed_filtered_file_names = filtered_file_names.reverse if options[:r]
+  file_names_to_display = reversed_filtered_file_names || filtered_file_names
+
+  total_file_names = file_names_to_display.size.to_f
   row_size = (total_file_names / COL_MAX).ceil
   col_size = (total_file_names / row_size).ceil
-  widths = get_column_widths(filtered_file_names, row_size, col_size)
+  widths = get_column_widths(file_names_to_display, row_size, col_size)
 
   row_size.times do |row|
     col_size.times do |col|
-      file_name = filtered_file_names[row + col * row_size]
+      file_name = file_names_to_display[row + col * row_size]
       width = widths[col] + PADDING
       print file_name.ljust(width, ' ') if file_name
     end
