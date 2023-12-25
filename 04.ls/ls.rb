@@ -20,9 +20,7 @@ end
 
 def display_file_names(file_names, options)
   filtered_file_names = file_names.reject { |name| name.start_with?('.') }
-  reversed_filtered_file_names = filtered_file_names.reverse if options[:r]
-  file_names_to_display = reversed_filtered_file_names || filtered_file_names
-
+  file_names_to_display = options[:r] ? filtered_file_names.reverse : filtered_file_names
   total_file_names = file_names_to_display.size.to_f
   row_size = (total_file_names / COL_MAX).ceil
   col_size = (total_file_names / row_size).ceil
