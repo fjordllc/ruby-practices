@@ -24,7 +24,7 @@ def main
   argv = opt.parse(ARGV)
 
   path = argv[0] || './'
-  corrected_path = path.sub(%r{([^/])\z}, '\1/') # pathの文字列が/で終わらない場合、文字列の末尾に/を追加する
+  corrected_path = path.end_with?('/') ? path : "#{path}/"
   FileTest.directory?(corrected_path) or return
   file_names = Dir.children(corrected_path).sort
   filtered_file_names = file_names.reject { |name| name.start_with?('.') }
