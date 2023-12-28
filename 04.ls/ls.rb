@@ -33,7 +33,7 @@ end
 
 def display_file_names_with_long(path, file_names)
   file_paths = file_names.map { |file_name| path + file_name }
-  total_block_size = get_total_block_size(file_paths)
+  total_block_size = file_paths.sum { |file_path| File.stat(file_path).blocks }
   column_name_to_width = get_column_name_to_width(file_paths)
   puts "total #{total_block_size / 2}"
 
@@ -51,15 +51,6 @@ def display_file_names_with_long(path, file_names)
     print "#{stat.mtime.strftime('%b %e %H:%M')} "
     puts file_path[%r{/([^/]+)$}, 1] # file_pathの文字列中の最後の/以降を出力する
   end
-end
-
-def get_total_block_size(file_paths)
-  total_block_size = 0
-  file_paths.each do |file_path|
-    stat = File.stat(file_path)
-    total_block_size += stat.blocks
-  end
-  total_block_size
 end
 
 def get_column_name_to_width(file_paths)
