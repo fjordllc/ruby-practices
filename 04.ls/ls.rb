@@ -16,6 +16,7 @@ FILE_TYPE_TO_CHARACTER = {
   'socket' => 's',
   'unknown' => '?'
 }.freeze
+PERMISSION_SEPARATER = 512
 
 def main
   options = { l: false }
@@ -40,7 +41,7 @@ def display_file_names_with_long(path, file_names)
   file_paths.each do |file_path|
     file_type = File.ftype(file_path)
     stat = File.stat(file_path)
-    mode_number = stat.mode % 8.pow(3)
+    mode_number = stat.mode % PERMISSION_SEPARATER
     mode = convert_mode_number_to_mode(mode_number)
     print FILE_TYPE_TO_CHARACTER[file_type]
     print "#{mode} "
@@ -67,22 +68,13 @@ end
 
 def convert_mode_number_to_mode(mode_number)
   mode = ''
-  2.downto(0) do |digit|
-    each_mode_number = mode_number / 8.pow(digit)
-    if each_mode_number >= 4
-      each_mode_number -= 4
-      mode += 'r'
-    else
-      mode += '-'
+  binary_modes = mode_number.digits(2).reverse
+  binary_modes.each.with_index do |binary_mode, index|
+    case index % 3
+    when 0 then mode += binary_mode == 1 ? 'r' : '-'
+    when 1 then mode += binary_mode == 1 ? 'w' : '-'
+    when 2 then mode += binary_mode == 1 ? 'x' : '-'
     end
-    if each_mode_number >= 2
-      each_mode_number -= 2
-      mode += 'w'
-    else
-      mode += '-'
-    end
-    mode += each_mode_number >= 1 ? 'x' : '-'
-    mode_number %= 8.pow(digit)
   end
   mode
 end
