@@ -49,7 +49,7 @@ def display_file_names_with_long(path, file_names)
     print "#{Etc.getgrgid(stat.gid).name.rjust(column_name_to_width[:group_name])} "
     print "#{stat.size.to_s.rjust(column_name_to_width[:byte_size])} "
     print "#{stat.mtime.strftime('%b %e %H:%M')} "
-    puts file_path[%r{/([^/]+)$}, 1] # file_pathの文字列中の最後の/以降を出力する
+    puts File.basename(file_path)
   end
 end
 
