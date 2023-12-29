@@ -27,7 +27,7 @@ def show_files(matrix)
 end
 
 path = ARGV[0]&.to_s || '.'
-files = Dir.entries(path).reject { |file| /^\..*/.match(file) }.sort
+files = Dir.entries(path).reject { |file| file.start_with?('.') }.sort
 
 return if files.empty?
 
