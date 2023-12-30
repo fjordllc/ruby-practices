@@ -40,29 +40,29 @@ def display_file_names_with_long(path, file_names)
     file_type = File.ftype(file_path)
     stat = File.stat(file_path)
     mode = get_mode_by_stat(stat)
-    column_name_to_width = get_column_name_to_width(file_paths)
+    widths = get_widths(file_paths)
     cols = []
     cols << FILE_TYPE_TO_CHARACTER[file_type] + mode
-    cols << stat.nlink.to_s.rjust(column_name_to_width[:hard_link_number])
-    cols << Etc.getpwuid(stat.uid).name.ljust(column_name_to_width[:owner_name])
-    cols << Etc.getgrgid(stat.gid).name.ljust(column_name_to_width[:group_name])
-    cols << stat.size.to_s.rjust(column_name_to_width[:byte_size])
+    cols << stat.nlink.to_s.rjust(widths[:nlink])
+    cols << Etc.getpwuid(stat.uid).name.ljust(widths[:owner])
+    cols << Etc.getgrgid(stat.gid).name.ljust(widths[:group])
+    cols << stat.size.to_s.rjust(widths[:size])
     cols << stat.mtime.strftime('%b %e %H:%M')
     cols << File.basename(file_path)
     puts cols.join(' ')
   end
 end
 
-def get_column_name_to_width(file_paths)
-  column_name_to_width = { hard_link_number: 0, owner_name: 0, group_name: 0, byte_size: 0 }
+def get_widths(file_paths)
+  widths = { nlink: 0, owner: 0, group: 0, size: 0 }
   file_paths.each do |file_path|
     stat = File.stat(file_path)
-    column_name_to_width[:hard_link_number] = [column_name_to_width[:hard_link_number], stat.nlink.to_s.length].max
-    column_name_to_width[:owner_name] = [column_name_to_width[:owner_name], Etc.getpwuid(stat.uid).name.length].max
-    column_name_to_width[:group_name] = [column_name_to_width[:group_name], Etc.getgrgid(stat.gid).name.length].max
-    column_name_to_width[:byte_size] = [column_name_to_width[:byte_size], stat.size.to_s.length].max
+    widths[:nlink] = [widths[:nlink], stat.nlink.to_s.length].max
+    widths[:owner] = [widths[:owner], Etc.getpwuid(stat.uid).name.length].max
+    widths[:group] = [widths[:group], Etc.getgrgid(stat.gid).name.length].max
+    widths[:size] = [widths[:size], stat.size.to_s.length].max
   end
-  column_name_to_width
+  widths
 end
 
 def get_mode_by_stat(stat)
