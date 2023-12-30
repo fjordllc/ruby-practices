@@ -25,15 +25,14 @@ def main
   argv = opt.parse(ARGV)
 
   path = argv[0] || './'
-  corrected_path = path.end_with?('/') ? path : "#{path}/"
-  FileTest.directory?(corrected_path) or return
-  file_names = Dir.children(corrected_path).sort
+  FileTest.directory?(path) or return
+  file_names = Dir.children(path).sort
   filtered_file_names = file_names.reject { |name| name.start_with?('.') }
-  options[:l] ? display_file_names_with_long(corrected_path, filtered_file_names) : display_file_names(filtered_file_names)
+  options[:l] ? display_file_names_with_long(path, filtered_file_names) : display_file_names(filtered_file_names)
 end
 
 def display_file_names_with_long(path, file_names)
-  file_paths = file_names.map { |file_name| path + file_name }
+  file_paths = file_names.map { |file_name| File.join(path, file_name) }
   total_block_size = file_paths.sum { |file_path| File.stat(file_path).blocks }
   column_name_to_width = get_column_name_to_width(file_paths)
   puts "total #{total_block_size / 2}"
