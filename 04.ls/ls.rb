@@ -41,14 +41,15 @@ def display_file_names_with_long(path, file_names)
     stat = File.stat(file_path)
     mode = get_mode_by_stat(stat)
     column_name_to_width = get_column_name_to_width(file_paths)
-    print FILE_TYPE_TO_CHARACTER[file_type]
-    print "#{mode} "
-    print "#{stat.nlink.to_s.rjust(column_name_to_width[:hard_link_number])} "
-    print "#{Etc.getpwuid(stat.uid).name.rjust(column_name_to_width[:owner_name])} "
-    print "#{Etc.getgrgid(stat.gid).name.rjust(column_name_to_width[:group_name])} "
-    print "#{stat.size.to_s.rjust(column_name_to_width[:byte_size])} "
-    print "#{stat.mtime.strftime('%b %e %H:%M')} "
-    puts File.basename(file_path)
+    cols = []
+    cols << FILE_TYPE_TO_CHARACTER[file_type] + mode
+    cols << stat.nlink.to_s.rjust(column_name_to_width[:hard_link_number])
+    cols << Etc.getpwuid(stat.uid).name.rjust(column_name_to_width[:owner_name])
+    cols << Etc.getgrgid(stat.gid).name.rjust(column_name_to_width[:group_name])
+    cols << stat.size.to_s.rjust(column_name_to_width[:byte_size])
+    cols << stat.mtime.strftime('%b %e %H:%M')
+    cols << File.basename(file_path)
+    puts cols.join(' ')
   end
 end
 
