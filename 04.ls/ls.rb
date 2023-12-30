@@ -80,9 +80,9 @@ def get_mode_by_stat(stat)
 end
 
 def display_file_names(file_names)
-  total_file_names = file_names.size.to_f
-  row_size = (total_file_names / COL_MAX).ceil
-  col_size = (total_file_names / row_size).ceil
+  number_of_files = file_names.size.to_f
+  row_size = (number_of_files / COL_MAX).ceil
+  col_size = (number_of_files / row_size).ceil
   widths = get_column_widths(file_names, row_size, col_size)
 
   row_size.times do |row|
