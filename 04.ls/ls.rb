@@ -44,8 +44,8 @@ def display_file_names_with_long(path, file_names)
     cols = []
     cols << FILE_TYPE_TO_CHARACTER[file_type] + mode
     cols << stat.nlink.to_s.rjust(column_name_to_width[:hard_link_number])
-    cols << Etc.getpwuid(stat.uid).name.rjust(column_name_to_width[:owner_name])
-    cols << Etc.getgrgid(stat.gid).name.rjust(column_name_to_width[:group_name])
+    cols << Etc.getpwuid(stat.uid).name.ljust(column_name_to_width[:owner_name])
+    cols << Etc.getgrgid(stat.gid).name.ljust(column_name_to_width[:group_name])
     cols << stat.size.to_s.rjust(column_name_to_width[:byte_size])
     cols << stat.mtime.strftime('%b %e %H:%M')
     cols << File.basename(file_path)
