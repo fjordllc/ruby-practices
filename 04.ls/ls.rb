@@ -39,8 +39,7 @@ def display_file_names_with_long(path, file_names)
   file_paths.each do |file_path|
     file_type = File.ftype(file_path)
     stat = File.stat(file_path)
-    mode_number = stat.mode % PERMISSION_SEPARATOR
-    mode = convert_mode_number_to_mode(mode_number)
+    mode = get_mode_by_stat(stat)
     column_name_to_width = get_column_name_to_width(file_paths)
     print FILE_TYPE_TO_CHARACTER[file_type]
     print "#{mode} "
@@ -65,8 +64,9 @@ def get_column_name_to_width(file_paths)
   column_name_to_width
 end
 
-def convert_mode_number_to_mode(mode_number)
+def get_mode_by_stat(stat)
   mode = ''
+  mode_number = stat.mode % PERMISSION_SEPARATOR
   binary_modes = mode_number.digits(2).reverse
   binary_modes.each.with_index do |binary_mode, index|
     case index % 3
