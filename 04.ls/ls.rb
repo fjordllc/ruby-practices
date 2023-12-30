@@ -16,7 +16,7 @@ FILE_TYPE_TO_CHARACTER = {
   'socket' => 's',
   'unknown' => '?'
 }.freeze
-PERMISSION_SEPARATER = 512
+PERMISSION_SEPARATOR = 512
 
 def main
   options = { l: false }
@@ -39,7 +39,7 @@ def display_file_names_with_long(path, file_names)
   file_paths.each do |file_path|
     file_type = File.ftype(file_path)
     stat = File.stat(file_path)
-    mode_number = stat.mode % PERMISSION_SEPARATER
+    mode_number = stat.mode % PERMISSION_SEPARATOR
     mode = convert_mode_number_to_mode(mode_number)
     column_name_to_width = get_column_name_to_width(file_paths)
     print FILE_TYPE_TO_CHARACTER[file_type]
