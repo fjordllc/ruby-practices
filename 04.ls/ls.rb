@@ -34,7 +34,6 @@ end
 def display_file_names_with_long(path, file_names)
   file_paths = file_names.map { |file_name| File.join(path, file_name) }
   total_block_size = file_paths.sum { |file_path| File.stat(file_path).blocks }
-  column_name_to_width = get_column_name_to_width(file_paths)
   puts "total #{total_block_size / 2}"
 
   file_paths.each do |file_path|
@@ -42,6 +41,7 @@ def display_file_names_with_long(path, file_names)
     stat = File.stat(file_path)
     mode_number = stat.mode % PERMISSION_SEPARATER
     mode = convert_mode_number_to_mode(mode_number)
+    column_name_to_width = get_column_name_to_width(file_paths)
     print FILE_TYPE_TO_CHARACTER[file_type]
     print "#{mode} "
     print "#{stat.nlink.to_s.rjust(column_name_to_width[:hard_link_number])} "
