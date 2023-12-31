@@ -43,26 +43,14 @@ def display_file_names_with_long(path, file_names)
     widths = get_widths(file_paths)
     cols = []
     cols << FILE_TYPE_TO_CHARACTER[file_type] + mode
-    cols << stat.nlink.to_s.rjust(widths[:nlink])
-    cols << Etc.getpwuid(stat.uid).name.ljust(widths[:owner])
-    cols << Etc.getgrgid(stat.gid).name.ljust(widths[:group])
-    cols << stat.size.to_s.rjust(widths[:size])
+    cols << get_nlink_string(stat).rjust(widths[:nlink])
+    cols << get_owner_name(stat).ljust(widths[:owner])
+    cols << get_group_name(stat).ljust(widths[:group])
+    cols << get_size_string(stat).rjust(widths[:size])
     cols << stat.mtime.strftime('%b %e %H:%M')
     cols << File.basename(file_path)
     puts cols.join(' ')
   end
-end
-
-def get_widths(file_paths)
-  widths = { nlink: 0, owner: 0, group: 0, size: 0 }
-  file_paths.each do |file_path|
-    stat = File.stat(file_path)
-    widths[:nlink] = [widths[:nlink], stat.nlink.to_s.length].max
-    widths[:owner] = [widths[:owner], Etc.getpwuid(stat.uid).name.length].max
-    widths[:group] = [widths[:group], Etc.getgrgid(stat.gid).name.length].max
-    widths[:size] = [widths[:size], stat.size.to_s.length].max
-  end
-  widths
 end
 
 def get_mode_by_stat(stat)
@@ -77,6 +65,34 @@ def get_mode_by_stat(stat)
     end
   end
   mode
+end
+
+def get_widths(file_paths)
+  widths = { nlink: 0, owner: 0, group: 0, size: 0 }
+  file_paths.each do |file_path|
+    stat = File.stat(file_path)
+    widths[:nlink] = [widths[:nlink], get_nlink_string(stat).length].max
+    widths[:owner] = [widths[:owner], get_owner_name(stat).length].max
+    widths[:group] = [widths[:group], get_group_name(stat).length].max
+    widths[:size] = [widths[:size], get_size_string(stat).length].max
+  end
+  widths
+end
+
+def get_nlink_string(stat)
+  stat.nlink.to_s
+end
+
+def get_owner_name(stat)
+  Etc.getpwuid(stat.uid).name
+end
+
+def get_group_name(stat)
+  Etc.getpwuid(stat.gid).name
+end
+
+def get_size_string(stat)
+  stat.size.to_s
 end
 
 def display_file_names(file_names)
