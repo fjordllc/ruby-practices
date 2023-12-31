@@ -26,6 +26,7 @@ def main
 
   path = argv[0] || './'
   FileTest.directory?(path) or return
+
   file_names = Dir.children(path).sort
   filtered_file_names = file_names.reject { |name| name.start_with?('.') }
   options[:l] ? display_file_names_with_long(path, filtered_file_names) : display_file_names(filtered_file_names)
