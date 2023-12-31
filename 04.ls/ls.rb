@@ -40,7 +40,7 @@ def display_file_names_with_long(path, file_names)
     file_type = File.ftype(file_path)
     stat = File.stat(file_path)
     mode = get_mode_by_stat(stat)
-    widths = get_widths(file_paths)
+    widths = calc_widths(file_paths)
     cols = []
     cols << FILE_TYPE_TO_CHARACTER[file_type] + mode
     cols << get_nlink_string(stat).rjust(widths[:nlink])
@@ -67,7 +67,7 @@ def get_mode_by_stat(stat)
   mode
 end
 
-def get_widths(file_paths)
+def calc_widths(file_paths)
   widths = { nlink: 0, owner: 0, group: 0, size: 0 }
   file_paths.each do |file_path|
     stat = File.stat(file_path)
