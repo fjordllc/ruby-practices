@@ -34,8 +34,8 @@ def main
       end
     end
   end
-  file_names = get_filtered_file_names(path, options)
 
+  file_names = get_filtered_file_names(path, options)
   options[:l] ? display_file_names_with_long(path, file_names) : display_file_names(file_names)
 end
 
