@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'optparse'
 require 'etc'
 
 COL_MAX = 3
@@ -19,17 +18,31 @@ FILE_TYPE_TO_CHARACTER = {
 PERMISSION_SEPARATOR = 512
 
 def main
-  options = { l: false }
-  opt = OptionParser.new
-  opt.on('-l') { options[:l] = true }
-  argv = opt.parse(ARGV)
+  options = { a: false, r: false, l: false }
+  path = './'
+  ARGV.each do |argv|
+    if FileTest.directory?(argv)
+      path = argv
+    elsif argv.start_with?('-')
+      specified_options = argv.delete('-').chars
+      specified_options.each do |specified_option|
+        case specified_option
+        when 'a' then options[:a] = true
+        when 'r' then options[:r] = true
+        when 'l' then options[:l] = true
+        end
+      end
+    end
+  end
+  file_names = get_filtered_file_names(path, options)
 
-  path = argv[0] || './'
-  FileTest.directory?(path) or return
+  options[:l] ? display_file_names_with_long(path, file_names) : display_file_names(file_names)
+end
 
-  file_names = Dir.children(path).sort
-  filtered_file_names = file_names.reject { |name| name.start_with?('.') }
-  options[:l] ? display_file_names_with_long(path, filtered_file_names) : display_file_names(filtered_file_names)
+def get_filtered_file_names(path, options)
+  file_names = Dir.glob('*', File::FNM_DOTMATCH, base: path).sort_by { |name| name.delete('.') }
+  filtered_file_names = options[:a] ? file_names : file_names.reject { |name| name.start_with?('.') }
+  options[:r] ? filtered_file_names.reverse : filtered_file_names
 end
 
 def display_file_names_with_long(path, file_names)
@@ -90,8 +103,8 @@ end
 
 def display_file_names(file_names)
   file_count = file_names.size.to_f
-  row_size = (files_count / COL_MAX).ceil
-  col_size = (files_count / row_size).ceil
+  row_size = (file_count / COL_MAX).ceil
+  col_size = (file_count / row_size).ceil
   widths = get_column_widths(file_names, row_size, col_size)
 
   row_size.times do |row|
