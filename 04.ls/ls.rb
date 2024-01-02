@@ -89,7 +89,7 @@ def get_group_name(stat)
 end
 
 def display_file_names(file_names)
-  files_count = file_names.size.to_f
+  file_count = file_names.size.to_f
   row_size = (files_count / COL_MAX).ceil
   col_size = (files_count / row_size).ceil
   widths = get_column_widths(file_names, row_size, col_size)
