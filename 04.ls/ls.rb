@@ -2,33 +2,101 @@
 # frozen_string_literal: true
 
 require 'optparse'
+require 'etc'
 
 COL_MAX = 3
 PADDING = 2
+FILE_TYPE_TO_CHARACTER = {
+  'file' => '-',
+  'directory' => 'd',
+  'characterSpecial' => 'c',
+  'blockSpecial' => 'b',
+  'fifo' => 'p',
+  'link' => 'l',
+  'socket' => 's',
+  'unknown' => '?'
+}.freeze
+PERMISSION_SEPARATOR = 512
 
 def main
-  options = { r: false }
+  options = { l: false }
   opt = OptionParser.new
-  opt.on('-r') { options[:r] = true }
+  opt.on('-l') { options[:l] = true }
   argv = opt.parse(ARGV)
 
-  path = argv[0] || '.'
+  path = argv[0] || './'
   FileTest.directory?(path) or return
+
   file_names = Dir.children(path).sort
-  display_file_names(file_names, options)
+  filtered_file_names = file_names.reject { |name| name.start_with?('.') }
+  options[:l] ? display_file_names_with_long(path, filtered_file_names) : display_file_names(filtered_file_names)
 end
 
-def display_file_names(file_names, options)
-  filtered_file_names = file_names.reject { |name| name.start_with?('.') }
-  file_names_to_display = options[:r] ? filtered_file_names.reverse : filtered_file_names
-  total_file_names = file_names_to_display.size.to_f
-  row_size = (total_file_names / COL_MAX).ceil
-  col_size = (total_file_names / row_size).ceil
-  widths = get_column_widths(file_names_to_display, row_size, col_size)
+def display_file_names_with_long(path, file_names)
+  file_paths = file_names.map { |file_name| File.join(path, file_name) }
+  total_block_size = file_paths.sum { |file_path| File.stat(file_path).blocks }
+  puts "total #{total_block_size / 2}"
+
+  file_paths.each do |file_path|
+    file_type = File.ftype(file_path)
+    stat = File.stat(file_path)
+    mode = get_mode_by_stat(stat)
+    widths = calc_widths(file_paths)
+    cols = []
+    cols << FILE_TYPE_TO_CHARACTER[file_type] + mode
+    cols << stat.nlink.to_s.rjust(widths[:nlink])
+    cols << get_owner_name(stat).ljust(widths[:owner])
+    cols << get_group_name(stat).ljust(widths[:group])
+    cols << stat.size.to_s.rjust(widths[:size])
+    cols << stat.mtime.strftime('%b %e %H:%M')
+    cols << File.basename(file_path)
+    puts cols.join(' ')
+  end
+end
+
+def get_mode_by_stat(stat)
+  mode = ''
+  mode_number = stat.mode % PERMISSION_SEPARATOR
+  binary_modes = mode_number.digits(2).reverse
+  binary_modes.each.with_index do |binary_mode, index|
+    case index % 3
+    when 0 then mode += binary_mode == 1 ? 'r' : '-'
+    when 1 then mode += binary_mode == 1 ? 'w' : '-'
+    when 2 then mode += binary_mode == 1 ? 'x' : '-'
+    end
+  end
+  mode
+end
+
+def calc_widths(file_paths)
+  widths = { nlink: 0, owner: 0, group: 0, size: 0 }
+  file_paths.each do |file_path|
+    stat = File.stat(file_path)
+    widths[:nlink] = [widths[:nlink], stat.nlink.to_s.length].max
+    widths[:owner] = [widths[:owner], get_owner_name(stat).length].max
+    widths[:group] = [widths[:group], get_group_name(stat).length].max
+    widths[:size] = [widths[:size], stat.size.to_s.length].max
+  end
+  widths
+end
+
+def get_owner_name(stat)
+  Etc.getpwuid(stat.uid).name
+end
+
+def get_group_name(stat)
+  Etc.getpwuid(stat.gid).name
+end
+
+def display_file_names(file_names)
+  file_count = file_names.size.to_f
+  row_size = (files_count / COL_MAX).ceil
+  col_size = (files_count / row_size).ceil
+  widths = get_column_widths(file_names, row_size, col_size)
 
   row_size.times do |row|
     col_size.times do |col|
-      file_name = file_names_to_display[row + col * row_size]
+      file_name = file_names[row + col * row_size]
       width = widths[col] + PADDING
       print file_name.ljust(width, ' ') if file_name
     end
