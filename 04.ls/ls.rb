@@ -1,6 +1,8 @@
 #! /usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'optparse'
+
 MAX_COL_SIZE = 3
 
 # 表示用行列を生成
@@ -26,8 +28,15 @@ def show_files(matrix)
   end
 end
 
+opt = OptionParser.new
+
+all_option = false
+opt.on('-a', '--all') { |v| all_option = v }
+opt.parse!(ARGV)
+
 path = ARGV[0]&.to_s || '.'
-files = Dir.entries(path).reject { |file| file.start_with?('.') }.sort
+files = Dir.entries(path).sort
+files = files.reject { |file| file.start_with?('.') } if !all_option
 
 return if files.empty?
 
