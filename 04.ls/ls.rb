@@ -38,7 +38,7 @@ def distribute_files(files, cols)
 end
 
 def list_directory(cols = 3)
-  files = Dir.glob('*')
+  files = Dir.glob('*', File::FNM_DOTMATCH)
   padded_files = distribute_files(files, cols)
   padded_files[0].zip(*padded_files[1...]).each do |row|
     puts row.map(&:to_s).join('  ')
