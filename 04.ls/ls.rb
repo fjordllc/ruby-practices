@@ -39,8 +39,11 @@ def distribute_files(files, cols)
   pad_files(padded_files)
 end
 
-def list_directory(cols = 3)
+def list_directory(cols = 3, reverse_order: true)
   files = Dir.glob('*')
+
+  files.reverse! if reverse_order
+
   padded_files = distribute_files(files, cols)
   padded_files[0].zip(*padded_files[1...]).each do |row|
     puts row.map(&:to_s).join('  ')
