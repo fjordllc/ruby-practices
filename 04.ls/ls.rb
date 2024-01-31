@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
 def relocate_elements(files)
-  relocated_files = files.map(&:dup)  # 配列の複製を作成
-  while relocated_files.any?(&:empty?)
-    empty_list_index = relocated_files.each_index.select { |i| relocated_files[i].empty? }.reverse
+  duplicated_files = files.map(&:dup)
+  while duplicated_files.any?(&:empty?)
+    empty_list_index = duplicated_files.each_index.select { |i| duplicated_files[i].empty? }.reverse
     empty_list_index.each do |empty_index|
       left_list_index = empty_index - 1
-      if relocated_files[left_list_index].length > 1
-        relocated_files[empty_index] << relocated_files[left_list_index].pop
-      elsif relocated_files[left_list_index].length == 1
-        relocated_files[empty_index] = relocated_files[left_list_index]
-        relocated_files[left_list_index] = []
+      if duplicated_files[left_list_index].length > 1
+        duplicated_files[empty_index] << duplicated_files[left_list_index].pop
+      elsif duplicated_files[left_list_index].length == 1
+        duplicated_files[empty_index] = duplicated_files[left_list_index]
+        duplicated_files[left_list_index] = []
       end
     end
   end
-  relocated_files
+  duplicated_files
 end
 
 def pad_files(padded_files)
@@ -40,8 +40,16 @@ def distribute_files(files, cols)
   padded_files
 end
 
-def list_directory(cols = 2)
+def calculate_columns(max_name_length, screen_width)
+  screen_width / (max_name_length + 2)
+end
+
+def list_directory
   file_names = Dir.glob('*')
+  max_file_name_length = file_names.map(&:length).max
+  screen_width = `tput cols`.to_i
+
+  cols = calculate_columns(max_file_name_length, screen_width) > 3 ? 3 : calculate_columns(max_file_name_length, screen_width)
   padded_files = distribute_files(file_names, cols)
   padded_files[0].zip(*padded_files[1...]).each do |row|
     puts row.map(&:to_s).join('  ')
