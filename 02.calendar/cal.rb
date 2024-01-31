@@ -4,10 +4,6 @@
 require 'date'
 require 'optparse'
 
-params = ARGV.getopts('', 'y:', 'm:')
-
-today = Date.today
-
 def print_calendar(year, month)
   start_date = Date.new(year, month, 1)
   end_date = Date.new(year, month, -1)
@@ -22,7 +18,11 @@ def print_calendar(year, month)
   print "\n"
 end
 
-year = params['y'] ? params['y'].to_i : today.year
-month = params['m'] ? params['m'].to_i : today.month
+params = ARGV.getopts('', 'y:', 'm:')
+
+today = Date.today
+
+year = params['y']&.to_i || today.year
+month = params['m']&.to_i || today.month
 
 print_calendar(year, month)
