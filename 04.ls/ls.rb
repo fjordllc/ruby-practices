@@ -1,22 +1,5 @@
 # frozen_string_literal: true
 
-def relocate_elements(files)
-  duplicated_files = files.map(&:dup)
-  while duplicated_files.any?(&:empty?)
-    empty_list_index = duplicated_files.each_index.select { |i| duplicated_files[i].empty? }.reverse
-    empty_list_index.each do |empty_index|
-      left_list_index = empty_index - 1
-      if duplicated_files[left_list_index].length > 1
-        duplicated_files[empty_index] << duplicated_files[left_list_index].pop
-      elsif duplicated_files[left_list_index].length == 1
-        duplicated_files[empty_index] = duplicated_files[left_list_index]
-        duplicated_files[left_list_index] = []
-      end
-    end
-  end
-  duplicated_files
-end
-
 def pad_files(padded_files)
   max_length = padded_files.map(&:length).max
   padded_files.map { |column| column + [nil] * (max_length - column.length) }
@@ -33,7 +16,6 @@ def distribute_files(files, cols)
 
       padded_files[sublist_index] << file
     end
-    padded_files = relocate_elements(padded_files)
   else
     padded_files = pad_files(padded_files)
   end
