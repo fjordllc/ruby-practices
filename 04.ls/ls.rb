@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-COLS = 3
+MAX_COLMNS = 3
 
-def distribute_files(files, cols)
+def partition_filenames(files, cols)
   rows = (files.length / cols.to_f).ceil
   max_length = files.max_by(&:length).length
   files.map { |file| file.ljust(max_length) }
@@ -12,8 +12,8 @@ end
 def list_directory
   file_names = Dir.glob('*')
 
-  padded_files = distribute_files(file_names, COLS)
-  padded_files[0].zip(*padded_files[1..]).each do |row|
+  partitioned_files = partition_filenames(file_names, MAX_COLMNS)
+  partitioned_files[0].zip(*partitioned_files[1..]).each do |row|
     puts row.join('  ')
   end
 end
