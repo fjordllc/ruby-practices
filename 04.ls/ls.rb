@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'optparse'
+
 NUM_COLUMNS = 3 # 列幅の最大数
 
 def main
@@ -10,7 +12,19 @@ def main
 end
 
 def take_items
-  Dir.glob('*')
+  take_hidden_files = false
+
+  OptionParser.new do |opt|
+    opt.on('-a') do
+      take_hidden_files = true
+    end
+  end.parse!
+
+  if take_hidden_files
+    Dir.foreach('.').to_a
+  else
+    Dir.glob('*')
+  end.sort
 end
 
 def slice_items(taken_items)
@@ -31,8 +45,8 @@ def transpose_items(sliced_items)
 end
 
 def display_items(transposed_items)
+  max_word_count = transposed_items.flatten.compact.map(&:size).max
   transposed_items.each do |items|
-    max_word_count = items.flatten.compact.map(&:size).max
     items.compact.each do |item|
       print item.ljust(max_word_count + 5)
     end
