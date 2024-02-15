@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 number = (1..20).to_a
 number.each do |n|
   if (n % 3).zero? && (n % 5).zero?
