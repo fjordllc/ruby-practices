@@ -16,7 +16,7 @@ def calendar(year = Date.year, month = Date.month)
   end
 end
 
-options = { year: Date.today.year }
+options = { year: Date.today.year, month: Date.today.month}
 OptionParser.new do |opts|
   opts.on('-y VAL', Integer) { |v| options[:year] = v }
   opts.on('-m VAL', Integer) { |v| options[:month] = v }
