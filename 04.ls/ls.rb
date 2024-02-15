@@ -8,13 +8,6 @@ def partition_filenames(files, cols)
   rows = (files.length / cols.to_f).ceil
   max_length = files.max_by(&:length).length
   partitioned_files = files.map { |file| file.ljust(max_length) }
-  if files.length == 4
-    return [
-      partitioned_files[0..1],
-      [partitioned_files[2], nil],
-      [partitioned_files[3], nil]
-    ]
-  end
 
   partitioned_files.each_slice(rows).to_a
 end
