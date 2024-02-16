@@ -13,7 +13,8 @@ def partition_filenames(files, cols)
 end
 
 def list_directory(options)
-  file_names = options[:include_hidden] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
+  flags = options[:include_hidden] ? File::FNM_DOTMATCH : 0
+  file_names = Dir.glob('*', flags)
   partitioned_files = partition_filenames(file_names, MAX_COLUMNS)
   partitioned_files[0].zip(*partitioned_files[1..]).each do |row|
     puts row.join('  ')
