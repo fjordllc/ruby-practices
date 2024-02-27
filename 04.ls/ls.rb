@@ -39,6 +39,8 @@ def list_directory(options)
   file_names.reverse! if options[:reverse]
 
   if options[:long_format]
+    total_size = file_names.sum { |file| File.stat(file).blocks }
+    puts "total #{total_size}"
     file_names.each do |file|
       puts format_file_stat(file)
     end
