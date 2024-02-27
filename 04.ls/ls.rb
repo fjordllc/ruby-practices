@@ -4,8 +4,8 @@ require 'optparse'
 require 'etc'
 
 MAX_COLUMNS = 3
-TYPES = { '10': '-', '04': 'd', '12': 'l', '02': 'c', '06': 'b', '01': 'p', '14': 's' }.freeze
-PERMS = { '0': '---', '1': '--x', '2': '-w-', '3': '-wx', '4': 'r--', '5': 'r-x', '6': 'rw-', '7': 'rwx' }.freeze
+FILE_TYPE_CHARACTORS = { '10': '-', '04': 'd', '12': 'l', '02': 'c', '06': 'b', '01': 'p', '14': 's' }.freeze
+PERMISSIONS = { '0': '---', '1': '--x', '2': '-w-', '3': '-wx', '4': 'r--', '5': 'r-x', '6': 'rw-', '7': 'rwx' }.freeze
 
 def partition_filenames(files, cols)
   rows = (files.length / cols.to_f).ceil
@@ -17,9 +17,9 @@ end
 
 def format_mode(mode)
   type_code = mode[0..1]
-  type = TYPES[type_code.to_sym] || '-'
-  usr, grp, oth = mode[3..5].chars.map { |c| PERMS[c.to_sym] }
-  "#{type}#{usr}#{grp}#{oth}"
+  file_types = FILE_TYPE_CHARACTORS[type_code.to_sym] || '-'
+  user_permissions, group_permissions, other_permissions = mode[3..5].chars.map { |char| PERMISSIONS[char.to_sym] }
+  "#{file_types}#{user_permissions}#{group_permissions}#{other_permissions}"
 end
 
 def format_file_stat(file)
