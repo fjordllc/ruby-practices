@@ -16,9 +16,10 @@ def partition_filenames(files, cols)
 end
 
 def format_mode(mode)
-  type_code = mode[0..1]
+  mode_str = mode.rjust(6, '0')
+  type_code = mode_str[0..1]
   file_types = FILE_TYPE_CHARACTORS[type_code.to_sym] || '-'
-  user_permissions, group_permissions, other_permissions = mode[3..5].chars.map { |char| PERMISSIONS[char.to_sym] }
+  user_permissions, group_permissions, other_permissions = mode_str[3..5].chars.map { |char| PERMISSIONS[char.to_sym] }
   "#{file_types}#{user_permissions}#{group_permissions}#{other_permissions}"
 end
 
