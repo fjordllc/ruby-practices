@@ -3,18 +3,9 @@
 require 'optparse'
 
 def main
-  formatted_list = []
-  opt = OptionParser.new
-  opt.on('-a') do
-    files_and_dirs_name = Dir.entries('.')
-    formatted_list = push_elem_to_three_lists(files_and_dirs_name.sort)
-  end
-  opt.parse!(ARGV)
-
-  if formatted_list.empty?
-    files_and_dirs_name = Dir.glob('*')
-    formatted_list = push_elem_to_three_lists(files_and_dirs_name)
-  end
+  option = ARGV.getopts('a')
+  files_and_dirs_name = option['a'] ? Dir.entries('.').sort : Dir.glob('*')
+  formatted_list = push_elem_to_three_lists(files_and_dirs_name)
 
   # 各配列の要素数を揃えるために、要素数が足りないリストにnilを入れる
   max_elem = formatted_list.max_by(&:size).size
