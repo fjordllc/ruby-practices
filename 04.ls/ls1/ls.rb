@@ -20,17 +20,12 @@ if @files.size <= COL
   puts files_include_space.join
 
 else
-  if remainder != 0 && ((element_number + 1) * (@files.size / (element_number + 1))) != @files.size
+  if remainder != 0
     col_array_include_remainder = slice(0, ((element_number + 1) * (@files.size / (element_number + 1))) - 1, element_number + 1)
     col_array_without_remainder = slice(((element_number + 1) * (@files.size / (element_number + 1))), -1, element_number + 1)
     col_array = col_array_include_remainder + col_array_without_remainder
     row_array = Array.new((element_number + 1)) do |m|
       col_array.map { |k| k[m] }.compact.map { |p| "#{p}#{' ' * (file_size_max - bytesize(p))} " }
-    end
-  elsif remainder != 0
-    col_array = @files.each_slice(element_number + 1)
-    row_array = Array.new((element_number + 1)) do |m|
-      col_array.map { |k| "#{k[m]}#{' ' * (file_size_max - bytesize(k[m]))} " }
     end
   else
     col_array = @files.each_slice(element_number)
