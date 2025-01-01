@@ -12,3 +12,4 @@ count = 20 # カウントしたい回数
       puts x
     end
   end
+  
