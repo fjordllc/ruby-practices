@@ -1,9 +1,34 @@
 require 'date'
+require 'optparse' # オプションを取り扱うためのライブラリ
 
 # 今日の日付を取得
 today = Date.today
 year  = today.year
 month = today.month
+
+# オプションがあった場合の条件分岐
+options = {}
+opt = OptionParser.new
+
+opt.on('-m VAL') do |m|
+  options[:month] = m.to_i
+end
+opt.on('-y VAL') do |y|
+  options[:year] = y.to_i
+end
+
+opt.parse!(ARGV)
+
+if options[:month]
+  month = options[:month]
+  if options[:year]
+    year = options[:year]
+  end
+else
+  if options[:year]
+    puts "ERROR!"
+  end
+end
 
 # 特定された月を1日から月末日を特定する（その月の日数を特定する）
 first_day = Date.new(year, month, 1) # 特定の月の 1日を取得（月初の曜日取得のため）
@@ -31,3 +56,11 @@ end
 end
 
 print "\n" # 空白行
+
+
+
+
+
+
+
+
