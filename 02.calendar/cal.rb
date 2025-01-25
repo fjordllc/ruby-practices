@@ -1,5 +1,5 @@
 require 'date'
-require 'optparse' # オプションを取り扱うためのライブラリ
+require 'optparse'
 
 # 今日の日付を取得
 today = Date.today
@@ -30,27 +30,25 @@ else
   end
 end
 
-# 特定された月を1日から月末日を特定する（その月の日数を特定する）
-first_day = Date.new(year, month, 1) # 特定の月の 1日を取得（月初の曜日取得のため）
-last_day = Date.new(year, month, -1) # 特定の月の月末（最終日）
+# 特定された月を1日から月末日を特定
+first_day = Date.new(year, month, 1) 
+last_day = Date.new(year, month, -1) 
 
 # 曜日の取得
 today_wday = today.wday # 今日の曜日を取得
-# puts "今日の曜日: #{today_wday}"
 
 # カレンダー出力
-print "\n" # 空白行
-puts "      #{month}月 #{year}"# 1行目
-puts "日 月 火 水 木 金 土 " # 2行目
+puts "      #{month}月 #{year}"
+puts "日 月 火 水 木 金 土 "
 
-# 3行目以降 (今月の日付をプリントする)
-(0...first_day.wday).each do # first_dayの曜日の日数分のスペース(3つ)を入れる
+# 今月の日付をプリントする
+(0...first_day.wday).each do
   print "   "
 end
 
-(first_day...last_day).each do |date| # 1日から月末まで繰り返す
-  print date.day.to_s.rjust(2) + " " # 日付を右に寄せにする
-  if date.wday == 6 # 土曜日で改行を入れる
+(first_day...last_day).each do |date|
+  print date.day.to_s.rjust(2) + " "
+  if date.wday == 6
     puts "\n"
   end
 end
