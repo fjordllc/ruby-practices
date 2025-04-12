@@ -2,8 +2,8 @@
 
 class Position
   # マスを'f3','d6'などの表記で表現する。変数名cell_refとして取り扱う。
-  ROW = %w[a b c d e f g h].freeze
-  COL = %w[1 2 3 4 5 6 7 8].freeze
+  COL = %w[a b c d e f g h].freeze
+  ROW = %w[1 2 3 4 5 6 7 8].freeze
 
   DIRECTIONS = [
     TOP_LEFT      = :top_left,
@@ -25,8 +25,8 @@ class Position
       @col = col
     else
       # Position.new('f7')のような呼び出し
-      @row = ROW.index(row_or_cell_ref[0])
-      @col = COL.index(row_or_cell_ref[1])
+      @row = ROW.index(row_or_cell_ref[1])
+      @col = COL.index(row_or_cell_ref[0])
     end
   end
 
@@ -47,19 +47,19 @@ class Position
   def to_cell_ref
     return '盤面外' if out_of_board?
 
-    "#{ROW[row]}#{COL[col]}"
+    "#{COL[col]}#{ROW[row]}"
   end
 
   def next_position(direction)
     case direction
-    when TOP_LEFT     then Position.new(row - 1,  col - 1)
-    when TOP          then Position.new(row,      col - 1)
-    when TOP_RIGHT    then Position.new(row + 1,  col - 1)
-    when LEFT         then Position.new(row - 1,  col)
-    when RIGHT        then Position.new(row + 1,  col)
-    when BOTTOM_LEFT  then Position.new(row - 1,  col + 1)
-    when BOTTOM       then Position.new(row,      col + 1)
-    when BOTTOM_RIGHT then Position.new(row + 1,  col + 1)
+    when TOP_LEFT     then Position.new(row - 1, col - 1)
+    when TOP          then Position.new(row - 1, col)
+    when TOP_RIGHT    then Position.new(row - 1, col + 1)
+    when LEFT         then Position.new(row,     col - 1)
+    when RIGHT        then Position.new(row,     col + 1)
+    when BOTTOM_LEFT  then Position.new(row + 1, col - 1)
+    when BOTTOM       then Position.new(row + 1, col)
+    when BOTTOM_RIGHT then Position.new(row + 1, col + 1)
     else raise 'Unknown direction'
     end
   end

@@ -2,63 +2,57 @@
 
 require_relative './lib/reversi_methods'
 
-QUIT_COMMANDS = %w[quit exit q].freeze
-@quit = false
+class Reversi
+  include ReversiMethods
 
-# @boardは盤面を示す二次元配列
-@board = Array.new(8) { Array.new(8, BLANK_CELL) }
-@board[3][3] = WHITE_STONE # d5
-@board[4][4] = WHITE_STONE # e4
-@board[3][4] = BLACK_STONE # d4
-@board[4][3] = BLACK_STONE # e5
+  QUIT_COMMANDS = %w[quit exit q].freeze
 
-@turn_stone_color = BLACK_STONE # 現在の手番の石色、初手は黒から
-
-def turn_stone_color_str
-  return '黒●' if @turn_stone_color == BLACK_STONE
-  return '白○' if @turn_stone_color == WHITE_STONE
-
-  raise '石色エラー'
-end
-
-def switch_stone_color
-  case @turn_stone_color
-  when BLACK_STONE then @turn_stone_color = WHITE_STONE
-  when WHITE_STONE then @turn_stone_color = BLACK_STONE
-  end
-end
-
-until @quit
-  output(@board)
-
-  if finished?(@board)
-    puts '試合終了'
-    puts "白○:#{count_stone(@board, WHITE_STONE)}"
-    puts "黒●:#{count_stone(@board, BLACK_STONE)}"
-    @quit = true
-    next
+  def initialize
+    @board = build_initial_board
+    @current_stone = BLACK_STONE
   end
 
-  unless placeable?(@board, @turn_stone_color)
-    puts '詰みのためターンを切り替えます'
-    switch_stone_color
-    next
-  end
+  def run # rubocop:disable Metrics/MethodLength
+    loop do
+      output(@board)
 
-  print "command? (#{turn_stone_color_str}) >"
-  command = gets.chomp
-  @quit = true and next if QUIT_COMMANDS.include?(command)
+      if finished?(@board)
+        puts '試合終了'
+        puts "白○:#{count_stone(@board, WHITE_STONE)}"
+        puts "黒●:#{count_stone(@board, BLACK_STONE)}"
+        break
+      end
 
-  begin
-    if put_stone!(@board, command, @turn_stone_color)
-      puts '配置成功、次のターン'
-      switch_stone_color
-    else
-      puts '配置失敗、ターン据え置き'
+      unless placeable?(@board, @current_stone)
+        puts '詰みのためターンを切り替えます'
+        toggle_stone
+        next
+      end
+
+      print "command? (#{@current_stone == WHITE_STONE ? '白○' : '黒●'}) > "
+      command = gets.chomp
+      break if QUIT_COMMANDS.include?(command)
+
+      begin
+        if put_stone(@board, command, @current_stone)
+          puts '配置成功、次のターン'
+          toggle_stone
+        else
+          puts '配置失敗、ターン据え置き'
+        end
+      rescue StandardError => e
+        puts "ERROR: #{e.message}"
+      end
     end
-  rescue StandardError => e
-    puts "ERROR: #{e.message}"
+
+    puts 'finished!'
+  end
+
+  private
+
+  def toggle_stone
+    @current_stone = @current_stone == WHITE_STONE ? BLACK_STONE : WHITE_STONE
   end
 end
 
-puts 'finished!'
+Reversi.new.run if __FILE__ == $PROGRAM_NAME
