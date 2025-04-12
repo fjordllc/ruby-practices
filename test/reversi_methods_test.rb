@@ -3,7 +3,7 @@
 require 'minitest/autorun'
 require_relative '../lib/reversi_methods'
 
-class TestReversiMethods < Minitest::Test
+class ReversiMethodsTest < Minitest::Test
   include ReversiMethods
 
   def build_board(board_text)
