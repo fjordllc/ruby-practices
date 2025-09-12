@@ -16,7 +16,7 @@ last_day = Date.new(year, month, -1).day
 
 
 #年と月を表示
-puts "      #{year}年#{month}月"
+puts "     #{year}年#{month}月"
 
 #曜日ヘッダーを表示
 puts "日 月 火 水 木 金 土"
