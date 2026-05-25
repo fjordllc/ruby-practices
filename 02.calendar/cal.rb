@@ -3,13 +3,18 @@ require 'date'
 require 'optparse'
 
 options = {}
+
 OptionParser.new do |opts|
+  opts.on('-y YEAR', Integer) do |y|
+    options[:year] = y
+  end
+
   opts.on('-m MONTH', Integer) do |m|
     options[:month] = m
   end
 end.parse!
 
-year = Date.today.year
+year = options[:year] || Date.today.year
 month = options[:month] || Date.today.month
 
 def cal(year, month)
