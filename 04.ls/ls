@@ -1,0 +1,54 @@
+#!/usr/bin/env ruby
+# require 'debug'
+
+# ファイルを取得する関数
+def fetch_files
+  files = Dir.entries('.') # カレントディレクトリのファイルを取得
+  new_files = [] 
+
+  files.each do |file|
+    if !file.start_with?('.') # ドットで始まるファイルは除外
+      new_files << file
+    end
+  end
+
+  new_files.sort # ファイルをアルファベット順にソート
+end
+
+# 行列を作成する関数
+def make_matrix(files, row, col)
+  matrix = Array.new(row) { Array.new(col) }
+
+  i = 0
+  while i < files.length # ファイルの数だけループ
+    r = i % row
+    c = i / row
+
+    if c < col
+      matrix[r][c] = files[i] # 行列にファイルを配置
+    end
+  
+    i += 1
+  end
+  
+  matrix # 行列を返す
+end
+
+# 行列を表示する関数
+def print_matrix(matrix)
+  matrix.each do |row| # 行ごとにループ
+    line = ""
+
+    row.each do |file| # 列ごとにループ
+      if file != nil
+        line = line + file + "   " # ファイル名をスペースで区切って表示
+      end
+    end
+    puts line
+  end
+end
+
+# 関数実行
+files = fetch_files
+matrix = make_matrix(files, 3, 3) # 3行3列の行列を作成
+print_matrix(matrix)
