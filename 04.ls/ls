@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 # require 'debug'
-
 # ファイルを取得する関数
 def fetch_files
   files = Dir.entries('.') # カレントディレクトリのファイルを取得
