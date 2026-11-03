@@ -16,7 +16,6 @@ myls_options = DisplayOptions.new(**options)
 
 builder = DisplayBuilder.new
 all_file_names = Dir.entries('.')
-all_file_names.map(&:length).max
 builder.build_display(
   all_file_names.sort,
   column: myls_options.options[:column],
