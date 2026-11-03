@@ -3,8 +3,8 @@
 class DisplayOptions
   attr_reader :options
 
-  DEFAULT_OPTIONS = { column: 3, show_hidden: false }.freeze
-  def initialized(colmun: DEFAULT_OPTIONPS[:colmun], show_hidden: DEFAULT_OPTIONPS[:show_hidden])
-    @options = [colmun, show_hidden]
+  DEFAULT_OPTIONS = { default_column: 3, default_show_hidden: false }.freeze
+  def initialize(column: DEFAULT_OPTIONS[:default_column], show_hidden: DEFAULT_OPTIONS[:default_show_hidden])
+    @options = { column:, show_hidden: }
   end
 end
